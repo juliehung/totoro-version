@@ -4,135 +4,135 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Section14 {
 
-    private MetricData L25;
-
-    private MetricData L26;
-
-    private MetricData L27;
-
-    private MetricData L28;
-
-    private MetricData L29;
-
-    private MetricData L30;
-
-    private MetricData L31;
-
-    private MetricData L32;
-
-    private MetricData L33;
-
-    private MetricData L34;
-
-    private MetricData L35;
-
-    private MetricData L36;
-
     @JsonProperty("Lp25")
+    private MetricData l25;
+
+    @JsonProperty("Lp26")
+    private MetricData l26;
+
+    @JsonProperty("Lp27")
+    private MetricData l27;
+
+    @JsonProperty("Lp28")
+    private MetricData l28;
+
+    @JsonProperty("Lp29")
+    private MetricData l29;
+
+    @JsonProperty("Lp30")
+    private MetricData l30;
+
+    @JsonProperty("Lp31")
+    private MetricData l31;
+
+    @JsonProperty("Lp32")
+    private MetricData l32;
+
+    @JsonProperty("Lp33")
+    private MetricData l33;
+
+    @JsonProperty("Lp34")
+    private MetricData l34;
+
+    @JsonProperty("Lp35")
+    private MetricData l35;
+
+    @JsonProperty("Lp36")
+    private MetricData l36;
+
     public MetricData getL25() {
-        return L25;
+        return l25;
     }
 
     public void setL25(MetricData l25) {
-        L25 = l25;
+        this.l25 = l25;
     }
 
-    @JsonProperty("Lp26")
     public MetricData getL26() {
-        return L26;
+        return l26;
     }
 
     public void setL26(MetricData l26) {
-        L26 = l26;
+        this.l26 = l26;
     }
 
-    @JsonProperty("Lp27")
     public MetricData getL27() {
-        return L27;
+        return l27;
     }
 
     public void setL27(MetricData l27) {
-        L27 = l27;
+        this.l27 = l27;
     }
 
-    @JsonProperty("Lp28")
     public MetricData getL28() {
-        return L28;
+        return l28;
     }
 
     public void setL28(MetricData l28) {
-        L28 = l28;
+        this.l28 = l28;
     }
 
-    @JsonProperty("Lp29")
     public MetricData getL29() {
-        return L29;
+        return l29;
     }
 
     public void setL29(MetricData l29) {
-        L29 = l29;
+        this.l29 = l29;
     }
 
-    @JsonProperty("Lp30")
     public MetricData getL30() {
-        return L30;
+        return l30;
     }
 
     public void setL30(MetricData l30) {
-        L30 = l30;
+        this.l30 = l30;
     }
 
-    @JsonProperty("Lp31")
     public MetricData getL31() {
-        return L31;
+        return l31;
     }
 
     public void setL31(MetricData l31) {
-        L31 = l31;
+        this.l31 = l31;
     }
 
-    @JsonProperty("Lp32")
     public MetricData getL32() {
-        return L32;
+        return l32;
     }
 
     public void setL32(MetricData l32) {
-        L32 = l32;
+        this.l32 = l32;
     }
 
-    @JsonProperty("Lp33")
     public MetricData getL33() {
-        return L33;
+        return l33;
     }
 
     public void setL33(MetricData l33) {
-        L33 = l33;
+        this.l33 = l33;
     }
 
-    @JsonProperty("Lp34")
     public MetricData getL34() {
-        return L34;
+        return l34;
     }
 
     public void setL34(MetricData l34) {
-        L34 = l34;
+        this.l34 = l34;
     }
 
-    @JsonProperty("Lp35")
     public MetricData getL35() {
-        return L35;
+        return l35;
     }
 
     public void setL35(MetricData l35) {
-        L35 = l35;
+        this.l35 = l35;
     }
 
-    @JsonProperty("Lp36")
     public MetricData getL36() {
-        return L36;
+        return l36;
     }
 
     public void setL36(MetricData l36) {
-        L36 = l36;
+        this.l36 = l36;
     }
 }

@@ -1,7 +1,7 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import io.dentall.totoro.business.service.nhi.metric.MetricDashboardService;
+import io.dentall.totoro.business.service.nhi.metric.MetricService;
 import io.dentall.totoro.business.service.nhi.metric.vm.MetricLVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +19,13 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/nhi/metric")
 public class NhiMetricResource {
+
     private final Logger log = LoggerFactory.getLogger(NhiMetricResource.class);
 
-    private final MetricDashboardService metricDashboardService;
+    private final MetricService metricService;
 
-    public NhiMetricResource(MetricDashboardService metricDashboardService) {
-        this.metricDashboardService = metricDashboardService;
+    public NhiMetricResource(MetricService metricService) {
+        this.metricService = metricService;
     }
 
     @GetMapping("/L")
@@ -33,7 +34,7 @@ public class NhiMetricResource {
         @RequestParam LocalDate begin,
         @RequestParam(required = false) List<Long> excludeDisposalId) {
 
-        List<MetricLVM> vm = metricDashboardService.metric(begin, excludeDisposalId);
+        List<MetricLVM> vm = metricService.getDashboardMetric(begin, excludeDisposalId);
         Map<String, List<MetricLVM>> map = new HashMap<>();
         map.put("metrics", vm);
 

@@ -4,47 +4,47 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Section17 {
 
-    private MetricData L53;
-
-    private MetricData L54;
-
-    private MetricData L55;
-
-    private MetricData L56;
-
     @JsonProperty("Lp53")
+    private MetricData l53;
+
+    @JsonProperty("Lp54")
+    private MetricData l54;
+
+    @JsonProperty("Lp55")
+    private MetricData l55;
+
+    @JsonProperty("Lp56")
+    private MetricData l56;
+
     public MetricData getL53() {
-        return L53;
+        return l53;
     }
 
     public void setL53(MetricData l53) {
-        L53 = l53;
+        this.l53 = l53;
     }
 
-    @JsonProperty("Lp54")
     public MetricData getL54() {
-        return L54;
+        return l54;
     }
 
     public void setL54(MetricData l54) {
-        L54 = l54;
+        this.l54 = l54;
     }
 
-    @JsonProperty("Lp55")
     public MetricData getL55() {
-        return L55;
+        return l55;
     }
 
     public void setL55(MetricData l55) {
-        L55 = l55;
+        this.l55 = l55;
     }
 
-    @JsonProperty("Lp56")
     public MetricData getL56() {
-        return L56;
+        return l56;
     }
 
     public void setL56(MetricData l56) {
-        L56 = l56;
+        this.l56 = l56;
     }
 }

@@ -4,102 +4,102 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Section10 {
 
-    private MetricData L11;
-
-    private MetricData L12;
-
-    private MetricData L13;
-
-    private MetricData L14;
-
-    private MetricData L15;
-
-    private MetricData L16;
-
-    private MetricData L17;
-
-    private MetricData L18;
-
-    private MetricData L19;
-
     @JsonProperty("Lp11")
+    private MetricData l11;
+
+    @JsonProperty("Lp12")
+    private MetricData l12;
+
+    @JsonProperty("Lp13")
+    private MetricData l13;
+
+    @JsonProperty("Lp14")
+    private MetricData l14;
+
+    @JsonProperty("Lp15")
+    private MetricData l15;
+
+    @JsonProperty("Lp16")
+    private MetricData l16;
+
+    @JsonProperty("Lp17")
+    private MetricData l17;
+
+    @JsonProperty("Lp18")
+    private MetricData l18;
+
+    @JsonProperty("Lp19")
+    private MetricData l19;
+
     public MetricData getL11() {
-        return L11;
+        return l11;
     }
 
     public void setL11(MetricData l11) {
-        L11 = l11;
+        this.l11 = l11;
     }
 
-    @JsonProperty("Lp12")
     public MetricData getL12() {
-        return L12;
+        return l12;
     }
 
     public void setL12(MetricData l12) {
-        L12 = l12;
+        this.l12 = l12;
     }
 
-    @JsonProperty("Lp13")
     public MetricData getL13() {
-        return L13;
+        return l13;
     }
 
     public void setL13(MetricData l13) {
-        L13 = l13;
+        this.l13 = l13;
     }
 
-    @JsonProperty("Lp14")
     public MetricData getL14() {
-        return L14;
+        return l14;
     }
 
     public void setL14(MetricData l14) {
-        L14 = l14;
+        this.l14 = l14;
     }
 
-    @JsonProperty("Lp15")
     public MetricData getL15() {
-        return L15;
+        return l15;
     }
 
     public void setL15(MetricData l15) {
-        L15 = l15;
+        this.l15 = l15;
     }
 
-    @JsonProperty("Lp16")
     public MetricData getL16() {
-        return L16;
+        return l16;
     }
 
     public void setL16(MetricData l16) {
-        L16 = l16;
+        this.l16 = l16;
     }
 
-    @JsonProperty("Lp17")
     public MetricData getL17() {
-        return L17;
+        return l17;
     }
 
     public void setL17(MetricData l17) {
-        L17 = l17;
+        this.l17 = l17;
     }
 
-    @JsonProperty("Lp18")
     public MetricData getL18() {
-        return L18;
+        return l18;
     }
 
     public void setL18(MetricData l18) {
-        L18 = l18;
+        this.l18 = l18;
     }
 
-    @JsonProperty("Lp19")
     public MetricData getL19() {
-        return L19;
+        return l19;
     }
 
     public void setL19(MetricData l19) {
-        L19 = l19;
+        this.l19 = l19;
     }
 }

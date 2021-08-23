@@ -2,13 +2,12 @@ package io.dentall.totoro.business.service.nhi.metric;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.*;
 import io.dentall.totoro.business.service.nhi.metric.formula.*;
-import io.dentall.totoro.business.service.nhi.metric.mapper.SpecialTreatmentMapper;
-import io.dentall.totoro.business.service.nhi.metric.mapper.TimeLineDataMapper;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType;
 import io.dentall.totoro.business.service.nhi.metric.source.MonthSelectedSource;
 import io.dentall.totoro.business.service.nhi.metric.source.SourceKey;
-import io.dentall.totoro.business.service.nhi.metric.vm.*;
+import io.dentall.totoro.business.service.nhi.metric.vm.DoctorData;
+import io.dentall.totoro.business.service.nhi.metric.vm.NameValue;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
@@ -53,7 +52,7 @@ public class MetricDashboardService {
         this.userRepository = userRepository;
     }
 
-    public List<MetricLVM> metric(final LocalDate baseDate, List<Long> excludeDisposalIds) {
+    public List<GiantMetricDto> metric(final LocalDate baseDate, List<Long> excludeDisposalIds) {
         Optional<User> userOptional = this.userService.getUserWithAuthorities();
         if (!userOptional.isPresent()) {
             return emptyList();
@@ -71,12 +70,12 @@ public class MetricDashboardService {
         );
 
         return allSubject.parallelStream()
-            .map(subject -> buildMetricL(baseDate, allSubject, subject, nhiMetricRawVMList))
+            .map(subject -> buildMetric(baseDate, allSubject, subject, nhiMetricRawVMList))
             .filter(Objects::nonNull)
             .collect(toList());
     }
 
-    private MetricLVM buildMetricL(LocalDate baseDate, List<User> allSubject, User subject, List<NhiMetricRawVM> source) {
+    private GiantMetricDto buildMetric(LocalDate baseDate, List<User> allSubject, User subject, List<NhiMetricRawVM> source) {
         MetricConfig metricConfig = new MetricConfig(subject, baseDate, source);
 
         if (!metricConfig.isSourceExist(metricConfig.getSubjectSource().key()) || metricConfig.retrieveSource(metricConfig.getSubjectSource().key()).size() == 0) {
@@ -159,145 +158,83 @@ public class MetricDashboardService {
             disposalSummaryDtoList = new DisposalSummaryFormula(metricConfig).calculate();
         }
 
-        Section5 section5 = new Section5();
-        section5.setL1(new MetricData(metricL1));
-        section5.setL2(new MetricData(metricL2));
-        section5.setL3(new MetricData(metricL3));
-        section5.setL4(new MetricData(metricL4));
+        MetricLDto metricLDto = new MetricLDto();
+        metricLDto.setL1(metricL1);
+        metricLDto.setL2(metricL2);
+        metricLDto.setL3(metricL3);
+        metricLDto.setL4(metricL4);
+        metricLDto.setL5(metricL5);
+        metricLDto.setL6(metricL6);
+        metricLDto.setL7(metricL7);
+        metricLDto.setL8(metricL8);
+        metricLDto.setL11(metricL11);
+        metricLDto.setL12(metricL12);
+        metricLDto.setL13(metricL13);
+        metricLDto.setL14(metricL14);
+        metricLDto.setL15(metricL15);
+        metricLDto.setL16(metricL16);
+        metricLDto.setL17(metricL17);
+        metricLDto.setL18(metricL18);
+        metricLDto.setL19(metricL19);
+        metricLDto.setL20(metricL20);
+        metricLDto.setL21(metricL21);
+        metricLDto.setL22(metricL22);
+        metricLDto.setL23(metricL23);
+        metricLDto.setL24(metricL24);
+        metricLDto.setL25(metricL25);
+        metricLDto.setL26(metricL26);
+        metricLDto.setL27(metricL27);
+        metricLDto.setL28(metricL28);
+        metricLDto.setL29(metricL29);
+        metricLDto.setL30(metricL30);
+        metricLDto.setL31(metricL31);
+        metricLDto.setL32(metricL32);
+        metricLDto.setL33(metricL33);
+        metricLDto.setL34(metricL34);
+        metricLDto.setL35(metricL35);
+        metricLDto.setL36(metricL36);
+        metricLDto.setL37(metricL37);
+        metricLDto.setL38(metricL38);
+        metricLDto.setL39(metricL39);
+        metricLDto.setL40(metricL40);
+        metricLDto.setL41(metricL41);
+        metricLDto.setL42(metricL42);
+        metricLDto.setL43(metricL43);
+        metricLDto.setL44(metricL44);
+        metricLDto.setL45(metricL45);
+        metricLDto.setL46(metricL46);
+        metricLDto.setL47(metricL47);
+        metricLDto.setL48(metricL48);
+        metricLDto.setL49(metricL49);
+        metricLDto.setL50(metricL50);
+        metricLDto.setL51(metricL51);
+        metricLDto.setL52(metricL52);
+        metricLDto.setL53(metricL53);
+        metricLDto.setL54(metricL54);
+        metricLDto.setL55(metricL55);
+        metricLDto.setL56(metricL56);
 
-        Section6 section6 = new Section6();
-        section6.setL5(new MetricData(metricL5));
-        section6.setL6(new MetricData(metricL6));
-        section6.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dailyPt1.entrySet()));
+        GiantMetricDto giantMetricDto = new GiantMetricDto();
+        giantMetricDto.setType(metricSubjectType);
+        giantMetricDto.setMetricLDto(metricLDto);
+        giantMetricDto.setDailyIc3(dailyIc3);
+        giantMetricDto.setDailyPt1(dailyPt1);
+        giantMetricDto.setDailyPoints(dailyPoints);
+        giantMetricDto.setSpecialTreatmentAnalysisDto(specialTreatmentAnalysisDto);
 
-        Section7 section7 = new Section7();
-        section7.setL7(new MetricData(metricL7));
-        section7.setL8(new MetricData(metricL8));
-        section7.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dailyIc3.entrySet()));
-
-        Section8 section8 = new Section8();
         if (metricSubjectType == CLINIC) {
-            section8.setL9(nameValue);
+            metricLDto.setL9(nameValue);
+            giantMetricDto.setDoctorSummary(doctorSummaryDtoList);
         } else {
-            section8.setL10(nameValue);
-        }
-
-        Section9 section9 = new Section9();
-        section9.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dailyPoints.entrySet()));
-
-        Section10 section10 = new Section10();
-        section10.setL11(new MetricData(metricL11));
-        section10.setL12(new MetricData(metricL12));
-        section10.setL13(new MetricData(metricL13));
-        section10.setL14(new MetricData(metricL14));
-        section10.setL15(new MetricData(metricL15));
-        section10.setL16(new MetricData(metricL16));
-        section10.setL17(new MetricData(metricL17));
-        section10.setL18(new MetricData(metricL18));
-        section10.setL19(new MetricData(metricL19));
-
-        Section11 section11 = new Section11();
-        section11.setP1(SpecialTreatmentMapper.INSTANCE.mapToVM(specialTreatmentAnalysisDto.getP1()));
-        section11.setP2(SpecialTreatmentMapper.INSTANCE.mapToVM(specialTreatmentAnalysisDto.getP2()));
-        section11.setP3(SpecialTreatmentMapper.INSTANCE.mapToVM(specialTreatmentAnalysisDto.getP3()));
-        section11.setP4(SpecialTreatmentMapper.INSTANCE.mapToVM(specialTreatmentAnalysisDto.getP4()));
-        section11.setP5(SpecialTreatmentMapper.INSTANCE.mapToVM(specialTreatmentAnalysisDto.getP5()));
-        section11.setP6(SpecialTreatmentMapper.INSTANCE.mapToVM(specialTreatmentAnalysisDto.getP6()));
-        section11.setP7(SpecialTreatmentMapper.INSTANCE.mapToVM(specialTreatmentAnalysisDto.getP7()));
-        section11.setP8(SpecialTreatmentMapper.INSTANCE.mapToVM(specialTreatmentAnalysisDto.getP8()));
-        section11.setOther(SpecialTreatmentMapper.INSTANCE.mapToVM(specialTreatmentAnalysisDto.getOther()));
-        section11.setSummary(SpecialTreatmentMapper.INSTANCE.mapToVM(specialTreatmentAnalysisDto.getSummary()));
-        section11.setP1p5(SpecialTreatmentMapper.INSTANCE.mapToVM(specialTreatmentAnalysisDto.getP1p5()));
-        section11.setP2p3(SpecialTreatmentMapper.INSTANCE.mapToVM(specialTreatmentAnalysisDto.getP2p3()));
-        section11.setP4p8(SpecialTreatmentMapper.INSTANCE.mapToVM(specialTreatmentAnalysisDto.getP4p8()));
-        section11.setP6p7AndOther(SpecialTreatmentMapper.INSTANCE.mapToVM(specialTreatmentAnalysisDto.getP6p7AndOther()));
-
-        Section12 section12 = new Section12();
-        section12.setL20(new MetricData(metricL20));
-        section12.setL21(new MetricData(metricL21));
-        section12.setL22(new MetricData(metricL22));
-        section12.setL23(new MetricData(metricL23));
-
-        Section13 section13 = new Section13();
-        section13.setL24(new MetricData(metricL24));
-
-        Section14 section14 = new Section14();
-        section14.setL25(new MetricData(metricL25));
-        section14.setL26(new MetricData(metricL26));
-        section14.setL27(new MetricData(metricL27));
-        section14.setL28(new MetricData(metricL28));
-        section14.setL29(new MetricData(metricL29));
-        section14.setL30(new MetricData(metricL30));
-        section14.setL31(new MetricData(metricL31));
-        section14.setL32(new MetricData(metricL32));
-        section14.setL33(new MetricData(metricL33));
-        section14.setL34(new MetricData(metricL34));
-        section14.setL35(new MetricData(metricL35));
-        section14.setL36(new MetricData(metricL36));
-
-        Section15 section15 = new Section15();
-        section15.setL37(new MetricData(metricL37));
-        section15.setL38(new MetricData(metricL38));
-        section15.setL39(new MetricData(metricL39));
-        section15.setL40(new MetricData(metricL40));
-        section15.setL41(new MetricData(metricL41));
-        section15.setL42(new MetricData(metricL42));
-        section15.setL43(new MetricData(metricL43));
-        section15.setL44(new MetricData(metricL44));
-        section15.setL45(new MetricData(metricL45));
-        section15.setL46(new MetricData(metricL46));
-        section15.setL47(new MetricData(metricL47));
-        section15.setL48(new MetricData(metricL48));
-
-        Section16 section16 = new Section16();
-        section16.setL49(new MetricData(metricL49));
-        section16.setL50(new MetricData(metricL50));
-        section16.setL51(new MetricData(metricL51));
-        section16.setL52(new MetricData(metricL52));
-
-        Section17 section17 = new Section17();
-        section17.setL53(new MetricData(metricL53));
-        section17.setL54(new MetricData(metricL54));
-        section17.setL55(new MetricData(metricL55));
-        section17.setL56(new MetricData(metricL56));
-
-        Section18 section18 = new Section18();
-        if (metricSubjectType == CLINIC) {
-            section18.setCount(doctorSummaryDtoList.size());
-            section18.setTotal(doctorSummaryDtoList.stream().mapToLong(DoctorSummaryDto::getTotal).sum());
-            section18.setDoctorSummary(doctorSummaryDtoList);
-        } else {
-            section18.setCount(disposalSummaryDtoList.size());
-            section18.setTotal(disposalSummaryDtoList.stream().mapToLong(DisposalSummaryDto::getTotal).sum());
-            section18.setDisposalSummary(disposalSummaryDtoList);
-        }
-
-        MetricLVM metricLVM = new MetricLVM();
-        metricLVM.setType(metricSubjectType.name().toLowerCase());
-
-        if (metricSubjectType == MetricSubjectType.DOCTOR) {
+            metricLDto.setL10(nameValue);
             DoctorData doctorData = new DoctorData();
             doctorData.setDoctorId(metricConfig.getSubject().getId());
             doctorData.setDoctorName(metricConfig.getSubject().getFirstName());
-            metricLVM.setDoctor(doctorData);
+            giantMetricDto.setDoctor(doctorData);
+            giantMetricDto.setDisposalSummary(disposalSummaryDtoList);
         }
 
-        metricLVM.setSection5(section5);
-        metricLVM.setSection6(section6);
-        metricLVM.setSection7(section7);
-        metricLVM.setSection8(section8);
-        metricLVM.setSection9(section9);
-        metricLVM.setSection10(section10);
-        metricLVM.setSection11(section11);
-        metricLVM.setSection12(section12);
-        metricLVM.setSection13(section13);
-        metricLVM.setSection14(section14);
-        metricLVM.setSection15(section15);
-        metricLVM.setSection16(section16);
-        metricLVM.setSection17(section17);
-        metricLVM.setSection18(section18);
-
-        return metricLVM;
+        return giantMetricDto;
     }
 
     private List<User> findAllSubject(User user) {
