@@ -10,5 +10,17 @@
             <column name="chief_complaint" value="Gum bleeding or Gum tenderness"/>
             <where>id = 236 and code = '91089C'</where>
         </update>
+        <update tableName="nhi_procedure">
+            <column name="default_icd_10_cm_id" value="14"/>
+            <where>id = 211 and code = '91021C'</where>
+        </update>
+        <update tableName="nhi_procedure">
+            <column name="default_icd_10_cm_id" value="14"/>
+            <where>id = 212 and code = '91022C'</where>
+        </update>
+        <update tableName="nhi_procedure">
+            <column name="default_icd_10_cm_id" value="14"/>
+            <where>id = 213 and code = '91023C'</where>
+        </update>
     </changeSet>
 </databaseChangeLog>
