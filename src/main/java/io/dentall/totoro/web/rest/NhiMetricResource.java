@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +51,20 @@ public class NhiMetricResource {
         @RequestParam(required = false) List<Long> doctorIds) {
 
         List<GiantMetricDto> vm = metricService.getTaipeiDistrictMetric(begin, excludeDisposalId, doctorIds);
+        Map<String, List<GiantMetricDto>> map = new HashMap<>();
+        map.put("metrics", vm);
+
+        return ResponseEntity.ok().body(map);
+    }
+
+    @GetMapping("/middle-district")
+    @Timed
+    public ResponseEntity<Map<String, List<GiantMetricDto>>> getMiddleDistrictMetric(
+        @RequestParam LocalDate begin,
+        @RequestParam(required = false) List<Long> excludeDisposalId,
+        @RequestParam(required = false) List<Long> doctorIds) {
+
+        List<GiantMetricDto> vm = metricService.getMiddleDistrictMetric(begin, excludeDisposalId, doctorIds);
         Map<String, List<GiantMetricDto>> map = new HashMap<>();
         map.put("metrics", vm);
 
