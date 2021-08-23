@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/nhi/metric")
@@ -27,12 +29,14 @@ public class NhiMetricResource {
 
     @GetMapping("/L")
     @Timed
-    public ResponseEntity<List<MetricLVM>> getMetricL(
+    public ResponseEntity<Map<String, List<MetricLVM>>> getMetricL(
         @RequestParam LocalDate begin,
         @RequestParam(required = false) List<Long> excludeDisposalId) {
 
         List<MetricLVM> vm = metricDashboardService.metric(begin, excludeDisposalId);
+        Map<String, List<MetricLVM>> map = new HashMap<>();
+        map.put("metrics", vm);
 
-        return ResponseEntity.ok().body(vm);
+        return ResponseEntity.ok().body(map);
     }
 }
