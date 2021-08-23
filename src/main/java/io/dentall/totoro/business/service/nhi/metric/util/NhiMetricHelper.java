@@ -206,7 +206,7 @@ public class NhiMetricHelper {
             return count;
         }
 
-        String key = date.getMonth().getValue() + patientId + cardNumber;
+        String key = date.getMonth().getValue() + "_" + patientId + "_" + cardNumber;
         boolean isNumeric = isNumericCardNumber(cardNumber);
 
         if (isNumeric) {
