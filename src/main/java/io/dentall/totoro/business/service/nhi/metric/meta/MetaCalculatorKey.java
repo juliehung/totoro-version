@@ -2,6 +2,7 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.source.Key;
 
+import java.util.List;
 import java.util.Objects;
 
 public class MetaCalculatorKey implements Key {
@@ -12,10 +13,13 @@ public class MetaCalculatorKey implements Key {
 
     private final MetaConfig config;
 
+    private final List<?> list;
+
     public MetaCalculatorKey(MetaCalculator<?> calculator) {
         this.sourceNames = calculator.getSourceNames();
         this.calculatorName = calculator.getCalculatorName();
         this.config = calculator.getConfig();
+        this.list = calculator.getExtraKeyAttribute();
     }
 
     @Override
@@ -27,11 +31,11 @@ public class MetaCalculatorKey implements Key {
             return false;
         }
         MetaCalculatorKey that = (MetaCalculatorKey) o;
-        return sourceNames.equals(that.sourceNames) && calculatorName.equals(that.calculatorName) && config.equals(that.config);
+        return sourceNames.equals(that.sourceNames) && calculatorName.equals(that.calculatorName) && config.equals(that.config) && Objects.equals(list, that.list);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sourceNames, calculatorName, config);
+        return Objects.hash(sourceNames, calculatorName, config, list);
     }
 }

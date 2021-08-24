@@ -22,7 +22,10 @@ public enum MetaType {
     Od1ToothCount, Od4TreatmentCount, Od5TreatmentCount, Od6TreatmentCount, Od456SurfaceCount,
     Od1Pt1, Od1Point,
     Od1Pt2,
-    SpecialTreatment, DoctorSummary, DisposalSummary
+    SpecialTreatment, DoctorSummary, DisposalSummary,
+
+    TreatmentCount, TreatmentAndAgeCount
+
 }
 
 

@@ -17,7 +17,11 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper
 public class Ic3 extends SingleSourceMetaCalculator<Long> {
 
     public Ic3(MetricConfig metricConfig, Source<?, ?> source) {
-        super(metricConfig, source);
+        this(metricConfig, null, source);
+    }
+
+    public Ic3(MetricConfig metricConfig, MetaConfig metaConfig, Source<?, ?> source) {
+        super(metricConfig, metaConfig, source);
     }
 
     @Override

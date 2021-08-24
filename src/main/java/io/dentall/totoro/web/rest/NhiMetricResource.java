@@ -34,6 +34,7 @@ public class NhiMetricResource {
     public ResponseEntity<Map<String, List<MetricLVM>>> getDashboardMetric(
         @RequestParam LocalDate begin,
         @RequestParam(required = false) List<Long> excludeDisposalId) {
+        log.debug("REST request to dashboard : begin={}, excludeDisposalId={}", begin, excludeDisposalId);
 
         List<MetricLVM> vm = metricService.getDashboardMetric(begin, excludeDisposalId);
         Map<String, List<MetricLVM>> map = new HashMap<>();
@@ -49,8 +50,24 @@ public class NhiMetricResource {
         @RequestParam LocalDate begin,
         @RequestParam(required = false) List<Long> excludeDisposalId,
         @RequestParam(required = false) List<Long> doctorIds) {
+        log.debug("REST request to taipei district : begin={}, excludeDisposalId={}, doctorIds={}", begin, excludeDisposalId, doctorIds);
 
         List<GiantMetricDto> vm = metricService.getTaipeiDistrictMetric(begin, excludeDisposalId, doctorIds);
+        Map<String, List<GiantMetricDto>> map = new HashMap<>();
+        map.put("metrics", vm);
+
+        return ResponseEntity.ok().body(map);
+    }
+
+    @GetMapping("/north-district")
+    @Timed
+    public ResponseEntity<Map<String, List<GiantMetricDto>>> getNorthDistrictMetric(
+        @RequestParam LocalDate begin,
+        @RequestParam(required = false) List<Long> excludeDisposalId,
+        @RequestParam(required = false) List<Long> doctorIds) {
+        log.debug("REST request to north district : begin={}, excludeDisposalId={}, doctorIds={}", begin, excludeDisposalId, doctorIds);
+
+        List<GiantMetricDto> vm = metricService.getNorthDistrictMetric(begin, excludeDisposalId, doctorIds);
         Map<String, List<GiantMetricDto>> map = new HashMap<>();
         map.put("metrics", vm);
 
@@ -63,6 +80,7 @@ public class NhiMetricResource {
         @RequestParam LocalDate begin,
         @RequestParam(required = false) List<Long> excludeDisposalId,
         @RequestParam(required = false) List<Long> doctorIds) {
+        log.debug("REST request to middle district : begin={}, excludeDisposalId={}, doctorIds={}", begin, excludeDisposalId, doctorIds);
 
         List<GiantMetricDto> vm = metricService.getMiddleDistrictMetric(begin, excludeDisposalId, doctorIds);
         Map<String, List<GiantMetricDto>> map = new HashMap<>();

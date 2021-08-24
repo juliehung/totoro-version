@@ -16,6 +16,8 @@ public class GiantMetricDto {
 
     private DoctorData doctor;
 
+    private MetricADto metricADto;
+
     private MetricFDto metricFDto;
 
     private MetricHDto metricHDto;
@@ -48,6 +50,14 @@ public class GiantMetricDto {
 
     public void setDoctor(DoctorData doctor) {
         this.doctor = doctor;
+    }
+
+    public MetricADto getMetricADto() {
+        return metricADto;
+    }
+
+    public void setMetricADto(MetricADto metricADto) {
+        this.metricADto = metricADto;
     }
 
     public MetricFDto getMetricFDto() {

@@ -9,6 +9,7 @@ import io.dentall.totoro.domain.Holiday;
 import io.dentall.totoro.service.HolidayService;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.Year;
 import java.util.*;
 import java.util.function.BiFunction;
@@ -226,6 +227,13 @@ public class NhiMetricHelper {
         }
 
         return count + 1L;
+    }
+
+    public static Predicate<NhiMetricRawVM> applyLegalAge(int bottom, int upper) {
+        return vm -> {
+            int ages = Period.between(vm.getPatientBirth(), vm.getDisposalDate()).getYears();
+            return ages >= bottom && ages <= upper;
+        };
     }
 
 }

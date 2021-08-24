@@ -4,6 +4,7 @@ import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
@@ -76,4 +77,8 @@ public abstract class AbstractMetaCalculator<T> implements MetaCalculator<T> {
         return this.config;
     }
 
+    @Override
+    public List<?> getExtraKeyAttribute() {
+        return null;
+    }
 }
