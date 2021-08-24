@@ -138,7 +138,7 @@ public class NhiMetricHelper {
 
         if (config.isExcludeHolidayPoint()) {
             // 國定假日無論有無放假，都要扣除健保代碼點數
-            return 0L;
+            return isHoliday(vm.getDisposalDate(), config.getHolidayMap()) ? 0L : vm.getTreatmentProcedureTotal();
         }
 
         return vm.getTreatmentProcedureTotal();
@@ -151,7 +151,7 @@ public class NhiMetricHelper {
 
         if (config.isExcludeHolidayPoint()) {
             // 國定假日無論有無放假，都要扣除健保代碼點數
-            return 0L;
+            return isHoliday(dto.getDisposalDate(), config.getHolidayMap()) ? 0L : dto.getTreatmentProcedureTotal();
         }
 
         return dto.getTreatmentProcedureTotal();
@@ -159,6 +159,10 @@ public class NhiMetricHelper {
 
     public static boolean isDayOffHoliday(LocalDate date, Map<LocalDate, Optional<Holiday>> holidayMap) {
         return ofNullable(holidayMap.get(date)).filter(Optional::isPresent).map(Optional::get).map(h -> h.getDayOff().equals("Y")).orElse(false);
+    }
+
+    public static boolean isHoliday(LocalDate date, Map<LocalDate, Optional<Holiday>> holidayMap) {
+        return ofNullable(holidayMap.get(date)).map(Optional::isPresent).orElse(false);
     }
 
     public static Predicate<NhiMetricRawVM> applyExcludeByVM(Exclude exclude) {
