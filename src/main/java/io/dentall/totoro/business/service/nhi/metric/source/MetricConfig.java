@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.CLINIC;
+import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.DOCTOR;
 import static io.dentall.totoro.service.util.DateTimeUtil.convertLocalDateToBeginOfDayInstant;
 import static io.dentall.totoro.service.util.DateTimeUtil.getCurrentQuarterMonthsRangeInstant;
 import static java.util.Optional.ofNullable;
@@ -38,12 +39,21 @@ public class MetricConfig {
     private final MetricSubjectType subjectType;
 
     public MetricConfig(User subject, LocalDate baseDate, List<?> source) {
+        if (subject == null) {
+            throw new IllegalArgumentException("subject can not be null");
+        }
+        if (baseDate == null) {
+            throw new IllegalArgumentException("baseDate can not be null");
+        }
+        if (source == null) {
+            throw new IllegalArgumentException("source can not be null");
+        }
         this.subject = subject;
         this.baseDate = baseDate;
         this.quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
         this.cached.put(this.initialSource.key(), source);
         this.subjectSource = subject.getId().equals(Long.MIN_VALUE) ? new ClinicSource(this) : new DoctorSource(this);
-        this.subjectType = this.subjectSource.getClass().isAssignableFrom(ClinicSource.class) ? CLINIC : MetricSubjectType.DOCTOR;
+        this.subjectType = this.subjectSource.getClass().isAssignableFrom(ClinicSource.class) ? CLINIC : DOCTOR;
         apply(this.subjectSource);
     }
 

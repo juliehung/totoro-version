@@ -52,11 +52,13 @@ public class NhiMetricHelper {
 
     public static Long applyNewExamPoint(NhiMetricRawVM vm, MetaConfig config) {
         if (config.isExcludeHideoutPoint() && codesByHideout.contains(vm.getExamCode())) {
-            return 0L;
+            // 山地離島的健保代碼要扣除多出來的點數
+            // 30點差額是00125C(260 point)、00126C(260 pont)扣除00121C(230 point)的差額與00309C(385 point)、00310C(385 pont)扣除00305C(355 point)的差額
+            return parseLong(vm.getExamPoint()) - 30L;
         }
 
         if (config.isUse00121CPoint()) {
-            return 30L;
+            return 230L;
         }
 
         return parseLong(vm.getExamPoint());
@@ -135,7 +137,8 @@ public class NhiMetricHelper {
         }
 
         if (config.isExcludeHolidayPoint()) {
-            return isDayOffHoliday(vm.getDisposalDate(), config.getHolidayMap()) ? 0L : vm.getTreatmentProcedureTotal();
+            // 國定假日無論有無放假，都要扣除健保代碼點數
+            return 0L;
         }
 
         return vm.getTreatmentProcedureTotal();
@@ -147,7 +150,8 @@ public class NhiMetricHelper {
         }
 
         if (config.isExcludeHolidayPoint()) {
-            return isDayOffHoliday(dto.getDisposalDate(), config.getHolidayMap()) ? 0L : dto.getTreatmentProcedureTotal();
+            // 國定假日無論有無放假，都要扣除健保代碼點數
+            return 0L;
         }
 
         return dto.getTreatmentProcedureTotal();

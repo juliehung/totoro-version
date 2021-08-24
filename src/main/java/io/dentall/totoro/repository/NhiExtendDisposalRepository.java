@@ -809,7 +809,9 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             " p.birth as patientBirth," +
             " p.name as patientName, " +
             " d.id as disposalId, " +
-            " ned.jhi_date as disposalDate," +
+            " case when ned.a19 = '1' then ned.jhi_date " +
+            "      when ned.a19 = '2' then ned.replenishment_date " +
+            "      else ned.jhi_date end as disposalDate," +
             " ned.a18 as cardNumber," +
             " ned.a19 as cardReplenishment," +
             " ned.a23 as nhiCategory," +

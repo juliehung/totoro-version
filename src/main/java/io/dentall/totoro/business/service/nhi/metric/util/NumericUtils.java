@@ -4,13 +4,13 @@ import java.math.BigDecimal;
 
 public class NumericUtils {
 
-    public static final BigDecimal ONE_THOUSAND = new BigDecimal(100);
+    public static final BigDecimal ONE_HUNDRED = new BigDecimal(100);
 
     private NumericUtils() {
     }
 
     public static BigDecimal toPercentage(BigDecimal val) {
-        return val.multiply(ONE_THOUSAND);
+        return val.multiply(ONE_HUNDRED);
     }
 
     public static BigDecimal divide(BigDecimal val1, BigDecimal val2) {

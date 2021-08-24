@@ -28,8 +28,8 @@ public class OdDto {
 
     private Long nhiOriginPoint;
 
-    // 需要有方法可以辨別出，同一處置單不同處置(但同一個健保代碼)，所以利用該屬性，只要是同一處置，就會是一樣的seq
-    // 即使是相同的健保代碼，但不同處置就會不一樣的seq
+    // 需要有方法可以辨別出，同一處置單不同診療(但同一個健保代碼)，所以利用該屬性，只要是同一診療，就會是一樣的seq
+    // 即使是相同的健保代碼，但不同診療就會不一樣的seq
     private int treatmentSeq;
 
     public long getPatientId() {
