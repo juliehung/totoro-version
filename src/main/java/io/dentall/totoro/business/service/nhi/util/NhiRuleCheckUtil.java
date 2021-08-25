@@ -2911,7 +2911,8 @@ public class NhiRuleCheckUtil {
         String code
     ) {
         NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO();
-        result.validated(true);
+        result.validated(true)
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.SUCCESS);
 
         List<NhiHybridRecordDTO> records = this.findNhiHypeRecordsDTO(
             dto.getPatient().getId(),
