@@ -14,12 +14,13 @@ import java.math.BigDecimal;
 
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
+import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
 
 /**
  * (月)OD 點數比率
  *
- * @ date-15@ 的 (@OD-1@/@Point-1@)*100%
+ * @ date-15@ 的 [1-(@OD-1@/@Point-1@)]*100%
  */
 public class F5h6Formula extends AbstractFormula<BigDecimal> {
 
@@ -40,7 +41,7 @@ public class F5h6Formula extends AbstractFormula<BigDecimal> {
         Point1 point1 = new Point1(metricConfig, config, source).apply();
         try {
             BigDecimal tmp = divide(od1Point.getResult(), point1.getResult());
-            return toPercentage(ZERO.subtract(tmp));
+            return toPercentage(ONE.subtract(tmp));
         } catch (ArithmeticException e) {
             return ZERO;
         }

@@ -1,12 +1,9 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
-import io.dentall.totoro.business.service.nhi.metric.meta.Category1416Config;
-import io.dentall.totoro.business.service.nhi.metric.meta.Od1Point;
-import io.dentall.totoro.business.service.nhi.metric.meta.Point1;
+import io.dentall.totoro.business.service.nhi.metric.meta.Endo90015CTreatment;
+import io.dentall.totoro.business.service.nhi.metric.meta.EndoTreatment;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.MonthSelectedSource;
-import io.dentall.totoro.business.service.nhi.metric.source.OdMonthSelectedSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -18,29 +15,23 @@ import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
 
 /**
- * (月)OD 點數比率
- *
- * @ date-15@ 的 [1-(@OD-1@/@Point-1@)]*100%
+ * 當月根管未完成率 ＠date-15＠ 的 [1–(90001C+90002C+90003C+90016C+90018C+90019C+90020C) ∕ 90015C]*100%
  */
-public class A9Formula extends AbstractFormula<BigDecimal> {
+public class G8h4Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 
-    private final Source<OdDto, OdDto> odSource;
-
-    public A9Formula(MetricConfig metricConfig) {
+    public G8h4Formula(MetricConfig metricConfig) {
         super(metricConfig);
         this.source = new MonthSelectedSource(metricConfig);
-        this.odSource = new OdMonthSelectedSource(metricConfig);
     }
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Category1416Config config = new Category1416Config(metricConfig);
-        Od1Point od1Point = new Od1Point(metricConfig, config, odSource).apply();
-        Point1 point1 = new Point1(metricConfig, config, source).apply();
+        EndoTreatment endoTreatment = new EndoTreatment(metricConfig, source).apply();
+        Endo90015CTreatment endo90015CTreatment = new Endo90015CTreatment(metricConfig, source).apply();
         try {
-            BigDecimal tmp = divide(od1Point.getResult(), point1.getResult());
+            BigDecimal tmp = divide(endoTreatment.getResult(), endo90015CTreatment.getResult());
             return toPercentage(ONE.subtract(tmp));
         } catch (ArithmeticException e) {
             return ZERO;

@@ -1,7 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
-import io.dentall.totoro.business.service.nhi.metric.meta.Category1416Config;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1Point;
 import io.dentall.totoro.business.service.nhi.metric.meta.Point1;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
@@ -22,13 +21,13 @@ import static java.math.BigDecimal.ZERO;
  *
  * @ date-15@ 的 [1-(@OD-1@/@Point-1@)]*100%
  */
-public class A9Formula extends AbstractFormula<BigDecimal> {
+public class G8h3Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 
     private final Source<OdDto, OdDto> odSource;
 
-    public A9Formula(MetricConfig metricConfig) {
+    public G8h3Formula(MetricConfig metricConfig) {
         super(metricConfig);
         this.source = new MonthSelectedSource(metricConfig);
         this.odSource = new OdMonthSelectedSource(metricConfig);
@@ -36,9 +35,8 @@ public class A9Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Category1416Config config = new Category1416Config(metricConfig);
-        Od1Point od1Point = new Od1Point(metricConfig, config, odSource).apply();
-        Point1 point1 = new Point1(metricConfig, config, source).apply();
+        Od1Point od1Point = new Od1Point(metricConfig, odSource).apply();
+        Point1 point1 = new Point1(metricConfig, source).apply();
         try {
             BigDecimal tmp = divide(od1Point.getResult(), point1.getResult());
             return toPercentage(ONE.subtract(tmp));

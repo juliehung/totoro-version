@@ -59,6 +59,8 @@ public class MetricService {
 
     private final SouthDistrictService southDistrictService;
 
+    private final EastDistrictService eastDistrictService;
+
     public MetricService(UserService userService,
                          UserRepository userRepository,
                          NhiExtendDisposalRepository nhiExtendDisposalRepository,
@@ -66,7 +68,8 @@ public class MetricService {
                          TaipeiDistrictService taipeiDistrictService,
                          NorthDistrictService northDistrictService,
                          MiddleDistrictService middleDistrictService,
-                         SouthDistrictService southDistrictService) {
+                         SouthDistrictService southDistrictService,
+                         EastDistrictService eastDistrictService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
@@ -76,6 +79,7 @@ public class MetricService {
         this.northDistrictService = northDistrictService;
         this.middleDistrictService = middleDistrictService;
         this.southDistrictService = southDistrictService;
+        this.eastDistrictService = eastDistrictService;
     }
 
     public List<MetricLVM> getDashboardMetric(final LocalDate baseDate, List<Long> excludeDisposalIds) {
@@ -329,6 +333,29 @@ public class MetricService {
         Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2, baseYear - 3);
 
         return southDistrictService.metric(baseDate, subjects, source, holidayMap);
+    }
+
+    public List<EastDistrictDto> getEastDistrictMetric(final LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
+        Optional<User> userOptional = this.userService.getUserWithAuthorities();
+        if (!userOptional.isPresent()) {
+            return emptyList();
+        }
+
+        doctorIds = Optional.ofNullable(doctorIds).orElse(emptyList());
+        User user = userOptional.get();
+        excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
+        List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
+        DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
+        Instant begin = quarterRange.getBegin().minus(730, DAYS); // 季 + 二年(730)
+        List<NhiMetricRawVM> source = nhiExtendDisposalRepository.findMetricRaw(
+            begin,
+            quarterRange.getEnd(),
+            excludeDisposalIds
+        );
+        int baseYear = baseDate.getYear();
+        Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2, baseYear - 3);
+
+        return eastDistrictService.metric(baseDate, subjects, source, holidayMap);
     }
 
     private List<User> findSpecificSubject(User user, List<Long> subjectIds) {

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
+import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 
 /**
  * 第二年自家O.D.重補率
@@ -41,7 +42,7 @@ public class I8Formula extends AbstractFormula<BigDecimal> {
         Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, config, odSource).apply();
         Od1ReToothCount od1ReToothCount = new Od1ReToothCount(metricConfig, config, odByPatientSource, odPastByPatientSource, 366, 730).apply();
         try {
-            return divide(od1ReToothCount.getResult(), od1ToothCount.getResult());
+            return toPercentage(divide(od1ReToothCount.getResult(), od1ToothCount.getResult()));
         } catch (ArithmeticException e) {
             return BigDecimal.ZERO;
         }

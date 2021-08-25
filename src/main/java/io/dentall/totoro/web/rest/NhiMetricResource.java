@@ -95,10 +95,25 @@ public class NhiMetricResource {
         @RequestParam LocalDate begin,
         @RequestParam(required = false) List<Long> excludeDisposalId,
         @RequestParam(required = false) List<Long> doctorIds) {
-        log.debug("REST request to middle district : begin={}, excludeDisposalId={}, doctorIds={}", begin, excludeDisposalId, doctorIds);
+        log.debug("REST request to south district : begin={}, excludeDisposalId={}, doctorIds={}", begin, excludeDisposalId, doctorIds);
 
         List<SouthDistrictDto> vm = metricService.getSouthDistrictMetric(begin, excludeDisposalId, doctorIds);
         Map<String, List<SouthDistrictDto>> map = new HashMap<>();
+        map.put("metrics", vm);
+
+        return ResponseEntity.ok().body(map);
+    }
+
+    @GetMapping("/east-district")
+    @Timed
+    public ResponseEntity<Map<String, List<EastDistrictDto>>> getEastDistrictMetric(
+        @RequestParam LocalDate begin,
+        @RequestParam(required = false) List<Long> excludeDisposalId,
+        @RequestParam(required = false) List<Long> doctorIds) {
+        log.debug("REST request to east district : begin={}, excludeDisposalId={}, doctorIds={}", begin, excludeDisposalId, doctorIds);
+
+        List<EastDistrictDto> vm = metricService.getEastDistrictMetric(begin, excludeDisposalId, doctorIds);
+        Map<String, List<EastDistrictDto>> map = new HashMap<>();
         map.put("metrics", vm);
 
         return ResponseEntity.ok().body(map);
