@@ -5,7 +5,7 @@ import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 import java.time.LocalDate;
 import java.util.List;
 
-import static io.dentall.totoro.service.util.DateTimeUtil.*;
+import static io.dentall.totoro.service.util.DateTimeUtil.toLocalDate;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;

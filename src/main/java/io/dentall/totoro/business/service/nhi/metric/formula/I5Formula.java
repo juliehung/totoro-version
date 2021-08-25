@@ -1,10 +1,12 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.meta.Point2;
+import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.meta.Od1ToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Pt1;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.MonthSelectedSource;
+import io.dentall.totoro.business.service.nhi.metric.source.OdMonthSelectedSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -13,24 +15,29 @@ import java.math.BigDecimal;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 
 /**
- * ＠date-15＠ 的 @Point-2@/@PT-1@
+ * (季)就醫患者之平均O.D.顆數
+ *
+ * @ date-10@ 的 @OD-1@齒數/@date-10@@PT-1@
  */
-public class H2Formula extends AbstractFormula<BigDecimal> {
+public class I5Formula extends AbstractFormula<BigDecimal> {
+
+    private final Source<OdDto, OdDto> odSource;
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 
-    public H2Formula(MetricConfig metricConfig) {
+    public I5Formula(MetricConfig metricConfig) {
         super(metricConfig);
+        this.odSource = new OdMonthSelectedSource(metricConfig);
         this.source = new MonthSelectedSource(metricConfig);
     }
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
         Tro1Config config = new Tro1Config(metricConfig);
-        Point2 point2 = new Point2(metricConfig, config, source).apply();
         Pt1 pt1 = new Pt1(metricConfig, config, source).apply();
+        Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, config, odSource).apply();
         try {
-            return divide(point2.getResult(), pt1.getResult());
+            return divide(od1ToothCount.getResult(), pt1.getResult());
         } catch (ArithmeticException e) {
             return BigDecimal.ZERO;
         }

@@ -2,14 +2,12 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1ToothCount;
-import io.dentall.totoro.business.service.nhi.metric.meta.Point2;
 import io.dentall.totoro.business.service.nhi.metric.meta.Pt1;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.MonthSelectedSource;
 import io.dentall.totoro.business.service.nhi.metric.source.OdMonthSelectedSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.service.nhi.metric.util.NumericUtils;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
@@ -17,7 +15,9 @@ import java.math.BigDecimal;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 
 /**
- * ＠date-15＠ 的 @Point-2@/@PT-1@
+ * (月)院所別就醫患者之平均OD填補顆數>各分區95百分位列計1點
+ *
+ * @ OD-1@齒數/@PT-1@
  */
 public class H7Formula extends AbstractFormula<BigDecimal> {
 

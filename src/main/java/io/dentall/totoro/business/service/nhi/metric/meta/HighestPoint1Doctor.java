@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static io.dentall.totoro.business.service.nhi.metric.meta.MetaType.*;
@@ -44,7 +45,13 @@ public class HighestPoint1Doctor extends SingleSourceMetaCalculator<HighestDocto
         exam4.getResult().forEach((keyId, point) -> map.compute(keyId, (key, value) -> ofNullable(value).orElse(0L) + point));
         point3.getResult().forEach((keyId, point) -> map.compute(keyId, (key, value) -> ofNullable(value).orElse(0L) + point));
 
-        Entry<Long, Long> entry = map.entrySet().stream().max(comparingByValue()).get();
+        Optional<Entry<Long, Long>> optional = map.entrySet().stream().max(comparingByValue());
+
+        if (!optional.isPresent()) {
+            return new HighestDoctorDto(null, null);
+        }
+
+        Entry<Long, Long> entry = optional.get();
         BigDecimal value;
 
         try {

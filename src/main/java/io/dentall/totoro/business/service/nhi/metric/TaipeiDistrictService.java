@@ -1,8 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.GiantMetricDto;
-import io.dentall.totoro.business.service.nhi.metric.dto.MetricFDto;
-import io.dentall.totoro.business.service.nhi.metric.dto.MetricLDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.TaipeiDistrictDto;
 import io.dentall.totoro.business.service.nhi.metric.formula.*;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType;
@@ -27,14 +25,14 @@ import static java.util.stream.Collectors.toList;
 @Transactional
 public class TaipeiDistrictService {
 
-    public List<GiantMetricDto> metric(final LocalDate baseDate, List<User> subjects, List<NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
+    public List<TaipeiDistrictDto> metric(final LocalDate baseDate, List<User> subjects, List<NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
         return subjects.parallelStream()
             .map(subject -> buildMetric(baseDate, holidayMap, subject, source))
             .filter(Objects::nonNull)
             .collect(toList());
     }
 
-    private GiantMetricDto buildMetric(LocalDate baseDate, Map<LocalDate, Optional<Holiday>> holidayMap, User subject, List<NhiMetricRawVM> source) {
+    private TaipeiDistrictDto buildMetric(LocalDate baseDate, Map<LocalDate, Optional<Holiday>> holidayMap, User subject, List<NhiMetricRawVM> source) {
         MetricConfig metricConfig = new MetricConfig(subject, baseDate, source);
         metricConfig.applyHolidayMap(holidayMap);
 
@@ -58,38 +56,32 @@ public class TaipeiDistrictService {
         BigDecimal metricF5h8 = new F5h8Formula(metricConfig).calculate();
         BigDecimal metricL22 = new L22Formula(metricConfig).calculate();
 
-        MetricFDto metricFDto = new MetricFDto();
-        metricFDto.setF1h1(metricF1h1);
-        metricFDto.setF1h2(metricF1h2);
-        metricFDto.setF1h3(metricF1h3);
-        metricFDto.setF2h4(metricF2h4);
-        metricFDto.setF3h1(metricF3h1);
-        metricFDto.setF3h2(metricF3h2);
-        metricFDto.setF4h3(metricF4h3);
-        metricFDto.setF4h3(metricF4h3);
-        metricFDto.setF5h3(metricF5h3);
-        metricFDto.setF5h4(metricF5h4);
-        metricFDto.setF5h5(metricF5h5);
-        metricFDto.setF5h6(metricF5h6);
-        metricFDto.setF5h7(metricF5h7);
-        metricFDto.setF5h8(metricF5h8);
-
-        MetricLDto metricLDto = new MetricLDto();
-        metricLDto.setL22(metricL22);
-
-        GiantMetricDto giantMetricDto = new GiantMetricDto();
-        giantMetricDto.setType(metricSubjectType);
-        giantMetricDto.setMetricFDto(metricFDto);
-        giantMetricDto.setMetricLDto(metricLDto);
+        TaipeiDistrictDto taipeiDistrictDto = new TaipeiDistrictDto();
+        taipeiDistrictDto.setType(metricSubjectType);
+        taipeiDistrictDto.setF1h1(metricF1h1);
+        taipeiDistrictDto.setF1h2(metricF1h2);
+        taipeiDistrictDto.setF1h3(metricF1h3);
+        taipeiDistrictDto.setF2h4(metricF2h4);
+        taipeiDistrictDto.setF3h1(metricF3h1);
+        taipeiDistrictDto.setF3h2(metricF3h2);
+        taipeiDistrictDto.setF4h3(metricF4h3);
+        taipeiDistrictDto.setF4h3(metricF4h3);
+        taipeiDistrictDto.setF5h3(metricF5h3);
+        taipeiDistrictDto.setF5h4(metricF5h4);
+        taipeiDistrictDto.setF5h5(metricF5h5);
+        taipeiDistrictDto.setF5h6(metricF5h6);
+        taipeiDistrictDto.setF5h7(metricF5h7);
+        taipeiDistrictDto.setF5h8(metricF5h8);
+        taipeiDistrictDto.setL22(metricL22);
 
         if (metricSubjectType == DOCTOR) {
             DoctorData doctorData = new DoctorData();
             doctorData.setDoctorId(metricConfig.getSubject().getId());
             doctorData.setDoctorName(metricConfig.getSubject().getFirstName());
-            giantMetricDto.setDoctor(doctorData);
+            taipeiDistrictDto.setDoctor(doctorData);
         }
 
-        return giantMetricDto;
+        return taipeiDistrictDto;
     }
 
 }

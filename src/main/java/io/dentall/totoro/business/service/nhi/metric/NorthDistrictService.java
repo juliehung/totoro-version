@@ -1,7 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.GiantMetricDto;
-import io.dentall.totoro.business.service.nhi.metric.dto.MetricADto;
+import io.dentall.totoro.business.service.nhi.metric.dto.NorthDistrictDto;
 import io.dentall.totoro.business.service.nhi.metric.formula.*;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType;
@@ -26,14 +25,14 @@ import static java.util.stream.Collectors.toList;
 @Transactional
 public class NorthDistrictService {
 
-    public List<GiantMetricDto> metric(final LocalDate baseDate, List<User> subjects, List<NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
+    public List<NorthDistrictDto> metric(final LocalDate baseDate, List<User> subjects, List<NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
         return subjects.parallelStream()
             .map(subject -> buildMetric(baseDate, holidayMap, subject, source))
             .filter(Objects::nonNull)
             .collect(toList());
     }
 
-    private GiantMetricDto buildMetric(LocalDate baseDate, Map<LocalDate, Optional<Holiday>> holidayMap, User subject, List<NhiMetricRawVM> source) {
+    private NorthDistrictDto buildMetric(LocalDate baseDate, Map<LocalDate, Optional<Holiday>> holidayMap, User subject, List<NhiMetricRawVM> source) {
         MetricConfig metricConfig = new MetricConfig(subject, baseDate, source);
         metricConfig.applyHolidayMap(holidayMap);
 
@@ -54,31 +53,28 @@ public class NorthDistrictService {
         BigDecimal metricA8 = new A8Formula(metricConfig).calculate();
         BigDecimal metricA9 = new A9Formula(metricConfig).calculate();
 
-        MetricADto metricADto = new MetricADto();
-        metricADto.setA10(metricA10);
-        metricADto.setA14(metricA14);
-        metricADto.setA15h1(metricA15h1);
-        metricADto.setA15h2(metricA15h2);
-        metricADto.setA17h1(metricA17h1);
-        metricADto.setA17h2(metricA17h2);
-        metricADto.setA18h1(metricA18h1);
-        metricADto.setA18h2(metricA18h2);
-        metricADto.setA7(metricA7);
-        metricADto.setA8(metricA8);
-        metricADto.setA9(metricA9);
-
-        GiantMetricDto giantMetricDto = new GiantMetricDto();
-        giantMetricDto.setType(metricSubjectType);
-        giantMetricDto.setMetricADto(metricADto);
+        NorthDistrictDto northDistrictDto = new NorthDistrictDto();
+        northDistrictDto.setType(metricSubjectType);
+        northDistrictDto.setA10(metricA10);
+        northDistrictDto.setA14(metricA14);
+        northDistrictDto.setA15h1(metricA15h1);
+        northDistrictDto.setA15h2(metricA15h2);
+        northDistrictDto.setA17h1(metricA17h1);
+        northDistrictDto.setA17h2(metricA17h2);
+        northDistrictDto.setA18h1(metricA18h1);
+        northDistrictDto.setA18h2(metricA18h2);
+        northDistrictDto.setA7(metricA7);
+        northDistrictDto.setA8(metricA8);
+        northDistrictDto.setA9(metricA9);
 
         if (metricSubjectType == DOCTOR) {
             DoctorData doctorData = new DoctorData();
             doctorData.setDoctorId(metricConfig.getSubject().getId());
             doctorData.setDoctorName(metricConfig.getSubject().getFirstName());
-            giantMetricDto.setDoctor(doctorData);
+            northDistrictDto.setDoctor(doctorData);
         }
 
-        return giantMetricDto;
+        return northDistrictDto;
     }
 
 }

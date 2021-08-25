@@ -18,11 +18,11 @@ import static java.math.BigDecimal.ZERO;
 /**
  * 當季根管未完成率 "＠date-10＠ 的 [1–(90001C+90002C+90003C+90016C+90018C+90019C+90020C) ∕ 90015C]*100%"
  */
-public class L22Formula extends AbstractFormula<BigDecimal> {
+public class I12Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 
-    public L22Formula(MetricConfig metricConfig) {
+    public I12Formula(MetricConfig metricConfig) {
         super(metricConfig);
         this.source = new QuarterSource(metricConfig);
     }

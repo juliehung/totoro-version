@@ -1,9 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.GiantMetricDto;
-import io.dentall.totoro.business.service.nhi.metric.dto.MetricFDto;
-import io.dentall.totoro.business.service.nhi.metric.dto.MetricHDto;
-import io.dentall.totoro.business.service.nhi.metric.dto.MetricLDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MiddleDistrictDto;
 import io.dentall.totoro.business.service.nhi.metric.formula.*;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType;
@@ -23,7 +20,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.DOCTOR;
-import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.getHolidayMap;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -36,14 +32,14 @@ public class MiddleDistrictService {
         this.holidayService = holidayService;
     }
 
-    public List<GiantMetricDto> metric(final LocalDate baseDate, List<User> subjects, List<NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
+    public List<MiddleDistrictDto> metric(final LocalDate baseDate, List<User> subjects, List<NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
         return subjects.parallelStream()
             .map(subject -> buildMetric(baseDate, holidayMap, subject, source))
             .filter(Objects::nonNull)
             .collect(toList());
     }
 
-    private GiantMetricDto buildMetric(LocalDate baseDate, Map<LocalDate, Optional<Holiday>> holidayMap, User subject, List<NhiMetricRawVM> source) {
+    private MiddleDistrictDto buildMetric(LocalDate baseDate, Map<LocalDate, Optional<Holiday>> holidayMap, User subject, List<NhiMetricRawVM> source) {
         MetricConfig metricConfig = new MetricConfig(subject, baseDate, source);
         metricConfig.applyHolidayMap(holidayMap);
 
@@ -59,26 +55,23 @@ public class MiddleDistrictService {
         BigDecimal metricH5 = new H5Formula(metricConfig).calculate();
         BigDecimal metricH7 = new H7Formula(metricConfig).calculate();
 
-        MetricHDto metricHDto = new MetricHDto();
-        metricHDto.setH1(metricH1);
-        metricHDto.setH2(metricH2);
-        metricHDto.setH3(metricH3);
-        metricHDto.setH4(metricH4);
-        metricHDto.setH5(metricH5);
-        metricHDto.setH7(metricH7);
-
-        GiantMetricDto giantMetricDto = new GiantMetricDto();
-        giantMetricDto.setType(metricSubjectType);
-        giantMetricDto.setMetricHDto(metricHDto);
+        MiddleDistrictDto middleDistrictDto = new MiddleDistrictDto();
+        middleDistrictDto.setType(metricSubjectType);
+        middleDistrictDto.setH1(metricH1);
+        middleDistrictDto.setH2(metricH2);
+        middleDistrictDto.setH3(metricH3);
+        middleDistrictDto.setH4(metricH4);
+        middleDistrictDto.setH5(metricH5);
+        middleDistrictDto.setH7(metricH7);
 
         if (metricSubjectType == DOCTOR) {
             DoctorData doctorData = new DoctorData();
             doctorData.setDoctorId(metricConfig.getSubject().getId());
             doctorData.setDoctorName(metricConfig.getSubject().getFirstName());
-            giantMetricDto.setDoctor(doctorData);
+            middleDistrictDto.setDoctor(doctorData);
         }
 
-        return giantMetricDto;
+        return middleDistrictDto;
     }
 
 }

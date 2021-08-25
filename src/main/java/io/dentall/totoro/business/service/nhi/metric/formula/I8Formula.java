@@ -12,17 +12,15 @@ import java.util.List;
 import java.util.Map;
 
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
-import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
-import static java.math.BigDecimal.ZERO;
 
 /**
- * 三年自家重補率
- * 分子：＠date-10＠＠OD-2＠@OD-3@＠deta-12＠
+ * 第二年自家O.D.重補率
+ * <p>
+ * 分子：＠date-10＠＠OD-2＠@OD-3@＠deta-11＠
  * 分母：＠date-10＠@OD-1@@tooth-1@@tooth-2@
- * 3. 公式
  * (分子 / 分母) x 100%"
  */
-public class F5h3Formula extends AbstractFormula<BigDecimal> {
+public class I8Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, OdDto> odSource;
 
@@ -30,22 +28,22 @@ public class F5h3Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odPastByPatientSource;
 
-    public F5h3Formula(MetricConfig metricConfig) {
+    public I8Formula(MetricConfig metricConfig) {
         super(metricConfig);
         this.odSource = new OdQuarterSource(metricConfig);
         this.odByPatientSource = new OdQuarterByPatientSource(metricConfig);
-        this.odPastByPatientSource = new OdThreeYearNearByPatientSource(metricConfig);
+        this.odPastByPatientSource = new OdTwoYearNearByPatientSource(metricConfig);
     }
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
         Tro1Config config = new Tro1Config(metricConfig);
         Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, config, odSource).apply();
-        Od1ReToothCount odReTreatment = new Od1ReToothCount(metricConfig, config, odByPatientSource, odPastByPatientSource, 1, 1095).apply();
+        Od1ReToothCount od1ReToothCount = new Od1ReToothCount(metricConfig, config, odByPatientSource, odPastByPatientSource, 366, 730).apply();
         try {
-            return toPercentage(divide(odReTreatment.getResult(), od1ToothCount.getResult()));
+            return divide(od1ReToothCount.getResult(), od1ToothCount.getResult());
         } catch (ArithmeticException e) {
-            return ZERO;
+            return BigDecimal.ZERO;
         }
     }
 }

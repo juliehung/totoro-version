@@ -2,7 +2,6 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 
-import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro1;
 import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro5;
 
 public class Tro5Config extends MetaConfig {

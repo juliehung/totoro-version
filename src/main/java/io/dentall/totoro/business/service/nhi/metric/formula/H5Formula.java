@@ -16,25 +16,29 @@ import static java.math.BigDecimal.ZERO;
  */
 public class H5Formula extends AbstractFormula<BigDecimal> {
 
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odOneAndHalfYearSource;
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odTwoYearSource;
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odMonthSelectedSource;
+    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odOneAndHalfYearByPatientSource;
+    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odTwoYearByPatientSource;
+    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odMonthSelectedByPatientSource;
+    private final Source<OdDto, OdDto> odMonthSelectedSource;
 
     public H5Formula(MetricConfig metricConfig) {
         super(metricConfig);
-        this.odOneAndHalfYearSource = new OdDeciduousOneAndHalfYearNearByPatientSource(metricConfig);
-        this.odTwoYearSource = new OdPermanentOneYearNearByPatientSource(metricConfig);
-        this.odMonthSelectedSource = new OdMonthSelectedByPatientSource(metricConfig);
+        this.odOneAndHalfYearByPatientSource = new OdDeciduousOneAndHalfYearNearByPatientSource(metricConfig);
+        this.odTwoYearByPatientSource = new OdPermanentOneYearNearByPatientSource(metricConfig);
+        this.odMonthSelectedByPatientSource = new OdMonthSelectedByPatientSource(metricConfig);
+        this.odMonthSelectedSource = new OdMonthSelectedSource(metricConfig);
     }
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
         MetaConfig config = new Tro1Config(metricConfig);
-        OdToothCount odToothCount = new OdToothCount(metricConfig, config, odMonthSelectedSource).apply();
-        OdDeciduousReToothCount odDeciduousToothCount = new OdDeciduousReToothCount(metricConfig, config, odMonthSelectedSource, odOneAndHalfYearSource, 1, 450).apply();
-        OdPermanentReToothCount odPermanentReToothCount = new OdPermanentReToothCount(metricConfig, config, odMonthSelectedSource, odTwoYearSource, 1, 730).apply();
+        Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, config, odMonthSelectedSource).apply();
+        OdDeciduousReToothCount odDeciduousToothCount =
+            new OdDeciduousReToothCount(metricConfig, config, odMonthSelectedByPatientSource, odOneAndHalfYearByPatientSource, 1, 450).apply();
+        OdPermanentReToothCount odPermanentReToothCount =
+            new OdPermanentReToothCount(metricConfig, config, odMonthSelectedByPatientSource, odTwoYearByPatientSource, 1, 730).apply();
         try {
-            return divide(odDeciduousToothCount.getResult() + odPermanentReToothCount.getResult(), odToothCount.getResult());
+            return divide(odDeciduousToothCount.getResult() + odPermanentReToothCount.getResult(), od1ToothCount.getResult());
         } catch (ArithmeticException e) {
             return ZERO;
         }

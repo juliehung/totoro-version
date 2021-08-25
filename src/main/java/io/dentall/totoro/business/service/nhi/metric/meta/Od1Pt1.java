@@ -18,7 +18,11 @@ import static java.util.stream.Collectors.maxBy;
 public class Od1Pt1 extends SingleSourceMetaCalculator<Long> {
 
     public Od1Pt1(MetricConfig metricConfig, Source<?, ?> source) {
-        super(metricConfig, source);
+        this(metricConfig, null, source);
+    }
+
+    public Od1Pt1(MetricConfig metricConfig, MetaConfig metaConfig, Source<?, ?> source) {
+        super(metricConfig, metaConfig, source);
     }
 
     @Override

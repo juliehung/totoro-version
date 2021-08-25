@@ -25,7 +25,7 @@ public class OdThreeYearNearSource extends OdSource<NhiMetricRawVM> {
             .filter(vm -> codes.contains(vm.getTreatmentProcedureCode()))
             .filter(vm -> isNotBlank(vm.getTreatmentProcedureTooth()))
             .map(vm -> {
-                List<String> teeth = splitA74(vm.getTreatmentProcedureTooth());
+                    List<String> teeth = splitA74(vm.getTreatmentProcedureTooth());
                     int seq = i.getAndIncrement();
                     return teeth.stream().map(tooth -> {
                             OdDto odDto = NhiMetricRawMapper.INSTANCE.mapToOdDto(vm);

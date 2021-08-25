@@ -3,7 +3,6 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 
 import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.NhiCategory1416Perio1Perio2;
-import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro1;
 
 public class Category1416Perio1Perio2Config extends MetaConfig {
 

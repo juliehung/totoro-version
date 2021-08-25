@@ -1,9 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.DisposalSummaryDto;
-import io.dentall.totoro.business.service.nhi.metric.dto.DoctorSummaryDto;
-import io.dentall.totoro.business.service.nhi.metric.dto.GiantMetricDto;
-import io.dentall.totoro.business.service.nhi.metric.dto.MetricLDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.*;
 import io.dentall.totoro.business.service.nhi.metric.mapper.SpecialTreatmentMapper;
 import io.dentall.totoro.business.service.nhi.metric.mapper.TimeLineDataMapper;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType;
@@ -60,13 +57,16 @@ public class MetricService {
 
     private final MiddleDistrictService middleDistrictService;
 
+    private final SouthDistrictService southDistrictService;
+
     public MetricService(UserService userService,
                          UserRepository userRepository,
                          NhiExtendDisposalRepository nhiExtendDisposalRepository,
                          HolidayService holidayService, MetricDashboardService metricDashboardService,
                          TaipeiDistrictService taipeiDistrictService,
                          NorthDistrictService northDistrictService,
-                         MiddleDistrictService middleDistrictService) {
+                         MiddleDistrictService middleDistrictService,
+                         SouthDistrictService southDistrictService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
@@ -75,6 +75,7 @@ public class MetricService {
         this.taipeiDistrictService = taipeiDistrictService;
         this.northDistrictService = northDistrictService;
         this.middleDistrictService = middleDistrictService;
+        this.southDistrictService = southDistrictService;
     }
 
     public List<MetricLVM> getDashboardMetric(final LocalDate baseDate, List<Long> excludeDisposalIds) {
@@ -87,134 +88,136 @@ public class MetricService {
         excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
         DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
         List<User> subjects = findAllSubject(user);
-        Instant begin = quarterRange.getBegin().minus(1095, DAYS);
+        Instant begin = quarterRange.getBegin().minus(1095, DAYS); // 季 + 三年(1095)
         List<NhiMetricRawVM> source = nhiExtendDisposalRepository.findMetricRaw(
             begin,
             quarterRange.getEnd(),
             excludeDisposalIds
         );
+        int baseYear = baseDate.getYear();
+        Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2, baseYear - 3);
 
-        List<GiantMetricDto> giantMetricDtoList = metricDashboardService.metric(baseDate, subjects, source);
+        List<DashboardDto> dashboardDtoList = metricDashboardService.metric(baseDate, subjects, source, holidayMap);
 
-        return giantMetricDtoList.stream().map(giantDto -> {
-            MetricSubjectType metricSubjectType = giantDto.getType();
-            MetricLDto metricLDto = giantDto.getMetricLDto();
+        return dashboardDtoList.stream().map(dto -> {
+            MetricSubjectType metricSubjectType = dto.getType();
+
             Section5 section5 = new Section5();
-            section5.setL1(new MetricData(metricLDto.getL1()));
-            section5.setL2(new MetricData(metricLDto.getL2()));
-            section5.setL3(new MetricData(metricLDto.getL3()));
-            section5.setL4(new MetricData(metricLDto.getL4()));
+            section5.setL1(new MetricData(dto.getL1()));
+            section5.setL2(new MetricData(dto.getL2()));
+            section5.setL3(new MetricData(dto.getL3()));
+            section5.setL4(new MetricData(dto.getL4()));
 
             Section6 section6 = new Section6();
-            section6.setL5(new MetricData(metricLDto.getL5()));
-            section6.setL6(new MetricData(metricLDto.getL6()));
-            section6.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(giantDto.getDailyPt1().entrySet()));
+            section6.setL5(new MetricData(dto.getL5()));
+            section6.setL6(new MetricData(dto.getL6()));
+            section6.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dto.getDailyPt1().entrySet()));
 
             Section7 section7 = new Section7();
-            section7.setL7(new MetricData(metricLDto.getL7()));
-            section7.setL8(new MetricData(metricLDto.getL8()));
-            section7.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(giantDto.getDailyIc3().entrySet()));
+            section7.setL7(new MetricData(dto.getL7()));
+            section7.setL8(new MetricData(dto.getL8()));
+            section7.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dto.getDailyIc3().entrySet()));
 
             Section8 section8 = new Section8();
             if (metricSubjectType == CLINIC) {
-                section8.setL9(metricLDto.getL9());
+                section8.setL9(dto.getL9());
             } else {
-                section8.setL10(metricLDto.getL10());
+                section8.setL10(dto.getL10());
             }
 
             Section9 section9 = new Section9();
-            section9.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(giantDto.getDailyPoints().entrySet()));
+            section9.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dto.getDailyPoints().entrySet()));
 
             Section10 section10 = new Section10();
-            section10.setL11(new MetricData(metricLDto.getL11()));
-            section10.setL12(new MetricData(metricLDto.getL12()));
-            section10.setL13(new MetricData(metricLDto.getL13()));
-            section10.setL14(new MetricData(metricLDto.getL14()));
-            section10.setL15(new MetricData(metricLDto.getL15()));
-            section10.setL16(new MetricData(metricLDto.getL16()));
-            section10.setL17(new MetricData(metricLDto.getL17()));
-            section10.setL18(new MetricData(metricLDto.getL18()));
-            section10.setL19(new MetricData(metricLDto.getL19()));
+            section10.setL11(new MetricData(dto.getL11()));
+            section10.setL12(new MetricData(dto.getL12()));
+            section10.setL13(new MetricData(dto.getL13()));
+            section10.setL14(new MetricData(dto.getL14()));
+            section10.setL15(new MetricData(dto.getL15()));
+            section10.setL16(new MetricData(dto.getL16()));
+            section10.setL17(new MetricData(dto.getL17()));
+            section10.setL18(new MetricData(dto.getL18()));
+            section10.setL19(new MetricData(dto.getL19()));
 
             Section11 section11 = new Section11();
-            section11.setP1(SpecialTreatmentMapper.INSTANCE.mapToVM(giantDto.getSpecialTreatmentAnalysisDto().getP1()));
-            section11.setP2(SpecialTreatmentMapper.INSTANCE.mapToVM(giantDto.getSpecialTreatmentAnalysisDto().getP2()));
-            section11.setP3(SpecialTreatmentMapper.INSTANCE.mapToVM(giantDto.getSpecialTreatmentAnalysisDto().getP3()));
-            section11.setP4(SpecialTreatmentMapper.INSTANCE.mapToVM(giantDto.getSpecialTreatmentAnalysisDto().getP4()));
-            section11.setP5(SpecialTreatmentMapper.INSTANCE.mapToVM(giantDto.getSpecialTreatmentAnalysisDto().getP5()));
-            section11.setP6(SpecialTreatmentMapper.INSTANCE.mapToVM(giantDto.getSpecialTreatmentAnalysisDto().getP6()));
-            section11.setP7(SpecialTreatmentMapper.INSTANCE.mapToVM(giantDto.getSpecialTreatmentAnalysisDto().getP7()));
-            section11.setP8(SpecialTreatmentMapper.INSTANCE.mapToVM(giantDto.getSpecialTreatmentAnalysisDto().getP8()));
-            section11.setOther(SpecialTreatmentMapper.INSTANCE.mapToVM(giantDto.getSpecialTreatmentAnalysisDto().getOther()));
-            section11.setSummary(SpecialTreatmentMapper.INSTANCE.mapToVM(giantDto.getSpecialTreatmentAnalysisDto().getSummary()));
-            section11.setP1p5(SpecialTreatmentMapper.INSTANCE.mapToVM(giantDto.getSpecialTreatmentAnalysisDto().getP1p5()));
-            section11.setP2p3(SpecialTreatmentMapper.INSTANCE.mapToVM(giantDto.getSpecialTreatmentAnalysisDto().getP2p3()));
-            section11.setP4p8(SpecialTreatmentMapper.INSTANCE.mapToVM(giantDto.getSpecialTreatmentAnalysisDto().getP4p8()));
-            section11.setP6p7AndOther(SpecialTreatmentMapper.INSTANCE.mapToVM(giantDto.getSpecialTreatmentAnalysisDto().getP6p7AndOther()));
+            section11.setP1(SpecialTreatmentMapper.INSTANCE.mapToVM(dto.getSpecialTreatmentAnalysisDto().getP1()));
+            section11.setP2(SpecialTreatmentMapper.INSTANCE.mapToVM(dto.getSpecialTreatmentAnalysisDto().getP2()));
+            section11.setP3(SpecialTreatmentMapper.INSTANCE.mapToVM(dto.getSpecialTreatmentAnalysisDto().getP3()));
+            section11.setP4(SpecialTreatmentMapper.INSTANCE.mapToVM(dto.getSpecialTreatmentAnalysisDto().getP4()));
+            section11.setP5(SpecialTreatmentMapper.INSTANCE.mapToVM(dto.getSpecialTreatmentAnalysisDto().getP5()));
+            section11.setP6(SpecialTreatmentMapper.INSTANCE.mapToVM(dto.getSpecialTreatmentAnalysisDto().getP6()));
+            section11.setP7(SpecialTreatmentMapper.INSTANCE.mapToVM(dto.getSpecialTreatmentAnalysisDto().getP7()));
+            section11.setP8(SpecialTreatmentMapper.INSTANCE.mapToVM(dto.getSpecialTreatmentAnalysisDto().getP8()));
+            section11.setOther(SpecialTreatmentMapper.INSTANCE.mapToVM(dto.getSpecialTreatmentAnalysisDto().getOther()));
+            section11.setSummary(SpecialTreatmentMapper.INSTANCE.mapToVM(dto.getSpecialTreatmentAnalysisDto().getSummary()));
+            section11.setP1p5(SpecialTreatmentMapper.INSTANCE.mapToVM(dto.getSpecialTreatmentAnalysisDto().getP1p5()));
+            section11.setP2p3(SpecialTreatmentMapper.INSTANCE.mapToVM(dto.getSpecialTreatmentAnalysisDto().getP2p3()));
+            section11.setP4p8(SpecialTreatmentMapper.INSTANCE.mapToVM(dto.getSpecialTreatmentAnalysisDto().getP4p8()));
+            section11.setP6p7AndOther(SpecialTreatmentMapper.INSTANCE.mapToVM(dto.getSpecialTreatmentAnalysisDto().getP6p7AndOther()));
 
             Section12 section12 = new Section12();
-            section12.setL20(new MetricData(metricLDto.getL20()));
-            section12.setL21(new MetricData(metricLDto.getL21()));
-            section12.setL22(new MetricData(metricLDto.getL22()));
-            section12.setL23(new MetricData(metricLDto.getL23()));
+            section12.setL20(new MetricData(dto.getL20()));
+            section12.setL21(new MetricData(dto.getL21()));
+            section12.setL22(new MetricData(dto.getL22()));
+            section12.setL23(new MetricData(dto.getL23()));
 
             Section13 section13 = new Section13();
-            section13.setL24(new MetricData(metricLDto.getL24()));
+            section13.setL24(new MetricData(dto.getL24()));
 
             Section14 section14 = new Section14();
-            section14.setL25(new MetricData(metricLDto.getL25()));
-            section14.setL26(new MetricData(metricLDto.getL26()));
-            section14.setL27(new MetricData(metricLDto.getL27()));
-            section14.setL28(new MetricData(metricLDto.getL28()));
-            section14.setL29(new MetricData(metricLDto.getL29()));
-            section14.setL30(new MetricData(metricLDto.getL30()));
-            section14.setL31(new MetricData(metricLDto.getL31()));
-            section14.setL32(new MetricData(metricLDto.getL32()));
-            section14.setL33(new MetricData(metricLDto.getL33()));
-            section14.setL34(new MetricData(metricLDto.getL34()));
-            section14.setL35(new MetricData(metricLDto.getL35()));
-            section14.setL36(new MetricData(metricLDto.getL36()));
+            section14.setL25(new MetricData(dto.getL25()));
+            section14.setL26(new MetricData(dto.getL26()));
+            section14.setL27(new MetricData(dto.getL27()));
+            section14.setL28(new MetricData(dto.getL28()));
+            section14.setL29(new MetricData(dto.getL29()));
+            section14.setL30(new MetricData(dto.getL30()));
+            section14.setL31(new MetricData(dto.getL31()));
+            section14.setL32(new MetricData(dto.getL32()));
+            section14.setL33(new MetricData(dto.getL33()));
+            section14.setL34(new MetricData(dto.getL34()));
+            section14.setL35(new MetricData(dto.getL35()));
+            section14.setL36(new MetricData(dto.getL36()));
 
             Section15 section15 = new Section15();
-            section15.setL37(new MetricData(metricLDto.getL37()));
-            section15.setL38(new MetricData(metricLDto.getL38()));
-            section15.setL39(new MetricData(metricLDto.getL39()));
-            section15.setL40(new MetricData(metricLDto.getL40()));
-            section15.setL41(new MetricData(metricLDto.getL41()));
-            section15.setL42(new MetricData(metricLDto.getL42()));
-            section15.setL43(new MetricData(metricLDto.getL43()));
-            section15.setL44(new MetricData(metricLDto.getL44()));
-            section15.setL45(new MetricData(metricLDto.getL45()));
-            section15.setL46(new MetricData(metricLDto.getL46()));
-            section15.setL47(new MetricData(metricLDto.getL47()));
-            section15.setL48(new MetricData(metricLDto.getL48()));
+            section15.setL37(new MetricData(dto.getL37()));
+            section15.setL38(new MetricData(dto.getL38()));
+            section15.setL39(new MetricData(dto.getL39()));
+            section15.setL40(new MetricData(dto.getL40()));
+            section15.setL41(new MetricData(dto.getL41()));
+            section15.setL42(new MetricData(dto.getL42()));
+            section15.setL43(new MetricData(dto.getL43()));
+            section15.setL44(new MetricData(dto.getL44()));
+            section15.setL45(new MetricData(dto.getL45()));
+            section15.setL46(new MetricData(dto.getL46()));
+            section15.setL47(new MetricData(dto.getL47()));
+            section15.setL48(new MetricData(dto.getL48()));
 
             Section16 section16 = new Section16();
-            section16.setL49(new MetricData(metricLDto.getL49()));
-            section16.setL50(new MetricData(metricLDto.getL50()));
-            section16.setL51(new MetricData(metricLDto.getL51()));
-            section16.setL52(new MetricData(metricLDto.getL52()));
+            section16.setL49(new MetricData(dto.getL49()));
+            section16.setL50(new MetricData(dto.getL50()));
+            section16.setL51(new MetricData(dto.getL51()));
+            section16.setL52(new MetricData(dto.getL52()));
 
             Section17 section17 = new Section17();
-            section17.setL53(new MetricData(metricLDto.getL53()));
-            section17.setL54(new MetricData(metricLDto.getL54()));
-            section17.setL55(new MetricData(metricLDto.getL55()));
-            section17.setL56(new MetricData(metricLDto.getL56()));
+            section17.setL53(new MetricData(dto.getL53()));
+            section17.setL54(new MetricData(dto.getL54()));
+            section17.setL55(new MetricData(dto.getL55()));
+            section17.setL56(new MetricData(dto.getL56()));
 
             Section18 section18 = new Section18();
             if (metricSubjectType == CLINIC) {
-                section18.setCount(giantDto.getDoctorSummary().size());
-                section18.setTotal(giantDto.getDoctorSummary().stream().mapToLong(DoctorSummaryDto::getTotal).sum());
-                section18.setDoctorSummary(giantDto.getDoctorSummary());
+                section18.setCount(dto.getDoctorSummary().size());
+                section18.setTotal(dto.getDoctorSummary().stream().mapToLong(DoctorSummaryDto::getTotal).sum());
+                section18.setDoctorSummary(dto.getDoctorSummary());
             } else {
-                section18.setCount(giantDto.getDisposalSummary().size());
-                section18.setTotal(giantDto.getDisposalSummary().stream().mapToLong(DisposalSummaryDto::getTotal).sum());
-                section18.setDisposalSummary(giantDto.getDisposalSummary());
+                section18.setCount(dto.getDisposalSummary().size());
+                section18.setTotal(dto.getDisposalSummary().stream().mapToLong(DisposalSummaryDto::getTotal).sum());
+                section18.setDisposalSummary(dto.getDisposalSummary());
             }
 
             MetricLVM metricLVM = new MetricLVM();
             if (metricSubjectType == DOCTOR) {
-                metricLVM.setDoctor(giantDto.getDoctor());
+                metricLVM.setDoctor(dto.getDoctor());
             }
             metricLVM.setType(metricSubjectType.name().toLowerCase());
             metricLVM.setSection5(section5);
@@ -236,7 +239,7 @@ public class MetricService {
         }).collect(Collectors.toList());
     }
 
-    public List<GiantMetricDto> getTaipeiDistrictMetric(final LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
+    public List<TaipeiDistrictDto> getTaipeiDistrictMetric(final LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
         Optional<User> userOptional = this.userService.getUserWithAuthorities();
         if (!userOptional.isPresent()) {
             return emptyList();
@@ -247,7 +250,7 @@ public class MetricService {
         excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
         List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
         DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
-        Instant begin = quarterRange.getBegin().minus(1095, DAYS);
+        Instant begin = quarterRange.getBegin().minus(1095, DAYS); // 季 + 三年(1095)
         List<NhiMetricRawVM> source = nhiExtendDisposalRepository.findMetricRaw(
             begin,
             quarterRange.getEnd(),
@@ -259,7 +262,7 @@ public class MetricService {
         return taipeiDistrictService.metric(baseDate, subjects, source, holidayMap);
     }
 
-    public List<GiantMetricDto> getNorthDistrictMetric(final LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
+    public List<NorthDistrictDto> getNorthDistrictMetric(final LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
         Optional<User> userOptional = this.userService.getUserWithAuthorities();
         if (!userOptional.isPresent()) {
             return emptyList();
@@ -282,7 +285,7 @@ public class MetricService {
         return northDistrictService.metric(baseDate, subjects, source, holidayMap);
     }
 
-    public List<GiantMetricDto> getMiddleDistrictMetric(final LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
+    public List<MiddleDistrictDto> getMiddleDistrictMetric(final LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
         Optional<User> userOptional = this.userService.getUserWithAuthorities();
         if (!userOptional.isPresent()) {
             return emptyList();
@@ -303,6 +306,29 @@ public class MetricService {
         Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2);
 
         return middleDistrictService.metric(baseDate, subjects, source, holidayMap);
+    }
+
+    public List<SouthDistrictDto> getSouthDistrictMetric(final LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
+        Optional<User> userOptional = this.userService.getUserWithAuthorities();
+        if (!userOptional.isPresent()) {
+            return emptyList();
+        }
+
+        doctorIds = Optional.ofNullable(doctorIds).orElse(emptyList());
+        User user = userOptional.get();
+        excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
+        List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
+        DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
+        Instant begin = quarterRange.getBegin().minus(1095, DAYS); // 季 + 三年(1095)
+        List<NhiMetricRawVM> source = nhiExtendDisposalRepository.findMetricRaw(
+            begin,
+            quarterRange.getEnd(),
+            excludeDisposalIds
+        );
+        int baseYear = baseDate.getYear();
+        Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2, baseYear - 3);
+
+        return southDistrictService.metric(baseDate, subjects, source, holidayMap);
     }
 
     private List<User> findSpecificSubject(User user, List<Long> subjectIds) {

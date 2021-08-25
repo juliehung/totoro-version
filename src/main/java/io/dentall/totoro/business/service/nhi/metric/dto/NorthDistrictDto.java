@@ -1,8 +1,15 @@
 package io.dentall.totoro.business.service.nhi.metric.dto;
 
+import io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType;
+import io.dentall.totoro.business.service.nhi.metric.vm.DoctorData;
+
 import java.math.BigDecimal;
 
-public class MetricADto {
+public class NorthDistrictDto {
+
+    private MetricSubjectType type;
+
+    private DoctorData doctor;
 
     private BigDecimal a10;
 
@@ -25,6 +32,22 @@ public class MetricADto {
     private BigDecimal a8;
 
     private BigDecimal a9;
+
+    public MetricSubjectType getType() {
+        return type;
+    }
+
+    public void setType(MetricSubjectType type) {
+        this.type = type;
+    }
+
+    public DoctorData getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(DoctorData doctor) {
+        this.doctor = doctor;
+    }
 
     public BigDecimal getA10() {
         return a10;

@@ -2,7 +2,7 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.business.service.nhi.metric.MetricService;
-import io.dentall.totoro.business.service.nhi.metric.dto.GiantMetricDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.*;
 import io.dentall.totoro.business.service.nhi.metric.vm.MetricLVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,14 +46,14 @@ public class NhiMetricResource {
 
     @GetMapping("/taipei-district")
     @Timed
-    public ResponseEntity<Map<String, List<GiantMetricDto>>> getTaipeiDistrictMetric(
+    public ResponseEntity<Map<String, List<TaipeiDistrictDto>>> getTaipeiDistrictMetric(
         @RequestParam LocalDate begin,
         @RequestParam(required = false) List<Long> excludeDisposalId,
         @RequestParam(required = false) List<Long> doctorIds) {
         log.debug("REST request to taipei district : begin={}, excludeDisposalId={}, doctorIds={}", begin, excludeDisposalId, doctorIds);
 
-        List<GiantMetricDto> vm = metricService.getTaipeiDistrictMetric(begin, excludeDisposalId, doctorIds);
-        Map<String, List<GiantMetricDto>> map = new HashMap<>();
+        List<TaipeiDistrictDto> vm = metricService.getTaipeiDistrictMetric(begin, excludeDisposalId, doctorIds);
+        Map<String, List<TaipeiDistrictDto>> map = new HashMap<>();
         map.put("metrics", vm);
 
         return ResponseEntity.ok().body(map);
@@ -61,14 +61,14 @@ public class NhiMetricResource {
 
     @GetMapping("/north-district")
     @Timed
-    public ResponseEntity<Map<String, List<GiantMetricDto>>> getNorthDistrictMetric(
+    public ResponseEntity<Map<String, List<NorthDistrictDto>>> getNorthDistrictMetric(
         @RequestParam LocalDate begin,
         @RequestParam(required = false) List<Long> excludeDisposalId,
         @RequestParam(required = false) List<Long> doctorIds) {
         log.debug("REST request to north district : begin={}, excludeDisposalId={}, doctorIds={}", begin, excludeDisposalId, doctorIds);
 
-        List<GiantMetricDto> vm = metricService.getNorthDistrictMetric(begin, excludeDisposalId, doctorIds);
-        Map<String, List<GiantMetricDto>> map = new HashMap<>();
+        List<NorthDistrictDto> vm = metricService.getNorthDistrictMetric(begin, excludeDisposalId, doctorIds);
+        Map<String, List<NorthDistrictDto>> map = new HashMap<>();
         map.put("metrics", vm);
 
         return ResponseEntity.ok().body(map);
@@ -76,14 +76,29 @@ public class NhiMetricResource {
 
     @GetMapping("/middle-district")
     @Timed
-    public ResponseEntity<Map<String, List<GiantMetricDto>>> getMiddleDistrictMetric(
+    public ResponseEntity<Map<String, List<MiddleDistrictDto>>> getMiddleDistrictMetric(
         @RequestParam LocalDate begin,
         @RequestParam(required = false) List<Long> excludeDisposalId,
         @RequestParam(required = false) List<Long> doctorIds) {
         log.debug("REST request to middle district : begin={}, excludeDisposalId={}, doctorIds={}", begin, excludeDisposalId, doctorIds);
 
-        List<GiantMetricDto> vm = metricService.getMiddleDistrictMetric(begin, excludeDisposalId, doctorIds);
-        Map<String, List<GiantMetricDto>> map = new HashMap<>();
+        List<MiddleDistrictDto> vm = metricService.getMiddleDistrictMetric(begin, excludeDisposalId, doctorIds);
+        Map<String, List<MiddleDistrictDto>> map = new HashMap<>();
+        map.put("metrics", vm);
+
+        return ResponseEntity.ok().body(map);
+    }
+
+    @GetMapping("/south-district")
+    @Timed
+    public ResponseEntity<Map<String, List<SouthDistrictDto>>> getSouthDistrictMetric(
+        @RequestParam LocalDate begin,
+        @RequestParam(required = false) List<Long> excludeDisposalId,
+        @RequestParam(required = false) List<Long> doctorIds) {
+        log.debug("REST request to middle district : begin={}, excludeDisposalId={}, doctorIds={}", begin, excludeDisposalId, doctorIds);
+
+        List<SouthDistrictDto> vm = metricService.getSouthDistrictMetric(begin, excludeDisposalId, doctorIds);
+        Map<String, List<SouthDistrictDto>> map = new HashMap<>();
         map.put("metrics", vm);
 
         return ResponseEntity.ok().body(map);

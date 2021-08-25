@@ -15,7 +15,7 @@ import static java.util.stream.Collectors.maxBy;
 /**
  * 往前追溯發生在特定時間區間之自家同患者同牙位有申請過OD之顆數。
  */
-public class OdReToothCount extends AbstractMetaCalculator<Long> {
+public class Od1ReToothCount extends AbstractMetaCalculator<Long> {
 
     private final Source<?, ?> odSource;
 
@@ -25,11 +25,11 @@ public class OdReToothCount extends AbstractMetaCalculator<Long> {
 
     private final int dayShiftEnd;
 
-    public OdReToothCount(MetricConfig metricConfig, Source<?, ?> odSource, Source<?, ?> odPastSource, int dayShiftBegin, int dayShiftEnd) {
+    public Od1ReToothCount(MetricConfig metricConfig, Source<?, ?> odSource, Source<?, ?> odPastSource, int dayShiftBegin, int dayShiftEnd) {
         this(metricConfig, null, odSource, odPastSource, dayShiftBegin, dayShiftEnd);
     }
 
-    public OdReToothCount(MetricConfig metricConfig, MetaConfig config, Source<?, ?> odSource, Source<?, ?> odPastSource, int dayShiftBegin, int dayShiftEnd) {
+    public Od1ReToothCount(MetricConfig metricConfig, MetaConfig config, Source<?, ?> odSource, Source<?, ?> odPastSource, int dayShiftBegin, int dayShiftEnd) {
         super(metricConfig, config, new Source[]{odSource, odPastSource});
         this.odSource = odSource;
         this.odPastSource = odPastSource;
