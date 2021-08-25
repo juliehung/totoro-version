@@ -50,6 +50,10 @@ public class HolidayService {
     }
 
     private List<Holiday> findHolidays(Year year) {
+        if (year.getValue() < baseYear) {
+            return emptyList();
+        }
+
         List<Holiday> holidayList = holidayRepository.findByYear(valueOf(year.getValue()));
 
         if (holidayList.size() == 0) {
@@ -67,8 +71,15 @@ public class HolidayService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         RequestEntity requestEntity = new RequestEntity(headers, HttpMethod.GET, URI.create(getUrl(page, size)));
-        ResponseEntity<List<HolidayDTO>> response = restTemplate.exchange(requestEntity, new ParameterizedTypeReference<List<HolidayDTO>>() {
-        });
+
+        ResponseEntity<List<HolidayDTO>> response;
+        try {
+            response = restTemplate.exchange(requestEntity, new ParameterizedTypeReference<List<HolidayDTO>>() {
+            });
+        } catch (Exception e) {
+            log.error("gov holiday api call fail", e);
+            return emptyList();
+        }
 
         List<Holiday> result = HolidayMapper.INSTANCE.mapToHoliday(response.getBody());
 

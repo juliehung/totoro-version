@@ -11,8 +11,8 @@ public class Holiday implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "holidaySequenceGenerator")
+    @SequenceGenerator(name = "holidaySequenceGenerator", sequenceName = "holiday_id_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
     private Long id;
 

@@ -35,5 +35,6 @@
             <column name="year"/>
             <column name="date"/>
         </createIndex>
+        <createSequence sequenceName="holiday_id_seq"/>
     </changeSet>
 </databaseChangeLog>
