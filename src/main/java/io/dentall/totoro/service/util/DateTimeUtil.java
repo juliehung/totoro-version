@@ -38,7 +38,7 @@ public final class DateTimeUtil {
 
     public static enum QuarterMonth {
         SEASON_1(0, 1, 2, 3),
-        SEASON_2(1, 4, 5,6),
+        SEASON_2(1, 4, 5, 6),
         SEASON_3(2, 7, 8, 9),
         SEASON_4(3, 10, 11, 12),
         ;
@@ -73,7 +73,7 @@ public final class DateTimeUtil {
         public Integer getLastMonth() {
             return lastMonth;
         }
-    };
+    }
 
     public static final Period NHI_0_DAY = Period.ofDays(0);
 
@@ -344,4 +344,33 @@ public final class DateTimeUtil {
     public static Instant pastInstant(int pastDays) {
         return Instant.now().minus(pastDays, ChronoUnit.DAYS);
     }
+
+    public static LocalDate beginOfMonth(LocalDate date) {
+        return Instant.now()
+            .atOffset(TimeConfig.ZONE_OFF_SET)
+            .with(LocalTime.MIN)
+            .withYear(date.getYear())
+            .withMonth(date.getMonthValue())
+            .withDayOfMonth(1)
+            .toLocalDate();
+    }
+
+    public static LocalDate endOfMonth(LocalDate date) {
+        return Instant.now()
+            .atOffset(TimeConfig.ZONE_OFF_SET)
+            .with(LocalTime.MAX)
+            .withYear(date.getYear())
+            .withMonth(date.getMonthValue())
+            .withDayOfMonth(date.lengthOfMonth())
+            .toLocalDate();
+    }
+
+    public static LocalDate toLocalDate(Instant instant) {
+        return instant.atOffset(TimeConfig.ZONE_OFF_SET).toLocalDate();
+    }
+
+    public static boolean isSameMonth(LocalDate date) {
+        return LocalDate.now().getYear() == date.getYear() && LocalDate.now().getMonth() == date.getMonth();
+    }
+
 }
