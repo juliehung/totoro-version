@@ -20,9 +20,6 @@
         <createIndex tableName="nhi_metric_report" indexName="idx_nhi_metric_report_id" unique="false">
             <column name="id"/>
         </createIndex>
-        <createIndex tableName="nhi_metric_report" indexName="idx_nhi_metric_report_jhi_year_month" unique="true">
-            <column name="jhi_year_month"/>
-        </createIndex>
         <createSequence sequenceName="nhi_metric_report_seq"/>
     </changeSet>
 </databaseChangeLog>

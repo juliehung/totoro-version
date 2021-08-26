@@ -1,9 +1,13 @@
 package io.dentall.totoro.business.vm.nhi;
 
+import javax.validation.constraints.NotNull;
+
 public class NhiMetricReportQueryStringVM {
 
+    @NotNull
     private Integer yyyymm;
 
+    @NotNull
     private String createdBy;
 
     public Integer getYyyymm() {

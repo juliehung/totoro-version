@@ -8,6 +8,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricReportQueryStringVM;
 import io.dentall.totoro.domain.NhiMetricReport;
 import io.dentall.totoro.repository.NhiMetricReportRepository;
 import io.dentall.totoro.service.mapper.NhiMetricReportMapper;
+import io.dentall.totoro.service.util.DateTimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -70,6 +71,13 @@ public class NhiMetricResource {
     @Timed
     @Transactional
     public ResponseEntity<List<NhiMetricReport>> getNhiMetricReports(NhiMetricReportQueryStringVM queryStringVM) {
-        return ResponseEntity.ok().body(nhiMetricReportRepository.findAll());
+        return ResponseEntity.ok().body(
+            nhiMetricReportRepository.findByYearMonthAndCreatedByOrderByCreatedDateDesc(
+                DateTimeUtil.transformIntYyyymmToFormatedStringYyyymm(
+                    queryStringVM.getYyyymm()
+                ),
+                queryStringVM.getCreatedBy()
+            )
+        );
     }
 }
