@@ -7,7 +7,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import java.util.Map;
 import java.util.function.Function;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.codesByExam1;
+import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstants.CodesByExam1;
 
 /**
  * 一般牙科門診診察費(不含Xray)  病患點數 or 醫師點數
@@ -30,7 +30,7 @@ public class Exam1ByClassifier extends Exam<Map<Long, Long>> {
 
     @Override
     public Map<Long, Long> doCalculate(MetricConfig metricConfig) {
-        return doCalculateByClassifier(metricConfig, codesByExam1, classifier);
+        return doCalculateByClassifier(metricConfig, CodesByExam1, classifier);
     }
 
     @Override

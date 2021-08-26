@@ -2,7 +2,6 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.meta.EndoReTreatmentByTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.EndoTreatmentByTooth;
-import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
 import io.dentall.totoro.business.service.nhi.metric.source.HalfYearNearSource;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;

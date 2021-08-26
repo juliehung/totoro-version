@@ -8,7 +8,7 @@ import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Predica
 import static java.util.Optional.ofNullable;
 
 public enum Exclude {
-    Tro1(tro1), Tro2(tro2), Tro5(tro5),
+    Tro1(tro1), Tro2(tro2), Tro5(tro5), Tro6(tro6),
     NhiCategory1416Perio1Perio2(nhiCategory1416Perio1Perio2),
     NhiCategory1416(nhiCategory1416),
     N89013C(nhiCode89013C),
@@ -34,6 +34,7 @@ public enum Exclude {
         static final Predicate<ExcludeDto> nhiCategoryByTro1 = nhiCategory14.and(nhiCategory16).and(nhiCategoryA3).and(nhiCategoryB6).and(nhiCategoryB7);
         static final Predicate<ExcludeDto> nhiCategoryByTro2 = nhiCategory14.and(nhiCategory16).and(nhiCategoryA3).and(nhiCategoryB6).and(nhiCategoryB7);
         static final Predicate<ExcludeDto> nhiCategoryByTro5 = nhiCategory14.and(nhiCategory16).and(nhiCategoryA3);
+        static final Predicate<ExcludeDto> nhiCategoryByTro6 = nhiCategory14.and(nhiCategory16).and(nhiCategoryA3).and(nhiCategoryB6).and(nhiCategoryB7);
 
         // 特殊治療項目
         static final Predicate<ExcludeDto> specificCodeG9 = dto -> !"G9".equals(ofNullable(dto.getTreatmentProcedureSpecificCode()).map(Enum::name).orElse(null));
@@ -42,6 +43,7 @@ public enum Exclude {
         static final Predicate<ExcludeDto> specificCodeByTro1 = specificCodeG9.and(specificCodeJA).and(specificCodeJB);
         static final Predicate<ExcludeDto> specificCodeByTro2 = specificCodeG9.and(specificCodeJA).and(specificCodeJB);
         static final Predicate<ExcludeDto> specificCodeByTro5 = specificCodeG9.and(specificCodeJA);
+        static final Predicate<ExcludeDto> specificCodeByTro6 = specificCodeJA.and(specificCodeJB);
 
         // 健保代碼
         static final Predicate<ExcludeDto> nhiCode92090C = dto -> !"92090C".equals(dto.getTreatmentProcedureCode());
@@ -71,6 +73,7 @@ public enum Exclude {
         static final Predicate<ExcludeDto> tro1 = nhiCategoryByTro1.and(perio1).and(perio2).and(specificCodeByTro1).and(nhiCodeByTro1);
         static final Predicate<ExcludeDto> tro2 = nhiCategoryByTro2.and(perio1).and(perio2).and(specificCodeByTro2).and(nhiCodeByTro2);
         static final Predicate<ExcludeDto> tro5 = nhiCategoryByTro5.and(perio1).and(perio2).and(specificCodeByTro5).and(nhiCodeByTro5);
+        static final Predicate<ExcludeDto> tro6 = nhiCategoryByTro6.and(perio1).and(specificCodeByTro6);
         static final Predicate<ExcludeDto> nhiCategory1416SpecificCodeG9 = nhiCategory14.and(nhiCategory16).and(specificCodeG9);
         static final Predicate<ExcludeDto> nhiCategory1416Perio1Perio2 = nhiCategory14.and(nhiCategory16).and(perio1).and(perio2);
         static final Predicate<ExcludeDto> nhiCategory1416 = nhiCategory14.and(nhiCategory16);

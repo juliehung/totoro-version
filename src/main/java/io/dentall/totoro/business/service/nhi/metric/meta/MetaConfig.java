@@ -22,6 +22,9 @@ public class MetaConfig {
     // treatment 相關
     private boolean excludeHolidayPoint = false;
 
+    // 國定假日排除點數上限 20,000 點 (超過部分要算入點數)
+    private boolean exclude20000Point1ByDay = false;
+
     private Exclude exclude;
 
     private final Map<LocalDate, Optional<Holiday>> holidayMap;
@@ -57,6 +60,14 @@ public class MetaConfig {
         return this;
     }
 
+    public boolean isExclude20000Point1ByDay() {
+        return exclude20000Point1ByDay;
+    }
+
+    public void setExclude20000Point1ByDay(boolean exclude20000Point1ByDay) {
+        this.exclude20000Point1ByDay = exclude20000Point1ByDay;
+    }
+
     public boolean isExcludeHolidayPoint() {
         return excludeHolidayPoint;
     }
@@ -87,16 +98,17 @@ public class MetaConfig {
             return false;
         }
         MetaConfig that = (MetaConfig) o;
-        return use00121CPoint == that.use00121CPoint
-            && excludeHideoutPoint == that.excludeHideoutPoint
-            && useOriginPoint == that.useOriginPoint
-            && excludeHolidayPoint == that.excludeHolidayPoint
-            && exclude == that.exclude
-            && Objects.equals(holidayMap, that.holidayMap);
+        return use00121CPoint == that.use00121CPoint &&
+            excludeHideoutPoint == that.excludeHideoutPoint &&
+            useOriginPoint == that.useOriginPoint &&
+            excludeHolidayPoint == that.excludeHolidayPoint &&
+            exclude20000Point1ByDay == that.exclude20000Point1ByDay &&
+            exclude == that.exclude &&
+            Objects.equals(holidayMap, that.holidayMap);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(use00121CPoint, excludeHideoutPoint, useOriginPoint, excludeHolidayPoint, exclude, holidayMap);
+        return Objects.hash(use00121CPoint, excludeHideoutPoint, useOriginPoint, excludeHolidayPoint, exclude20000Point1ByDay, exclude, holidayMap);
     }
 }

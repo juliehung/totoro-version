@@ -16,7 +16,6 @@ public class OdOneAndHalfYearNearSource extends OdSource<OdDto> {
 
     public OdOneAndHalfYearNearSource(MetricConfig metricConfig) {
         super(new OdTwoYearNearSource(metricConfig));
-        LocalDate baseDate = metricConfig.getBaseDate();
         this.begin = toLocalDate(metricConfig.getQuarterRange().getBegin()).minus(450, DAYS);
     }
 

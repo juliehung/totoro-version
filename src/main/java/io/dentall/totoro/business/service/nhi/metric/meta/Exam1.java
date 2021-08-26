@@ -3,7 +3,7 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.codesByExam1;
+import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstants.CodesByExam1;
 
 /**
  * 一般牙科門診診察費(不含Xray)
@@ -20,7 +20,7 @@ public class Exam1 extends Exam<Long> {
 
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
-        return doCalculateRegular(metricConfig, codesByExam1);
+        return doCalculateRegular(metricConfig, CodesByExam1);
     }
 
     @Override

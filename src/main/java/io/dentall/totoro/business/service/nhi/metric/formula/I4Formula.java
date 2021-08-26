@@ -6,14 +6,12 @@ import io.dentall.totoro.business.service.nhi.metric.meta.Od1Pt1;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.OdQuarterSource;
-import io.dentall.totoro.business.service.nhi.metric.source.QuarterSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
-import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ZERO;
 
 /**
@@ -36,7 +34,7 @@ public class I4Formula extends AbstractFormula<BigDecimal> {
         Od1Pt1 od1Pt1 = new Od1Pt1(metricConfig, config, source).apply();
         Od1Point endo1Point = new Od1Point(metricConfig, config, source).apply();
         try {
-            return toPercentage(divide(endo1Point.getResult(), od1Pt1.getResult()));
+            return divide(endo1Point.getResult(), od1Pt1.getResult());
         } catch (ArithmeticException e) {
             return ZERO;
         }

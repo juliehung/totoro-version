@@ -118,4 +118,34 @@ public class NhiMetricResource {
 
         return ResponseEntity.ok().body(map);
     }
+
+    @GetMapping("/kao-ping-district-regular")
+    @Timed
+    public ResponseEntity<Map<String, List<KaoPingDistrictRegularDto>>> getKaoPingDistrictRegularMetric(
+        @RequestParam LocalDate begin,
+        @RequestParam(required = false) List<Long> excludeDisposalId,
+        @RequestParam(required = false) List<Long> doctorIds) {
+        log.debug("REST request to kao-ping district regular : begin={}, excludeDisposalId={}, doctorIds={}", begin, excludeDisposalId, doctorIds);
+
+        List<KaoPingDistrictRegularDto> vm = metricService.getKaoPingDistrictRegularMetric(begin, excludeDisposalId, doctorIds);
+        Map<String, List<KaoPingDistrictRegularDto>> map = new HashMap<>();
+        map.put("metrics", vm);
+
+        return ResponseEntity.ok().body(map);
+    }
+
+    @GetMapping("/kao-ping-district-reduction")
+    @Timed
+    public ResponseEntity<Map<String, List<KaoPingDistrictReductionDto>>> getKaoPingDistrictReductionMetric(
+        @RequestParam LocalDate begin,
+        @RequestParam(required = false) List<Long> excludeDisposalId,
+        @RequestParam(required = false) List<Long> doctorIds) {
+        log.debug("REST request to kao-ping district reduction : begin={}, excludeDisposalId={}, doctorIds={}", begin, excludeDisposalId, doctorIds);
+
+        List<KaoPingDistrictReductionDto> vm = metricService.getKaoPingDistrictReductionMetric(begin, excludeDisposalId, doctorIds);
+        Map<String, List<KaoPingDistrictReductionDto>> map = new HashMap<>();
+        map.put("metrics", vm);
+
+        return ResponseEntity.ok().body(map);
+    }
 }

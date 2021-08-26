@@ -39,7 +39,7 @@ public class Endo1Point extends SingleSourceMetaCalculator<Long> {
 
     @Override
     public MetaType metaType() {
-        return MetaType.EndoTreatment;
+        return MetaType.Endo1Point;
     }
 
 }

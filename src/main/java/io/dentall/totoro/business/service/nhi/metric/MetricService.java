@@ -3,6 +3,7 @@ package io.dentall.totoro.business.service.nhi.metric;
 import io.dentall.totoro.business.service.nhi.metric.dto.*;
 import io.dentall.totoro.business.service.nhi.metric.mapper.SpecialTreatmentMapper;
 import io.dentall.totoro.business.service.nhi.metric.mapper.TimeLineDataMapper;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConstants;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType;
 import io.dentall.totoro.business.service.nhi.metric.vm.*;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
@@ -17,6 +18,7 @@ import io.dentall.totoro.service.util.DateTimeUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
@@ -61,6 +63,10 @@ public class MetricService {
 
     private final EastDistrictService eastDistrictService;
 
+    private final KaoPingDistrictRegularService kaoPingDistrictRegularService;
+
+    private final KaoPingDistrictReductionService kaoPingDistrictReductionService;
+
     public MetricService(UserService userService,
                          UserRepository userRepository,
                          NhiExtendDisposalRepository nhiExtendDisposalRepository,
@@ -69,7 +75,9 @@ public class MetricService {
                          NorthDistrictService northDistrictService,
                          MiddleDistrictService middleDistrictService,
                          SouthDistrictService southDistrictService,
-                         EastDistrictService eastDistrictService) {
+                         EastDistrictService eastDistrictService,
+                         KaoPingDistrictRegularService kaoPingDistrictRegularService,
+                         KaoPingDistrictReductionService kaoPingDistrictReductionService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
@@ -80,6 +88,8 @@ public class MetricService {
         this.middleDistrictService = middleDistrictService;
         this.southDistrictService = southDistrictService;
         this.eastDistrictService = eastDistrictService;
+        this.kaoPingDistrictRegularService = kaoPingDistrictRegularService;
+        this.kaoPingDistrictReductionService = kaoPingDistrictReductionService;
     }
 
     public List<MetricLVM> getDashboardMetric(final LocalDate baseDate, List<Long> excludeDisposalIds) {
@@ -358,6 +368,62 @@ public class MetricService {
         return eastDistrictService.metric(baseDate, subjects, source, holidayMap);
     }
 
+    public List<KaoPingDistrictRegularDto> getKaoPingDistrictRegularMetric(final LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
+        Optional<User> userOptional = this.userService.getUserWithAuthorities();
+        if (!userOptional.isPresent()) {
+            return emptyList();
+        }
+
+        doctorIds = Optional.ofNullable(doctorIds).orElse(emptyList());
+        User user = userOptional.get();
+        excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
+        List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
+        DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
+        Instant begin = quarterRange.getBegin().minus(1095, DAYS); // 季 + 三年(1095)
+        List<NhiMetricRawVM> source = nhiExtendDisposalRepository.findMetricRaw(
+            begin,
+            quarterRange.getEnd(),
+            excludeDisposalIds
+        );
+        int baseYear = baseDate.getYear();
+        Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2, baseYear - 3);
+
+        return kaoPingDistrictRegularService.metric(baseDate, subjects, source, holidayMap);
+    }
+
+    public List<KaoPingDistrictReductionDto> getKaoPingDistrictReductionMetric(final LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
+        Optional<User> userOptional = this.userService.getUserWithAuthorities();
+        if (!userOptional.isPresent()) {
+            return emptyList();
+        }
+
+        doctorIds = Optional.ofNullable(doctorIds).orElse(emptyList());
+        User user = userOptional.get();
+        excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
+        List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
+        DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
+        Instant begin = quarterRange.getBegin().minus(365, DAYS); // 季 + 一年(1095)
+        List<NhiMetricRawVM> source = nhiExtendDisposalRepository.findMetricRaw(
+            begin,
+            quarterRange.getEnd(),
+            excludeDisposalIds
+        );
+        int baseYear = baseDate.getYear();
+        Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1);
+
+        List<DoctorPoint1Dto> doctorPoint1DtoList = kaoPingDistrictReductionService.getJ1h1Metric(baseDate, holidayMap, source);
+        BigDecimal metricJ1h2 = kaoPingDistrictReductionService.getJ1h2Metric(baseDate, holidayMap, source);
+
+        List<KaoPingDistrictReductionDto> resultDtoList = kaoPingDistrictReductionService.metric(baseDate, subjects, source, holidayMap);
+        resultDtoList.forEach(dto -> {
+                dto.setJ1h1(doctorPoint1DtoList);
+                dto.setJ1h2(metricJ1h2);
+            }
+        );
+
+        return resultDtoList;
+    }
+
     private List<User> findSpecificSubject(User user, List<Long> subjectIds) {
         List<User> userList = findAllSubject(user);
         return subjectIds.size() == 0 ?
@@ -380,9 +446,7 @@ public class MetricService {
         if (isDoctor) {
             doctors = doctors.stream().filter(doctor -> doctor.getId().equals(user.getId())).collect(toList());
         } else {
-            User clinic = new User();
-            clinic.setId(CLINIC_ID);
-            doctors.add(clinic);
+            doctors.add(MetricConstants.CLINIC);
         }
 
         return doctors;
