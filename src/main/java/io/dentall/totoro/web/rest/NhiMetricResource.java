@@ -3,8 +3,11 @@ package io.dentall.totoro.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.business.service.nhi.metric.MetricService;
 import io.dentall.totoro.business.service.nhi.metric.vm.MetricLVM;
+import io.dentall.totoro.business.vm.nhi.NhiMetricReportBodyVM;
+import io.dentall.totoro.business.vm.nhi.NhiMetricReportQueryStringVM;
 import io.dentall.totoro.domain.NhiMetricReport;
 import io.dentall.totoro.repository.NhiMetricReportRepository;
+import io.dentall.totoro.service.mapper.NhiMetricReportMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -26,6 +29,7 @@ public class NhiMetricResource {
     private final MetricService metricService;
 
     private final NhiMetricReportRepository nhiMetricReportRepository;
+
 
     public NhiMetricResource(
         MetricService metricService,
@@ -52,8 +56,12 @@ public class NhiMetricResource {
     @PostMapping("/reports")
     @Timed
     @Transactional
-    public ResponseEntity<String> generateNhiMetricReport(@RequestBody NhiMetricReport nhiMetricReport) {
-        NhiMetricReport r = nhiMetricReportRepository.save(nhiMetricReport);
+    public ResponseEntity<String> generateNhiMetricReport(@RequestBody NhiMetricReportBodyVM nhiMetricReportBodyVM) {
+        NhiMetricReport r = nhiMetricReportRepository.save(
+            NhiMetricReportMapper.INSTANCE.convertBodyToDomain(
+                nhiMetricReportBodyVM
+            )
+        );
         return ResponseEntity.ok("OK");
     }
 
@@ -61,9 +69,7 @@ public class NhiMetricResource {
     @GetMapping("/reports")
     @Timed
     @Transactional
-    public ResponseEntity<List<NhiMetricReport>> getNhiMetricReports() {
+    public ResponseEntity<List<NhiMetricReport>> getNhiMetricReports(NhiMetricReportQueryStringVM queryStringVM) {
         return ResponseEntity.ok().body(nhiMetricReportRepository.findAll());
     }
-
-
 }

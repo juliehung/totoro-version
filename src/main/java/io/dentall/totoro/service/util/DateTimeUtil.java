@@ -1,16 +1,13 @@
 package io.dentall.totoro.service.util;
 
 import io.dentall.totoro.config.TimeConfig;
+import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 
 import javax.validation.constraints.NotNull;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 public final class DateTimeUtil {
@@ -373,4 +370,25 @@ public final class DateTimeUtil {
         return LocalDate.now().getYear() == date.getYear() && LocalDate.now().getMonth() == date.getMonth();
     }
 
+    public static String transformIntYyyymmToFormatedStringYyyymm(Integer yyyymm) {
+        String partialACDateTimeString = String.valueOf(yyyymm);
+
+        if (partialACDateTimeString.length() == 6) {
+            yyyymm = yyyymm - 191100;
+        } else {
+            throw new BadRequestAlertException(
+                "year month must be 6 digits",
+                "VALIDATION",
+                "as title"
+            );
+        }
+
+        partialACDateTimeString = partialACDateTimeString.substring(0, 4)
+            .concat("-")
+            .concat(
+                partialACDateTimeString.substring(4, 6)
+            );
+
+        return partialACDateTimeString;
+    }
 }
