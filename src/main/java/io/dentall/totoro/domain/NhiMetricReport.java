@@ -29,7 +29,7 @@ public class NhiMetricReport extends AbstractAuditingEntity implements Serializa
     )
     @GeneratedValue(
         strategy = GenerationType.SEQUENCE,
-        generator = "nhiMonthDeclarationRuleCheckReportSeq"
+        generator = "nhiMetricReportSeq"
     )
     private Long id;
 
@@ -42,6 +42,15 @@ public class NhiMetricReport extends AbstractAuditingEntity implements Serializa
 
     @Type(type = "jsonb")
     @Column(name = "comment")
+    /**
+     * version: 1.0
+     * date: 2021-08-26
+     * {
+     *   nhiMetricReportTypes: [],
+     *   selectedTargets: [],
+     *   url: "string"
+     * }
+     */
     private Map<String, Object> comment;
 
     @CreatedBy
@@ -135,5 +144,4 @@ public class NhiMetricReport extends AbstractAuditingEntity implements Serializa
     public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
-
 }

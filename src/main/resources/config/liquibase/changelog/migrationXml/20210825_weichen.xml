@@ -17,12 +17,12 @@
                 last_modified_date timestamp
             );
         </sql>
-        <sql>
-            CREATE SEQUENCE nhi_metric_report_seq START WITH 1 INCREMENT BY 1;
-        </sql>
-        <sql>
-            CREATE INDEX idx_nhi_metric_report_id ON nhi_metric_report id;
-            CREATE INDEX idx_nhi_metric_report_jhi_year_month ON nhi_metric_report jhi_year_month;
-        </sql>
+        <createIndex tableName="nhi_metric_report" indexName="idx_nhi_metric_report_id" unique="false">
+            <column name="id"/>
+        </createIndex>
+        <createIndex tableName="nhi_metric_report" indexName="idx_nhi_metric_report_jhi_year_month" unique="true">
+            <column name="jhi_year_month"/>
+        </createIndex>
+        <createSequence sequenceName="nhi_metric_report_seq"/>
     </changeSet>
 </databaseChangeLog>
