@@ -12,7 +12,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Map;
 
 @Entity
 @Table(name = "nhi_metric_report")
@@ -42,16 +41,7 @@ public class NhiMetricReport extends AbstractAuditingEntity implements Serializa
 
     @Type(type = "jsonb")
     @Column(name = "comment")
-    /**
-     * version: 1.0
-     * date: 2021-08-26
-     * {
-     *   nhiMetricReportTypes: [],
-     *   selectedTargets: [],
-     *   url: "string"
-     * }
-     */
-    private Map<String, Object> comment;
+    private NhiMetricReportComment comment;
 
     @CreatedBy
     @Column(name = "created_by", nullable = false, length = 50, updatable = false)
@@ -97,11 +87,11 @@ public class NhiMetricReport extends AbstractAuditingEntity implements Serializa
         this.status = status;
     }
 
-    public Map<String, Object> getComment() {
+    public NhiMetricReportComment getComment() {
         return comment;
     }
 
-    public void setComment(Map<String, Object> comment) {
+    public void setComment(NhiMetricReportComment comment) {
         this.comment = comment;
     }
 
