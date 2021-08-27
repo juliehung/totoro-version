@@ -30,8 +30,8 @@ public class ExcelUtil {
         NorthDistrictReport rp2 = new NorthDistrictReport();
         SouthDistrictReport rp3 = new SouthDistrictReport();
         MiddleDistrictReport rp4 = new MiddleDistrictReport();
-        KaoPingDistrictRegularReport rp5 = new KaoPingDistrictRegularReport();
-        KaoPinDistrictRegularReport rp6 = new KaoPinDistrictRegularReport();
+        KaoPingDistrictReductionReport rp5 = new KaoPingDistrictReductionReport();
+        KaoPingDistrictRegularReport rp6 = new KaoPingDistrictRegularReport();
         wb.write(fos);
         fos.close();
         wb.close();

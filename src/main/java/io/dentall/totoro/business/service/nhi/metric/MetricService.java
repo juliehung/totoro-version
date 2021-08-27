@@ -20,6 +20,8 @@ import io.dentall.totoro.repository.NhiMetricReportRepository;
 import io.dentall.totoro.service.UserService;
 import io.dentall.totoro.service.mapper.NhiMetricReportMapper;
 import io.dentall.totoro.service.util.DateTimeUtil;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -245,6 +247,9 @@ public class MetricService {
                         "content".getBytes(StandardCharsets.UTF_8),
                         BackupFileCatalog.NHI_METRIC_REPORT.getFileExtension()
                     );
+
+                    Workbook wb = new HSSFWorkbook();
+
 //                    String gcpUrl = nhiRuleCheckUtil.generateMonthDeclarationRuleCheckReport(
 //                        finalPartialACDateTime,
 //                        finalExcludeDisposals,

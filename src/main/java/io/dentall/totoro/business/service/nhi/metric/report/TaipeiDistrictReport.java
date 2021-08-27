@@ -5,9 +5,11 @@ import io.dentall.totoro.business.service.nhi.metric.util.ExcelUtil;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.PropertyTemplate;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class TaipeiDistrictReport {
     private static final String SHEET_NAME = "台北區-服務品質控管";
 

@@ -1,19 +1,21 @@
 package io.dentall.totoro.business.service.nhi.metric.report;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.KaoPingDistrictReductionDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.KaoPingDistrictRegularDto;
 import io.dentall.totoro.business.service.nhi.metric.util.ExcelUtil;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.PropertyTemplate;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class KaoPingDistrictRegularReport {
-    private static final String SHEET_NAME = "高屏區-減量抽審辦法";
+    private static final String SHEET_NAME = "高屏區-牙醫門診總額抽審原則";
 
     public void generateReport(
         Workbook wb,
-        List<KaoPingDistrictReductionDto> contents
+        List<KaoPingDistrictRegularDto> contents
     ) throws Exception {
         if (wb == null) {
             throw new Exception("Must new a workbook first before create sheet");
@@ -29,19 +31,37 @@ public class KaoPingDistrictRegularReport {
         // 醫療費用
         row = sheet.createRow(rowCounter++);
         row.createCell(0).setCellValue("醫療費用");
-        row.createCell(1).setCellValue("醫療費用點數\n(個別醫師需<51 萬)");
-        row = sheet.createRow(rowCounter++);
-        row.createCell(1).setCellValue("去年當季醫師平均醫療費用點數");
-        row = sheet.createRow(rowCounter++);
-        row.createCell(1).setCellValue("當季平均醫療費用點數\n(需<36萬)");
+        row.createCell(1).setCellValue("當季醫師月平均醫療費用點數");
         row = sheet.createRow(rowCounter++);
         row.createCell(1).setCellValue("當季就醫病患平均耗用值");
         row = sheet.createRow(rowCounter++);
-        row.createCell(1).setCellValue("當季每人平均就醫次數\n(需<2.0次/人)");
+        row.createCell(1).setCellValue("平均耗格數");
         // 根管相關
         row = sheet.createRow(rowCounter++);
         row.createCell(0).setCellValue("根管相關");
         row.createCell(1).setCellValue("當季根管治療未完成率(需<30%)");
+        // 補牙相關
+        row = sheet.createRow(rowCounter++);
+        row.createCell(0).setCellValue("補牙相關");
+        row.createCell(1).setCellValue("當季O.D. 之平均面數");
+        row = sheet.createRow(rowCounter++);
+        row.createCell(1).setCellValue("當季每位O.D.患者平均O.D.耗用值");
+        row = sheet.createRow(rowCounter++);
+        row.createCell(1).setCellValue("當季O.D.點數佔比");
+        row = sheet.createRow(rowCounter++);
+        row.createCell(1).setCellValue("當季就醫病患平均O.D.顆數");
+        row = sheet.createRow(rowCounter++);
+        row.createCell(1).setCellValue("二年內自家重補率");
+        row = sheet.createRow(rowCounter++);
+        row.createCell(1).setCellValue("第三年自家重補率");
+        // 洗牙相關
+        row = sheet.createRow(rowCounter++);
+        row.createCell(0).setCellValue("洗牙相關");
+        row.createCell(1).setCellValue("當季洗牙醫令項目佔比");
+        // 拔牙相關
+        row = sheet.createRow(rowCounter++);
+        row.createCell(0).setCellValue("拔牙相關");
+        row.createCell(1).setCellValue("拔牙前半年耗用值");
         // 備註
         row = sheet.createRow(rowCounter++);
         row.createCell(0).setCellValue("※其餘牽涉他願資料無法計算之指標，請參照健保署最新公告");
@@ -50,15 +70,21 @@ public class KaoPingDistrictRegularReport {
 
         // Assign data
         for (int colIdx = 0; colIdx < contents.size(); colIdx++){
-            KaoPingDistrictReductionDto content = contents.get(colIdx);
+            KaoPingDistrictRegularDto content = contents.get(colIdx);
             int rowIdx = 0;
             sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getDoctor().getDoctorName());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getJ1h1().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getJ1h2().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getJ2h2().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getJ2h3().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getJ2h4().toString());
+            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getK1().toString());
+            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getK2().toString());
+            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getK11().toString());
             sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getJ2h5().toString());
+            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getK10().toString());
+            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getK3().toString());
+            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getK4().toString());
+            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getK5().toString());
+            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getK6().toString());
+            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getK7().toString());
+            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getK12().toString());
+            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getK14().toString());
         }
 
         // Styles
@@ -69,7 +95,7 @@ public class KaoPingDistrictRegularReport {
 
     private void applyTitleStyle(Sheet sheet) {
         int fromRow = 0;
-        int toRow = 6;
+        int toRow = 12;
         int fromCol = 0;
         int toCol = 1;
         for (int i = fromRow; i <= toRow; i++) {
@@ -83,10 +109,9 @@ public class KaoPingDistrictRegularReport {
         }
     }
 
-    private void applySheetMergeSection(
-        Sheet sheet
-    ) {
-        sheet.addMergedRegion(new CellRangeAddress(1, 5, 0, 0));
+    private void applySheetMergeSection(Sheet sheet) {
+        sheet.addMergedRegion(new CellRangeAddress(1, 3, 0, 0));
+        sheet.addMergedRegion(new CellRangeAddress(5, 10, 0, 0));
         sheet.setColumnWidth(0, ExcelUtil.columnWidth(5, 12));
         sheet.setColumnWidth(1, ExcelUtil.columnWidth(15, 12));
     }
@@ -103,12 +128,27 @@ public class KaoPingDistrictRegularReport {
             BorderExtent.BOTTOM
         );
         pt.drawBorders(
-            new CellRangeAddress(5, 5, 0, 1 + numberOfDoctor),
+            new CellRangeAddress(3, 3, 0, 1 + numberOfDoctor),
             BorderStyle.THICK,
             BorderExtent.BOTTOM
         );
         pt.drawBorders(
-            new CellRangeAddress(6, 6, 0, 1 + numberOfDoctor),
+            new CellRangeAddress(4, 4, 0, 1 + numberOfDoctor),
+            BorderStyle.THICK,
+            BorderExtent.BOTTOM
+        );
+        pt.drawBorders(
+            new CellRangeAddress(10, 10, 0, 1 + numberOfDoctor),
+            BorderStyle.THICK,
+            BorderExtent.BOTTOM
+        );
+        pt.drawBorders(
+            new CellRangeAddress(11, 11, 0, 1 + numberOfDoctor),
+            BorderStyle.THICK,
+            BorderExtent.BOTTOM
+        );
+        pt.drawBorders(
+            new CellRangeAddress(12, 12, 0, 1 + numberOfDoctor),
             BorderStyle.THICK,
             BorderExtent.BOTTOM
         );

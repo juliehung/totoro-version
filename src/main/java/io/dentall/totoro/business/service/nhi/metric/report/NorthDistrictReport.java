@@ -5,9 +5,11 @@ import io.dentall.totoro.business.service.nhi.metric.util.ExcelUtil;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.PropertyTemplate;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class NorthDistrictReport {
     private static final String SHEET_NAME = "北區-牙醫門診總額快速通關免審專業審查篩選指標";
 
