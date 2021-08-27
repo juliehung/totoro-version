@@ -2,6 +2,7 @@ package io.dentall.totoro.repository;
 
 import io.dentall.totoro.business.repository.RemappingDomainToTableDtoRepository;
 import io.dentall.totoro.business.vm.nhi.NhiMetricBaseVM;
+import io.dentall.totoro.business.service.nhi.NhiHybridRecord;
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.repository.dao.MonthDisposalDAO;
 import io.dentall.totoro.service.dto.CalculateBaseData;
@@ -680,4 +681,122 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
         @Param("onlyCodes") List<String> onlyCodes
     );
 
+    @Query(
+        nativeQuery = true,
+        value = "with ic_records as ( " +
+            "        select cast('IC' as text) as recordSource, " +
+            "               cast(0 as bigint) as disposalId, " +
+            "               cast(0 as bigint) as doctorId, " +
+            "               cast(jhi_date as text) as recordDateTime, " +
+            "               cast(nhi_code as text) as code, " +
+            "               cast(part as text) as tooth, " +
+            "               cast(jhi_usage as text) as surface " +
+            "        from nhi_medical_record nmr " +
+            "        left join nhi_procedure np on np.code = nmr.nhi_code" +
+            "        where  nhi_extend_patient_patient_id = :patientId " +
+            "        and    np.id is not null " +
+            "        and    nhi_code in (:codes) " +
+            "    ), " +
+            "     sys_records as ( " +
+            "         select cast('SYS' as text) as recordSource, " +
+            "                cast(d.id as bigint) as disposalId, " +
+            "                cast(a.doctor_user_id as bigint) as doctorId, " +
+            "                cast(netp.a71 as text) as recordDateTime, " +
+            "                cast(netp.a73 as text) as code, " +
+            "                cast(netp.a74 as text) as tooth, " +
+            "                cast(netp.a75 as text) as surface " +
+            "         from disposal d " +
+            "         left join appointment a on d.registration_id = a.registration_id " +
+            "         left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "         left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "         left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "         where  a.patient_id = :patientId " +
+            "         and    netp.a73 in (:codes) " +
+            "         and    trim(ned.a18) <> '' " +
+            "         and    tp.nhi_procedure_id is not null " +
+            "     ) " +
+            "select sum_records.recordSource, " +
+            "       sum_records.disposalId, " +
+            "       sum_records.doctorId, " +
+            "       sum_records.recordDateTime, " +
+            "       sum_records.code, " +
+            "       sum_records.tooth, " +
+            "       sum_records.surface " +
+            "from ( " +
+            "         select * from sys_records " +
+            "         union " +
+            "         select * from ic_records " +
+            "     ) sum_records " +
+            "left join sys_records " +
+            "    on  sum_records.recordSource = 'IC' " +
+            "    and sum_records.recordDateTime = sys_records.recordDateTime " +
+            "where sys_records.recordDateTime is null " +
+            "    and sum_records.recordDateTime is not null " +
+            "    and sum_records.code is not null " +
+            "    and sum_records.disposalId not in (:excludeDisposalIds) " +
+            "order by sum_records.recordDateTime desc "
+    )
+    List<NhiHybridRecord> findNhiHybridRecord(
+        @Param("patientId") Long patientId,
+        @Param("codes") List<String> codes,
+        @Param("excludeDisposalIds") List<Long> excludeDisposalIds
+    );
+
+    @Query(
+        nativeQuery = true,
+        value = "with ic_records as ( " +
+            "        select cast('IC' as text) as recordSource, " +
+            "               cast(0 as bigint) as disposalId, " +
+            "               cast(0 as bigint) as doctorId, " +
+            "               cast(jhi_date as text) as recordDateTime, " +
+            "               cast(nhi_code as text) as code, " +
+            "               cast(part as text) as tooth, " +
+            "               cast(jhi_usage as text) as surface " +
+            "        from nhi_medical_record nmr " +
+            "        left join nhi_procedure np on np.code = nmr.nhi_code" +
+            "        where  nhi_extend_patient_patient_id = :patientId " +
+            "        and    np.id is not null " +
+            "    ), " +
+            "     sys_records as ( " +
+            "         select cast('SYS' as text) as recordSource, " +
+            "                cast(d.id as bigint) as disposalId, " +
+            "                cast(a.doctor_user_id as bigint) as doctorId, " +
+            "                cast(netp.a71 as text) as recordDateTime, " +
+            "                cast(netp.a73 as text) as code, " +
+            "                cast(netp.a74 as text) as tooth, " +
+            "                cast(netp.a75 as text) as surface " +
+            "         from disposal d " +
+            "         left join appointment a on d.registration_id = a.registration_id " +
+            "         left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "         left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "         left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "         where  a.patient_id = :patientId " +
+            "         and    trim(ned.a18) <> '' " +
+            "         and    tp.nhi_procedure_id is not null " +
+            "     ) " +
+            "select sum_records.recordSource, " +
+            "       sum_records.disposalId, " +
+            "       sum_records.doctorId, " +
+            "       sum_records.recordDateTime, " +
+            "       sum_records.code, " +
+            "       sum_records.tooth, " +
+            "       sum_records.surface " +
+            "from ( " +
+            "         select * from sys_records " +
+            "         union " +
+            "         select * from ic_records " +
+            "     ) sum_records " +
+            "left join sys_records " +
+            "    on  sum_records.recordSource = 'IC' " +
+            "    and sum_records.recordDateTime = sys_records.recordDateTime " +
+            "where sys_records.recordDateTime is null " +
+            "    and sum_records.recordDateTime is not null " +
+            "    and sum_records.code is not null " +
+            "    and sum_records.disposalId not in (:excludeDisposalIds) " +
+            "order by sum_records.recordDateTime desc "
+    )
+    List<NhiHybridRecord> findNhiHybridRecord(
+        @Param("patientId") Long patientId,
+        @Param("excludeDisposalIds") List<Long> excludeDisposalIds
+    );
 }

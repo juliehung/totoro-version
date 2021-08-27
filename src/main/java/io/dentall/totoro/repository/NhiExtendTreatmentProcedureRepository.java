@@ -1,5 +1,6 @@
 package io.dentall.totoro.repository;
 
+import io.dentall.totoro.business.service.nhi.NhiRuleCheckMonthDeclarationTxDTO;
 import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.service.dto.HistoricalNhiTxDispInfoDTO;
 import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
@@ -9,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -60,13 +60,45 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
 
     <T> Optional<T> findById(Long id, Class<T> type);
 
-    Optional<NhiExtendTreatmentProcedureTable> findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndTreatmentProcedure_Disposal_DateTimeBetween(
+    Optional<NhiExtendTreatmentProcedureTable> findTop1ByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndTreatmentProcedure_Disposal_DateTimeBetweenAndTreatmentProcedure_Disposal_IdNotInOrderByTreatmentProcedure_Disposal_DateTimeDesc(
         Long patientId,
-        LocalDate begin,
-        LocalDate end
+        Instant begin,
+        Instant end,
+        Long excludeDisposalId
     );
 
     // 查詢所有 nhi extend procedure，且包含輸入之健保代碼，且在指定病患下
     List<NhiExtendTreatmentProcedureTable> findAllByTreatmentProcedure_Disposal_Registration_Appointment_Patient_IdAndA73InOrderByA71Desc(Long patientId, List<String> a73s);
 
+    @Query(
+        nativeQuery = true,
+        value = "select d.id as disposalId, " +
+            "       a.patient_id as patientId, " +
+            "       p.name as patientName, " +
+            "       a.doctor_user_id as doctorId, " +
+            "       ju.first_name as doctorName, " +
+            "       ned.a17 as disposalTime, " +
+            "       ned.a23 as nhiCategory, " +
+            "       tp.id as treatmentProcedureId, " +
+            "       netp.a73 as nhiCode, " +
+            "       netp.a74 as teeth, " +
+            "       netp.a75 as surface ," +
+            "       np.name as nhiTxName " +
+            "from disposal d " +
+            "left join appointment a on d.registration_id = a.registration_id " +
+            "left join patient p on p.id = a.patient_id " +
+            "left join jhi_user ju on ju.id = a.doctor_user_id " +
+            "left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "left join nhi_procedure np on np.id = tp.nhi_procedure_id " +
+            "where tp.nhi_procedure_id is not null and trim(ned.a18) <> '' and a19 = '1' and a17 like :yearMonthQueryClause and d.id is not null and netp.treatment_procedure_id is not null and d.id not in (:excludeDisposals) " +
+            "or tp.nhi_procedure_id is not null and trim(ned.a18) <> '' and a19 = '2' and a54 like :yearMonthQueryClause and d.id is not null and netp.treatment_procedure_id is not null and d.id not in (:excludeDisposals)" +
+            "order by d.date_time, doctorId, patientId" +
+            ";"
+    )
+    List<NhiRuleCheckMonthDeclarationTxDTO> findNhiMonthDeclarationTx(
+        @Param(value = "yearMonthQueryClause") String yearMonthQueryClause,
+        @Param(value = "excludeDisposals") List<Long> excludeDisposals
+    );
 }

@@ -3,7 +3,9 @@ package io.dentall.totoro.domain.enumeration;
 public enum BackupFileCatalog {
     NHI_LOG("nhi-log", "nhi-log", "text/plain"),
     DAY_UPLOAD_XML("day-upload-xml", "day-upload-xml", "text/xml"),
-    MONTH_DECLARE_XML("month-declare-xml", "month-declare-xml",  "text/xml");
+    MONTH_DECLARE_XML("month-declare-xml", "month-declare-xml",  "text/xml"),
+    MONTH_DECLARE_RULE_CHECK_REPORT("month-declare-rule-check-report", "month-declare-rule-check-report",  "text/csv"),
+    ;
 
     private String urlPath;
 

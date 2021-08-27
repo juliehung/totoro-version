@@ -75,25 +75,72 @@ public final class DateTimeUtil {
         }
     };
 
-    public static final Period NHI_1_WEEK = Period.ofDays(7);
+    public static final Period NHI_0_DAY = Period.ofDays(0);
 
-    public static final Period NHI_1_MONTH = Period.ofDays(30);
+    public static final Period NHI_3_DAY = Period.ofDays(3);
 
-    public static final Period NHI_2_MONTH = Period.ofDays(60);
+    public static final Period NHI_7_DAY = Period.ofDays(7);
 
-    public static final Period NHI_3_MONTH = Period.ofDays(90);
+    public static final Period NHI_30_DAY = Period.ofDays(30);
 
-    public static final Period NHI_6_MONTH = Period.ofDays(180);
+    public static final Period NHI_60_DAY = Period.ofDays(60);
 
-    public static final Period NHI_12_MONTH = Period.ofDays(365);
+    public static final Period NHI_90_DAY = Period.ofDays(90);
 
-    public static final Period NHI_18_MONTH = Period.ofDays(545);
+    public static final Period NHI_152_DAY = Period.ofDays(152);
 
-    public static final Period NHI_24_MONTH = Period.ofDays(730);
-
-    public static final Period NHI_36_MONTH = Period.ofDays(1095);
+    public static final Period NHI_180_DAY = Period.ofDays(180);
 
     public static final Period NHI_360_DAY = Period.ofDays(360);
+
+    public static final Period NHI_365_DAY = Period.ofDays(365);
+
+    public static final Period NHI_545_DAY = Period.ofDays(545);
+
+    public static final Period NHI_730_DAY = Period.ofDays(730);
+
+    public static final Period NHI_1095_DAY = Period.ofDays(1095);
+
+    @Deprecated
+    public static final Period NHI_1_WEEK = Period.ofDays(7);
+
+    @Deprecated
+    public static final Period NHI_1_MONTH = Period.ofDays(30);
+
+    @Deprecated
+    public static final Period NHI_2_MONTH = Period.ofDays(60);
+
+    @Deprecated
+    public static final Period NHI_3_MONTH = Period.ofDays(90);
+
+    @Deprecated
+    public static final Period NHI_6_MONTH = Period.ofDays(180);
+
+    @Deprecated
+    public static final Period NHI_12_MONTH = Period.ofDays(365);
+
+    @Deprecated
+    public static final Period NHI_18_MONTH = Period.ofDays(545);
+
+    @Deprecated
+    public static final Period NHI_24_MONTH = Period.ofDays(730);
+
+    @Deprecated
+    public static final Period NHI_36_MONTH = Period.ofDays(1095);
+
+    public static final long NUMBERS_OF_MONTH_1 = 1L;
+
+    public static final long NUMBERS_OF_MONTH_3 = 3L;
+
+    public static final long NUMBERS_OF_MONTH_6 = 6L;
+
+    public static final long NUMBERS_OF_MONTH_12 = 12L;
+
+    public static final long NUMBERS_OF_YEAR_2 = 24L;
+
+    public static final long NUMBERS_OF_YEAR_1 = 12L;
+
+    public static final DateTimeFormatter localDateDisplayFormat = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
     public static Supplier<Instant> localTimeMin = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).toZonedDateTime().with(LocalTime.MIN).toInstant();
     public static Supplier<Instant> localTimeMax = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).toZonedDateTime().with(LocalTime.MAX).toInstant();
@@ -101,8 +148,38 @@ public final class DateTimeUtil {
     public static Supplier<LocalDate> localMonthFirstDay = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).with(TemporalAdjusters.firstDayOfMonth()).toLocalDate();
     public static Supplier<LocalDate> localMonthLastDay = () -> OffsetDateTime.now(TimeConfig.ZONE_OFF_SET).with(TemporalAdjusters.lastDayOfMonth()).toLocalDate();
 
+    public static String transformA71ToDisplayWithTime(String a71) {
+        String result = "";
+
+        if (
+            a71 != null &&
+            a71.length() > 11
+        ) {
+            result = result.concat(a71.substring(0, 3))
+                .concat("/")
+                .concat(a71.substring(3, 5))
+                .concat("/")
+                .concat(a71.substring(5, 7))
+                .concat(" ")
+                .concat(a71.substring(7, 9))
+                .concat(":")
+                .concat(a71.substring(9, 11));
+        }
+
+        return result;
+    }
+
     public static String transformA71ToDisplay(String a71) {
         return String.format("%s/%s/%s", a71.substring(0, 3), a71.substring(3, 5), a71.substring(5, 7));
+    }
+
+    public static String transformLocalDateToRocDateForDisplay(LocalDate dateTime) {
+        return dateTime
+            .minus(1911, ChronoUnit.YEARS)
+            .format(
+                DateTimeFormatter.ofPattern("yyyy/MM/dd")
+            )
+            .substring(1);
     }
 
     public static String transformLocalDateToRocDateForDisplay(Instant dateTime) {
@@ -110,7 +187,8 @@ public final class DateTimeUtil {
             .atOffset(TimeConfig.ZONE_OFF_SET)
             .minus(1911, ChronoUnit.YEARS)
             .format(
-                DateTimeFormatter.ofPattern("yyyy/MM/dd"))
+                DateTimeFormatter.ofPattern("yyyy/MM/dd")
+            )
             .substring(1);
     }
 
@@ -131,8 +209,7 @@ public final class DateTimeUtil {
         return LocalDate.of(year, month, day);
     }
 
-    public static Integer getAge(LocalDate birthday, LocalDate now)
-    {
+    public static Integer getAge(LocalDate birthday, LocalDate now) {
         int yearGap = now.getYear() - birthday.getYear();
         LocalDate birthDateThisYear = birthday.plusYears(yearGap);
         return now.isAfter(birthDateThisYear) || now.isEqual(birthDateThisYear)
@@ -180,7 +257,7 @@ public final class DateTimeUtil {
         }
 
         return format;
-    };
+    }
 
     public static Period startDayOfMonthDiff(LocalDate current) {
         return Period.between(LocalDate.of(current.getYear(), current.getMonth(), 1), current);
@@ -262,5 +339,9 @@ public final class DateTimeUtil {
             .withMonth(date.getMonthValue())
             .withDayOfMonth(date.getDayOfMonth())
             .toInstant();
+    }
+
+    public static Instant pastInstant(int pastDays) {
+        return Instant.now().minus(pastDays, ChronoUnit.DAYS);
     }
 }

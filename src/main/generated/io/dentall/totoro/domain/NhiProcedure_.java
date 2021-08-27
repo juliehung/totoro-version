@@ -13,6 +13,7 @@ public abstract class NhiProcedure_ {
 	public static volatile SingularAttribute<NhiProcedure, String> englishName;
 	public static volatile SingularAttribute<NhiProcedure, String> code;
 	public static volatile SingularAttribute<NhiProcedure, Long> defaultIcd10CmId;
+	public static volatile SingularAttribute<NhiProcedure, Instant> effectiveTime;
 	public static volatile SingularAttribute<NhiProcedure, String> description;
 	public static volatile SingularAttribute<NhiProcedure, String> fdi;
 	public static volatile SingularAttribute<NhiProcedure, NhiProcedureType> nhiProcedureType;

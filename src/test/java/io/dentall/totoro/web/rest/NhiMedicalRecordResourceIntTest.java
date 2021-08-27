@@ -105,10 +105,13 @@ public class NhiMedicalRecordResourceIntTest {
     @Autowired
     private NhiMedicineRepository nhiMedicineRepository;
 
+    @Autowired
+    private NhiExtendDisposalRepository nhiExtendDisposalRepository;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final NhiMedicalRecordResource nhiMedicalRecordResource = new NhiMedicalRecordResource(nhiMedicalRecordService, nhiMedicalRecordQueryService, nhiTxRepository, nhiMedicineRepository);
+        final NhiMedicalRecordResource nhiMedicalRecordResource = new NhiMedicalRecordResource(nhiMedicalRecordService, nhiMedicalRecordQueryService, nhiTxRepository, nhiMedicineRepository, nhiExtendDisposalRepository);
         this.restNhiMedicalRecordMockMvc = MockMvcBuilders.standaloneSetup(nhiMedicalRecordResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

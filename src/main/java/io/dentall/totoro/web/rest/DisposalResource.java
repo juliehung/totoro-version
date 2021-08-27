@@ -1,19 +1,14 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import io.dentall.totoro.business.service.nhi.NhiRuleCheckService;
-import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
-import io.dentall.totoro.business.vm.nhi.NhiRuleCheckVM;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.PlainDisposalType;
+import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.service.DisposalQueryService;
 import io.dentall.totoro.service.DisposalService;
-import io.dentall.totoro.service.NhiExtendDisposalService;
 import io.dentall.totoro.service.NhiService;
 import io.dentall.totoro.service.dto.DisposalCriteria;
-import io.dentall.totoro.service.dto.HybridRuleCheckDisposal;
-import io.dentall.totoro.service.dto.HybridRuleCheckTreatmentProcedure;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -27,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -56,7 +50,7 @@ public class DisposalResource {
 
     private final NhiService nhiService;
 
-    private final NhiRuleCheckService nhiRuleCheckService;
+    private final NhiExtendDisposalRepository nhiExtendDisposalRepository;
 
     private final UserRepository userRepository;
 
@@ -64,14 +58,13 @@ public class DisposalResource {
         DisposalService disposalService,
         DisposalQueryService disposalQueryService,
         NhiService nhiService,
-        NhiExtendDisposalService nhiExtendDisposalService,
-        NhiRuleCheckService nhiRuleCheckService,
+        NhiExtendDisposalRepository nhiExtendDisposalRepository,
         UserRepository userRepository
     ) {
         this.disposalService = disposalService;
+        this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.disposalQueryService = disposalQueryService;
         this.nhiService = nhiService;
-        this.nhiRuleCheckService = nhiRuleCheckService;
         this.userRepository = userRepository;
     }
 
@@ -204,88 +197,6 @@ public class DisposalResource {
         log.debug("REST request to delete Disposal : {}", id);
         disposalService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-    }
-
-    @GetMapping("/disposals/rules-checked/{id}")
-    @Timed
-    public ResponseEntity<HybridRuleCheckDisposal> getDisposalWithRulesCheckedNhiExtTxProc2(@PathVariable Long id) {
-        log.debug("REST request to get Disposal rules-checked : {}", id);
-        // Origin useing -> findOneWithEagerRelationships
-        Disposal disposal = disposalService.getDisposalByProjection(id);
-
-        if (disposal == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            // Assemble treatment family for check rule
-            Treatment treatment = new Treatment();
-            TreatmentPlan treatmentPlan = new TreatmentPlan();
-            TreatmentTask treatmentTask = new TreatmentTask();
-            Patient patient = new Patient();
-
-            // two way relationship no. 1
-            treatmentTask.setTreatmentPlan(treatmentPlan);
-            treatmentPlan.setTreatment(treatment);
-            treatment.setPatient(patient);
-            patient.setId(disposal.getNhiExtendDisposals().iterator().next().getPatientId());
-
-            // two way relationship no. 2
-            Set<TreatmentTask> treatmentTaskSet = new HashSet<>();
-            Set<TreatmentPlan> treatmentPlanSet = new HashSet<>();
-            treatmentTaskSet.add(treatmentTask);
-            treatmentPlanSet.add(treatmentPlan);
-            treatmentPlan.setTreatmentTasks(treatmentTaskSet);
-            treatment.setTreatmentPlans(treatmentPlanSet);
-
-            // Add back to disposal
-            disposal.getTreatmentProcedures().forEach(treatmentProcedure -> {
-                treatmentProcedure.setTreatmentTask(treatmentTask);
-                treatmentProcedure.setDisposal(disposal);
-                if (treatmentProcedure.getNhiProcedure() != null) {
-                    treatmentProcedure.getNhiExtendTreatmentProcedure().setTreatmentProcedure(treatmentProcedure);
-                }
-            });
-
-            nhiService.checkNhiExtendTreatmentProcedures(disposal);
-
-            HybridRuleCheckDisposal hd = new HybridRuleCheckDisposal(disposal);
-            Set<HybridRuleCheckTreatmentProcedure> htp = new HashSet<>();
-            List<Long> excludeTpIds = new ArrayList<>();
-            List<String> includeCodes = new ArrayList<>();
-            disposal.getTreatmentProcedures().stream()
-                .forEach(treatmentProcedure -> {
-                    if (treatmentProcedure != null &&
-                        treatmentProcedure.getId() != null
-                    ) {
-                        excludeTpIds.add(treatmentProcedure.getId());
-                    }
-                    if (treatmentProcedure != null &&
-                        treatmentProcedure.getNhiProcedure() != null &&
-                        treatmentProcedure.getNhiProcedure().getCode() != null
-                    ) {
-                        includeCodes.add(treatmentProcedure.getNhiProcedure().getCode());
-                    }
-                });
-
-            disposal.getTreatmentProcedures().forEach(tp -> {
-                NhiRuleCheckVM vm = new NhiRuleCheckVM();
-                vm.setPatientId(patient.getId());
-                vm.setTreatmentProcedureId(tp.getId());
-                vm.setExcludeTreatmentProcedureIds(excludeTpIds);
-                vm.setIncludeNhiCodes(includeCodes);
-                try {
-                    NhiRuleCheckResultVM rvm = (NhiRuleCheckResultVM) nhiRuleCheckService.dispatch(tp.getNhiProcedure().getCode(), vm);
-                    HybridRuleCheckTreatmentProcedure hybridRuleCheckTreatmentProcedure = new HybridRuleCheckTreatmentProcedure(tp);
-                    hybridRuleCheckTreatmentProcedure.setCheckHistory(rvm.getCheckHistory());
-                    htp.add(hybridRuleCheckTreatmentProcedure);
-                } catch (Exception e) {
-                    HybridRuleCheckTreatmentProcedure hybridRuleCheckTreatmentProcedure = new HybridRuleCheckTreatmentProcedure(tp);
-                    htp.add(hybridRuleCheckTreatmentProcedure);
-                }
-            });
-            hd.setHybridRuleCheckTreatmentProcedures(htp);
-
-            return ResponseEntity.ok(hd);
-        }
     }
 
     @GetMapping("/disposals/same-treatment")

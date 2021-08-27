@@ -1,0 +1,310 @@
+name: "Push then release"
+
+on:
+    push:
+        tags:
+            - 'rel*'
+            - 'stg*'
+            - 'dev*'
+            - 'nhi*'
+            - 'ms*'
+            - '[0-9]+.[0-9]+.[0-9]+*'
+        branches:
+            - develop
+    pull_request:
+
+env:
+    VERSION_REPOSITORY: dentallio/totoro-version
+    WEB_REPOSITORY: dentallio/totoro-web
+    ARTIFACT_NAME: his-artifact
+
+jobs:
+    Regular-Test:
+        runs-on: ubuntu-18.04
+        container: openjdk:8-jdk-stretch
+        services:
+            postgres:
+                image: postgres
+                env:
+                    POSTGRES_DB: totoro
+                    POSTGRES_USER: totoro
+                    POSTGRES_PASSWORD: totoro
+        steps:
+            -   name: "Check out totoro admin"
+                uses: actions/checkout@v2
+            -   uses: actions/cache@v2
+                with:
+                    path: |
+                        ~/.gradle/caches
+                        ~/.gradle/wrapper
+                    key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+                    restore-keys: |
+                        ${{ runner.os }}-gradle-
+            -   name: "Grant execute permission for gradlew"
+                run: chmod +x gradlew
+            -   name: "Run test"
+                run: ./gradlew test --no-daemon
+                env:
+                    SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/totoro
+
+    Props:
+        runs-on: ubuntu-18.04
+        if: ${{ startsWith(github.ref, 'refs/heads/') || startsWith(github.ref, 'refs/tags/') }}
+        outputs:
+            tag-name: ${{ steps.setup-props-value.outputs.tag-name }}
+            tag-timestamp: ${{ steps.setup-props-value.outputs.tag-timestamp }}
+            war-name: ${{ steps.setup-props-value.outputs.war-name }}
+            version-file: ${{ steps.setup-props-value.outputs.version-file }}
+            deploy-port: ${{ steps.setup-props-value.outputs.deploy-port }}
+            notify: ${{ steps.setup-props-value.outputs.notify }}
+            dev-deploy: ${{ steps.setup-props-value.outputs.dev-deploy }}
+            gcp-release: ${{ steps.setup-props-value.outputs.gcp-release }}
+            firebase-release: ${{ steps.setup-props-value.outputs.firebase-release }}
+        steps:
+            -   name: "Check out totoro admin"
+                uses: actions/checkout@v2
+            -   name: "Setup Props Value"
+                id: setup-props-value
+                run: ${GITHUB_WORKSPACE}/.github/workflows/scripts/setup-props-value.sh
+                shell: bash
+                env:
+                    GITHUB_REF: ${{ github.ref }}
+                    GITHUB_SHA: ${{ github.sha }}
+
+    Build-War:
+        runs-on: ubuntu-18.04
+        container: openjdk:8-jdk-stretch
+        needs: [ Regular-Test, Props ]
+        if: ${{ startsWith(github.ref, 'refs/heads/') || startsWith(github.ref, 'refs/tags/') }}
+        env:
+            WAR_NAME: ${{ needs.Props.outputs.war-name }}
+            TAG_NAME: ${{ needs.Props.outputs.tag-name }}
+            VERSION_FILE: ${{ needs.Props.outputs.version-file }}
+        steps:
+            -   name: "Install Tool"
+                run: |
+                    apt-get update -y && apt-get install jq curl unzip git -y
+                    apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
+            -   name: "Check out totoro admin"
+                uses: actions/checkout@v1
+            -   name: "Check out totoro version"
+                uses: actions/checkout@v2
+                with:
+                    repository: ${{ env.VERSION_REPOSITORY }}
+                    ref: master
+                    token: ${{ secrets.TOTORO_VERSION_ACCESS }}
+                    path: totoro-version
+            -   name: "Download web artifact"
+                id: download-web-artifact
+                run: ${GITHUB_WORKSPACE}/.github/workflows/scripts/retrieve-web-artifact.sh
+                shell: bash
+                env:
+                    TOKEN: ${{ secrets.TOTORO_VERSION_ACCESS }}
+                    WEB_REPOSITORY: ${{ env.WEB_REPOSITORY }}
+                    VERSION_FILE: ${{ env.VERSION_FILE }}
+                working-directory: ./totoro-version
+            -   uses: actions/cache@v2
+                with:
+                    path: |
+                        ~/.gradle/caches
+                        ~/.gradle/wrapper
+                    key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+                    restore-keys: |
+                        ${{ runner.os }}-gradle-
+            -   name: "Grant execute permission for gradlew"
+                run: chmod +x gradlew
+            -   name: "Build"
+                run: |
+                    ./gradlew bootWar -Pprod -x check --no-daemon
+                    ls ${GITHUB_WORKSPACE}/build/libs/
+            -   name: "Change war name By develop"
+                if: ${{ startsWith(env.TAG_NAME, 'dev') }}
+                run: ls totoro*.war | xargs -I {} mv {} ${WAR_NAME}
+                env:
+                    WAR_NAME: ${{ env.WAR_NAME }}
+                working-directory: ./build/libs/
+            -   name: "Upload his war"
+                uses: actions/upload-artifact@v2
+                with:
+                    name: ${{ env.ARTIFACT_NAME }}
+                    path: build/libs/${{ env.WAR_NAME }}
+
+    Release-To-Dev-Machine:
+        runs-on: ubuntu-18.04
+        needs: [ Build-War, Props ]
+        if: ${{ startsWith(github.ref, 'refs/heads/') || startsWith(github.ref, 'refs/tags/') }}
+        env:
+            WAR_NAME: ${{ needs.Props.outputs.war-name }}
+        steps:
+            -   name: "Check out totoro admin"
+                uses: actions/checkout@v2
+            -   name: "Download his war"
+                uses: actions/download-artifact@v2
+                with:
+                    name: ${{ env.ARTIFACT_NAME }}
+            -   name: "Deliver his war"
+                run: ${GITHUB_WORKSPACE}/.github/workflows/scripts/scp.sh
+                shell: bash
+                env:
+                    SECRET: ${{ secrets.HIS_LOCAL_DEV_MACHINE_KEY }}
+                    SOURCE_PATH: ${{ github.workspace }}/${{ env.WAR_NAME }}
+                    TARGET_HOST: dev.dentall.site
+                    TARGET_USER: dentallio
+                    TARGET_PATH: /home/dentallio/Dentall/dora-monitor/storage/wars/
+
+    Release-Image-To-GCP:
+        runs-on: ubuntu-18.04
+        needs: [ Build-War, Props ]
+        if: ${{ needs.Props.outputs.gcp-release == 'true' }}
+        env:
+            WAR_NAME: ${{ needs.Props.outputs.war-name }}
+            TAG_NAME: ${{ needs.Props.outputs.tag-name }}
+        steps:
+            -   name: "Check out totoro admin"
+                uses: actions/checkout@v2
+            -   name: "Download his war"
+                uses: actions/download-artifact@v2
+                with:
+                    name: ${{ env.ARTIFACT_NAME }}
+            -   name: "Rename war"
+                run: |-
+                    ls
+                    echo ======
+                    mv ${WAR_NAME} src/main/docker/app.war
+                env:
+                    WAR_NAME: ${{ env.WAR_NAME }}
+            -   name: "Set up Cloud SDK"
+                uses: google-github-actions/setup-gcloud@master
+                with:
+                    project_id: ${{ secrets.HIS_GCP_PROJECT_ID }}
+                    service_account_key: ${{ secrets.HIS_GCP_SERVICE_KEY }}
+                    export_default_credentials: true
+            -   name: "Configure docker to use the gcloud command-line tool as a credential helper"
+                run: |-
+                    gcloud --quiet auth configure-docker
+            -   name: "Build image"
+                run: |-
+                    docker pull asia.gcr.io/${HIS_GCP_PROJECT_ID}/${HIS_GCP_PROJECT_NAME}:cache || true
+                    docker build --cache-from asia.gcr.io/${HIS_GCP_PROJECT_ID}/${HIS_GCP_PROJECT_NAME}:cache -t asia.gcr.io/${HIS_GCP_PROJECT_ID}/${HIS_GCP_PROJECT_NAME}:${TAG_NAME} -t asia.gcr.io/${HIS_GCP_PROJECT_ID}/${HIS_GCP_PROJECT_NAME}:cache -f src/main/docker/Dockerfile src/main/docker
+                env:
+                    HIS_GCP_PROJECT_ID: ${{ secrets.HIS_GCP_PROJECT_ID }}
+                    HIS_GCP_PROJECT_NAME: totoro-admin
+            -   name: "Publish image"
+                run: |-
+                    docker push asia.gcr.io/${HIS_GCP_PROJECT_ID}/${HIS_GCP_PROJECT_NAME}:${TAG_NAME}
+                    docker push asia.gcr.io/${HIS_GCP_PROJECT_ID}/${HIS_GCP_PROJECT_NAME}:cache
+                env:
+                    HIS_GCP_PROJECT_ID: ${{ secrets.HIS_GCP_PROJECT_ID }}
+                    HIS_GCP_PROJECT_NAME: totoro-admin
+
+    Release-War-To-Firebase:
+        runs-on: ubuntu-18.04
+        needs: [ Build-War, Props ]
+        if: ${{ needs.Props.outputs.firebase-release == 'true' }}
+        env:
+            WAR_NAME: ${{ needs.Props.outputs.war-name }}
+        steps:
+            -   name: "Download his war"
+                uses: actions/download-artifact@v2
+                with:
+                    name: ${{ env.ARTIFACT_NAME }}
+            -   name: "Set up Cloud SDK"
+                uses: google-github-actions/setup-gcloud@master
+                with:
+                    project_id: ${{ secrets.HIS_GCP_PROJECT_ID }}
+                    service_account_key: ${{ secrets.HIS_GCP_SERVICE_KEY }}
+                    export_default_credentials: true
+            -   name: "Push war"
+                run: gsutil cp ${WAR_NAME} gs://dentall-admin-auto-update/
+                env:
+                    WAR_NAME: ${{ env.WAR_NAME }}
+
+    Deploy-To-Dentall-Dev:
+        runs-on: ubuntu-18.04
+        needs: [ Release-To-Dev-Machine, Props ]
+        if: ${{ needs.Props.outputs.dev-deploy == 'true' }}
+        env:
+            WAR_NAME: ${{ needs.Props.outputs.war-name }}
+            DORA_MANAGERED_SERVER_PORT: ${{ needs.Props.outputs.deploy-port }}
+        steps:
+            -   name: "Setup Common"
+                run: |
+                    echo "CURL_CONTENT_TYPE=Content-Type: application/json" >> $GITHUB_ENV
+                    echo "CURL_DATA_FOR_STOP={\"operation\": \"stop\", \"warVersion\": \"${WAR_NAME}\"}" >> $GITHUB_ENV
+                    echo "CURL_DATA_FOR_START={\"operation\": \"start\", \"warVersion\": \"${WAR_NAME}\"}" >> $GITHUB_ENV
+                env:
+                    WAR_NAME: ${{ env.WAR_NAME }}
+            -   name: "Deploy And Restart"
+                run: |
+                    curl -X POST http://dev.dentall.site:8001/servers/${DORA_MANAGERED_SERVER_PORT}/operation -H "${CURL_CONTENT_TYPE}" -d "${CURL_DATA_FOR_STOP}"
+                    sleep 1
+                    curl -X POST http://dev.dentall.site:8001/servers/${DORA_MANAGERED_SERVER_PORT}/operation -H "${CURL_CONTENT_TYPE}" -d "${CURL_DATA_FOR_START}"
+                env:
+                    DORA_MANAGERED_SERVER_PORT: ${{ env.DORA_MANAGERED_SERVER_PORT }}
+                    CURL_CONTENT_TYPE: ${{ env.CURL_CONTENT_TYPE }}
+                    CURL_DATA_FOR_STOP: ${{ env.CURL_DATA_FOR_STOP }}
+                    CURL_DATA_FOR_START: ${{ env.CURL_DATA_FOR_START }}
+
+    Notify:
+        runs-on: ubuntu-18.04
+        needs: [ Deploy-To-Dentall-Dev, Props ]
+        if: ${{ needs.Props.outputs.notify == 'true' }}
+        env:
+            TAG_NAME: ${{ needs.Props.outputs.tag-name }}
+            DORA_MANAGERED_SERVER_PORT: ${{ needs.Props.outputs.deploy-port }}
+        steps:
+            -   name: "Setup Common"
+                run: |
+                    echo "CURL_CONTENT_TYPE=Content-Type: application/json" >> $GITHUB_ENV
+                    echo "SLACK_INFO={\"text\": \"(IN TEST) Hey everyone in <!here>, ${DORA_MANAGERED_SERVER_PORT} is ready with version: ${TAG_NAME}\"}" >> $GITHUB_ENV
+                env:
+                    DORA_MANAGERED_SERVER_PORT: ${{ env.DORA_MANAGERED_SERVER_PORT }}
+                    TAG_NAME: ${{ env.TAG_NAME }}
+            -   name: "Notify to Slack"
+                run: curl --location --request POST "${SLACK_CHANNEL_HOOK}" --header "${CURL_CONTENT_TYPE}" --data-raw "${SLACK_INFO}"
+                env:
+                    SLACK_CHANNEL_HOOK: ${{ secrets.SLACK_QA_CHANNEL_HOOK }}
+                    CURL_CONTENT_TYPE: ${{ env.CURL_CONTENT_TYPE }}
+                    SLACK_INFO: ${{ env.SLACK_INFO }}
+
+    Apply-His-Version:
+        runs-on: ubuntu-18.04
+        needs: [ Build-War, Props ]
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        env:
+            TAG_NAME: ${{ needs.Props.outputs.tag-name }}
+            TAG_TIMESTAMP: ${{ needs.Props.outputs.tag-timestamp }}
+            VERSION_FILE: ${{ needs.Props.outputs.version-file }}
+        steps:
+            -   name: "Check out totoro version"
+                uses: actions/checkout@v2
+                with:
+                    repository: ${{ env.VERSION_REPOSITORY }}
+                    ref: master
+                    token: ${{ secrets.TOTORO_VERSION_ACCESS }}
+                    path: totoro-version
+            -   name: "Install Tool"
+                run: sudo apt-get update -y && sudo apt-get install jq -y
+            -   name: "Setup his version"
+                run: |
+                    jq --arg timestamp ${TAG_TIMESTAMP} --arg version ${TAG_NAME} \
+                    '.totoroAdminModifiedTime=$timestamp | .totoroAdmin=$version' ${VERSION_FILE} > tmp \
+                    && mv tmp ${VERSION_FILE}
+                env:
+                    TAG_NAME: ${{ env.TAG_NAME }}
+                    TAG_TIMESTAMP: ${{ env.TAG_TIMESTAMP }}
+                    VERSION_FILE: ${{ env.VERSION_FILE }}
+                working-directory: ./totoro-version
+            -   name: "Commit his version"
+                run: |
+                    echo "Commit his version"
+                    echo "::group::Push to totoro-version repository"
+                    git config --global user.email "github-auto@dentall.io"
+                    git config --global user.name "github-auto"
+                    git commit -am "Create update totoro-admin ${TAG_NAME} version at ${TAG_TIMESTAMP}"
+                    git push
+                    echo "::endgroup::"
+                env:
+                    TAG_NAME: ${{ env.TAG_NAME }}
+                    TAG_TIMESTAMP: ${{ env.TAG_TIMESTAMP }}
+                working-directory: ./totoro-version

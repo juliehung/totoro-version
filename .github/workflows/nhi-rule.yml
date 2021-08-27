@@ -1,0 +1,43 @@
+# This workflow will build a Java project with Gradle
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
+name: NHI Rule Integration Test
+
+on:
+    workflow_dispatch:
+        inputs:
+            tags:
+                description: 'Which Cucumber Tags you want to run'
+                required: true
+    push:
+        branches:
+            - '**nhi-rule'
+    pull_request:
+        branches:
+            - '**nhi-rule'
+
+jobs:
+    nhi-rule-test:
+        runs-on: [ self-hosted, dentall-his-runner ]
+        steps:
+            -   name: Check out branch
+                uses: actions/checkout@v2
+            -   name: Set up JDK 1.8
+                uses: actions/setup-java@v2
+                with:
+                    java-version: '8'
+                    distribution: 'adopt-openj9'
+            -   name: Grant execute permission for gradlew
+                run: chmod +x gradlew
+            -   name: Run NHI Rule Integration Test Automatic
+                if: ${{github.event.inputs.tags == '' }}
+                run: ./gradlew -Pcucumber.filter.tags=@nhi cucumber
+            -   name: Run NHI Rule Integration Test Manually
+                if: ${{github.event.inputs.tags != '' }}
+                run: ./gradlew -Pcucumber.filter.tags=${{github.event.inputs.tags}} cucumber
+            -   name: Upload Cucumber Report
+                if: ${{ always() }}
+                uses: actions/upload-artifact@v2.2.4
+                with:
+                    name: cucumber-artifact
+                    path: build/reports/cucumber/
