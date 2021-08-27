@@ -26,36 +26,12 @@ public class ExcelUtil {
         Workbook wb = new HSSFWorkbook();
 
         Map<String, List<String>> rowContents = new HashMap<>();
-        TaipeiAreaReport rp1 = new TaipeiAreaReport();
-        NorthAreaReport rp2 = new NorthAreaReport();
-        SouthAreaReport rp3 = new SouthAreaReport();
-        CenterAreaReport rp4 = new CenterAreaReport();
-        KaoPinAreaReport1 rp5 = new KaoPinAreaReport1();
-        KaoPinAreaReport2 rp6 = new KaoPinAreaReport2();
-        rp1.generateReport(
-            wb,
-            rowContents
-        );
-        rp2.generateReport(
-            wb,
-            rowContents
-        );
-        rp3.generateReport(
-            wb,
-            rowContents
-        );
-        rp4.generateReport(
-            wb,
-            rowContents
-        );
-        rp5.generateReport(
-            wb,
-            rowContents
-        );
-        rp6.generateReport(
-            wb,
-            rowContents
-        );
+        TaipeiDistrictReport rp1 = new TaipeiDistrictReport();
+        NorthDistrictReport rp2 = new NorthDistrictReport();
+        SouthDistrictReport rp3 = new SouthDistrictReport();
+        MiddleDistrictReport rp4 = new MiddleDistrictReport();
+        KaoPingDistrictRegularReport rp5 = new KaoPingDistrictRegularReport();
+        KaoPinDistrictRegularReport rp6 = new KaoPinDistrictRegularReport();
         wb.write(fos);
         fos.close();
         wb.close();
