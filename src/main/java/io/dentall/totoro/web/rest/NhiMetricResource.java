@@ -6,6 +6,7 @@ import io.dentall.totoro.business.service.nhi.metric.vm.MetricLVM;
 import io.dentall.totoro.business.vm.nhi.NhiMetricReportBodyVM;
 import io.dentall.totoro.business.vm.nhi.NhiMetricReportQueryStringVM;
 import io.dentall.totoro.domain.NhiMetricReport;
+import io.dentall.totoro.domain.enumeration.BatchStatus;
 import io.dentall.totoro.repository.NhiMetricReportRepository;
 import io.dentall.totoro.service.mapper.NhiMetricReportMapper;
 import io.dentall.totoro.service.util.DateTimeUtil;
@@ -29,15 +30,10 @@ public class NhiMetricResource {
 
     private final MetricService metricService;
 
-    private final NhiMetricReportRepository nhiMetricReportRepository;
-
-
     public NhiMetricResource(
-        MetricService metricService,
-        NhiMetricReportRepository nhiMetricReportRepository
+        MetricService metricService
     ) {
         this.metricService = metricService;
-        this.nhiMetricReportRepository = nhiMetricReportRepository;
     }
 
     @GetMapping("/dashboard")
@@ -58,12 +54,7 @@ public class NhiMetricResource {
     @Timed
     @Transactional
     public ResponseEntity<String> generateNhiMetricReport(@RequestBody NhiMetricReportBodyVM nhiMetricReportBodyVM) {
-        NhiMetricReport r = nhiMetricReportRepository.save(
-            NhiMetricReportMapper.INSTANCE.convertBodyToDomain(
-                nhiMetricReportBodyVM
-            )
-        );
-        return ResponseEntity.ok("OK");
+        return ResponseEntity.ok(metricService.generateNhiMetricReport(nhiMetricReportBodyVM));
     }
 
     @Profile("img-gcs")
@@ -71,13 +62,6 @@ public class NhiMetricResource {
     @Timed
     @Transactional
     public ResponseEntity<List<NhiMetricReport>> getNhiMetricReports(NhiMetricReportQueryStringVM queryStringVM) {
-        return ResponseEntity.ok().body(
-            nhiMetricReportRepository.findByYearMonthAndCreatedByOrderByCreatedDateDesc(
-                DateTimeUtil.transformIntYyyymmToFormatedStringYyyymm(
-                    queryStringVM.getYyyymm()
-                ),
-                queryStringVM.getCreatedBy()
-            )
-        );
+        return ResponseEntity.ok().body(metricService.getNhiMetricReports(queryStringVM));
     }
 }

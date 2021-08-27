@@ -1,5 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric;
 
+import com.google.api.client.util.Value;
+import io.dentall.totoro.business.service.ImageGcsBusinessService;
 import io.dentall.totoro.business.service.nhi.metric.dto.DisposalSummaryDto;
 import io.dentall.totoro.business.service.nhi.metric.dto.DoctorSummaryDto;
 import io.dentall.totoro.business.service.nhi.metric.dto.GiantMetricDto;
@@ -8,11 +10,24 @@ import io.dentall.totoro.business.service.nhi.metric.mapper.SpecialTreatmentMapp
 import io.dentall.totoro.business.service.nhi.metric.mapper.TimeLineDataMapper;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType;
 import io.dentall.totoro.business.service.nhi.metric.vm.*;
+import io.dentall.totoro.business.vm.nhi.NhiMetricReportBodyVM;
+import io.dentall.totoro.business.vm.nhi.NhiMetricReportQueryStringVM;
+import io.dentall.totoro.domain.NhiMetricReport;
+import io.dentall.totoro.domain.User;
+import io.dentall.totoro.domain.enumeration.BatchStatus;
+import io.dentall.totoro.repository.NhiMetricReportRepository;
+import io.dentall.totoro.service.UserService;
+import io.dentall.totoro.service.mapper.NhiMetricReportMapper;
+import io.dentall.totoro.service.util.DateTimeUtil;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 
 import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.CLINIC;
@@ -24,8 +39,25 @@ public class MetricService {
 
     private final MetricDashboardService metricDashboardService;
 
-    public MetricService(MetricDashboardService metricDashboardService) {
+    private final NhiMetricReportRepository nhiMetricReportRepository;
+
+    private final UserService userService;
+
+    private final ApplicationContext applicationContext;
+
+    @Value("${ nhi.metric.maxLock }")
+    private Integer MAX_LOCK;
+
+    public MetricService(
+        MetricDashboardService metricDashboardService,
+        NhiMetricReportRepository nhiMetricReportRepository,
+        UserService userService,
+        ApplicationContext applicationContext
+    ) {
         this.metricDashboardService = metricDashboardService;
+        this.nhiMetricReportRepository = nhiMetricReportRepository;
+        this.userService = userService;
+        this.applicationContext = applicationContext;
     }
 
     public List<MetricLVM> getDashboardMetric(final LocalDate baseDate, List<Long> excludeDisposalIds) {
@@ -172,4 +204,69 @@ public class MetricService {
         }).collect(Collectors.toList());
     }
 
+    @Profile("img-gcs")
+    @Transactional
+    synchronized public String generateNhiMetricReport(NhiMetricReportBodyVM nhiMetricReportBodyVM) {
+        NhiMetricReport r = null;
+        try {
+            Optional<User> currentUser = userService.getUserWithAuthorities();
+
+            if (!currentUser.isPresent()) {
+                return "Can not found current login user.";
+            }
+
+            if (
+                nhiMetricReportRepository.countByStatusOrderByCreatedDateDesc(BatchStatus.LOCK) >= MAX_LOCK
+            ) {
+                return String.format(
+                    "Excess maximum lock, wait until procedure done and download result from url",
+                    this.MAX_LOCK
+                );
+            }
+
+            r = nhiMetricReportRepository.save(
+                NhiMetricReportMapper.INSTANCE.convertBodyToDomain(
+                    nhiMetricReportBodyVM
+                )
+            );
+
+            // running
+            ForkJoinPool.commonPool().submit(() -> {
+                try {
+                    ImageGcsBusinessService imageGcsBusinessService = applicationContext.getBean(ImageGcsBusinessService.class);
+//                    String gcpUrl = nhiRuleCheckUtil.generateMonthDeclarationRuleCheckReport(
+//                        finalPartialACDateTime,
+//                        finalExcludeDisposals,
+//                        imageGcsBusinessService
+//                    );
+
+
+//                    r.setStatus(BatchStatus.DONE);
+//                    r.getComment().setUrl(gcpUrl);
+                } catch (Exception e) {
+//                    log.error();
+//                    r.setStatus(BatchStatus.FAILURE);
+                }
+            });
+
+
+        } catch(Exception e) {
+            if (r != null) {
+                r.setStatus(BatchStatus.FAILURE);
+            }
+
+            return e.getMessage();
+        }
+
+        return "ok";
+    }
+
+    public List<NhiMetricReport> getNhiMetricReports(NhiMetricReportQueryStringVM queryStringVM) {
+        return nhiMetricReportRepository.findByYearMonthAndCreatedByOrderByCreatedDateDesc(
+            DateTimeUtil.transformIntYyyymmToFormatedStringYyyymm(
+                queryStringVM.getYyyymm()
+            ),
+            queryStringVM.getCreatedBy()
+        );
+    }
 }

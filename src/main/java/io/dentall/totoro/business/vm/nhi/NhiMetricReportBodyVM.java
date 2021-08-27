@@ -2,14 +2,19 @@ package io.dentall.totoro.business.vm.nhi;
 
 import io.dentall.totoro.domain.enumeration.NhiMetricReportType;
 
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 public class NhiMetricReportBodyVM {
+
+    @NotNull
     private Integer yyyymm;
 
+    @NotNull
     private Set<NhiMetricReportType> nhiMetricReportTypes;
 
-    private Set<String> selectedTargets;
+    @NotNull
+    private Set<Long> selectedTargets;
 
     public Integer getYyyymm() {
         return yyyymm;
@@ -27,11 +32,11 @@ public class NhiMetricReportBodyVM {
         this.nhiMetricReportTypes = nhiMetricReportTypes;
     }
 
-    public Set<String> getSelectedTargets() {
+    public Set<Long> getSelectedTargets() {
         return selectedTargets;
     }
 
-    public void setSelectedTargets(Set<String> selectedTargets) {
+    public void setSelectedTargets(Set<Long> selectedTargets) {
         this.selectedTargets = selectedTargets;
     }
 }
