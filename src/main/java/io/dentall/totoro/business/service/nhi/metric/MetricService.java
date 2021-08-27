@@ -14,6 +14,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricReportBodyVM;
 import io.dentall.totoro.business.vm.nhi.NhiMetricReportQueryStringVM;
 import io.dentall.totoro.domain.NhiMetricReport;
 import io.dentall.totoro.domain.User;
+import io.dentall.totoro.domain.enumeration.BackupFileCatalog;
 import io.dentall.totoro.domain.enumeration.BatchStatus;
 import io.dentall.totoro.repository.NhiMetricReportRepository;
 import io.dentall.totoro.service.UserService;
@@ -24,6 +25,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -234,6 +236,15 @@ public class MetricService {
             ForkJoinPool.commonPool().submit(() -> {
                 try {
                     ImageGcsBusinessService imageGcsBusinessService = applicationContext.getBean(ImageGcsBusinessService.class);
+                    imageGcsBusinessService.uploadFile(
+                        imageGcsBusinessService.getClinicName()
+                            .concat("/")
+                            .concat(BackupFileCatalog.NHI_METRIC_REPORT.getRemotePath())
+                            .concat("/"),
+                        "filename",
+                        "content".getBytes(StandardCharsets.UTF_8),
+                        BackupFileCatalog.NHI_METRIC_REPORT.getFileExtension()
+                    );
 //                    String gcpUrl = nhiRuleCheckUtil.generateMonthDeclarationRuleCheckReport(
 //                        finalPartialACDateTime,
 //                        finalExcludeDisposals,
