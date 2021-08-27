@@ -3,7 +3,6 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1ToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od456SurfaceCount;
-import io.dentall.totoro.business.service.nhi.metric.meta.Tro6Config;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.OdQuarterSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
@@ -11,6 +10,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
+import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro6;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 
 /**
@@ -25,13 +25,13 @@ public class K10Formula extends AbstractFormula<BigDecimal> {
     public K10Formula(MetricConfig metricConfig) {
         super(metricConfig);
         this.source = new OdQuarterSource(metricConfig);
+        this.source.setExclude(Tro6);
     }
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro6Config config = new Tro6Config(metricConfig);
-        Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, config, source).apply();
-        Od456SurfaceCount od456SurfaceCount = new Od456SurfaceCount(metricConfig, config, source).apply();
+        Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, source).apply();
+        Od456SurfaceCount od456SurfaceCount = new Od456SurfaceCount(metricConfig, source).apply();
         try {
             return divide(od456SurfaceCount.getResult(), od1ToothCount.getResult());
         } catch (ArithmeticException e) {

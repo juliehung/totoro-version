@@ -3,7 +3,6 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 import io.dentall.totoro.business.service.nhi.metric.meta.EndoAndOdToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.ExtToothCount;
-import io.dentall.totoro.business.service.nhi.metric.meta.Tro6Config;
 import io.dentall.totoro.business.service.nhi.metric.source.*;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -11,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro6;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static java.math.BigDecimal.ZERO;
 
@@ -31,13 +31,15 @@ public class K14Formula extends AbstractFormula<BigDecimal> {
         this.extQuarterSource = new ExtQuarterSource(metricConfig);
         this.extQuarterByPatientSource = new ExtQuarterByPatientSource(metricConfig);
         this.endoAndOdHalfYearByPatientSource = new EndoAndOdHalfYearNearByPatientSource(metricConfig);
+        this.extQuarterSource.setExclude(Tro6);
+        this.extQuarterByPatientSource.setExclude(Tro6);
+        this.endoAndOdHalfYearByPatientSource.setExclude(Tro6);
     }
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro6Config config = new Tro6Config(metricConfig);
-        ExtToothCount extToothCount = new ExtToothCount(metricConfig, config, extQuarterSource).apply();
-        EndoAndOdToothCount endoAndOdToothCount = new EndoAndOdToothCount(metricConfig, config, extQuarterByPatientSource, endoAndOdHalfYearByPatientSource, 1, 180).apply();
+        ExtToothCount extToothCount = new ExtToothCount(metricConfig, extQuarterSource).apply();
+        EndoAndOdToothCount endoAndOdToothCount = new EndoAndOdToothCount(metricConfig, extQuarterByPatientSource, endoAndOdHalfYearByPatientSource, 1, 180).apply();
         try {
             return divide(endoAndOdToothCount.getResult(), extToothCount.getResult());
         } catch (ArithmeticException e) {

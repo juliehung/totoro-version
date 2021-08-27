@@ -6,8 +6,6 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyExcludeByVM;
-
 /**
  * 醫令數
  */
@@ -27,10 +25,8 @@ public class TreatmentCount extends SingleSourceMetaCalculator<Long> {
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
         List<NhiMetricRawVM> source = metricConfig.retrieveSource(source().key());
-        Exclude exclude = getExclude();
         return source.stream()
             .filter(vm -> codes.contains(vm.getTreatmentProcedureCode()))
-            .filter(applyExcludeByVM(exclude))
             .count();
     }
 

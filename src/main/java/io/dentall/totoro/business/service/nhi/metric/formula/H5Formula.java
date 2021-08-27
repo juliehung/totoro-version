@@ -1,13 +1,17 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
-import io.dentall.totoro.business.service.nhi.metric.meta.*;
+import io.dentall.totoro.business.service.nhi.metric.meta.Od1ToothCount;
+import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousReToothCount;
+import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentReToothCount;
+import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
 import io.dentall.totoro.business.service.nhi.metric.source.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro1;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static java.math.BigDecimal.ZERO;
 
@@ -27,11 +31,15 @@ public class H5Formula extends AbstractFormula<BigDecimal> {
         this.odTwoYearByPatientSource = new OdPermanentOneYearNearByPatientSource(metricConfig);
         this.odMonthSelectedByPatientSource = new OdMonthSelectedByPatientSource(metricConfig);
         this.odMonthSelectedSource = new OdMonthSelectedSource(metricConfig);
+        this.odOneAndHalfYearByPatientSource.setExclude(Tro1);
+        this.odTwoYearByPatientSource.setExclude(Tro1);
+        this.odMonthSelectedByPatientSource.setExclude(Tro1);
+        this.odMonthSelectedSource.setExclude(Tro1);
     }
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        MetaConfig config = new Tro1Config(metricConfig);
+        Tro1Config config = new Tro1Config(metricConfig);
         Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, config, odMonthSelectedSource).apply();
         OdDeciduousReToothCount odDeciduousToothCount =
             new OdDeciduousReToothCount(metricConfig, config, odMonthSelectedByPatientSource, odOneAndHalfYearByPatientSource, 1, 450).apply();

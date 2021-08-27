@@ -24,10 +24,4 @@ public interface NhiMetricRawMapper {
 
     ExcludeDto mapToExcludeDto(NhiMetricRawVM vm);
 
-    @Mappings({
-        @Mapping(target = "treatmentProcedureCode", source = "code"),
-        @Mapping(target = "nhiCategory", source = "category"),
-        @Mapping(target = "treatmentProcedureSpecificCode", source = "specificCode")
-    })
-    ExcludeDto mapToExcludeDto(OdDto odDto);
 }

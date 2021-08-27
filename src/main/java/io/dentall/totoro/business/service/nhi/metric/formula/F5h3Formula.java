@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro1;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ZERO;
@@ -35,6 +36,9 @@ public class F5h3Formula extends AbstractFormula<BigDecimal> {
         this.odSource = new OdQuarterSource(metricConfig);
         this.odByPatientSource = new OdQuarterByPatientSource(metricConfig);
         this.odPastByPatientSource = new OdThreeYearNearByPatientSource(metricConfig);
+        this.odSource.setExclude(Tro1);
+        this.odByPatientSource.setExclude(Tro1);
+        this.odPastByPatientSource.setExclude(Tro1);
     }
 
     @Override

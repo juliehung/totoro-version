@@ -7,8 +7,6 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import java.util.List;
 import java.util.Objects;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyExcludeByVM;
-
 /**
  * 部分負擔點數
  */
@@ -25,10 +23,8 @@ public class Point4 extends SingleSourceMetaCalculator<Long> {
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
         List<NhiMetricRawVM> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
-        Exclude exclude = getExclude();
 
         return nhiMetricRawVMList.stream()
-            .filter(applyExcludeByVM(exclude))
             .map(NhiMetricRawVM::getPartialBurden)
             .filter(Objects::nonNull)
             .map(Long::valueOf)

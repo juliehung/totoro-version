@@ -1,6 +1,5 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.meta.Category1416Perio1Perio2Config;
 import io.dentall.totoro.business.service.nhi.metric.meta.Ic3;
 import io.dentall.totoro.business.service.nhi.metric.meta.Point1;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
@@ -10,6 +9,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
+import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.NhiCategory1416Perio1Perio2;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static java.math.BigDecimal.ZERO;
 
@@ -23,13 +23,13 @@ public class A7Formula extends AbstractFormula<BigDecimal> {
     public A7Formula(MetricConfig metricConfig) {
         super(metricConfig);
         this.source = new MonthSelectedSource(metricConfig);
+        this.source.setExclude(NhiCategory1416Perio1Perio2);
     }
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Category1416Perio1Perio2Config config = new Category1416Perio1Perio2Config(metricConfig);
-        Point1 point1 = new Point1(metricConfig, config, source).apply();
-        Ic3 ic3 = new Ic3(metricConfig, config, source).apply();
+        Point1 point1 = new Point1(metricConfig, source).apply();
+        Ic3 ic3 = new Ic3(metricConfig, source).apply();
         try {
             return divide(point1.getResult(), ic3.getResult());
         } catch (ArithmeticException e) {

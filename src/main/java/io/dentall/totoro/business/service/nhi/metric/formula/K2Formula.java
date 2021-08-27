@@ -2,7 +2,6 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.meta.Point2;
 import io.dentall.totoro.business.service.nhi.metric.meta.Pt1;
-import io.dentall.totoro.business.service.nhi.metric.meta.Tro6Config;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.QuarterSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
@@ -10,6 +9,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
+import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro6;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static java.math.BigDecimal.ZERO;
 import static java.math.BigDecimal.valueOf;
@@ -26,13 +26,13 @@ public class K2Formula extends AbstractFormula<BigDecimal> {
     public K2Formula(MetricConfig metricConfig) {
         super(metricConfig);
         this.source = new QuarterSource(metricConfig);
+        this.source.setExclude(Tro6);
     }
 
     @Override
     protected BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro6Config config = new Tro6Config(metricConfig);
-        Point2 point2 = new Point2(metricConfig, config, source).apply();
-        Pt1 pt1 = new Pt1(metricConfig, config, source).apply();
+        Point2 point2 = new Point2(metricConfig, source).apply();
+        Pt1 pt1 = new Pt1(metricConfig, source).apply();
 
         try {
             return divide(divide(point2.getResult(), pt1.getResult()), valueOf(3));

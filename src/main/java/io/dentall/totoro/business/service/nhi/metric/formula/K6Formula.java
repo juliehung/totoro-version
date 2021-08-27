@@ -3,7 +3,6 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1ReToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1ToothCount;
-import io.dentall.totoro.business.service.nhi.metric.meta.Tro6Config;
 import io.dentall.totoro.business.service.nhi.metric.source.*;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
@@ -11,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro6;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 
@@ -34,13 +34,15 @@ public class K6Formula extends AbstractFormula<BigDecimal> {
         this.odSource = new OdQuarterSource(metricConfig);
         this.odByPatientSource = new OdQuarterByPatientSource(metricConfig);
         this.odPastByPatientSource = new OdTwoYearNearByPatientSource(metricConfig);
+        this.odSource.setExclude(Tro6);
+        this.odByPatientSource.setExclude(Tro6);
+        this.odPastByPatientSource.setExclude(Tro6);
     }
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro6Config config = new Tro6Config(metricConfig);
-        Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, config, odSource).apply();
-        Od1ReToothCount od1ReToothCount = new Od1ReToothCount(metricConfig, config, odByPatientSource, odPastByPatientSource, 1, 730).apply();
+        Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, odSource).apply();
+        Od1ReToothCount od1ReToothCount = new Od1ReToothCount(metricConfig, odByPatientSource, odPastByPatientSource, 1, 730).apply();
         try {
             return toPercentage(divide(od1ReToothCount.getResult(), od1ToothCount.getResult()));
         } catch (ArithmeticException e) {

@@ -15,8 +15,6 @@ public abstract class AbstractMetaCalculator<T> implements MetaCalculator<T> {
 
     private Meta<T> meta;
 
-    private final Exclude exclude;
-
     private final MetaConfig config;
 
     private final Source<?, ?>[] sources;
@@ -26,7 +24,6 @@ public abstract class AbstractMetaCalculator<T> implements MetaCalculator<T> {
     public AbstractMetaCalculator(MetricConfig metricConfig, MetaConfig config, Source<?, ?>[] sources) {
         this.metricConfig = metricConfig;
         this.config = ofNullable(config).orElse(new MetaConfig(this.metricConfig));
-        this.exclude = this.config.getExclude();
         this.sources = sources;
         this.key = new MetaCalculatorKey(this);
     }
@@ -49,10 +46,6 @@ public abstract class AbstractMetaCalculator<T> implements MetaCalculator<T> {
     }
 
     public abstract T doCalculate(MetricConfig metricConfig);
-
-    public Exclude getExclude() {
-        return exclude;
-    }
 
     public final MetaCalculatorKey key() {
         return key;

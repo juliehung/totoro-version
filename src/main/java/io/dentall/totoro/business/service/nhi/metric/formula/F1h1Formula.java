@@ -9,6 +9,8 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
+import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro1;
+
 /**
  * 合計點數 ＠date-15＠ 的 @Point-1@
  */
@@ -19,6 +21,7 @@ public class F1h1Formula extends AbstractFormula<BigDecimal> {
     public F1h1Formula(MetricConfig metricConfig) {
         super(metricConfig);
         this.source = new MonthSelectedSource(metricConfig);
+        this.source.setExclude(Tro1);
     }
 
     @Override

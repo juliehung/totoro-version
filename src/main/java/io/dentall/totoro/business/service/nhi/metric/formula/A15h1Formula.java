@@ -1,7 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
-import io.dentall.totoro.business.service.nhi.metric.meta.Category1416SpecialG9Config;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousReToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousToothCount;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
@@ -13,6 +12,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.NhiCategory_SpecificCode_Group1;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ZERO;
@@ -33,13 +33,14 @@ public class A15h1Formula extends AbstractFormula<BigDecimal> {
         super(metricConfig);
         this.odQuarterSource = new OdDeciduousQuarterByPatientSource(metricConfig);
         this.odTwoYearNearSource = new OdDeciduousTwoYearNearByPatientSource(metricConfig);
+        this.odQuarterSource.setExclude(NhiCategory_SpecificCode_Group1);
+        this.odTwoYearNearSource.setExclude(NhiCategory_SpecificCode_Group1);
     }
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Category1416SpecialG9Config config = new Category1416SpecialG9Config(metricConfig);
-        OdDeciduousToothCount odDeciduousTreatment = new OdDeciduousToothCount(metricConfig, config, odQuarterSource).apply();
-        OdDeciduousReToothCount odDeciduousReTreatment = new OdDeciduousReToothCount(metricConfig, config, odQuarterSource, odTwoYearNearSource, 1, 450).apply();
+        OdDeciduousToothCount odDeciduousTreatment = new OdDeciduousToothCount(metricConfig, odQuarterSource).apply();
+        OdDeciduousReToothCount odDeciduousReTreatment = new OdDeciduousReToothCount(metricConfig, odQuarterSource, odTwoYearNearSource, 1, 450).apply();
         try {
             return toPercentage(divide(odDeciduousReTreatment.getResult(), odDeciduousTreatment.getResult()));
         } catch (ArithmeticException e) {

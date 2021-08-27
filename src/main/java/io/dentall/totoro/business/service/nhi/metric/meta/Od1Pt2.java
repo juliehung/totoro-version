@@ -8,7 +8,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.*;
+import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.calculateOdPt;
+import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.isPreventionCardNumber;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.maxBy;
 
@@ -28,10 +29,8 @@ public class Od1Pt2 extends SingleSourceMetaCalculator<Long> {
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
         List<OdDto> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
-        Exclude exclude = getExclude();
 
         return nhiMetricRawVMList.stream()
-            .filter(applyExcludeByDto(exclude))
             .filter(vm -> !isPreventionCardNumber(vm.getCardNumber()))
             // 因為資料是從Treatment層級，依牙齒切成多筆，所以需要先依 disposalId + code + treatmentSeq 做 group
             .collect(groupingBy(dto -> dto.getDisposalId() + dto.getCode() + dto.getTreatmentSeq(), maxBy(Comparator.comparing(OdDto::getDisposalId))))

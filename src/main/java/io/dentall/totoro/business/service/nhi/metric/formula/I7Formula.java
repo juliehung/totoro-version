@@ -11,6 +11,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
+import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro1;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 
 /**
@@ -25,6 +26,7 @@ public class I7Formula extends AbstractFormula<BigDecimal> {
     public I7Formula(MetricConfig metricConfig) {
         super(metricConfig);
         this.source = new OdQuarterSource(metricConfig);
+        this.source.setExclude(Tro1);
     }
 
     @Override

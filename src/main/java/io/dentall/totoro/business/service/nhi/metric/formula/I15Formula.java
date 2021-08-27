@@ -10,6 +10,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
+import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro1;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ZERO;
@@ -25,6 +26,7 @@ public class I15Formula extends AbstractFormula<BigDecimal> {
     public I15Formula(MetricConfig metricConfig) {
         super(metricConfig);
         this.source = new HalfYearNearSource(metricConfig);
+        this.source.setExclude(Tro1);
     }
 
     @Override

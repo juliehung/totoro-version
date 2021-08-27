@@ -9,6 +9,8 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
+import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro5;
+
 /**
  * 申請點數 ＠date-15＠ 的 @Point-2@
  */
@@ -19,6 +21,7 @@ public class A10Formula extends AbstractFormula<BigDecimal> {
     public A10Formula(MetricConfig metricConfig) {
         super(metricConfig);
         this.source = new MonthSelectedSource(metricConfig);
+        this.source.setExclude(Tro5);
     }
 
     @Override

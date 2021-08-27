@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyExcludeByVM;
 import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.calculatePt;
 
 /**
@@ -24,14 +23,12 @@ public class Pt1ByDaily extends SingleSourceMetaCalculator<Map<LocalDate, Long>>
     @Override
     public Map<LocalDate, Long> doCalculate(MetricConfig metricConfig) {
         List<Map<LocalDate, List<NhiMetricRawVM>>> source = metricConfig.retrieveSource(source().key());
-        Exclude exclude = getExclude();
 
         return source.get(0).entrySet().stream().reduce(new HashMap<>(),
             (map, entry) -> {
                 LocalDate date = entry.getKey();
                 List<NhiMetricRawVM> sourceByDate = entry.getValue();
                 Long value = sourceByDate.stream()
-                    .filter(applyExcludeByVM(exclude))
                     .reduce(0L, calculatePt(), Long::sum);
                 map.put(date, value);
                 return map;

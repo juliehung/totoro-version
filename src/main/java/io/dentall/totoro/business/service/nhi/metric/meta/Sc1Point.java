@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstants.CodesBySc1;
-import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyExcludeByVM;
 import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyNewTreatmentPoint;
 
 /**
@@ -29,12 +28,10 @@ public class Sc1Point extends SingleSourceMetaCalculator<Long> {
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
         List<NhiMetricRawVM> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
-        Exclude exclude = getExclude();
         MetaConfig config = getConfig();
 
         return nhiMetricRawVMList.stream()
             .filter(vm -> codes.contains(vm.getTreatmentProcedureCode()))
-            .filter(applyExcludeByVM(exclude))
             .map(vm -> applyNewTreatmentPoint(vm, config))
             .filter(Objects::nonNull)
             .reduce(Long::sum)

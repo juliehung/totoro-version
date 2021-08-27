@@ -6,7 +6,6 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyExcludeByVM;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 
@@ -28,11 +27,9 @@ public class Endo1Point extends SingleSourceMetaCalculator<Long> {
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
         List<NhiMetricRawVM> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
-        Exclude exclude = getExclude();
 
         return nhiMetricRawVMList.stream()
             .filter(vm -> codes.contains(vm.getTreatmentProcedureCode()))
-            .filter(applyExcludeByVM(exclude))
             .mapToLong(NhiMetricRawVM::getTreatmentProcedureTotal)
             .sum();
     }

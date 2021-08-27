@@ -1,5 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.source;
 
+import io.dentall.totoro.business.service.nhi.metric.meta.Exclude;
+
 import java.util.Objects;
 
 public class SourceKey implements Key {
@@ -8,8 +10,11 @@ public class SourceKey implements Key {
 
     private final Source<?, ?> source;
 
+    private final Exclude exclude;
+
     public SourceKey(Source<?, ?> source) {
         this.source = source;
+        this.exclude = source.getExclude();
         this.keyName = source.getClass().getName();
     }
 
@@ -26,11 +31,11 @@ public class SourceKey implements Key {
             return false;
         }
         SourceKey sourceKey = (SourceKey) o;
-        return Objects.equals(keyName, sourceKey.keyName);
+        return keyName.equals(sourceKey.keyName) && exclude == sourceKey.exclude;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(keyName);
+        return Objects.hash(keyName, exclude);
     }
 }

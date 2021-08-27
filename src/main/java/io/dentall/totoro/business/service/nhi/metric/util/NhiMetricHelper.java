@@ -148,10 +148,6 @@ public class NhiMetricHelper {
         return vm -> ofNullable(exclude).map(exclude1 -> exclude1.test(NhiMetricRawMapper.INSTANCE.mapToExcludeDto(vm))).orElse(true);
     }
 
-    public static Predicate<OdDto> applyExcludeByDto(Exclude exclude) {
-        return vm -> ofNullable(exclude).map(exclude1 -> exclude1.test(NhiMetricRawMapper.INSTANCE.mapToExcludeDto(vm))).orElse(true);
-    }
-
     public static Map<LocalDate, Optional<Holiday>> getHolidayMap(HolidayService holidayService, int... years) {
         return Arrays.stream(years)
             .mapToObj(Year::of)

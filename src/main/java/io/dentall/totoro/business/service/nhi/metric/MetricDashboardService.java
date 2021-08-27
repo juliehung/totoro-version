@@ -36,8 +36,7 @@ public class MetricDashboardService {
     }
 
     private DashboardDto buildMetric(LocalDate baseDate, List<User> allSubject, User subject, List<NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
-        MetricConfig metricConfig = new MetricConfig(subject, baseDate, source);
-        metricConfig.applyHolidayMap(holidayMap);
+        MetricConfig metricConfig = new MetricConfig(subject, baseDate, source).applyHolidayMap(holidayMap);
 
         if (!metricConfig.isSourceExist(metricConfig.getSubjectSource().key()) || metricConfig.retrieveSource(metricConfig.getSubjectSource().key()).size() == 0) {
             return null;

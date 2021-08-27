@@ -12,6 +12,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
+import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro1;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ONE;
@@ -32,6 +33,8 @@ public class F5h6Formula extends AbstractFormula<BigDecimal> {
         super(metricConfig);
         this.source = new MonthSelectedSource(metricConfig);
         this.odSource = new OdMonthSelectedSource(metricConfig);
+        this.source.setExclude(Tro1);
+        this.odSource.setExclude(Tro1);
     }
 
     @Override

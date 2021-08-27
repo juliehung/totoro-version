@@ -5,9 +5,8 @@ import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyExcludeByVM;
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * 醫師人數
@@ -25,10 +24,8 @@ public class DoctorCount extends SingleSourceMetaCalculator<Long> {
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
         List<NhiMetricRawVM> source = metricConfig.retrieveSource(source().key());
-        Exclude exclude = getExclude();
         return (long) source.stream()
-            .filter(applyExcludeByVM(exclude))
-            .collect(Collectors.groupingBy(NhiMetricRawVM::getDoctorId))
+            .collect(groupingBy(NhiMetricRawVM::getDoctorId))
             .keySet()
             .size();
     }

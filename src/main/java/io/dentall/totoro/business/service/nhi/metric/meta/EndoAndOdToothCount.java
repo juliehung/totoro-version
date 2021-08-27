@@ -6,7 +6,6 @@ import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.util.*;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyExcludeByDto;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.groupingBy;
@@ -43,7 +42,6 @@ public class EndoAndOdToothCount extends AbstractMetaCalculator<Long> {
         List<Map<Long, Map<String, List<OdDto>>>> pastSource = metricConfig.retrieveSource(this.extPastSource.key());
         Map<Long, Map<String, List<OdDto>>> sourceMap = source.get(0);
         Map<Long, Map<String, List<OdDto>>> pastSourceMap = pastSource.get(0);
-        Exclude exclude = getExclude();
 
         return sourceMap.entrySet().stream()
             .filter(entry -> pastSourceMap.get(entry.getKey()) != null && pastSourceMap.get(entry.getKey()).size() > 0)
@@ -55,7 +53,6 @@ public class EndoAndOdToothCount extends AbstractMetaCalculator<Long> {
                 // 該季中如果同顆牙有多次，則取最後一次
                 Map<String, Optional<OdDto>> lastToothDisposal = toothMap.values().stream()
                     .flatMap(Collection::stream)
-                    .filter(applyExcludeByDto(exclude))
                     .collect(groupingBy(OdDto::getTooth, maxBy(comparing(OdDto::getDisposalDate))));
 
                 return lastToothDisposal.entrySet().stream()
@@ -64,7 +61,6 @@ public class EndoAndOdToothCount extends AbstractMetaCalculator<Long> {
                     .filter(toothDisposal -> {
                         OdDto odDto = toothDisposal.getValue().get();
                         Iterator<OdDto> existReDtoItor = toothPastMap.get(toothDisposal.getKey()).stream()
-                            .filter(applyExcludeByDto(exclude))
                             .iterator();
                         boolean found = false;
 

@@ -25,8 +25,6 @@ public class MetaConfig {
     // 國定假日排除點數上限 20,000 點 (超過部分要算入點數)
     private boolean exclude20000Point1ByDay = false;
 
-    private Exclude exclude;
-
     private final Map<LocalDate, Optional<Holiday>> holidayMap;
 
 
@@ -76,15 +74,6 @@ public class MetaConfig {
         this.excludeHolidayPoint = excludeHolidayPoint;
     }
 
-    public Exclude getExclude() {
-        return exclude;
-    }
-
-    public MetaConfig setExclude(Exclude exclude) {
-        this.exclude = exclude;
-        return this;
-    }
-
     public Map<LocalDate, Optional<Holiday>> getHolidayMap() {
         return holidayMap;
     }
@@ -103,12 +92,11 @@ public class MetaConfig {
             useOriginPoint == that.useOriginPoint &&
             excludeHolidayPoint == that.excludeHolidayPoint &&
             exclude20000Point1ByDay == that.exclude20000Point1ByDay &&
-            exclude == that.exclude &&
             Objects.equals(holidayMap, that.holidayMap);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(use00121CPoint, excludeHideoutPoint, useOriginPoint, excludeHolidayPoint, exclude20000Point1ByDay, exclude, holidayMap);
+        return Objects.hash(use00121CPoint, excludeHideoutPoint, useOriginPoint, excludeHolidayPoint, exclude20000Point1ByDay, holidayMap);
     }
 }

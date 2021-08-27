@@ -2,7 +2,7 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.meta.DoctorCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Point1ByDaily;
-import io.dentall.totoro.business.service.nhi.metric.meta.Tro2Tro3Config;
+import io.dentall.totoro.business.service.nhi.metric.meta.Tro3Config;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.QuarterByDailyOfLastYearSource;
 import io.dentall.totoro.business.service.nhi.metric.source.QuarterOfLastYearSource;
@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro2;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 
 /**
@@ -29,11 +30,13 @@ public class J1h2Formula extends AbstractFormula<BigDecimal> {
         super(metricConfig);
         this.quarterSource = new QuarterOfLastYearSource(metricConfig);
         this.quarterByDailySource = new QuarterByDailyOfLastYearSource(metricConfig);
+        this.quarterSource.setExclude(Tro2);
+        this.quarterByDailySource.setExclude(Tro2);
     }
 
     @Override
     protected BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro2Tro3Config config = new Tro2Tro3Config(metricConfig);
+        Tro3Config config = new Tro3Config(metricConfig);
         Point1ByDaily point1ByDaily = new Point1ByDaily(metricConfig, config, quarterByDailySource).apply();
         DoctorCount doctorCount = new DoctorCount(metricConfig, config, quarterSource).apply();
 

@@ -39,8 +39,7 @@ public class EastDistrictService implements DistrictService {
     }
 
     private EastDistrictDto buildMetric(LocalDate baseDate, Map<LocalDate, Optional<Holiday>> holidayMap, User subject, List<NhiMetricRawVM> source) {
-        MetricConfig metricConfig = new MetricConfig(subject, baseDate, source);
-        metricConfig.applyHolidayMap(holidayMap);
+        MetricConfig metricConfig = new MetricConfig(subject, baseDate, source).applyHolidayMap(holidayMap);
 
         if (!metricConfig.isSourceExist(metricConfig.getSubjectSource().key()) || metricConfig.retrieveSource(metricConfig.getSubjectSource().key()).size() == 0) {
             return null;
