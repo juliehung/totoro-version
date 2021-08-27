@@ -18,14 +18,20 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.DOCTOR;
+import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.doctor;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional
-public class TaipeiDistrictService {
+public class TaipeiDistrictService implements DistrictService {
 
-    public List<TaipeiDistrictDto> metric(final LocalDate baseDate, List<User> subjects, List<NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
+    @Override
+    public Optional<TaipeiDistrictDto> metric(LocalDate baseDate, User subject, List<NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
+        return ofNullable(buildMetric(baseDate, holidayMap, subject, source));
+    }
+
+    public List<TaipeiDistrictDto> metric(LocalDate baseDate, List<User> subjects, List<NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
         return subjects.parallelStream()
             .map(subject -> buildMetric(baseDate, holidayMap, subject, source))
             .filter(Objects::nonNull)
@@ -54,7 +60,8 @@ public class TaipeiDistrictService {
         BigDecimal metricF5h6 = new F5h6Formula(metricConfig).calculate();
         BigDecimal metricF5h7 = new F5h7Formula(metricConfig).calculate();
         BigDecimal metricF5h8 = new F5h8Formula(metricConfig).calculate();
-        BigDecimal metricL22 = new L22Formula(metricConfig).calculate();
+        BigDecimal metricL1 = new L1Formula(metricConfig).calculate();
+        BigDecimal metricI12 = new I12Formula(metricConfig).calculate();
 
         TaipeiDistrictDto taipeiDistrictDto = new TaipeiDistrictDto();
         taipeiDistrictDto.setType(metricSubjectType);
@@ -72,9 +79,10 @@ public class TaipeiDistrictService {
         taipeiDistrictDto.setF5h6(metricF5h6);
         taipeiDistrictDto.setF5h7(metricF5h7);
         taipeiDistrictDto.setF5h8(metricF5h8);
-        taipeiDistrictDto.setL22(metricL22);
+        taipeiDistrictDto.setL1(metricL1);
+        taipeiDistrictDto.setI12(metricI12);
 
-        if (metricSubjectType == DOCTOR) {
+        if (metricSubjectType == doctor) {
             DoctorData doctorData = new DoctorData();
             doctorData.setDoctorId(metricConfig.getSubject().getId());
             doctorData.setDoctorName(metricConfig.getSubject().getFirstName());

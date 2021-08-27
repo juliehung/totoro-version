@@ -5,7 +5,7 @@ import io.dentall.totoro.business.service.nhi.metric.vm.DoctorData;
 
 import java.math.BigDecimal;
 
-public class TaipeiDistrictDto {
+public class TaipeiDistrictDto  implements DistrictDto {
 
     private MetricSubjectType type;
 
@@ -37,7 +37,9 @@ public class TaipeiDistrictDto {
 
     private BigDecimal F5h8;
 
-    private BigDecimal l22;
+    private BigDecimal l1;
+
+    private BigDecimal i12;
 
     public MetricSubjectType getType() {
         return type;
@@ -159,11 +161,19 @@ public class TaipeiDistrictDto {
         F5h8 = f5h8;
     }
 
-    public BigDecimal getL22() {
-        return l22;
+    public BigDecimal getL1() {
+        return l1;
     }
 
-    public void setL22(BigDecimal l22) {
-        this.l22 = l22;
+    public void setL1(BigDecimal l1) {
+        this.l1 = l1;
+    }
+
+    public BigDecimal getI12() {
+        return i12;
+    }
+
+    public void setI12(BigDecimal i12) {
+        this.i12 = i12;
     }
 }

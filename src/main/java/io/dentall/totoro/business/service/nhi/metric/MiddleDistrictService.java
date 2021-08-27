@@ -8,7 +8,6 @@ import io.dentall.totoro.business.service.nhi.metric.vm.DoctorData;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.Holiday;
 import io.dentall.totoro.domain.User;
-import io.dentall.totoro.service.HolidayService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,17 +18,17 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.DOCTOR;
+import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.doctor;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional
-public class MiddleDistrictService {
+public class MiddleDistrictService implements DistrictService {
 
-    private final HolidayService holidayService;
-
-    public MiddleDistrictService(HolidayService holidayService) {
-        this.holidayService = holidayService;
+    @Override
+    public Optional<MiddleDistrictDto> metric(LocalDate baseDate, User subject, List<NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
+        return ofNullable(buildMetric(baseDate, holidayMap, subject, source));
     }
 
     public List<MiddleDistrictDto> metric(final LocalDate baseDate, List<User> subjects, List<NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
@@ -64,7 +63,7 @@ public class MiddleDistrictService {
         middleDistrictDto.setH5(metricH5);
         middleDistrictDto.setH7(metricH7);
 
-        if (metricSubjectType == DOCTOR) {
+        if (metricSubjectType == doctor) {
             DoctorData doctorData = new DoctorData();
             doctorData.setDoctorId(metricConfig.getSubject().getId());
             doctorData.setDoctorName(metricConfig.getSubject().getFirstName());

@@ -5,7 +5,7 @@ import io.dentall.totoro.business.service.nhi.metric.vm.DoctorData;
 
 import java.math.BigDecimal;
 
-public class NorthDistrictDto {
+public class NorthDistrictDto implements DistrictDto {
 
     private MetricSubjectType type;
 

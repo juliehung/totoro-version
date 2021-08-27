@@ -18,12 +18,18 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.DOCTOR;
+import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.doctor;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional
-public class KaoPingDistrictRegularService {
+public class KaoPingDistrictRegularService implements DistrictService {
+
+    @Override
+    public Optional<KaoPingDistrictRegularDto> metric(LocalDate baseDate, User subject, List<NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
+        return ofNullable(buildMetric(baseDate, holidayMap, subject, source));
+    }
 
     public List<KaoPingDistrictRegularDto> metric(final LocalDate baseDate, List<User> subjects, List<NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
         return subjects.parallelStream()
@@ -69,7 +75,7 @@ public class KaoPingDistrictRegularService {
         kaoPingDistrictRegularDto.setK12(metricK12);
         kaoPingDistrictRegularDto.setK14(metricK14);
 
-        if (metricSubjectType == DOCTOR) {
+        if (metricSubjectType == doctor) {
             DoctorData doctorData = new DoctorData();
             doctorData.setDoctorId(metricConfig.getSubject().getId());
             doctorData.setDoctorName(metricConfig.getSubject().getFirstName());

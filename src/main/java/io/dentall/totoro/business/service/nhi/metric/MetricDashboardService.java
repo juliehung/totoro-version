@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.CLINIC;
+import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.clinic;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -106,7 +106,7 @@ public class MetricDashboardService {
         NameValue nameValue = new NameValue();
         List<DoctorSummaryDto> doctorSummaryDtoList = null;
         List<DisposalSummaryDto> disposalSummaryDtoList = null;
-        if (metricSubjectType == CLINIC) {
+        if (metricSubjectType == clinic) {
             HighestDoctorDto highestDoctorDto = new L9Formula(metricConfig).calculate();
             allSubject.stream().filter(val -> val.getId().equals(highestDoctorDto.getId())).map(User::getFirstName).findFirst().ifPresent(nameValue::setName);
             nameValue.setValue(highestDoctorDto.getValue());
@@ -180,7 +180,7 @@ public class MetricDashboardService {
         dashboardDto.setDailyPoints(dailyPoints);
         dashboardDto.setSpecialTreatmentAnalysisDto(specialTreatmentAnalysisDto);
 
-        if (metricSubjectType == CLINIC) {
+        if (metricSubjectType == clinic) {
             dashboardDto.setL9(nameValue);
             dashboardDto.setDoctorSummary(doctorSummaryDtoList);
         } else {

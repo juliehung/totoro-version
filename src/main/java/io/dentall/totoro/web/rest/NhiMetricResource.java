@@ -1,7 +1,7 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import io.dentall.totoro.business.service.nhi.metric.MetricService;
+import io.dentall.totoro.business.service.nhi.metric.*;
 import io.dentall.totoro.business.service.nhi.metric.dto.*;
 import io.dentall.totoro.business.service.nhi.metric.vm.MetricLVM;
 import org.slf4j.Logger;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -147,5 +148,25 @@ public class NhiMetricResource {
         map.put("metrics", vm);
 
         return ResponseEntity.ok().body(map);
+    }
+
+    @GetMapping("/composite-district")
+    @Timed
+    public ResponseEntity<CompositeDistrictDto> getCompositeDistrictReductionMetric(
+        @RequestParam LocalDate begin,
+        @RequestParam(required = false) List<Long> excludeDisposalId,
+        @RequestParam(required = false) List<Long> doctorIds) {
+        log.debug("REST request to composite district : begin={}, excludeDisposalId={}, doctorIds={}", begin, excludeDisposalId, doctorIds);
+
+        CompositeDistrictDto dto = metricService.getCompositeDistrictMetric(begin, excludeDisposalId, doctorIds,
+            Arrays.asList(TaipeiDistrictService.class,
+                NorthDistrictService.class,
+                MiddleDistrictService.class,
+                SouthDistrictService.class,
+                EastDistrictService.class,
+                KaoPingDistrictRegularService.class,
+                KaoPingDistrictReductionService.class));
+
+        return ResponseEntity.ok().body(dto);
     }
 }

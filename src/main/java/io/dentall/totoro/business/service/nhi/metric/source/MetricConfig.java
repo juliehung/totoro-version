@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.CLINIC;
-import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.DOCTOR;
+import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.clinic;
+import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.doctor;
 import static io.dentall.totoro.service.util.DateTimeUtil.convertLocalDateToBeginOfDayInstant;
 import static io.dentall.totoro.service.util.DateTimeUtil.getCurrentQuarterMonthsRangeInstant;
 import static java.util.Optional.ofNullable;
@@ -53,7 +53,7 @@ public class MetricConfig {
         this.quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
         this.cached.put(this.initialSource.key(), source);
         this.subjectSource = subject.getId().equals(Long.MIN_VALUE) ? new ClinicSource(this) : new DoctorSource(this);
-        this.subjectType = this.subjectSource.getClass().isAssignableFrom(ClinicSource.class) ? CLINIC : DOCTOR;
+        this.subjectType = this.subjectSource.getClass().isAssignableFrom(ClinicSource.class) ? clinic : doctor;
         apply(this.subjectSource);
     }
 
@@ -121,8 +121,9 @@ public class MetricConfig {
         return this.metaMap.containsKey(key);
     }
 
-    public void applyHolidayMap(Map<LocalDate, Optional<Holiday>> holidayMap) {
+    public MetricConfig applyHolidayMap(Map<LocalDate, Optional<Holiday>> holidayMap) {
         this.holidayMap.putAll(holidayMap);
+        return this;
     }
 
     public Map<LocalDate, Optional<Holiday>> getHolidayMap() {

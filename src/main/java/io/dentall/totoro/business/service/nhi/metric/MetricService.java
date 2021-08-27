@@ -3,6 +3,7 @@ package io.dentall.totoro.business.service.nhi.metric;
 import io.dentall.totoro.business.service.nhi.metric.dto.*;
 import io.dentall.totoro.business.service.nhi.metric.mapper.SpecialTreatmentMapper;
 import io.dentall.totoro.business.service.nhi.metric.mapper.TimeLineDataMapper;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConstants;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType;
 import io.dentall.totoro.business.service.nhi.metric.vm.*;
@@ -11,37 +12,40 @@ import io.dentall.totoro.domain.Holiday;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.UserRepository;
-import io.dentall.totoro.security.AuthoritiesConstants;
 import io.dentall.totoro.service.HolidayService;
 import io.dentall.totoro.service.UserService;
 import io.dentall.totoro.service.util.DateTimeUtil;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
 import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstants.CLINIC_ID;
-import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.CLINIC;
-import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.DOCTOR;
+import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.clinic;
+import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.doctor;
 import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.getHolidayMap;
 import static io.dentall.totoro.security.AuthoritiesConstants.ADMIN;
+import static io.dentall.totoro.security.AuthoritiesConstants.DOCTOR;
 import static io.dentall.totoro.service.util.DateTimeUtil.convertLocalDateToBeginOfDayInstant;
 import static io.dentall.totoro.service.util.DateTimeUtil.getCurrentQuarterMonthsRangeInstant;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional
-public class MetricService {
+public class MetricService implements ApplicationContextAware {
+
+    private ApplicationContext applicationContext;
 
     private final UserService userService;
 
@@ -92,7 +96,7 @@ public class MetricService {
         this.kaoPingDistrictReductionService = kaoPingDistrictReductionService;
     }
 
-    public List<MetricLVM> getDashboardMetric(final LocalDate baseDate, List<Long> excludeDisposalIds) {
+    public List<MetricLVM> getDashboardMetric(LocalDate baseDate, List<Long> excludeDisposalIds) {
         Optional<User> userOptional = this.userService.getUserWithAuthorities();
         if (!userOptional.isPresent()) {
             return emptyList();
@@ -133,7 +137,7 @@ public class MetricService {
             section7.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dto.getDailyIc3().entrySet()));
 
             Section8 section8 = new Section8();
-            if (metricSubjectType == CLINIC) {
+            if (metricSubjectType == clinic) {
                 section8.setL9(dto.getL9());
             } else {
                 section8.setL10(dto.getL10());
@@ -219,7 +223,7 @@ public class MetricService {
             section17.setL56(new MetricData(dto.getL56()));
 
             Section18 section18 = new Section18();
-            if (metricSubjectType == CLINIC) {
+            if (metricSubjectType == clinic) {
                 section18.setCount(dto.getDoctorSummary().size());
                 section18.setTotal(dto.getDoctorSummary().stream().mapToLong(DoctorSummaryDto::getTotal).sum());
                 section18.setDoctorSummary(dto.getDoctorSummary());
@@ -230,10 +234,10 @@ public class MetricService {
             }
 
             MetricLVM metricLVM = new MetricLVM();
-            if (metricSubjectType == DOCTOR) {
+            if (metricSubjectType == doctor) {
                 metricLVM.setDoctor(dto.getDoctor());
             }
-            metricLVM.setType(metricSubjectType.name().toLowerCase());
+            metricLVM.setType(metricSubjectType.name());
             metricLVM.setSection5(section5);
             metricLVM.setSection6(section6);
             metricLVM.setSection7(section7);
@@ -250,10 +254,10 @@ public class MetricService {
             metricLVM.setSection18(section18);
 
             return metricLVM;
-        }).collect(Collectors.toList());
+        }).collect(toList());
     }
 
-    public List<TaipeiDistrictDto> getTaipeiDistrictMetric(final LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
+    public List<TaipeiDistrictDto> getTaipeiDistrictMetric(LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
         Optional<User> userOptional = this.userService.getUserWithAuthorities();
         if (!userOptional.isPresent()) {
             return emptyList();
@@ -276,7 +280,7 @@ public class MetricService {
         return taipeiDistrictService.metric(baseDate, subjects, source, holidayMap);
     }
 
-    public List<NorthDistrictDto> getNorthDistrictMetric(final LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
+    public List<NorthDistrictDto> getNorthDistrictMetric(LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
         Optional<User> userOptional = this.userService.getUserWithAuthorities();
         if (!userOptional.isPresent()) {
             return emptyList();
@@ -299,7 +303,7 @@ public class MetricService {
         return northDistrictService.metric(baseDate, subjects, source, holidayMap);
     }
 
-    public List<MiddleDistrictDto> getMiddleDistrictMetric(final LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
+    public List<MiddleDistrictDto> getMiddleDistrictMetric(LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
         Optional<User> userOptional = this.userService.getUserWithAuthorities();
         if (!userOptional.isPresent()) {
             return emptyList();
@@ -322,7 +326,7 @@ public class MetricService {
         return middleDistrictService.metric(baseDate, subjects, source, holidayMap);
     }
 
-    public List<SouthDistrictDto> getSouthDistrictMetric(final LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
+    public List<SouthDistrictDto> getSouthDistrictMetric(LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
         Optional<User> userOptional = this.userService.getUserWithAuthorities();
         if (!userOptional.isPresent()) {
             return emptyList();
@@ -368,7 +372,7 @@ public class MetricService {
         return eastDistrictService.metric(baseDate, subjects, source, holidayMap);
     }
 
-    public List<KaoPingDistrictRegularDto> getKaoPingDistrictRegularMetric(final LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
+    public List<KaoPingDistrictRegularDto> getKaoPingDistrictRegularMetric(LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
         Optional<User> userOptional = this.userService.getUserWithAuthorities();
         if (!userOptional.isPresent()) {
             return emptyList();
@@ -391,7 +395,7 @@ public class MetricService {
         return kaoPingDistrictRegularService.metric(baseDate, subjects, source, holidayMap);
     }
 
-    public List<KaoPingDistrictReductionDto> getKaoPingDistrictReductionMetric(final LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
+    public List<KaoPingDistrictReductionDto> getKaoPingDistrictReductionMetric(LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
         Optional<User> userOptional = this.userService.getUserWithAuthorities();
         if (!userOptional.isPresent()) {
             return emptyList();
@@ -424,6 +428,77 @@ public class MetricService {
         return resultDtoList;
     }
 
+    public CompositeDistrictDto getCompositeDistrictMetric(
+        LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds, List<Class<? extends DistrictService>> metricServiceClass) {
+        Optional<User> userOptional = this.userService.getUserWithAuthorities();
+        if (!userOptional.isPresent()) {
+            return new CompositeDistrictDto();
+        }
+
+        doctorIds = Optional.ofNullable(doctorIds).orElse(emptyList());
+        User user = userOptional.get();
+        excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
+        List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
+        DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
+        Instant begin = quarterRange.getBegin().minus(1095, DAYS); // 季 + 三年(1095)
+        List<NhiMetricRawVM> source = nhiExtendDisposalRepository.findMetricRaw(
+            begin,
+            quarterRange.getEnd(),
+            excludeDisposalIds
+        );
+        int baseYear = baseDate.getYear();
+        Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2, baseYear - 3);
+
+        Map<Class<?>, List<DistrictDto>> districtMetricMap =
+            subjects.parallelStream()
+                .map(subject -> new MetricConfig(subject, baseDate, source).applyHolidayMap(holidayMap))
+                .map(metricConfig -> runMetricService(metricConfig, metricServiceClass))
+                .flatMap(Collection::stream)
+                .map(Optional::get)
+                .collect(groupingBy(Object::getClass));
+
+        CompositeDistrictDto compositeDistrictDto = applyToCompositeDistrictDto(districtMetricMap);
+
+        if (metricServiceClass.contains(KaoPingDistrictReductionService.class)) {
+            List<DoctorPoint1Dto> doctorPoint1DtoList = kaoPingDistrictReductionService.getJ1h1Metric(baseDate, holidayMap, source);
+            BigDecimal metricJ1h2 = kaoPingDistrictReductionService.getJ1h2Metric(baseDate, holidayMap, source);
+
+            compositeDistrictDto.getKaoPingDistrictReductionDtoList()
+                .forEach(dto -> {
+                        dto.setJ1h1(doctorPoint1DtoList);
+                        dto.setJ1h2(metricJ1h2);
+                    }
+                );
+        }
+
+        return compositeDistrictDto;
+    }
+
+    private List<Optional<? extends DistrictDto>> runMetricService(MetricConfig metricConfig, List<Class<? extends DistrictService>> metricServiceClass) {
+        List<NhiMetricRawVM> subSource = metricConfig.retrieveSource(metricConfig.getSubjectSource().key());
+        return metricServiceClass.parallelStream()
+            .map(clz -> applicationContext.getBean(clz))
+            .map(service -> service.metric(metricConfig.getBaseDate(), metricConfig.getSubject(), subSource, metricConfig.getHolidayMap()))
+            .filter(Optional::isPresent)
+            .collect(toList());
+    }
+
+    private CompositeDistrictDto applyToCompositeDistrictDto(Map<Class<?>, List<DistrictDto>> districtMetricMap) {
+        CompositeDistrictDto compositeDistrictDto = new CompositeDistrictDto();
+        compositeDistrictDto.setTaipeiDistrictDtoList(cast(districtMetricMap, TaipeiDistrictDto.class));
+        compositeDistrictDto.setNorthDistrictDtoList(cast(districtMetricMap, NorthDistrictDto.class));
+        compositeDistrictDto.setMiddleDistrictDtoList(cast(districtMetricMap, MiddleDistrictDto.class));
+        compositeDistrictDto.setSouthDistrictDtoList(cast(districtMetricMap, SouthDistrictDto.class));
+        compositeDistrictDto.setEastDistrictDtoList(cast(districtMetricMap, EastDistrictDto.class));
+        compositeDistrictDto.setKaoPingDistrictRegularDtoList(cast(districtMetricMap, KaoPingDistrictRegularDto.class));
+        compositeDistrictDto.setKaoPingDistrictReductionDtoList(cast(districtMetricMap, KaoPingDistrictReductionDto.class));
+        return compositeDistrictDto;
+    }
+
+    private <T> List<T> cast(Map<Class<?>, List<DistrictDto>> districtMetricMap, Class<T> clz) {
+        return districtMetricMap.getOrDefault(clz, new ArrayList<>()).stream().map(clz::cast).collect(toList());
+    }
+
     private List<User> findSpecificSubject(User user, List<Long> subjectIds) {
         List<User> userList = findAllSubject(user);
         return subjectIds.size() == 0 ?
@@ -431,7 +506,7 @@ public class MetricService {
     }
 
     private List<User> findAllSubject(User user) {
-        boolean isDoctor = user.getAuthorities().stream().anyMatch(authority -> AuthoritiesConstants.DOCTOR.equals(authority.getName()));
+        boolean isDoctor = user.getAuthorities().stream().anyMatch(authority -> DOCTOR.equals(authority.getName()));
         boolean isAdmin = user.getAuthorities().stream().anyMatch(authority -> ADMIN.equals(authority.getName()));
 
         if (!isDoctor && !isAdmin) {
@@ -440,7 +515,7 @@ public class MetricService {
 
         List<User> usersActivated = userRepository.findAllByActivatedIsTrue();
         List<User> doctors = usersActivated.stream()
-            .filter(userActivated -> userActivated.getAuthorities().stream().anyMatch(authority -> AuthoritiesConstants.DOCTOR.equals(authority.getName())))
+            .filter(userActivated -> userActivated.getAuthorities().stream().anyMatch(authority -> DOCTOR.equals(authority.getName())))
             .collect(toList());
 
         if (isDoctor) {
@@ -452,5 +527,8 @@ public class MetricService {
         return doctors;
     }
 
-
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 }
