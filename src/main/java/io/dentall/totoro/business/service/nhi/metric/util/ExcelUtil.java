@@ -17,26 +17,6 @@ public class ExcelUtil {
         ;
     }
 
-    public static void main(String[] args) throws Exception {
-        FileOutputStream fos = new FileOutputStream(
-            new File(
-                "test.xls"
-            )
-        );
-        Workbook wb = new HSSFWorkbook();
-
-        Map<String, List<String>> rowContents = new HashMap<>();
-        TaipeiDistrictReport rp1 = new TaipeiDistrictReport();
-        NorthDistrictReport rp2 = new NorthDistrictReport();
-        SouthDistrictReport rp3 = new SouthDistrictReport();
-        MiddleDistrictReport rp4 = new MiddleDistrictReport();
-        KaoPingDistrictReductionReport rp5 = new KaoPingDistrictReductionReport();
-        KaoPingDistrictRegularReport rp6 = new KaoPingDistrictRegularReport();
-        wb.write(fos);
-        fos.close();
-        wb.close();
-    }
-
     private static Map<SupportedFont, Font> fonts = new HashMap<>();
 
     public static int columnWidth(int numberOfCharacterOfCell, int sizeOfCharacter) {
