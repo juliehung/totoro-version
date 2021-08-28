@@ -1,6 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.*;
+import io.dentall.totoro.business.service.nhi.metric.mapper.NhiMetricRawMapper;
 import io.dentall.totoro.business.service.nhi.metric.mapper.SpecialTreatmentMapper;
 import io.dentall.totoro.business.service.nhi.metric.mapper.TimeLineDataMapper;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
@@ -107,11 +108,7 @@ public class MetricService implements ApplicationContextAware {
         DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
         List<User> subjects = findAllSubject(user);
         Instant begin = quarterRange.getBegin().minus(1095, DAYS); // 季 + 三年(1095)
-        List<NhiMetricRawVM> source = nhiExtendDisposalRepository.findMetricRaw(
-            begin,
-            quarterRange.getEnd(),
-            excludeDisposalIds
-        );
+        List<? extends NhiMetricRawVM> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
         int baseYear = baseDate.getYear();
         Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2, baseYear - 3);
 
@@ -269,11 +266,7 @@ public class MetricService implements ApplicationContextAware {
         List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
         DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
         Instant begin = quarterRange.getBegin().minus(1095, DAYS); // 季 + 三年(1095)
-        List<NhiMetricRawVM> source = nhiExtendDisposalRepository.findMetricRaw(
-            begin,
-            quarterRange.getEnd(),
-            excludeDisposalIds
-        );
+        List<? extends NhiMetricRawVM> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
         int baseYear = baseDate.getYear();
         Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2, baseYear - 3);
 
@@ -292,11 +285,7 @@ public class MetricService implements ApplicationContextAware {
         List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
         DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
         Instant begin = quarterRange.getBegin().minus(730, DAYS); // 季 + 二年(730)
-        List<NhiMetricRawVM> source = nhiExtendDisposalRepository.findMetricRaw(
-            begin,
-            quarterRange.getEnd(),
-            excludeDisposalIds
-        );
+        List<? extends NhiMetricRawVM> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
         int baseYear = baseDate.getYear();
         Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2);
 
@@ -315,11 +304,7 @@ public class MetricService implements ApplicationContextAware {
         List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
         DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
         Instant begin = quarterRange.getBegin().minus(730, DAYS); // 季 + 二年(730)
-        List<NhiMetricRawVM> source = nhiExtendDisposalRepository.findMetricRaw(
-            begin,
-            quarterRange.getEnd(),
-            excludeDisposalIds
-        );
+        List<? extends NhiMetricRawVM> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
         int baseYear = baseDate.getYear();
         Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2);
 
@@ -338,11 +323,7 @@ public class MetricService implements ApplicationContextAware {
         List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
         DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
         Instant begin = quarterRange.getBegin().minus(1095, DAYS); // 季 + 三年(1095)
-        List<NhiMetricRawVM> source = nhiExtendDisposalRepository.findMetricRaw(
-            begin,
-            quarterRange.getEnd(),
-            excludeDisposalIds
-        );
+        List<? extends NhiMetricRawVM> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
         int baseYear = baseDate.getYear();
         Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2, baseYear - 3);
 
@@ -361,11 +342,7 @@ public class MetricService implements ApplicationContextAware {
         List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
         DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
         Instant begin = quarterRange.getBegin().minus(730, DAYS); // 季 + 二年(730)
-        List<NhiMetricRawVM> source = nhiExtendDisposalRepository.findMetricRaw(
-            begin,
-            quarterRange.getEnd(),
-            excludeDisposalIds
-        );
+        List<? extends NhiMetricRawVM> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
         int baseYear = baseDate.getYear();
         Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2, baseYear - 3);
 
@@ -384,11 +361,7 @@ public class MetricService implements ApplicationContextAware {
         List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
         DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
         Instant begin = quarterRange.getBegin().minus(1095, DAYS); // 季 + 三年(1095)
-        List<NhiMetricRawVM> source = nhiExtendDisposalRepository.findMetricRaw(
-            begin,
-            quarterRange.getEnd(),
-            excludeDisposalIds
-        );
+        List<? extends NhiMetricRawVM> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
         int baseYear = baseDate.getYear();
         Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2, baseYear - 3);
 
@@ -407,11 +380,7 @@ public class MetricService implements ApplicationContextAware {
         List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
         DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
         Instant begin = quarterRange.getBegin().minus(365, DAYS); // 季 + 一年(1095)
-        List<NhiMetricRawVM> source = nhiExtendDisposalRepository.findMetricRaw(
-            begin,
-            quarterRange.getEnd(),
-            excludeDisposalIds
-        );
+        List<? extends NhiMetricRawVM> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
         int baseYear = baseDate.getYear();
         Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1);
 
@@ -441,11 +410,7 @@ public class MetricService implements ApplicationContextAware {
         List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
         DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
         Instant begin = quarterRange.getBegin().minus(1095, DAYS); // 季 + 三年(1095)
-        List<NhiMetricRawVM> source = nhiExtendDisposalRepository.findMetricRaw(
-            begin,
-            quarterRange.getEnd(),
-            excludeDisposalIds
-        );
+        List<? extends NhiMetricRawVM> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
         int baseYear = baseDate.getYear();
         Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2, baseYear - 3);
 
@@ -497,6 +462,15 @@ public class MetricService implements ApplicationContextAware {
 
     private <T> List<T> cast(Map<Class<?>, List<DistrictDto>> districtMetricMap, Class<T> clz) {
         return districtMetricMap.getOrDefault(clz, new ArrayList<>()).stream().map(clz::cast).collect(toList());
+    }
+
+    private List<? extends NhiMetricRawVM> fetchSource(Instant begin, Instant end, List<Long> excludeDisposalIds) {
+        List<NhiMetricRawVM> source = nhiExtendDisposalRepository.findMetricRaw(
+            begin,
+            end,
+            excludeDisposalIds
+        );
+        return source.parallelStream().map(NhiMetricRawMapper.INSTANCE::mapToMetricTreatment).collect(toList());
     }
 
     private List<User> findSpecificSubject(User user, List<Long> subjectIds) {

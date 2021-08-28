@@ -4,6 +4,7 @@ import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static io.dentall.totoro.service.util.DateTimeUtil.beginOfMonth;
 import static io.dentall.totoro.service.util.DateTimeUtil.endOfMonth;
@@ -26,8 +27,8 @@ public class OdMonthSelectedSource extends OdSource<OdDto> {
     }
 
     @Override
-    public List<OdDto> filter(List<OdDto> source) {
-        return source.stream().parallel()
+    public List<OdDto> doFilter(Stream<OdDto> source) {
+        return source
             .filter(dto ->
                 begin.isEqual(dto.getDisposalDate())
                     || end.isEqual(dto.getDisposalDate())

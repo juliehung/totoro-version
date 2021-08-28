@@ -4,6 +4,7 @@ import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.groupingBy;
@@ -15,9 +16,8 @@ public class EndoAndOdHalfYearNearByPatientSource extends AbstractSource<OdDto, 
     }
 
     @Override
-    public List<Map<Long, Map<String, List<OdDto>>>> filter(List<OdDto> source) {
-        return singletonList(source.stream().parallel()
-            .collect(groupingBy(OdDto::getPatientId, groupingBy(OdDto::getTooth))));
+    public List<Map<Long, Map<String, List<OdDto>>>> doFilter(Stream<OdDto> source) {
+        return singletonList(source.collect(groupingBy(OdDto::getPatientId, groupingBy(OdDto::getTreatmentProcedureTooth))));
     }
 
 }

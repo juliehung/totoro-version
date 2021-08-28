@@ -3,8 +3,8 @@ package io.dentall.totoro.business.service.nhi.metric.source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
+import java.util.stream.Stream;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyExcludeByVM;
 import static java.util.stream.Collectors.toList;
 
 public class ClinicSource extends SubjectSource<NhiMetricRawVM, NhiMetricRawVM> {
@@ -14,10 +14,8 @@ public class ClinicSource extends SubjectSource<NhiMetricRawVM, NhiMetricRawVM> 
     }
 
     @Override
-    public List<NhiMetricRawVM> filter(List<NhiMetricRawVM> source) {
-        return source.stream().parallel()
-            .filter(applyExcludeByVM(getExclude()))
-            .collect(toList());
+    public List<NhiMetricRawVM> doFilter(Stream<NhiMetricRawVM> source) {
+        return source.collect(toList());
     }
 
 }

@@ -32,7 +32,7 @@ public class Od1Point extends SingleSourceMetaCalculator<Long> {
 
         return odDtoList.stream()
             // 因為資料是從Treatment層級，依牙齒切成多筆，所以需要先依 disposalId + code + treatmentSeq 做 group
-            .collect(groupingBy(dto -> dto.getDisposalId() + dto.getCode() + dto.getTreatmentSeq(), maxBy(comparing(OdDto::getDisposalId))))
+            .collect(groupingBy(dto -> dto.getDisposalId() + dto.getTreatmentProcedureCode() + dto.getTreatmentSeq(), maxBy(comparing(OdDto::getDisposalId))))
             .values().stream().filter(Optional::isPresent).map(Optional::get)
             .mapToLong(dto -> applyNewTreatmentPoint(dto, config))
             .sum();

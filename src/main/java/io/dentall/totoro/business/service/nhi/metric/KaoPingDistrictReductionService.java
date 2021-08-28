@@ -36,11 +36,11 @@ public class KaoPingDistrictReductionService implements DistrictService {
     }
 
     @Override
-    public Optional<KaoPingDistrictReductionDto> metric(LocalDate baseDate, User subject, List<NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
+    public Optional<KaoPingDistrictReductionDto> metric(LocalDate baseDate, User subject, List<? extends NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
         return ofNullable(buildMetric(baseDate, holidayMap, subject, source));
     }
 
-    public List<KaoPingDistrictReductionDto> metric(final LocalDate baseDate, List<User> subjects, List<NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
+    public List<KaoPingDistrictReductionDto> metric(LocalDate baseDate, List<User> subjects, List<? extends NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
         return subjects.parallelStream()
             .map(subject -> buildMetric(baseDate, holidayMap, subject, source))
             .filter(Objects::nonNull)
@@ -50,7 +50,7 @@ public class KaoPingDistrictReductionService implements DistrictService {
     /**
      * 因為J1-1指標是要計算全部醫師 Point1 > 525000，所以傳入資料要是全診所的資料才行，請勿傳入單個醫師的資料
      */
-    public List<DoctorPoint1Dto> getJ1h1Metric(LocalDate baseDate, Map<LocalDate, Optional<Holiday>> holidayMap, List<NhiMetricRawVM> source) {
+    public List<DoctorPoint1Dto> getJ1h1Metric(LocalDate baseDate, Map<LocalDate, Optional<Holiday>> holidayMap, List<? extends NhiMetricRawVM> source) {
         MetricConfig metricConfig = new MetricConfig(MetricConstants.CLINIC, baseDate, source).applyHolidayMap(holidayMap);
         Map<Long, Long> map = new J1h1Formula(metricConfig).calculate();
         List<User> allUserList = userRepository.findAll();
@@ -70,12 +70,12 @@ public class KaoPingDistrictReductionService implements DistrictService {
     /**
      * 傳入資料要是全診所的資料才行，請勿傳入單個醫師的資料
      */
-    public BigDecimal getJ1h2Metric(LocalDate baseDate, Map<LocalDate, Optional<Holiday>> holidayMap, List<NhiMetricRawVM> source) {
+    public BigDecimal getJ1h2Metric(LocalDate baseDate, Map<LocalDate, Optional<Holiday>> holidayMap, List<? extends NhiMetricRawVM> source) {
         MetricConfig metricConfig = new MetricConfig(MetricConstants.CLINIC, baseDate, source).applyHolidayMap(holidayMap);
         return new J1h2Formula(metricConfig).calculate();
     }
 
-    private KaoPingDistrictReductionDto buildMetric(LocalDate baseDate, Map<LocalDate, Optional<Holiday>> holidayMap, User subject, List<NhiMetricRawVM> source) {
+    private KaoPingDistrictReductionDto buildMetric(LocalDate baseDate, Map<LocalDate, Optional<Holiday>> holidayMap, User subject, List<? extends NhiMetricRawVM> source) {
         MetricConfig metricConfig = new MetricConfig(subject, baseDate, source).applyHolidayMap(holidayMap);
 
         if (!metricConfig.isSourceExist(metricConfig.getSubjectSource().key()) || metricConfig.retrieveSource(metricConfig.getSubjectSource().key()).size() == 0) {

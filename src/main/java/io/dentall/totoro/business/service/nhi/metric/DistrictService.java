@@ -12,5 +12,5 @@ import java.util.Optional;
 
 public interface DistrictService {
 
-    Optional<? extends DistrictDto> metric(LocalDate baseDate, User subject, List<NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap);
+    Optional<? extends DistrictDto> metric(LocalDate baseDate, User subject, List<? extends NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap);
 }

@@ -4,6 +4,7 @@ import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static io.dentall.totoro.service.util.DateTimeUtil.toLocalDate;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -20,11 +21,11 @@ public class OdOneAndHalfYearNearSource extends OdSource<OdDto> {
     }
 
     @Override
-    public List<OdDto> filter(List<OdDto> source) {
-        return source.stream().parallel()
+    public List<OdDto> doFilter(Stream<OdDto> source) {
+        return source
             .filter(dto -> begin.isBefore(dto.getDisposalDate()) || begin.isEqual(dto.getDisposalDate()))
-            .filter(dto -> codes.contains(dto.getCode()))
-            .filter(dto -> isNotBlank(dto.getTooth()))
+            .filter(dto -> codes.contains(dto.getTreatmentProcedureCode()))
+            .filter(dto -> isNotBlank(dto.getTreatmentProcedureTooth()))
             .collect(toList());
     }
 

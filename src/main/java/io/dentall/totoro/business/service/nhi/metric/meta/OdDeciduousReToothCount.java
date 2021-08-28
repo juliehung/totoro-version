@@ -53,7 +53,7 @@ public class OdDeciduousReToothCount extends AbstractMetaCalculator<Long> {
                 // 該季中如果同顆牙有多次，則取最後一次
                 Map<String, Optional<OdDto>> odMap = odToothMap.values().stream()
                     .flatMap(Collection::stream)
-                    .collect(groupingBy(OdDto::getTooth, maxBy(comparing(OdDto::getDisposalDate))));
+                    .collect(groupingBy(OdDto::getTreatmentProcedureTooth, maxBy(comparing(OdDto::getDisposalDate))));
 
                 return odMap.entrySet().stream()
                     .filter(entryOd -> entryOd.getValue().isPresent())

@@ -1,7 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.util;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
-import io.dentall.totoro.business.service.nhi.metric.mapper.NhiMetricRawMapper;
 import io.dentall.totoro.business.service.nhi.metric.meta.Exclude;
 import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConstants;
@@ -145,7 +144,7 @@ public class NhiMetricHelper {
     }
 
     public static Predicate<NhiMetricRawVM> applyExcludeByVM(Exclude exclude) {
-        return vm -> ofNullable(exclude).map(exclude1 -> exclude1.test(NhiMetricRawMapper.INSTANCE.mapToExcludeDto(vm))).orElse(true);
+        return vm -> ofNullable(exclude).map(exclude1 -> exclude1.test(vm)).orElse(true);
     }
 
     public static Map<LocalDate, Optional<Holiday>> getHolidayMap(HolidayService holidayService, int... years) {

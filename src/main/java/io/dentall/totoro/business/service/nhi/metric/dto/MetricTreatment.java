@@ -3,59 +3,63 @@ package io.dentall.totoro.business.service.nhi.metric.dto;
 import io.dentall.totoro.business.service.nhi.NhiSpecialCode;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.time.LocalDate;
 
-public class OdDto implements NhiMetricRawVM {
+public class MetricTreatment implements NhiMetricRawVM {
 
-    private Long patientId;
+    Long patientId;
 
-    private String patientName;
+    String patientName;
 
-    private LocalDate patientBirth;
+    LocalDate patientBirth;
 
-    private Long disposalId;
+    Long disposalId;
 
-    private LocalDate disposalDate;
+    // jhi_date
+    LocalDate disposalDate;
 
-    private String cardNumber;
+    // A18
+    String cardNumber;
 
-    private String cardReplenishment;
+    // A19
+    String cardReplenishment;
 
-    private String nhiCategory;
+    // A23
+    String nhiCategory;
 
-    private String partialBurden;
+    // A32
+    String partialBurden;
 
-    private LocalDate cardReplenishmentDisposalDate;
+    // replenishment date
+    LocalDate cardReplenishmentDisposalDate;
 
-    private String examCode;
+    String examCode;
 
-    private String examPoint;
+    String examPoint;
 
-    private String patientIdentity;
+    String patientIdentity;
 
-    private String serialNumber;
+    String serialNumber;
 
-    private String treatmentProcedureCode;
+    String treatmentProcedureCode;
 
-    private String treatmentProcedureTooth;
+    String treatmentProcedureTooth;
 
-    private String treatmentProcedureSurface;
+    String treatmentProcedureSurface;
 
-    private Long treatmentProcedureTotal;
+    Long treatmentProcedureTotal;
 
-    private Long nhiOriginPoint;
+    Long nhiOriginPoint;
 
-    private NhiSpecialCode treatmentProcedureSpecificCode;
+    @Enumerated(EnumType.STRING)
+    NhiSpecialCode treatmentProcedureSpecificCode;
 
-    private Long doctorId;
+    Long doctorId;
 
-    private String doctorName;
+    String doctorName;
 
-    // 需要有方法可以辨別出，同一處置單不同診療(但同一個健保代碼)，所以利用該屬性，只要是同一診療，就會是一樣的seq
-    // 即使是相同的健保代碼，但不同診療就會不一樣的seq
-    private int treatmentSeq;
-
-    @Override
     public Long getPatientId() {
         return patientId;
     }
@@ -64,7 +68,6 @@ public class OdDto implements NhiMetricRawVM {
         this.patientId = patientId;
     }
 
-    @Override
     public String getPatientName() {
         return patientName;
     }
@@ -73,7 +76,6 @@ public class OdDto implements NhiMetricRawVM {
         this.patientName = patientName;
     }
 
-    @Override
     public LocalDate getPatientBirth() {
         return patientBirth;
     }
@@ -82,7 +84,6 @@ public class OdDto implements NhiMetricRawVM {
         this.patientBirth = patientBirth;
     }
 
-    @Override
     public Long getDisposalId() {
         return disposalId;
     }
@@ -91,7 +92,6 @@ public class OdDto implements NhiMetricRawVM {
         this.disposalId = disposalId;
     }
 
-    @Override
     public LocalDate getDisposalDate() {
         return disposalDate;
     }
@@ -100,7 +100,6 @@ public class OdDto implements NhiMetricRawVM {
         this.disposalDate = disposalDate;
     }
 
-    @Override
     public String getCardNumber() {
         return cardNumber;
     }
@@ -109,7 +108,6 @@ public class OdDto implements NhiMetricRawVM {
         this.cardNumber = cardNumber;
     }
 
-    @Override
     public String getCardReplenishment() {
         return cardReplenishment;
     }
@@ -118,7 +116,6 @@ public class OdDto implements NhiMetricRawVM {
         this.cardReplenishment = cardReplenishment;
     }
 
-    @Override
     public String getNhiCategory() {
         return nhiCategory;
     }
@@ -127,7 +124,6 @@ public class OdDto implements NhiMetricRawVM {
         this.nhiCategory = nhiCategory;
     }
 
-    @Override
     public String getPartialBurden() {
         return partialBurden;
     }
@@ -136,7 +132,6 @@ public class OdDto implements NhiMetricRawVM {
         this.partialBurden = partialBurden;
     }
 
-    @Override
     public LocalDate getCardReplenishmentDisposalDate() {
         return cardReplenishmentDisposalDate;
     }
@@ -145,7 +140,6 @@ public class OdDto implements NhiMetricRawVM {
         this.cardReplenishmentDisposalDate = cardReplenishmentDisposalDate;
     }
 
-    @Override
     public String getExamCode() {
         return examCode;
     }
@@ -154,7 +148,6 @@ public class OdDto implements NhiMetricRawVM {
         this.examCode = examCode;
     }
 
-    @Override
     public String getExamPoint() {
         return examPoint;
     }
@@ -163,7 +156,6 @@ public class OdDto implements NhiMetricRawVM {
         this.examPoint = examPoint;
     }
 
-    @Override
     public String getPatientIdentity() {
         return patientIdentity;
     }
@@ -172,7 +164,6 @@ public class OdDto implements NhiMetricRawVM {
         this.patientIdentity = patientIdentity;
     }
 
-    @Override
     public String getSerialNumber() {
         return serialNumber;
     }
@@ -181,7 +172,6 @@ public class OdDto implements NhiMetricRawVM {
         this.serialNumber = serialNumber;
     }
 
-    @Override
     public String getTreatmentProcedureCode() {
         return treatmentProcedureCode;
     }
@@ -190,7 +180,6 @@ public class OdDto implements NhiMetricRawVM {
         this.treatmentProcedureCode = treatmentProcedureCode;
     }
 
-    @Override
     public String getTreatmentProcedureTooth() {
         return treatmentProcedureTooth;
     }
@@ -199,7 +188,6 @@ public class OdDto implements NhiMetricRawVM {
         this.treatmentProcedureTooth = treatmentProcedureTooth;
     }
 
-    @Override
     public String getTreatmentProcedureSurface() {
         return treatmentProcedureSurface;
     }
@@ -208,7 +196,6 @@ public class OdDto implements NhiMetricRawVM {
         this.treatmentProcedureSurface = treatmentProcedureSurface;
     }
 
-    @Override
     public Long getTreatmentProcedureTotal() {
         return treatmentProcedureTotal;
     }
@@ -217,7 +204,6 @@ public class OdDto implements NhiMetricRawVM {
         this.treatmentProcedureTotal = treatmentProcedureTotal;
     }
 
-    @Override
     public Long getNhiOriginPoint() {
         return nhiOriginPoint;
     }
@@ -226,7 +212,6 @@ public class OdDto implements NhiMetricRawVM {
         this.nhiOriginPoint = nhiOriginPoint;
     }
 
-    @Override
     public NhiSpecialCode getTreatmentProcedureSpecificCode() {
         return treatmentProcedureSpecificCode;
     }
@@ -235,7 +220,6 @@ public class OdDto implements NhiMetricRawVM {
         this.treatmentProcedureSpecificCode = treatmentProcedureSpecificCode;
     }
 
-    @Override
     public Long getDoctorId() {
         return doctorId;
     }
@@ -244,20 +228,11 @@ public class OdDto implements NhiMetricRawVM {
         this.doctorId = doctorId;
     }
 
-    @Override
     public String getDoctorName() {
         return doctorName;
     }
 
     public void setDoctorName(String doctorName) {
         this.doctorName = doctorName;
-    }
-
-    public int getTreatmentSeq() {
-        return treatmentSeq;
-    }
-
-    public void setTreatmentSeq(int treatmentSeq) {
-        this.treatmentSeq = treatmentSeq;
     }
 }

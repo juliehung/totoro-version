@@ -5,6 +5,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static io.dentall.totoro.service.util.DateTimeUtil.toLocalDate;
 import static java.util.Collections.emptyList;
@@ -27,8 +28,8 @@ public class QuarterByDailyOfLastYearSource extends AbstractSource<NhiMetricRawV
     }
 
     @Override
-    public List<Map<LocalDate, List<NhiMetricRawVM>>> filter(List<NhiMetricRawVM> nhiMetricRawVMList) {
-        Map<LocalDate, List<NhiMetricRawVM>> map = nhiMetricRawVMList.stream().collect(groupingBy(NhiMetricRawVM::getDisposalDate));
+    public List<Map<LocalDate, List<NhiMetricRawVM>>> doFilter(Stream<NhiMetricRawVM> source) {
+        Map<LocalDate, List<NhiMetricRawVM>> map = source.collect(groupingBy(NhiMetricRawVM::getDisposalDate));
 
         // 補齊沒有資料的日期
         for (LocalDate date = begin; !date.isAfter(end); date = date.plusDays(1L)) {

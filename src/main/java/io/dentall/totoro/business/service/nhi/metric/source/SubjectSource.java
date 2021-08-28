@@ -1,8 +1,9 @@
 package io.dentall.totoro.business.service.nhi.metric.source;
 
 import io.dentall.totoro.business.service.nhi.metric.meta.Exclude;
+import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
-public abstract class SubjectSource<S, R> extends AbstractSource<S, R> {
+public abstract class SubjectSource<S extends NhiMetricRawVM, R> extends AbstractSource<S, R> {
 
     private final MetricConfig metricConfig;
 

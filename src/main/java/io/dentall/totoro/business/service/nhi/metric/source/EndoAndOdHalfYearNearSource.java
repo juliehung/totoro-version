@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstants.CodesByEndo1;
 import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstants.CodesByOd;
@@ -27,9 +28,9 @@ public class EndoAndOdHalfYearNearSource extends AbstractSource<NhiMetricRawVM, 
     }
 
     @Override
-    public List<OdDto> filter(List<NhiMetricRawVM> source) {
+    public List<OdDto> doFilter(Stream<NhiMetricRawVM> source) {
         AtomicInteger i = new AtomicInteger();
-        return source.stream().parallel()
+        return source
             .filter(vm -> begin.isBefore(vm.getDisposalDate()) || begin.isEqual(vm.getDisposalDate()))
             .filter(vm -> CodesByEndo1.contains(vm.getTreatmentProcedureCode()) || CodesByOd.contains(vm.getTreatmentProcedureCode()))
             .filter(vm -> isNotBlank(vm.getTreatmentProcedureTooth()))
@@ -38,7 +39,7 @@ public class EndoAndOdHalfYearNearSource extends AbstractSource<NhiMetricRawVM, 
                     int seq = i.getAndIncrement();
                     return teeth.stream().map(tooth -> {
                             OdDto odDto = NhiMetricRawMapper.INSTANCE.mapToOdDto(vm);
-                            odDto.setTooth(tooth);
+                            odDto.setTreatmentProcedureTooth(tooth);
                             odDto.setTreatmentSeq(seq);
                             return odDto;
                         }

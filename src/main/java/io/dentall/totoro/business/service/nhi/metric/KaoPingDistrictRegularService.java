@@ -27,18 +27,18 @@ import static java.util.stream.Collectors.toList;
 public class KaoPingDistrictRegularService implements DistrictService {
 
     @Override
-    public Optional<KaoPingDistrictRegularDto> metric(LocalDate baseDate, User subject, List<NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
+    public Optional<KaoPingDistrictRegularDto> metric(LocalDate baseDate, User subject, List<? extends NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
         return ofNullable(buildMetric(baseDate, holidayMap, subject, source));
     }
 
-    public List<KaoPingDistrictRegularDto> metric(final LocalDate baseDate, List<User> subjects, List<NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
+    public List<KaoPingDistrictRegularDto> metric(LocalDate baseDate, List<User> subjects, List<? extends NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
         return subjects.parallelStream()
             .map(subject -> buildMetric(baseDate, holidayMap, subject, source))
             .filter(Objects::nonNull)
             .collect(toList());
     }
 
-    private KaoPingDistrictRegularDto buildMetric(LocalDate baseDate, Map<LocalDate, Optional<Holiday>> holidayMap, User subject, List<NhiMetricRawVM> source) {
+    private KaoPingDistrictRegularDto buildMetric(LocalDate baseDate, Map<LocalDate, Optional<Holiday>> holidayMap, User subject, List<? extends NhiMetricRawVM> source) {
         MetricConfig metricConfig = new MetricConfig(subject, baseDate, source).applyHolidayMap(holidayMap);
 
         if (!metricConfig.isSourceExist(metricConfig.getSubjectSource().key()) || metricConfig.retrieveSource(metricConfig.getSubjectSource().key()).size() == 0) {

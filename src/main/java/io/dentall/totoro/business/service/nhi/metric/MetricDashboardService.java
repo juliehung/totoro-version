@@ -28,14 +28,14 @@ import static java.util.stream.Collectors.toList;
 @Transactional
 public class MetricDashboardService {
 
-    public List<DashboardDto> metric(final LocalDate baseDate, List<User> subjects, List<NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
+    public List<DashboardDto> metric(final LocalDate baseDate, List<User> subjects, List<? extends NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
         return subjects.parallelStream()
             .map(subject -> buildMetric(baseDate, subjects, subject, source, holidayMap))
             .filter(Objects::nonNull)
             .collect(toList());
     }
 
-    private DashboardDto buildMetric(LocalDate baseDate, List<User> allSubject, User subject, List<NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
+    private DashboardDto buildMetric(LocalDate baseDate, List<User> allSubject, User subject, List<? extends NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
         MetricConfig metricConfig = new MetricConfig(subject, baseDate, source).applyHolidayMap(holidayMap);
 
         if (!metricConfig.isSourceExist(metricConfig.getSubjectSource().key()) || metricConfig.retrieveSource(metricConfig.getSubjectSource().key()).size() == 0) {
