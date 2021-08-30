@@ -19,13 +19,10 @@ public abstract class AbstractMetaCalculator<T> implements MetaCalculator<T> {
 
     private final Source<?, ?>[] sources;
 
-    private final MetaCalculatorKey key;
-
     public AbstractMetaCalculator(MetricConfig metricConfig, MetaConfig config, Source<?, ?>[] sources) {
         this.metricConfig = metricConfig;
         this.config = ofNullable(config).orElse(new MetaConfig(this.metricConfig));
         this.sources = sources;
-        this.key = new MetaCalculatorKey(this);
     }
 
     @Override
@@ -48,7 +45,7 @@ public abstract class AbstractMetaCalculator<T> implements MetaCalculator<T> {
     public abstract T doCalculate(MetricConfig metricConfig);
 
     public final MetaCalculatorKey key() {
-        return key;
+        return new MetaCalculatorKey(this);
     }
 
     public final Meta<T> getMeta() {

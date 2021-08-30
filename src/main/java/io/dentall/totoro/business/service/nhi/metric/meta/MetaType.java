@@ -4,7 +4,8 @@ public enum MetaType {
 
     Exam1, Exam2, Exam3, Exam4,
     Exam1ByDaily, Exam2ByDaily, Exam3ByDaily, Exam4ByDaily,
-    Point1, Point2, Point3, Point4,
+    Exam1Difference, Exam2Difference, Exam3Difference, Exam4Difference,
+    Point1, Point2, Point3, Point4, Point6,
     Point1ByDaily, Point2ByDaily, Point3ByDaily, Point4ByDaily,
     Pt1, Pt1ByDaily,
     Pt2,

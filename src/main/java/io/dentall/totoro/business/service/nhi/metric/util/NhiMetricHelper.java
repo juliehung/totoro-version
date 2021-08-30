@@ -50,13 +50,26 @@ public class NhiMetricHelper {
             .orElse(0L);
     }
 
-    public static Long calculateExamRegular(List<NhiMetricRawVM> source, List<String> codes, MetaConfig config) {
-        Stream<Optional<NhiMetricRawVM>> stream = source.stream()
+    private static Stream<Optional<NhiMetricRawVM>> groupByDisposal(List<NhiMetricRawVM> source, List<String> codes) {
+        return source.stream()
             .filter(vm -> isNotBlank(vm.getExamPoint()))
             .filter(vm -> codes.contains(vm.getExamCode()))
             .collect(groupingBy(NhiMetricRawVM::getDisposalId, maxBy(comparing(NhiMetricRawVM::getDisposalId))))
             .values().stream();
+    }
+
+    public static Long calculateExamRegular(List<NhiMetricRawVM> source, List<String> codes, MetaConfig config) {
+        Stream<Optional<NhiMetricRawVM>> stream = groupByDisposal(source, codes);
         return calculateExam(stream, config);
+    }
+
+    public static Long calculateExamDifference(List<NhiMetricRawVM> source, List<String> codes) {
+        return groupByDisposal(source, codes)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .map(vm -> parseLong(vm.getExamPoint()) - 230L)
+            .reduce(Long::sum)
+            .orElse(0L);
     }
 
     public static Map<Long, Long> calculateExamByClassifier(List<NhiMetricRawVM> source, List<String> codes, Function<NhiMetricRawVM, Long> classifier, MetaConfig config) {

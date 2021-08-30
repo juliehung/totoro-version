@@ -2,6 +2,7 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.meta.Endo90015CTreatment;
 import io.dentall.totoro.business.service.nhi.metric.meta.EndoTreatment;
+import io.dentall.totoro.business.service.nhi.metric.meta.Tro1ButPoint6Config;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
@@ -31,7 +32,7 @@ public class L21Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro1Config config = new Tro1Config(metricConfig);
+        Tro1ButPoint6Config config = new Tro1ButPoint6Config(metricConfig);
         EndoTreatment endoTreatment = new EndoTreatment(metricConfig, config, source).apply();
         Endo90015CTreatment endo90015CTreatment = new Endo90015CTreatment(metricConfig, config, source).apply();
         try {

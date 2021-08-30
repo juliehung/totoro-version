@@ -12,13 +12,10 @@ public abstract class AbstractSource<S extends NhiMetricRawVM, R> implements Sou
 
     private Source<?, ?> inputSource;
 
-    private SourceKey key;
-
     private Exclude exclude;
 
     public AbstractSource(Source<?, ?> inputSource) {
         this.inputSource = inputSource;
-        this.key = new SourceKey(this);
     }
 
     protected void changeInputSource(Source<?, ?> inputSource) {
@@ -35,7 +32,7 @@ public abstract class AbstractSource<S extends NhiMetricRawVM, R> implements Sou
 
     @Override
     public SourceKey key() {
-        return key;
+        return new SourceKey(this);
     }
 
     @Override
@@ -46,7 +43,6 @@ public abstract class AbstractSource<S extends NhiMetricRawVM, R> implements Sou
     @Override
     public void setExclude(Exclude exclude) {
         this.exclude = exclude;
-        this.key = new SourceKey(this);
     }
 
     @Override
