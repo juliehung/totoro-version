@@ -23,8 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -56,6 +57,9 @@ public class NhiMetricReportService {
 
     @Value("${ nhi.metric.maxLock }")
     private Integer MAX_LOCK;
+
+    DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
+        .withZone(ZoneId.of("Asia/Taipei"));
 
     public NhiMetricReportService(
         MetricDashboardService metricDashboardService,
@@ -115,15 +119,6 @@ public class NhiMetricReportService {
             ForkJoinPool.commonPool().submit(() -> {
                 try {
                     ImageGcsBusinessService imageGcsBusinessService = applicationContext.getBean(ImageGcsBusinessService.class);
-                    imageGcsBusinessService.uploadFile(
-                        imageGcsBusinessService.getClinicName()
-                            .concat("/")
-                            .concat(BackupFileCatalog.NHI_METRIC_REPORT.getRemotePath())
-                            .concat("/"),
-                        "filename",
-                        "content".getBytes(StandardCharsets.UTF_8),
-                        BackupFileCatalog.NHI_METRIC_REPORT.getFileExtension()
-                    );
 
                     if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.KAO_PING_REDUCTION_DISTRICT)) {
                         List<KaoPingDistrictReductionDto> contents = new ArrayList<>();
@@ -157,7 +152,12 @@ public class NhiMetricReportService {
                         .concat("/")
                         .concat(BackupFileCatalog.NHI_METRIC_REPORT.getRemotePath())
                         .concat("/");
-                    String fileName = Instant.now().toString()
+                    String fileName = String.format(
+                            "%s_NhiPoints_%s(報告產生時間yyymmddhhmmss)",
+                            "yyymm",
+                            imageGcsBusinessService.getClinicName(),
+                            Instant.now().toString()
+                        )
                         .concat(".xls");
                     String fileUrl = imageGcsBusinessService.getUrlForDownload()
                         .concat(imageGcsBusinessService.getClinicName())
