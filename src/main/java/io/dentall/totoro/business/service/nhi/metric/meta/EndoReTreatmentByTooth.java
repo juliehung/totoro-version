@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyExcludeByVM;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
@@ -26,12 +25,10 @@ public class EndoReTreatmentByTooth extends EndoTreatment {
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
         List<NhiMetricRawVM> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
-        Exclude exclude = getExclude();
 
         // 先取得每個病人的每個處置的牙齒
         Map<String, List<String>> teethByPatientTreatment = nhiMetricRawVMList.stream()
             .filter(vm -> codes.contains(vm.getTreatmentProcedureCode()))
-            .filter(applyExcludeByVM(exclude))
             .collect(groupingBy(vm -> vm.getPatientId() + vm.getTreatmentProcedureCode()))
             .entrySet().stream()
             .reduce(new HashMap<>(), (map, entry) -> {

@@ -19,7 +19,11 @@ import static io.dentall.totoro.business.service.nhi.util.NhiProcedureUtil.isExa
 public class Point3ByDaily extends SingleSourceMetaCalculator<Map<LocalDate, Long>> {
 
     public Point3ByDaily(MetricConfig metricConfig, Source<?, ?> source) {
-        super(metricConfig, source);
+        this(metricConfig, null, source);
+    }
+
+    public Point3ByDaily(MetricConfig metricConfig, MetaConfig metaConfig, Source<?, ?> source) {
+        super(metricConfig, metaConfig, source);
     }
 
     @Override

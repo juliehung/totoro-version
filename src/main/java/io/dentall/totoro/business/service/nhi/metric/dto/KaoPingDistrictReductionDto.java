@@ -6,7 +6,7 @@ import io.dentall.totoro.business.service.nhi.metric.vm.DoctorData;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class KaoPingDistrictReductionDto {
+public class KaoPingDistrictReductionDto implements DistrictDto {
 
     private MetricSubjectType type;
 

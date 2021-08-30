@@ -6,7 +6,6 @@ import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.util.*;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyExcludeByDto;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.groupingBy;
@@ -15,7 +14,7 @@ import static java.util.stream.Collectors.maxBy;
 /**
  * 往前追溯發生在特定時間區間之自家同患者同牙位有申請過OD之顆數。
  */
-public class OdReToothCount extends AbstractMetaCalculator<Long> {
+public class Od1ReToothCount extends AbstractMetaCalculator<Long> {
 
     private final Source<?, ?> odSource;
 
@@ -25,11 +24,11 @@ public class OdReToothCount extends AbstractMetaCalculator<Long> {
 
     private final int dayShiftEnd;
 
-    public OdReToothCount(MetricConfig metricConfig, Source<?, ?> odSource, Source<?, ?> odPastSource, int dayShiftBegin, int dayShiftEnd) {
+    public Od1ReToothCount(MetricConfig metricConfig, Source<?, ?> odSource, Source<?, ?> odPastSource, int dayShiftBegin, int dayShiftEnd) {
         this(metricConfig, null, odSource, odPastSource, dayShiftBegin, dayShiftEnd);
     }
 
-    public OdReToothCount(MetricConfig metricConfig, MetaConfig config, Source<?, ?> odSource, Source<?, ?> odPastSource, int dayShiftBegin, int dayShiftEnd) {
+    public Od1ReToothCount(MetricConfig metricConfig, MetaConfig config, Source<?, ?> odSource, Source<?, ?> odPastSource, int dayShiftBegin, int dayShiftEnd) {
         super(metricConfig, config, new Source[]{odSource, odPastSource});
         this.odSource = odSource;
         this.odPastSource = odPastSource;
@@ -43,7 +42,6 @@ public class OdReToothCount extends AbstractMetaCalculator<Long> {
         List<Map<Long, Map<String, List<OdDto>>>> odPastSource = metricConfig.retrieveSource(this.odPastSource.key());
         Map<Long, Map<String, List<OdDto>>> odSourceMap = odSource.get(0);
         Map<Long, Map<String, List<OdDto>>> odPastSourceMap = odPastSource.get(0);
-        Exclude exclude = getExclude();
 
         return odSourceMap.entrySet().stream()
             .filter(entry -> odPastSourceMap.get(entry.getKey()) != null && odPastSourceMap.get(entry.getKey()).size() > 0)
@@ -55,17 +53,14 @@ public class OdReToothCount extends AbstractMetaCalculator<Long> {
                 // 該季中如果同顆牙有多次，則取最後一次
                 Map<String, Optional<OdDto>> odMap = odToothMap.values().stream()
                     .flatMap(Collection::stream)
-                    .filter(applyExcludeByDto(exclude))
-                    .collect(groupingBy(OdDto::getTooth, maxBy(comparing(OdDto::getDisposalDate))));
+                    .collect(groupingBy(OdDto::getTreatmentProcedureTooth, maxBy(comparing(OdDto::getDisposalDate))));
 
                 return odMap.entrySet().stream()
                     .filter(entryOd -> entryOd.getValue().isPresent())
                     .filter(entryOd -> odToothPastMap.get(entryOd.getKey()) != null)
                     .filter(entryOd -> {
                         OdDto odDto = entryOd.getValue().get();
-                        Iterator<OdDto> existReDtoItor = odToothPastMap.get(entryOd.getKey()).stream()
-                            .filter(applyExcludeByDto(exclude))
-                            .iterator();
+                        Iterator<OdDto> existReDtoItor = odToothPastMap.get(entryOd.getKey()).stream().iterator();
                         boolean found = false;
 
                         while (existReDtoItor.hasNext() && !found) {

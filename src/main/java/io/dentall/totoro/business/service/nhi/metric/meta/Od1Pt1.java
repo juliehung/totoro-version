@@ -18,7 +18,11 @@ import static java.util.stream.Collectors.maxBy;
 public class Od1Pt1 extends SingleSourceMetaCalculator<Long> {
 
     public Od1Pt1(MetricConfig metricConfig, Source<?, ?> source) {
-        super(metricConfig, source);
+        this(metricConfig, null, source);
+    }
+
+    public Od1Pt1(MetricConfig metricConfig, MetaConfig metaConfig, Source<?, ?> source) {
+        super(metricConfig, metaConfig, source);
     }
 
     @Override
@@ -27,7 +31,7 @@ public class Od1Pt1 extends SingleSourceMetaCalculator<Long> {
 
         return odDtoList.stream()
             // 因為資料是從Treatment層級，依牙齒切成多筆，所以需要先依 disposalId + code + treatmentSeq 做 group
-            .collect(groupingBy(dto -> dto.getDisposalId() + dto.getCode() + dto.getTreatmentSeq(), maxBy(Comparator.comparing(OdDto::getDisposalId))))
+            .collect(groupingBy(dto -> dto.getDisposalId() + dto.getTreatmentProcedureCode() + dto.getTreatmentSeq(), maxBy(Comparator.comparing(OdDto::getDisposalId))))
             .values().stream()
             .filter(Optional::isPresent)
             .map(Optional::get)

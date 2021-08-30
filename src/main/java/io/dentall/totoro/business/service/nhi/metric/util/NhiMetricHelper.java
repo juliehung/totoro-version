@@ -1,14 +1,15 @@
 package io.dentall.totoro.business.service.nhi.metric.util;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
-import io.dentall.totoro.business.service.nhi.metric.mapper.NhiMetricRawMapper;
 import io.dentall.totoro.business.service.nhi.metric.meta.Exclude;
 import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConstants;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.Holiday;
 import io.dentall.totoro.service.HolidayService;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.Year;
 import java.util.*;
 import java.util.function.BiFunction;
@@ -17,8 +18,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static java.lang.Long.parseLong;
-import static java.util.Arrays.asList;
-import static java.util.Collections.unmodifiableList;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.*;
@@ -26,32 +25,11 @@ import static org.apache.commons.lang3.StringUtils.*;
 
 public class NhiMetricHelper {
 
-    public static final List<String> codesByExam1 = unmodifiableList(asList(
-        "00121C", "00122C", "00123C", "00124C", "00125C", "00126C", "00128C", "00129C", "00130C", "00133C", "00134C", "00301C", "00302C", "00303C", "00304C"
-    ));
-
-    public static final List<String> codesByExam2 = unmodifiableList(asList(
-        "01271C", "01272C", "01273C"
-    ));
-
-    public static final List<String> codesByExam3 = unmodifiableList(asList(
-        "00305C", "00306C", "00307C", "00308C", "00309C", "00310C", "00311C", "00312C", "00313C", "00314C"
-    ));
-
-    public static final List<String> codesByExam4 = unmodifiableList(asList(
-        "00315C", "00316C", "00317C"
-    ));
-
-    // 山地離島診察代碼
-    public static final List<String> codesByHideout = unmodifiableList(asList(
-        "00125C", "00126C", "00309C", "00310C"
-    ));
-
     private NhiMetricHelper() {
     }
 
     public static Long applyNewExamPoint(NhiMetricRawVM vm, MetaConfig config) {
-        if (config.isExcludeHideoutPoint() && codesByHideout.contains(vm.getExamCode())) {
+        if (config.isExcludeHideoutPoint() && MetricConstants.CodesByHideout.contains(vm.getExamCode())) {
             // 山地離島的健保代碼要扣除多出來的點數
             // 30點差額是00125C(260 point)、00126C(260 pont)扣除00121C(230 point)的差額與00309C(385 point)、00310C(385 pont)扣除00305C(355 point)的差額
             return parseLong(vm.getExamPoint()) - 30L;
@@ -72,13 +50,26 @@ public class NhiMetricHelper {
             .orElse(0L);
     }
 
-    public static Long calculateExamRegular(List<NhiMetricRawVM> source, List<String> codes, MetaConfig config) {
-        Stream<Optional<NhiMetricRawVM>> stream = source.stream()
+    private static Stream<Optional<NhiMetricRawVM>> groupByDisposal(List<NhiMetricRawVM> source, List<String> codes) {
+        return source.stream()
             .filter(vm -> isNotBlank(vm.getExamPoint()))
             .filter(vm -> codes.contains(vm.getExamCode()))
             .collect(groupingBy(NhiMetricRawVM::getDisposalId, maxBy(comparing(NhiMetricRawVM::getDisposalId))))
             .values().stream();
+    }
+
+    public static Long calculateExamRegular(List<NhiMetricRawVM> source, List<String> codes, MetaConfig config) {
+        Stream<Optional<NhiMetricRawVM>> stream = groupByDisposal(source, codes);
         return calculateExam(stream, config);
+    }
+
+    public static Long calculateExamDifference(List<NhiMetricRawVM> source, List<String> codes) {
+        return groupByDisposal(source, codes)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .map(vm -> parseLong(vm.getExamPoint()) - 230L)
+            .reduce(Long::sum)
+            .orElse(0L);
     }
 
     public static Map<Long, Long> calculateExamByClassifier(List<NhiMetricRawVM> source, List<String> codes, Function<NhiMetricRawVM, Long> classifier, MetaConfig config) {
@@ -166,11 +157,7 @@ public class NhiMetricHelper {
     }
 
     public static Predicate<NhiMetricRawVM> applyExcludeByVM(Exclude exclude) {
-        return vm -> ofNullable(exclude).map(exclude1 -> exclude1.test(NhiMetricRawMapper.INSTANCE.mapToExcludeDto(vm))).orElse(true);
-    }
-
-    public static Predicate<OdDto> applyExcludeByDto(Exclude exclude) {
-        return vm -> ofNullable(exclude).map(exclude1 -> exclude1.test(NhiMetricRawMapper.INSTANCE.mapToExcludeDto(vm))).orElse(true);
+        return vm -> ofNullable(exclude).map(exclude1 -> exclude1.test(vm)).orElse(true);
     }
 
     public static Map<LocalDate, Optional<Holiday>> getHolidayMap(HolidayService holidayService, int... years) {
@@ -226,6 +213,13 @@ public class NhiMetricHelper {
         }
 
         return count + 1L;
+    }
+
+    public static Predicate<NhiMetricRawVM> applyLegalAge(int bottom, int upper) {
+        return vm -> {
+            int ages = Period.between(vm.getPatientBirth(), vm.getDisposalDate()).getYears();
+            return ages >= bottom && ages <= upper;
+        };
     }
 
 }

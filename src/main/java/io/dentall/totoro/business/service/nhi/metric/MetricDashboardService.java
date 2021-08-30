@@ -9,74 +9,34 @@ import io.dentall.totoro.business.service.nhi.metric.source.SourceKey;
 import io.dentall.totoro.business.service.nhi.metric.vm.DoctorData;
 import io.dentall.totoro.business.service.nhi.metric.vm.NameValue;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
+import io.dentall.totoro.domain.Holiday;
 import io.dentall.totoro.domain.User;
-import io.dentall.totoro.repository.NhiExtendDisposalRepository;
-import io.dentall.totoro.repository.UserRepository;
-import io.dentall.totoro.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.CLINIC;
-import static io.dentall.totoro.security.AuthoritiesConstants.ADMIN;
-import static io.dentall.totoro.security.AuthoritiesConstants.DOCTOR;
-import static io.dentall.totoro.service.util.DateTimeUtil.*;
-import static java.time.temporal.ChronoUnit.DAYS;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static java.util.Optional.ofNullable;
+import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.clinic;
 import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional
 public class MetricDashboardService {
 
-    private final NhiExtendDisposalRepository nhiExtendDisposalRepository;
-
-    private final UserService userService;
-
-    private final UserRepository userRepository;
-
-    public MetricDashboardService(
-        NhiExtendDisposalRepository nhiExtendDisposalRepository,
-        UserService userService, UserRepository userRepository) {
-        this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
-        this.userService = userService;
-        this.userRepository = userRepository;
-    }
-
-    public List<GiantMetricDto> metric(final LocalDate baseDate, List<Long> excludeDisposalIds) {
-        Optional<User> userOptional = this.userService.getUserWithAuthorities();
-        if (!userOptional.isPresent()) {
-            return emptyList();
-        }
-
-        User user = userOptional.get();
-        excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
-        BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
-        List<User> allSubject = findAllSubject(user);
-        Instant begin = quarterRange.getBegin().minus(1095, DAYS);
-        List<NhiMetricRawVM> nhiMetricRawVMList = nhiExtendDisposalRepository.findMetricRaw(
-            begin,
-            quarterRange.getEnd(),
-            excludeDisposalIds
-        );
-
-        return allSubject.parallelStream()
-            .map(subject -> buildMetric(baseDate, allSubject, subject, nhiMetricRawVMList))
+    public List<DashboardDto> metric(final LocalDate baseDate, List<User> subjects, List<? extends NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
+        return subjects.parallelStream()
+            .map(subject -> buildMetric(baseDate, subjects, subject, source, holidayMap))
             .filter(Objects::nonNull)
             .collect(toList());
     }
 
-    private GiantMetricDto buildMetric(LocalDate baseDate, List<User> allSubject, User subject, List<NhiMetricRawVM> source) {
-        MetricConfig metricConfig = new MetricConfig(subject, baseDate, source);
+    private DashboardDto buildMetric(LocalDate baseDate, List<User> allSubject, User subject, List<? extends NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
+        MetricConfig metricConfig = new MetricConfig(subject, baseDate, source).applyHolidayMap(holidayMap);
 
         if (!metricConfig.isSourceExist(metricConfig.getSubjectSource().key()) || metricConfig.retrieveSource(metricConfig.getSubjectSource().key()).size() == 0) {
             return null;
@@ -145,7 +105,7 @@ public class MetricDashboardService {
         NameValue nameValue = new NameValue();
         List<DoctorSummaryDto> doctorSummaryDtoList = null;
         List<DisposalSummaryDto> disposalSummaryDtoList = null;
-        if (metricSubjectType == CLINIC) {
+        if (metricSubjectType == clinic) {
             HighestDoctorDto highestDoctorDto = new L9Formula(metricConfig).calculate();
             allSubject.stream().filter(val -> val.getId().equals(highestDoctorDto.getId())).map(User::getFirstName).findFirst().ifPresent(nameValue::setName);
             nameValue.setValue(highestDoctorDto.getValue());
@@ -158,107 +118,80 @@ public class MetricDashboardService {
             disposalSummaryDtoList = new DisposalSummaryFormula(metricConfig).calculate();
         }
 
-        MetricLDto metricLDto = new MetricLDto();
-        metricLDto.setL1(metricL1);
-        metricLDto.setL2(metricL2);
-        metricLDto.setL3(metricL3);
-        metricLDto.setL4(metricL4);
-        metricLDto.setL5(metricL5);
-        metricLDto.setL6(metricL6);
-        metricLDto.setL7(metricL7);
-        metricLDto.setL8(metricL8);
-        metricLDto.setL11(metricL11);
-        metricLDto.setL12(metricL12);
-        metricLDto.setL13(metricL13);
-        metricLDto.setL14(metricL14);
-        metricLDto.setL15(metricL15);
-        metricLDto.setL16(metricL16);
-        metricLDto.setL17(metricL17);
-        metricLDto.setL18(metricL18);
-        metricLDto.setL19(metricL19);
-        metricLDto.setL20(metricL20);
-        metricLDto.setL21(metricL21);
-        metricLDto.setL22(metricL22);
-        metricLDto.setL23(metricL23);
-        metricLDto.setL24(metricL24);
-        metricLDto.setL25(metricL25);
-        metricLDto.setL26(metricL26);
-        metricLDto.setL27(metricL27);
-        metricLDto.setL28(metricL28);
-        metricLDto.setL29(metricL29);
-        metricLDto.setL30(metricL30);
-        metricLDto.setL31(metricL31);
-        metricLDto.setL32(metricL32);
-        metricLDto.setL33(metricL33);
-        metricLDto.setL34(metricL34);
-        metricLDto.setL35(metricL35);
-        metricLDto.setL36(metricL36);
-        metricLDto.setL37(metricL37);
-        metricLDto.setL38(metricL38);
-        metricLDto.setL39(metricL39);
-        metricLDto.setL40(metricL40);
-        metricLDto.setL41(metricL41);
-        metricLDto.setL42(metricL42);
-        metricLDto.setL43(metricL43);
-        metricLDto.setL44(metricL44);
-        metricLDto.setL45(metricL45);
-        metricLDto.setL46(metricL46);
-        metricLDto.setL47(metricL47);
-        metricLDto.setL48(metricL48);
-        metricLDto.setL49(metricL49);
-        metricLDto.setL50(metricL50);
-        metricLDto.setL51(metricL51);
-        metricLDto.setL52(metricL52);
-        metricLDto.setL53(metricL53);
-        metricLDto.setL54(metricL54);
-        metricLDto.setL55(metricL55);
-        metricLDto.setL56(metricL56);
+        DashboardDto dashboardDto = new DashboardDto();
+        dashboardDto.setType(metricSubjectType);
+        dashboardDto.setL1(metricL1);
+        dashboardDto.setL2(metricL2);
+        dashboardDto.setL3(metricL3);
+        dashboardDto.setL4(metricL4);
+        dashboardDto.setL5(metricL5);
+        dashboardDto.setL6(metricL6);
+        dashboardDto.setL7(metricL7);
+        dashboardDto.setL8(metricL8);
+        dashboardDto.setL11(metricL11);
+        dashboardDto.setL12(metricL12);
+        dashboardDto.setL13(metricL13);
+        dashboardDto.setL14(metricL14);
+        dashboardDto.setL15(metricL15);
+        dashboardDto.setL16(metricL16);
+        dashboardDto.setL17(metricL17);
+        dashboardDto.setL18(metricL18);
+        dashboardDto.setL19(metricL19);
+        dashboardDto.setL20(metricL20);
+        dashboardDto.setL21(metricL21);
+        dashboardDto.setL22(metricL22);
+        dashboardDto.setL23(metricL23);
+        dashboardDto.setL24(metricL24);
+        dashboardDto.setL25(metricL25);
+        dashboardDto.setL26(metricL26);
+        dashboardDto.setL27(metricL27);
+        dashboardDto.setL28(metricL28);
+        dashboardDto.setL29(metricL29);
+        dashboardDto.setL30(metricL30);
+        dashboardDto.setL31(metricL31);
+        dashboardDto.setL32(metricL32);
+        dashboardDto.setL33(metricL33);
+        dashboardDto.setL34(metricL34);
+        dashboardDto.setL35(metricL35);
+        dashboardDto.setL36(metricL36);
+        dashboardDto.setL37(metricL37);
+        dashboardDto.setL38(metricL38);
+        dashboardDto.setL39(metricL39);
+        dashboardDto.setL40(metricL40);
+        dashboardDto.setL41(metricL41);
+        dashboardDto.setL42(metricL42);
+        dashboardDto.setL43(metricL43);
+        dashboardDto.setL44(metricL44);
+        dashboardDto.setL45(metricL45);
+        dashboardDto.setL46(metricL46);
+        dashboardDto.setL47(metricL47);
+        dashboardDto.setL48(metricL48);
+        dashboardDto.setL49(metricL49);
+        dashboardDto.setL50(metricL50);
+        dashboardDto.setL51(metricL51);
+        dashboardDto.setL52(metricL52);
+        dashboardDto.setL53(metricL53);
+        dashboardDto.setL54(metricL54);
+        dashboardDto.setL55(metricL55);
+        dashboardDto.setL56(metricL56);
+        dashboardDto.setDailyIc3(dailyIc3);
+        dashboardDto.setDailyPt1(dailyPt1);
+        dashboardDto.setDailyPoints(dailyPoints);
+        dashboardDto.setSpecialTreatmentAnalysisDto(specialTreatmentAnalysisDto);
 
-        GiantMetricDto giantMetricDto = new GiantMetricDto();
-        giantMetricDto.setType(metricSubjectType);
-        giantMetricDto.setMetricLDto(metricLDto);
-        giantMetricDto.setDailyIc3(dailyIc3);
-        giantMetricDto.setDailyPt1(dailyPt1);
-        giantMetricDto.setDailyPoints(dailyPoints);
-        giantMetricDto.setSpecialTreatmentAnalysisDto(specialTreatmentAnalysisDto);
-
-        if (metricSubjectType == CLINIC) {
-            metricLDto.setL9(nameValue);
-            giantMetricDto.setDoctorSummary(doctorSummaryDtoList);
+        if (metricSubjectType == clinic) {
+            dashboardDto.setL9(nameValue);
+            dashboardDto.setDoctorSummary(doctorSummaryDtoList);
         } else {
-            metricLDto.setL10(nameValue);
+            dashboardDto.setL10(nameValue);
             DoctorData doctorData = new DoctorData();
             doctorData.setDoctorId(metricConfig.getSubject().getId());
             doctorData.setDoctorName(metricConfig.getSubject().getFirstName());
-            giantMetricDto.setDoctor(doctorData);
-            giantMetricDto.setDisposalSummary(disposalSummaryDtoList);
+            dashboardDto.setDoctor(doctorData);
+            dashboardDto.setDisposalSummary(disposalSummaryDtoList);
         }
 
-        return giantMetricDto;
-    }
-
-    private List<User> findAllSubject(User user) {
-        boolean isDoctor = user.getAuthorities().stream().anyMatch(authority -> DOCTOR.equals(authority.getName()));
-        boolean isAdmin = user.getAuthorities().stream().anyMatch(authority -> ADMIN.equals(authority.getName()));
-
-        if (!isDoctor && !isAdmin) {
-            return emptyList();
-        }
-
-        List<User> usersActivated = userRepository.findAllByActivatedIsTrue();
-        List<User> doctors = usersActivated.stream()
-            .filter(userActivated -> userActivated.getAuthorities().stream().anyMatch(authority -> DOCTOR.equals(authority.getName())))
-            .collect(toList());
-
-        if (isDoctor) {
-            doctors = doctors.stream().filter(doctor -> doctor.getId().equals(user.getId())).collect(toList());
-        } else {
-            User clinic = new User();
-            clinic.setId(Long.MIN_VALUE);
-            doctors.add(clinic);
-        }
-
-        return doctors;
+        return dashboardDto;
     }
 
 }

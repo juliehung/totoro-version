@@ -11,8 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.CLINIC;
-import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.DOCTOR;
+import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstants.CLINIC_ID;
+import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.clinic;
+import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.doctor;
 import static io.dentall.totoro.service.util.DateTimeUtil.convertLocalDateToBeginOfDayInstant;
 import static io.dentall.totoro.service.util.DateTimeUtil.getCurrentQuarterMonthsRangeInstant;
 import static java.util.Optional.ofNullable;
@@ -29,8 +30,6 @@ public class MetricConfig {
     private final Source<?, ?> initialSource = new InitialSource();
 
     private final LocalDate baseDate;
-
-    private final Source<?, ?> subjectSource;
 
     private final DateTimeUtil.BeginEnd quarterRange;
 
@@ -52,9 +51,12 @@ public class MetricConfig {
         this.baseDate = baseDate;
         this.quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
         this.cached.put(this.initialSource.key(), source);
-        this.subjectSource = subject.getId().equals(Long.MIN_VALUE) ? new ClinicSource(this) : new DoctorSource(this);
-        this.subjectType = this.subjectSource.getClass().isAssignableFrom(ClinicSource.class) ? CLINIC : DOCTOR;
-        apply(this.subjectSource);
+        this.subjectType = subject.getId().equals(CLINIC_ID) ? clinic : doctor;
+        if (this.subjectType == clinic) {
+            apply(new ClinicSource(this));
+        } else {
+            apply(new DoctorSource(this));
+        }
     }
 
     public MetricConfig apply(Source<?, ?> source) {
@@ -79,7 +81,11 @@ public class MetricConfig {
     }
 
     public Source<?, ?> getSubjectSource() {
-        return subjectSource;
+        if (this.subjectType == clinic) {
+            return new ClinicSource(this);
+        } else {
+            return new DoctorSource(this);
+        }
     }
 
     public MetricSubjectType getSubjectType() {
@@ -121,8 +127,9 @@ public class MetricConfig {
         return this.metaMap.containsKey(key);
     }
 
-    public void applyHolidayMap(Map<LocalDate, Optional<Holiday>> holidayMap) {
+    public MetricConfig applyHolidayMap(Map<LocalDate, Optional<Holiday>> holidayMap) {
         this.holidayMap.putAll(holidayMap);
+        return this;
     }
 
     public Map<LocalDate, Optional<Holiday>> getHolidayMap() {

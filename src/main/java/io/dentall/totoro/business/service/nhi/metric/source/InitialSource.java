@@ -3,6 +3,7 @@ package io.dentall.totoro.business.service.nhi.metric.source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public class InitialSource extends AbstractSource<NhiMetricRawVM, NhiMetricRawVM> {
 
@@ -11,8 +12,8 @@ public class InitialSource extends AbstractSource<NhiMetricRawVM, NhiMetricRawVM
     }
 
     @Override
-    public List<NhiMetricRawVM> filter(List<NhiMetricRawVM> source) {
-        return source;
+    public List<NhiMetricRawVM> doFilter(Stream<NhiMetricRawVM> source) {
+        throw new RuntimeException("Should not be called.");
     }
 
 }
