@@ -1,11 +1,15 @@
 package io.dentall.totoro.business.service.nhi;
 
+import java.time.Instant;
+
 public class NhiRuleCheckMonthDeclarationTx {
 
     private Long disposalId;
 
     // a17 or a54
     private String disposalTime;
+
+    private Instant displayDisposalTime;
 
     // a23
     private String nhiCategory;
@@ -31,6 +35,7 @@ public class NhiRuleCheckMonthDeclarationTx {
     public NhiRuleCheckMonthDeclarationTx(
         Long disposalId,
         String disposalTime,
+        Instant displayDisposalTime,
         String nhiCategory,
         Long doctorId,
         String doctorName,
@@ -44,6 +49,7 @@ public class NhiRuleCheckMonthDeclarationTx {
     ) {
         this.disposalId = disposalId;
         this.disposalTime = disposalTime;
+        this.displayDisposalTime = displayDisposalTime;
         this.nhiCategory = nhiCategory;
         this.doctorId = doctorId;
         this.doctorName = doctorName;
@@ -74,6 +80,14 @@ public class NhiRuleCheckMonthDeclarationTx {
 
     public String getDisposalTime() {
         return disposalTime;
+    }
+
+    public Instant getDisplayDisposalTime() {
+        return displayDisposalTime;
+    }
+
+    public void setDisplayDisposalTime(Instant displayDisposalTime) {
+        this.displayDisposalTime = displayDisposalTime;
     }
 
     public void setDisposalTime(String disposalTime) {

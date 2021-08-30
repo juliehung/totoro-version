@@ -446,6 +446,7 @@ public class NhiRuleCheckUtil {
                 return new NhiRuleCheckMonthDeclarationTx(
                     d.getDisposalId(),
                     d.getDisposalTime(),
+                    d.getDisplayDisposalTime(),
                     d.getNhiCategory(),
                     d.getDoctorId(),
                     d.getDoctorName(),
@@ -480,7 +481,7 @@ public class NhiRuleCheckUtil {
                 if (isFirst) {
                     body = NhiRuleCheckMapper.INSTANCE.convertToNhiRuleCheckBody(v);
                     patientId = v.getPatientId();
-                    disposalTime = v.getDisposalTime();
+                    disposalTime = DateTimeUtil.transformInstantToRocDateTimeForDisplay(v.getDisplayDisposalTime());
                     patientName = v.getPatientName();
                     doctorName = v.getDoctorName();
                     isFirst = false;
@@ -544,9 +545,7 @@ public class NhiRuleCheckUtil {
                 CsvUtil.convertDataToCsvRecord(
                     Arrays.asList(
                         String.valueOf(seq),
-                        DateTimeUtil.transformA71ToDisplayWithTime(
-                            disposalTime
-                        ),
+                        disposalTime,
                         patientName,
                         doctorName,
                         "\"".concat(txString).concat("\""),

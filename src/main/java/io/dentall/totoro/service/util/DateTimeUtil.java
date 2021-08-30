@@ -182,6 +182,16 @@ public final class DateTimeUtil {
             .substring(1);
     }
 
+    public static String transformInstantToRocDateTimeForDisplay(Instant dateTime) {
+        return dateTime
+            .atZone(ZoneId.of("Asia/Taipei"))
+            .minus(1911, ChronoUnit.YEARS)
+            .format(
+                DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")
+            )
+            .substring(1);
+    }
+
     public static String transformLocalDateToRocDateForDisplay(Instant dateTime) {
         return dateTime
             .atOffset(TimeConfig.ZONE_OFF_SET)

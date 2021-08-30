@@ -1,11 +1,15 @@
 package io.dentall.totoro.business.service.nhi;
 
+import java.time.Instant;
+
 public interface NhiRuleCheckMonthDeclarationTxDTO {
 
     Long getDisposalId();
 
     // a17 or a54
     String getDisposalTime();
+
+    Instant getDisplayDisposalTime();
 
     // a23
     String getNhiCategory();
@@ -27,4 +31,5 @@ public interface NhiRuleCheckMonthDeclarationTxDTO {
     String getSurface();
 
     String getNhiTxName();
+
 }
