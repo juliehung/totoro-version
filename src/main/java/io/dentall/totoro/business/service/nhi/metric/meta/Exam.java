@@ -23,12 +23,12 @@ public abstract class Exam<T> extends SingleSourceMetaCalculator<T> {
         Class<?> clz = this.getClass();
 
         if (config.isIncludePoint6By12MPoints() &&
-            (clz.isAssignableFrom(Exam1.class) ||
-                clz.isAssignableFrom(Exam2.class) ||
-                clz.isAssignableFrom(Exam1ByClassifier.class) ||
+            (clz.isAssignableFrom(Exam2.class) ||
+                clz.isAssignableFrom(Exam4.class) ||
                 clz.isAssignableFrom(Exam2ByClassifier.class) ||
-                clz.isAssignableFrom(Exam1ByDaily.class) ||
-                clz.isAssignableFrom(Exam2ByDaily.class))) {
+                clz.isAssignableFrom(Exam4ByClassifier.class) ||
+                clz.isAssignableFrom(Exam2ByDaily.class) ||
+                clz.isAssignableFrom(Exam4ByDaily.class))) {
 
             Point6 point6 = new Point6(metricConfig, source()).apply();
             if (point6.getResult() > 12000000) {
