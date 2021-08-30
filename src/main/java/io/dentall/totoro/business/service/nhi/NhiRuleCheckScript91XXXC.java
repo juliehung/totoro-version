@@ -231,7 +231,7 @@ public class NhiRuleCheckScript91XXXC {
             nhiRuleCheckUtil.isCodeBeforeDateV2(
                 dto,
                 null,
-                Arrays.asList("91089C"),
+                Arrays.asList("91089C", "91003C", "91015C", "91016C", "91017C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
                 String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
                 1,
@@ -461,7 +461,7 @@ public class NhiRuleCheckScript91XXXC {
             nhiRuleCheckUtil.isDependOnCodeBeforeDate(
                 dto,
                 null,
-                Arrays.asList("91004C", "91005C", "91020C"),
+                Arrays.asList("91003C", "91004C", "91005C", "91020C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_0_DAY),
                 String.valueOf(DateTimeUtil.NHI_0_DAY.getDays()),
                 NhiRuleCheckFormat.W3_1
@@ -692,7 +692,7 @@ public class NhiRuleCheckScript91XXXC {
             nhiRuleCheckUtil.isCodeBeforeDateV2(
                 dto,
                 null,
-                Arrays.asList("91001C", "91003C", "91004C", "91017C", "91103C", "91104C"),
+                Arrays.asList("91001C", "91003C", "91004C", "91005C", "91089C", "91017C", "91103C", "91104C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_0_DAY),
                 String.valueOf(DateTimeUtil.NHI_0_DAY.getDays()),
                 1,
@@ -919,6 +919,19 @@ public class NhiRuleCheckScript91XXXC {
             nhiRuleCheckUtil.isCodeBeforeDateV2(
                 dto,
                 null,
+                Arrays.asList("91005C", "91015C", "91016C", "91017C", "91018C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
+                String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
+                1,
+                NhiRuleCheckFormat.D1_2
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isCodeBeforeDateV2(
+                dto,
+                null,
                 Arrays.asList("91089C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
                 String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
@@ -946,7 +959,7 @@ public class NhiRuleCheckScript91XXXC {
             nhiRuleCheckUtil.isCodeBeforeDateV2(
                 dto,
                 null,
-                Arrays.asList("91089C"),
+                Arrays.asList("91003C", "91005C", "91015C", "91016C", "91017C", "91018C", "91089C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
                 String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
                 1,
@@ -996,7 +1009,7 @@ public class NhiRuleCheckScript91XXXC {
             nhiRuleCheckUtil.isCodeBeforeDateV2(
                 dto,
                 null,
-                Arrays.asList("91089C"),
+                Arrays.asList("91003C", "91005C", "91015C", "91016C", "91017C", "91018C", "91089C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
                 String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
                 1,

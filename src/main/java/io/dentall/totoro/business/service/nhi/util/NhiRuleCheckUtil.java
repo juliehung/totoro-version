@@ -1322,7 +1322,8 @@ public class NhiRuleCheckUtil {
         // 當前處置
         for (NhiRuleCheckTxSnapshot ignoreTargetTxSnapshot : ignoreTargetTxSnapshots) {
             String snapshotCode = ignoreTargetTxSnapshot.getNhiCode();
-            if ("91004C".equals(snapshotCode) ||
+            if ("91003C".equals(snapshotCode) ||
+                "91004C".equals(snapshotCode) ||
                 "91005C".equals(snapshotCode)
             ) {
                 duration = this.regularDayDurationCalculation(
@@ -1345,7 +1346,7 @@ public class NhiRuleCheckUtil {
 
         // 當日其他處置 91004C, 91005C, 91020C
         List<String> queryCode = Arrays.asList(
-            "91004C", "91005C", "91020C"
+            "91003C", "91004C", "91005C", "91020C"
         );
         if (!foundTargetInCurrentDisposal) {
             List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
@@ -1369,7 +1370,8 @@ public class NhiRuleCheckUtil {
                 .count() > 0
             ) {
                 String clauseDataCode = sourceData.get(0).getCode();
-                if ("91004C".equals(clauseDataCode) ||
+                if ("91003C".equals(clauseDataCode) ||
+                    "91004C".equals(clauseDataCode) ||
                     "91005C".equals(clauseDataCode)
                 ) {
                     duration = this.regularDayDurationCalculation(

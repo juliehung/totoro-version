@@ -137,7 +137,7 @@ public class NhiRuleCheckScript92XXXC {
         nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isAllLimitedTooth(
                 dto,
-                ToothConstraint.PERMANENT_TOOTH
+                ToothConstraint.GENERAL_TOOTH
             ),
             vm
         );
