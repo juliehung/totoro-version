@@ -5,24 +5,14 @@ import io.dentall.totoro.business.service.nhi.metric.*;
 import io.dentall.totoro.business.service.nhi.metric.dto.*;
 import io.dentall.totoro.business.service.nhi.metric.vm.MetricLVM;
 import io.dentall.totoro.business.vm.nhi.NhiMetricReportBodyVM;
-import io.dentall.totoro.business.vm.nhi.NhiMetricReportQueryStringVM;
-import io.dentall.totoro.domain.NhiMetricReport;
-import io.dentall.totoro.domain.enumeration.BatchStatus;
-import io.dentall.totoro.repository.NhiMetricReportRepository;
-import io.dentall.totoro.service.mapper.NhiMetricReportMapper;
-import io.dentall.totoro.service.util.DateTimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
+import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/nhi/metric")
@@ -32,10 +22,14 @@ public class NhiMetricResource {
 
     private final MetricService metricService;
 
+    private final NhiMetricReportService nhiMetricReportService;
+
     public NhiMetricResource(
-        MetricService metricService
+        MetricService metricService,
+        NhiMetricReportService nhiMetricReportService
     ) {
         this.metricService = metricService;
+        this.nhiMetricReportService = nhiMetricReportService;
     }
 
     @GetMapping("/dashboard")
@@ -176,5 +170,54 @@ public class NhiMetricResource {
                 KaoPingDistrictReductionService.class));
 
         return ResponseEntity.ok().body(dto);
+    }
+
+    @PostMapping("/report")
+    @Timed
+    public ResponseEntity<String> generateNhiMetricReport(@RequestBody NhiMetricReportBodyVM nhiMetricReportBodyVM) throws IOException {
+        log.debug("REST request to composite district : begin={}, excludeDisposalId={}, doctorIds={}",
+            nhiMetricReportBodyVM.getBegin(),
+            nhiMetricReportBodyVM.getExcludeDisposalId(),
+            nhiMetricReportBodyVM.getDoctorIds()
+        );
+
+        List<Class<? extends DistrictService>> reportTypeServiceList = new ArrayList<>();
+        nhiMetricReportBodyVM.getNhiMetricReportTypes()
+            .forEach(t -> {
+                switch (t) {
+                    case TAIPEI_DISTRICT:
+                        reportTypeServiceList.add(TaipeiDistrictService.class);
+                        break;
+                    case NORTH_DISTRICT:
+                        reportTypeServiceList.add(NorthDistrictService.class);
+                        break;
+                    case MIDDLE_DISTRICT:
+                        reportTypeServiceList.add(MiddleDistrictService.class);
+                        break;
+                    case SOUTH_DISTRICT:
+                        reportTypeServiceList.add(SouthDistrictService.class);
+                        break;
+                    case KAO_PING_REDUCTION_DISTRICT:
+                        reportTypeServiceList.add(EastDistrictService.class);
+                        break;
+                    case KAO_PING_REGULAR_DISTRICT:
+                        reportTypeServiceList.add(KaoPingDistrictRegularService.class);
+                        break;
+                    case EAST_DISTRICT:
+                        reportTypeServiceList.add(KaoPingDistrictReductionService.class);
+                        break;
+                }
+            });
+
+        CompositeDistrictDto dto = metricService.getCompositeDistrictMetric(
+            nhiMetricReportBodyVM.getBegin(),
+            nhiMetricReportBodyVM.getExcludeDisposalId(),
+            nhiMetricReportBodyVM.getDoctorIds(),
+            reportTypeServiceList
+        );
+
+        nhiMetricReportService.generateNhiMetricReport(nhiMetricReportBodyVM, dto);
+
+        return ResponseEntity.ok().body("ok");
     }
 }

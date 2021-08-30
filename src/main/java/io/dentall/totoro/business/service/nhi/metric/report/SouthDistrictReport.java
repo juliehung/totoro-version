@@ -67,7 +67,7 @@ public class SouthDistrictReport {
         row.createCell(0).setCellValue("※指標數值係依系統累積資料量進行統計。");
 
         // Assign data
-        for (int colIdx = 0; colIdx < contents.size(); colIdx++){
+        for (int colIdx = 2; colIdx < contents.size(); colIdx++){
             SouthDistrictDto content = contents.get(colIdx);
             int rowIdx = 0;
             sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getDoctor().getDoctorName());

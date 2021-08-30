@@ -1,6 +1,5 @@
 package io.dentall.totoro.business.service.nhi.metric;
 
-import com.google.api.client.util.Value;
 import io.dentall.totoro.business.service.ImageGcsBusinessService;
 import io.dentall.totoro.business.service.nhi.metric.dto.*;
 import io.dentall.totoro.business.service.nhi.metric.report.*;
@@ -17,6 +16,7 @@ import io.dentall.totoro.service.mapper.NhiMetricReportMapper;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ForkJoinPool;
@@ -34,8 +33,6 @@ import java.util.concurrent.ForkJoinPool;
 @Service
 @Transactional
 public class NhiMetricReportService {
-
-    private final MetricDashboardService metricDashboardService;
 
     private final NhiMetricReportRepository nhiMetricReportRepository;
 
@@ -55,14 +52,11 @@ public class NhiMetricReportService {
 
     private final TaipeiDistrictReport taipeiDistrictReport;
 
-    @Value("${ nhi.metric.maxLock }")
-    private Integer MAX_LOCK;
+    private final MetricService metricService;
 
-    DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
-        .withZone(ZoneId.of("Asia/Taipei"));
+    private final Integer MAX_LOCK;
 
     public NhiMetricReportService(
-        MetricDashboardService metricDashboardService,
         NhiMetricReportRepository nhiMetricReportRepository,
         UserService userService,
         ApplicationContext applicationContext,
@@ -71,9 +65,10 @@ public class NhiMetricReportService {
         MiddleDistrictReport middleDistrictReport,
         NorthDistrictReport northDistrictReport,
         SouthDistrictReport southDistrictReport,
-        TaipeiDistrictReport taipeiDistrictReport
+        TaipeiDistrictReport taipeiDistrictReport,
+        MetricService metricService,
+        @Value("${nhi.metric.maxLock}") Integer maxLock
     ) {
-        this.metricDashboardService = metricDashboardService;
         this.nhiMetricReportRepository = nhiMetricReportRepository;
         this.userService = userService;
         this.applicationContext = applicationContext;
@@ -83,10 +78,15 @@ public class NhiMetricReportService {
         this.northDistrictReport = northDistrictReport;
         this.southDistrictReport = southDistrictReport;
         this.taipeiDistrictReport = taipeiDistrictReport;
+        this.metricService = metricService;
+        this.MAX_LOCK = maxLock;
     }
 
     @Transactional
-    synchronized public String generateNhiMetricReport(NhiMetricReportBodyVM nhiMetricReportBodyVM) throws IOException {
+    public synchronized String generateNhiMetricReport(
+        NhiMetricReportBodyVM nhiMetricReportBodyVM,
+        CompositeDistrictDto nhiMetricResultDto
+    ) throws IOException {
         String returnMessage = "";
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         Workbook wb = new HSSFWorkbook();
@@ -121,42 +121,43 @@ public class NhiMetricReportService {
                     ImageGcsBusinessService imageGcsBusinessService = applicationContext.getBean(ImageGcsBusinessService.class);
 
                     if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.KAO_PING_REDUCTION_DISTRICT)) {
-                        List<KaoPingDistrictReductionDto> contents = new ArrayList<>();
+                        List<KaoPingDistrictReductionDto> contents = nhiMetricResultDto.getKaoPingDistrictReductionDtoList();
                         kaoPingDistrictReductionReport.generateReport(wb, contents);
                     }
                     if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.KAO_PING_REGULAR_DISTRICT)) {
-                        List<KaoPingDistrictRegularDto> contents = new ArrayList<>();
+                        List<KaoPingDistrictRegularDto> contents = nhiMetricResultDto.getKaoPingDistrictRegularDtoList();
                         kaoPingDistrictRegularReport.generateReport(wb, contents);
                     }
                     if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.MIDDLE_DISTRICT)) {
-                        List<MiddleDistrictDto> contents = new ArrayList<>();
+                        List<MiddleDistrictDto> contents = nhiMetricResultDto.getMiddleDistrictDtoList();
                         middleDistrictReport.generateReport(wb, contents);
                     }
                     if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.NORTH_DISTRICT)) {
-                        List<NorthDistrictDto> contents = new ArrayList<>();
+                        List<NorthDistrictDto> contents = nhiMetricResultDto.getNorthDistrictDtoList();
                         northDistrictReport.generateReport(wb, contents);
                     }
                     if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.SOUTH_DISTRICT)) {
-                        List<SouthDistrictDto> contents = new ArrayList<>();
+                        List<SouthDistrictDto> contents = nhiMetricResultDto.getSouthDistrictDtoList();
                         southDistrictReport.generateReport(wb, contents);
                     }
                     if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.TAIPEI_DISTRICT)) {
-                        List<TaipeiDistrictDto> contents = new ArrayList<>();
+                        List<TaipeiDistrictDto> contents = nhiMetricResultDto.getTaipeiDistrictDtoList();
                         taipeiDistrictReport.generateReport(wb, contents);
                     }
 
                     wb.write(outStream);
-
 
                     String gcsPath = imageGcsBusinessService.getClinicName()
                         .concat("/")
                         .concat(BackupFileCatalog.NHI_METRIC_REPORT.getRemotePath())
                         .concat("/");
                     String fileName = String.format(
-                            "%s_NhiPoints_%s(報告產生時間yyymmddhhmmss)",
-                            "yyymm",
+                            "%s_NhiPoints_%s(報告產生時間%s)",
+                            nhiMetricReportBodyVM.getYyyymm(),
                             imageGcsBusinessService.getClinicName(),
-                            Instant.now().toString()
+                            DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
+                                    .withZone(ZoneId.of("Asia/Taipei"))
+                                    .format(Instant.now())
                         )
                         .concat(".xls");
                     String fileUrl = imageGcsBusinessService.getUrlForDownload()

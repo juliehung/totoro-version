@@ -135,7 +135,7 @@ logging:
 # application:
 nhi:
     metric:
-        max-lock: 5
+        maxLock: 5
 
 calendar:
     secret:

@@ -71,15 +71,15 @@ public class TaipeiDistrictReport {
         row.createCell(0).setCellValue("※指標數值係依系統累積資料量進行統計。");
 
         // Assign data
-        for (int colIdx = 0; colIdx < contents.size(); colIdx++) {
+        for (int colIdx = 2; colIdx < contents.size(); colIdx++) {
             TaipeiDistrictDto content = contents.get(colIdx);
             int rowIdx = 0;
             sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getDoctor().getDoctorName());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getL22().toString());
+            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getL1().toString());
             sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getF1h2().toString());
             sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getF3h1().toString());
             sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getF4h3().toString());
-//            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.get().toString());
+            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getI12().toString());
             sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getF1h3().toString());
             sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getF2h4().toString());
             sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getF3h2().toString());
