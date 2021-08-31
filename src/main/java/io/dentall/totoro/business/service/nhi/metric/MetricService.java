@@ -36,6 +36,7 @@ import static io.dentall.totoro.security.AuthoritiesConstants.DOCTOR;
 import static io.dentall.totoro.service.util.DateTimeUtil.convertLocalDateToBeginOfDayInstant;
 import static io.dentall.totoro.service.util.DateTimeUtil.getCurrentQuarterMonthsRangeInstant;
 import static java.time.temporal.ChronoUnit.DAYS;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
@@ -58,42 +59,18 @@ public class MetricService implements ApplicationContextAware {
 
     private final MetricDashboardService metricDashboardService;
 
-    private final TaipeiDistrictService taipeiDistrictService;
-
-    private final NorthDistrictService northDistrictService;
-
-    private final MiddleDistrictService middleDistrictService;
-
-    private final SouthDistrictService southDistrictService;
-
-    private final EastDistrictService eastDistrictService;
-
-    private final KaoPingDistrictRegularService kaoPingDistrictRegularService;
-
     private final KaoPingDistrictReductionService kaoPingDistrictReductionService;
 
     public MetricService(UserService userService,
                          UserRepository userRepository,
                          NhiExtendDisposalRepository nhiExtendDisposalRepository,
                          HolidayService holidayService, MetricDashboardService metricDashboardService,
-                         TaipeiDistrictService taipeiDistrictService,
-                         NorthDistrictService northDistrictService,
-                         MiddleDistrictService middleDistrictService,
-                         SouthDistrictService southDistrictService,
-                         EastDistrictService eastDistrictService,
-                         KaoPingDistrictRegularService kaoPingDistrictRegularService,
                          KaoPingDistrictReductionService kaoPingDistrictReductionService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.holidayService = holidayService;
         this.metricDashboardService = metricDashboardService;
-        this.taipeiDistrictService = taipeiDistrictService;
-        this.northDistrictService = northDistrictService;
-        this.middleDistrictService = middleDistrictService;
-        this.southDistrictService = southDistrictService;
-        this.eastDistrictService = eastDistrictService;
-        this.kaoPingDistrictRegularService = kaoPingDistrictRegularService;
         this.kaoPingDistrictReductionService = kaoPingDistrictReductionService;
     }
 
@@ -255,146 +232,45 @@ public class MetricService implements ApplicationContextAware {
     }
 
     public List<TaipeiDistrictDto> getTaipeiDistrictMetric(LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
-        Optional<User> userOptional = this.userService.getUserWithAuthorities();
-        if (!userOptional.isPresent()) {
-            return emptyList();
-        }
-
-        doctorIds = Optional.ofNullable(doctorIds).orElse(emptyList());
-        User user = userOptional.get();
-        excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
-        List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
-        DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
-        Instant begin = quarterRange.getBegin().minus(1095, DAYS); // 季 + 三年(1095)
-        List<? extends NhiMetricRawVM> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
-        int baseYear = baseDate.getYear();
-        Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2, baseYear - 3);
-
-        return taipeiDistrictService.metric(baseDate, subjects, source, holidayMap);
+        CompositeDistrictDto compositeDistrictDto =
+            getCompositeDistrictMetric(baseDate, excludeDisposalIds, doctorIds, asList(TaipeiDistrictService.class));
+        return compositeDistrictDto.getTaipeiDistrictDtoList();
     }
 
     public List<NorthDistrictDto> getNorthDistrictMetric(LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
-        Optional<User> userOptional = this.userService.getUserWithAuthorities();
-        if (!userOptional.isPresent()) {
-            return emptyList();
-        }
-
-        doctorIds = Optional.ofNullable(doctorIds).orElse(emptyList());
-        User user = userOptional.get();
-        excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
-        List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
-        DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
-        Instant begin = quarterRange.getBegin().minus(730, DAYS); // 季 + 二年(730)
-        List<? extends NhiMetricRawVM> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
-        int baseYear = baseDate.getYear();
-        Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2);
-
-        return northDistrictService.metric(baseDate, subjects, source, holidayMap);
+        CompositeDistrictDto compositeDistrictDto =
+            getCompositeDistrictMetric(baseDate, excludeDisposalIds, doctorIds, asList(NorthDistrictService.class));
+        return compositeDistrictDto.getNorthDistrictDtoList();
     }
 
     public List<MiddleDistrictDto> getMiddleDistrictMetric(LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
-        Optional<User> userOptional = this.userService.getUserWithAuthorities();
-        if (!userOptional.isPresent()) {
-            return emptyList();
-        }
-
-        doctorIds = Optional.ofNullable(doctorIds).orElse(emptyList());
-        User user = userOptional.get();
-        excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
-        List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
-        DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
-        Instant begin = quarterRange.getBegin().minus(730, DAYS); // 季 + 二年(730)
-        List<? extends NhiMetricRawVM> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
-        int baseYear = baseDate.getYear();
-        Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2);
-
-        return middleDistrictService.metric(baseDate, subjects, source, holidayMap);
+        CompositeDistrictDto compositeDistrictDto =
+            getCompositeDistrictMetric(baseDate, excludeDisposalIds, doctorIds, asList(MiddleDistrictService.class));
+        return compositeDistrictDto.getMiddleDistrictDtoList();
     }
 
     public List<SouthDistrictDto> getSouthDistrictMetric(LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
-        Optional<User> userOptional = this.userService.getUserWithAuthorities();
-        if (!userOptional.isPresent()) {
-            return emptyList();
-        }
-
-        doctorIds = Optional.ofNullable(doctorIds).orElse(emptyList());
-        User user = userOptional.get();
-        excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
-        List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
-        DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
-        Instant begin = quarterRange.getBegin().minus(1095, DAYS); // 季 + 三年(1095)
-        List<? extends NhiMetricRawVM> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
-        int baseYear = baseDate.getYear();
-        Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2, baseYear - 3);
-
-        return southDistrictService.metric(baseDate, subjects, source, holidayMap);
+        CompositeDistrictDto compositeDistrictDto =
+            getCompositeDistrictMetric(baseDate, excludeDisposalIds, doctorIds, asList(SouthDistrictService.class));
+        return compositeDistrictDto.getSouthDistrictDtoList();
     }
 
     public List<EastDistrictDto> getEastDistrictMetric(final LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
-        Optional<User> userOptional = this.userService.getUserWithAuthorities();
-        if (!userOptional.isPresent()) {
-            return emptyList();
-        }
-
-        doctorIds = Optional.ofNullable(doctorIds).orElse(emptyList());
-        User user = userOptional.get();
-        excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
-        List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
-        DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
-        Instant begin = quarterRange.getBegin().minus(730, DAYS); // 季 + 二年(730)
-        List<? extends NhiMetricRawVM> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
-        int baseYear = baseDate.getYear();
-        Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2, baseYear - 3);
-
-        return eastDistrictService.metric(baseDate, subjects, source, holidayMap);
+        CompositeDistrictDto compositeDistrictDto =
+            getCompositeDistrictMetric(baseDate, excludeDisposalIds, doctorIds, asList(EastDistrictService.class));
+        return compositeDistrictDto.getEastDistrictDtoList();
     }
 
     public List<KaoPingDistrictRegularDto> getKaoPingDistrictRegularMetric(LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
-        Optional<User> userOptional = this.userService.getUserWithAuthorities();
-        if (!userOptional.isPresent()) {
-            return emptyList();
-        }
-
-        doctorIds = Optional.ofNullable(doctorIds).orElse(emptyList());
-        User user = userOptional.get();
-        excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
-        List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
-        DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
-        Instant begin = quarterRange.getBegin().minus(1095, DAYS); // 季 + 三年(1095)
-        List<? extends NhiMetricRawVM> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
-        int baseYear = baseDate.getYear();
-        Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2, baseYear - 3);
-
-        return kaoPingDistrictRegularService.metric(baseDate, subjects, source, holidayMap);
+        CompositeDistrictDto compositeDistrictDto =
+            getCompositeDistrictMetric(baseDate, excludeDisposalIds, doctorIds, asList(KaoPingDistrictRegularService.class));
+        return compositeDistrictDto.getKaoPingDistrictRegularDtoList();
     }
 
     public List<KaoPingDistrictReductionDto> getKaoPingDistrictReductionMetric(LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
-        Optional<User> userOptional = this.userService.getUserWithAuthorities();
-        if (!userOptional.isPresent()) {
-            return emptyList();
-        }
-
-        doctorIds = Optional.ofNullable(doctorIds).orElse(emptyList());
-        User user = userOptional.get();
-        excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
-        List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
-        DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
-        Instant begin = quarterRange.getBegin().minus(365, DAYS); // 季 + 一年(1095)
-        List<? extends NhiMetricRawVM> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
-        int baseYear = baseDate.getYear();
-        Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1);
-
-        List<DoctorPoint1Dto> doctorPoint1DtoList = kaoPingDistrictReductionService.getJ1h1Metric(baseDate, holidayMap, source);
-        BigDecimal metricJ1h2 = kaoPingDistrictReductionService.getJ1h2Metric(baseDate, holidayMap, source);
-
-        List<KaoPingDistrictReductionDto> resultDtoList = kaoPingDistrictReductionService.metric(baseDate, subjects, source, holidayMap);
-        resultDtoList.forEach(dto -> {
-                dto.setJ1h1(doctorPoint1DtoList);
-                dto.setJ1h2(metricJ1h2);
-            }
-        );
-
-        return resultDtoList;
+        CompositeDistrictDto compositeDistrictDto =
+            getCompositeDistrictMetric(baseDate, excludeDisposalIds, doctorIds, asList(KaoPingDistrictReductionService.class));
+        return compositeDistrictDto.getKaoPingDistrictReductionDtoList();
     }
 
     public CompositeDistrictDto getCompositeDistrictMetric(
@@ -425,15 +301,10 @@ public class MetricService implements ApplicationContextAware {
         CompositeDistrictDto compositeDistrictDto = applyToCompositeDistrictDto(districtMetricMap);
 
         if (metricServiceClass.contains(KaoPingDistrictReductionService.class)) {
-            List<DoctorPoint1Dto> doctorPoint1DtoList = kaoPingDistrictReductionService.getJ1h1Metric(baseDate, holidayMap, source);
             BigDecimal metricJ1h2 = kaoPingDistrictReductionService.getJ1h2Metric(baseDate, holidayMap, source);
 
             compositeDistrictDto.getKaoPingDistrictReductionDtoList()
-                .forEach(dto -> {
-                        dto.setJ1h1(doctorPoint1DtoList);
-                        dto.setJ1h2(metricJ1h2);
-                    }
-                );
+                .forEach(dto -> dto.setJ1h2(metricJ1h2));
         }
 
         return compositeDistrictDto;

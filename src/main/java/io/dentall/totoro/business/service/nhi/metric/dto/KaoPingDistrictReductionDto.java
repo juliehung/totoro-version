@@ -4,7 +4,6 @@ import io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType;
 import io.dentall.totoro.business.service.nhi.metric.vm.DoctorData;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 public class KaoPingDistrictReductionDto implements DistrictDto {
 
@@ -12,7 +11,7 @@ public class KaoPingDistrictReductionDto implements DistrictDto {
 
     private DoctorData doctor;
 
-    private List<DoctorPoint1Dto> j1h1;
+    private BigDecimal j1h1;
 
     private BigDecimal j1h2;
 
@@ -40,11 +39,11 @@ public class KaoPingDistrictReductionDto implements DistrictDto {
         this.doctor = doctor;
     }
 
-    public List<DoctorPoint1Dto> getJ1h1() {
+    public BigDecimal getJ1h1() {
         return j1h1;
     }
 
-    public void setJ1h1(List<DoctorPoint1Dto> j1h1) {
+    public void setJ1h1(BigDecimal j1h1) {
         this.j1h1 = j1h1;
     }
 

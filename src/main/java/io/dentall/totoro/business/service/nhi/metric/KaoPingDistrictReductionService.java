@@ -1,6 +1,5 @@
 package io.dentall.totoro.business.service.nhi.metric;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.DoctorPoint1Dto;
 import io.dentall.totoro.business.service.nhi.metric.dto.KaoPingDistrictReductionDto;
 import io.dentall.totoro.business.service.nhi.metric.formula.*;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
@@ -10,7 +9,6 @@ import io.dentall.totoro.business.service.nhi.metric.vm.DoctorData;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.Holiday;
 import io.dentall.totoro.domain.User;
-import io.dentall.totoro.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,12 +27,6 @@ import static java.util.stream.Collectors.toList;
 @Transactional
 public class KaoPingDistrictReductionService implements DistrictService {
 
-    private final UserRepository userRepository;
-
-    public KaoPingDistrictReductionService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
     @Override
     public Optional<KaoPingDistrictReductionDto> metric(LocalDate baseDate, User subject, List<? extends NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
         return ofNullable(buildMetric(baseDate, holidayMap, subject, source));
@@ -45,26 +37,6 @@ public class KaoPingDistrictReductionService implements DistrictService {
             .map(subject -> buildMetric(baseDate, holidayMap, subject, source))
             .filter(Objects::nonNull)
             .collect(toList());
-    }
-
-    /**
-     * 因為J1-1指標是要計算全部醫師 Point1 > 525000，所以傳入資料要是全診所的資料才行，請勿傳入單個醫師的資料
-     */
-    public List<DoctorPoint1Dto> getJ1h1Metric(LocalDate baseDate, Map<LocalDate, Optional<Holiday>> holidayMap, List<? extends NhiMetricRawVM> source) {
-        MetricConfig metricConfig = new MetricConfig(MetricConstants.CLINIC, baseDate, source).applyHolidayMap(holidayMap);
-        Map<Long, Long> map = new J1h1Formula(metricConfig).calculate();
-        List<User> allUserList = userRepository.findAll();
-
-        return map.entrySet().stream()
-            .map(entry -> {
-                Long doctorId = entry.getKey();
-                Long point1 = entry.getValue();
-                DoctorPoint1Dto dto = new DoctorPoint1Dto();
-                dto.setDoctorId(doctorId);
-                dto.setPoint1(point1);
-                allUserList.stream().filter(u -> u.getId().equals(doctorId)).map(User::getFirstName).findFirst().ifPresent(dto::setDoctorName);
-                return dto;
-            }).collect(toList());
     }
 
     /**
@@ -83,6 +55,7 @@ public class KaoPingDistrictReductionService implements DistrictService {
         }
 
         MetricSubjectType metricSubjectType = metricConfig.getSubjectType();
+        BigDecimal metricJ1h1 = new J1h1Formula(metricConfig).calculate();
         BigDecimal metricJ2h2 = new J2h2Formula(metricConfig).calculate();
         BigDecimal metricJ2h3 = new J2h3Formula(metricConfig).calculate();
         BigDecimal metricJ2h4 = new J2h4Formula(metricConfig).calculate();
@@ -90,6 +63,7 @@ public class KaoPingDistrictReductionService implements DistrictService {
 
         KaoPingDistrictReductionDto kaoPingDistrictReductionDto = new KaoPingDistrictReductionDto();
         kaoPingDistrictReductionDto.setType(metricSubjectType);
+        kaoPingDistrictReductionDto.setJ1h1(metricJ1h1);
         kaoPingDistrictReductionDto.setJ2h2(metricJ2h2);
         kaoPingDistrictReductionDto.setJ2h3(metricJ2h3);
         kaoPingDistrictReductionDto.setJ2h4(metricJ2h4);
