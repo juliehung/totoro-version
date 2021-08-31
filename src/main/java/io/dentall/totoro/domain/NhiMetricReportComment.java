@@ -8,7 +8,7 @@ public class NhiMetricReportComment {
 
      private Set<NhiMetricReportType> nhiMetricReportTypes;
 
-     private Set<Long> selectedTargets;
+     private Set<Long> doctorIds;
 
      private String url;
 
@@ -20,12 +20,12 @@ public class NhiMetricReportComment {
         this.nhiMetricReportTypes = nhiMetricReportTypes;
     }
 
-    public Set<Long> getSelectedTargets() {
-        return selectedTargets;
+    public Set<Long> getDoctorIds() {
+        return doctorIds;
     }
 
-    public void setSelectedTargets(Set<Long> selectedTargets) {
-        this.selectedTargets = selectedTargets;
+    public void setDoctorIds(Set<Long> doctorIds) {
+        this.doctorIds = doctorIds;
     }
 
     public String getUrl() {

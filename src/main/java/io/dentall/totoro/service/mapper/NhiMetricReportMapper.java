@@ -18,7 +18,7 @@ public interface NhiMetricReportMapper {
         ),
         @Mapping(target = "status", constant = "LOCK"),
         @Mapping(target = "comment.nhiMetricReportTypes", source ="nhiMetricReportTypes"),
-        @Mapping(target = "comment.selectedTargets", source ="selectedTargets")
+        @Mapping(target = "comment.doctorIds", source ="doctorIds")
     })
     NhiMetricReport convertBodyToDomain(NhiMetricReportBodyVM nhiMetricReportBodyVM);
 

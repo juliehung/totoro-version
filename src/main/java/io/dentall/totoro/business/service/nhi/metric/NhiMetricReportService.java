@@ -7,7 +7,6 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricReportBodyVM;
 import io.dentall.totoro.business.vm.nhi.NhiMetricReportQueryStringVM;
 import io.dentall.totoro.domain.NhiMetricReport;
 import io.dentall.totoro.domain.User;
-import io.dentall.totoro.domain.enumeration.BackupFileCatalog;
 import io.dentall.totoro.domain.enumeration.BatchStatus;
 import io.dentall.totoro.domain.enumeration.NhiMetricReportType;
 import io.dentall.totoro.repository.NhiMetricReportRepository;
@@ -21,11 +20,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ForkJoinPool;
@@ -88,7 +84,10 @@ public class NhiMetricReportService {
         CompositeDistrictDto nhiMetricResultDto
     ) throws IOException {
         String returnMessage = "";
+        /**
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+         **/
+        FileOutputStream outStream = new FileOutputStream("test.xls");
         Workbook wb = new HSSFWorkbook();
         Long reportId = 0L;
 
@@ -147,6 +146,7 @@ public class NhiMetricReportService {
 
                     wb.write(outStream);
 
+                    /**
                     String gcsPath = imageGcsBusinessService.getClinicName()
                         .concat("/")
                         .concat(BackupFileCatalog.NHI_METRIC_REPORT.getRemotePath())
@@ -175,6 +175,7 @@ public class NhiMetricReportService {
 
                     reportRecord.setStatus(BatchStatus.DONE);
                     reportRecord.getComment().setUrl(fileUrl);
+                     **/
                 } catch (Exception e) {
                     NhiMetricReport r = nhiMetricReportRepository.findById(finalReportId)
                         .orElse(new NhiMetricReport());
@@ -192,9 +193,6 @@ public class NhiMetricReportService {
             }
 
             return e.getMessage();
-        } finally {
-            outStream.close();
-            wb.close();
         }
 
         return returnMessage;

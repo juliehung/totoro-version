@@ -24,9 +24,6 @@ public class NhiMetricReportBodyVM {
     @NotNull
     private Set<NhiMetricReportType> nhiMetricReportTypes;
 
-    @NotNull
-    private Set<Long> selectedTargets;
-
     public LocalDate getBegin() {
         return begin;
     }
@@ -67,11 +64,4 @@ public class NhiMetricReportBodyVM {
         this.nhiMetricReportTypes = nhiMetricReportTypes;
     }
 
-    public Set<Long> getSelectedTargets() {
-        return selectedTargets;
-    }
-
-    public void setSelectedTargets(Set<Long> selectedTargets) {
-        this.selectedTargets = selectedTargets;
-    }
 }

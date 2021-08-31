@@ -77,7 +77,7 @@ public class KaoPingDistrictReductionReport {
         for (int i = fromRow; i <= toRow; i++) {
             for (int j = fromCol; j <= toCol; j++) {
                 try {
-                    ExcelUtil.applyTitleCellStyle(sheet.getRow(i).getCell(j));
+                    // ExcelUtil.applyTitleCellStyle(sheet.getRow(i).getCell(j));
                 } catch(Exception e) {
                     // ignore exception
                 }

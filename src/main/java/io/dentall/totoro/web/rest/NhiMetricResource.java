@@ -3,6 +3,7 @@ package io.dentall.totoro.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.business.service.nhi.metric.*;
 import io.dentall.totoro.business.service.nhi.metric.dto.*;
+import io.dentall.totoro.business.service.nhi.metric.vm.DoctorData;
 import io.dentall.totoro.business.service.nhi.metric.vm.MetricLVM;
 import io.dentall.totoro.business.vm.nhi.NhiMetricReportBodyVM;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -181,7 +183,7 @@ public class NhiMetricResource {
             nhiMetricReportBodyVM.getDoctorIds()
         );
 
-        List<Class<? extends DistrictService>> reportTypeServiceList = new ArrayList<>();
+        Set<Class<? extends DistrictService>> reportTypeServiceList = new HashSet<>();
         nhiMetricReportBodyVM.getNhiMetricReportTypes()
             .forEach(t -> {
                 switch (t) {
@@ -209,12 +211,35 @@ public class NhiMetricResource {
                 }
             });
 
+        /**
         CompositeDistrictDto dto = metricService.getCompositeDistrictMetric(
             nhiMetricReportBodyVM.getBegin(),
             nhiMetricReportBodyVM.getExcludeDisposalId(),
             nhiMetricReportBodyVM.getDoctorIds(),
-            reportTypeServiceList
+            new ArrayList<>(reportTypeServiceList)
         );
+         **/
+        CompositeDistrictDto dto = new CompositeDistrictDto();
+        TaipeiDistrictDto tdto = new TaipeiDistrictDto();
+        dto.setTaipeiDistrictDtoList(Arrays.asList(tdto, tdto));
+        DoctorData dd = new DoctorData();
+        dd.setDoctorId(5L);
+        dd.setDoctorName("TEST");
+        tdto.setDoctor(dd);
+        tdto.setL1(new BigDecimal(20500));
+        tdto.setF1h2(new BigDecimal(20500));
+        tdto.setF3h1(new BigDecimal(650000));
+        tdto.setF4h3(new BigDecimal(750000));
+        tdto.setI12(new BigDecimal(2));
+        tdto.setF1h3(new BigDecimal(20500));
+        tdto.setF2h4(new BigDecimal(2));
+        tdto.setF3h2(new BigDecimal(20));
+        tdto.setF5h3(new BigDecimal(1.2));
+        tdto.setF5h4(new BigDecimal(2.5));
+        tdto.setF5h5(new BigDecimal(2.5));
+        tdto.setF5h6(new BigDecimal(1.2));
+        tdto.setF5h7(new BigDecimal(1.2));
+        tdto.setF5h8(new BigDecimal(1.2));
 
         nhiMetricReportService.generateNhiMetricReport(nhiMetricReportBodyVM, dto);
 
