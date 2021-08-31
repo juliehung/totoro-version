@@ -198,13 +198,13 @@ public class NhiMetricResource {
                         reportTypeServiceList.add(SouthDistrictService.class);
                         break;
                     case KAO_PING_REDUCTION_DISTRICT:
-                        reportTypeServiceList.add(EastDistrictService.class);
+                        reportTypeServiceList.add(KaoPingDistrictReductionService.class);
                         break;
                     case KAO_PING_REGULAR_DISTRICT:
                         reportTypeServiceList.add(KaoPingDistrictRegularService.class);
                         break;
                     case EAST_DISTRICT:
-                        reportTypeServiceList.add(KaoPingDistrictReductionService.class);
+                        reportTypeServiceList.add(EastDistrictService.class);
                         break;
                 }
             });

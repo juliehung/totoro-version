@@ -19,6 +19,9 @@ public class ExcelUtil {
         PERCENTAGE_NUMBER,
         RED_REAL_NUMBER,
         RED_PERCENTAGE_NUMBER,
+        AROUND_BORDER_TITLE,
+        AROUND_BORDER_CONTENT_REAL_NUMBER,
+        AROUND_BORDER_CONTENT_PERCENTAGE_NUMBER,
         ;
     }
 
@@ -103,6 +106,30 @@ public class ExcelUtil {
         redPercentageCellStyle.setAlignment(HorizontalAlignment.RIGHT);
         redPercentageCellStyle.setDataFormat((short) 10);
 
+        CellStyle aroundBorderTitleCellStyle = wb.createCellStyle();
+        aroundBorderTitleCellStyle.setBorderTop(BorderStyle.THIN);
+        aroundBorderTitleCellStyle.setBorderRight(BorderStyle.THIN);
+        aroundBorderTitleCellStyle.setBorderBottom(BorderStyle.THIN);
+        aroundBorderTitleCellStyle.setBorderLeft(BorderStyle.THIN);
+
+        CellStyle aroundBorderContentRealNumberCellStyle = wb.createCellStyle();
+        aroundBorderContentRealNumberCellStyle.setBorderTop(BorderStyle.THIN);
+        aroundBorderContentRealNumberCellStyle.setBorderRight(BorderStyle.THIN);
+        aroundBorderContentRealNumberCellStyle.setBorderBottom(BorderStyle.THIN);
+        aroundBorderContentRealNumberCellStyle.setBorderLeft(BorderStyle.THIN);
+        redRealNumberCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        redRealNumberCellStyle.setAlignment(HorizontalAlignment.RIGHT);
+        redRealNumberCellStyle.setDataFormat((short) 4);
+
+        CellStyle aroundBorderContentPercentageNumberCellStyle = wb.createCellStyle();
+        aroundBorderContentPercentageNumberCellStyle.setBorderTop(BorderStyle.THIN);
+        aroundBorderContentPercentageNumberCellStyle.setBorderRight(BorderStyle.THIN);
+        aroundBorderContentPercentageNumberCellStyle.setBorderBottom(BorderStyle.THIN);
+        aroundBorderContentPercentageNumberCellStyle.setBorderLeft(BorderStyle.THIN);
+        redPercentageCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        redPercentageCellStyle.setAlignment(HorizontalAlignment.RIGHT);
+        redPercentageCellStyle.setDataFormat((short) 10);
+
         // assign style to map
         m.put(SupportedCellStyle.USER, userCellStyle);
         m.put(SupportedCellStyle.TITLE, titleCellStyle);
@@ -110,6 +137,9 @@ public class ExcelUtil {
         m.put(SupportedCellStyle.PERCENTAGE_NUMBER, percentageCellStyle);
         m.put(SupportedCellStyle.RED_REAL_NUMBER, redRealNumberCellStyle);
         m.put(SupportedCellStyle.RED_PERCENTAGE_NUMBER, redPercentageCellStyle);
+        m.put(SupportedCellStyle.AROUND_BORDER_TITLE, aroundBorderTitleCellStyle);
+        m.put(SupportedCellStyle.AROUND_BORDER_CONTENT_REAL_NUMBER, aroundBorderContentRealNumberCellStyle);
+        m.put(SupportedCellStyle.AROUND_BORDER_CONTENT_PERCENTAGE_NUMBER, aroundBorderContentPercentageNumberCellStyle);
 
         return m;
     }

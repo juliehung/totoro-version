@@ -51,6 +51,8 @@ public class NhiMetricReportService {
 
     private final TaipeiDistrictReport taipeiDistrictReport;
 
+    private final EastDistrictReport eastDistrictReport;
+
     private final MetricService metricService;
 
     private final Integer MAX_LOCK;
@@ -65,7 +67,7 @@ public class NhiMetricReportService {
         NorthDistrictReport northDistrictReport,
         SouthDistrictReport southDistrictReport,
         TaipeiDistrictReport taipeiDistrictReport,
-        MetricService metricService,
+        EastDistrictReport eastDistrictReport, MetricService metricService,
         @Value("${nhi.metric.maxLock}") Integer maxLock
     ) {
         this.nhiMetricReportRepository = nhiMetricReportRepository;
@@ -77,6 +79,7 @@ public class NhiMetricReportService {
         this.northDistrictReport = northDistrictReport;
         this.southDistrictReport = southDistrictReport;
         this.taipeiDistrictReport = taipeiDistrictReport;
+        this.eastDistrictReport = eastDistrictReport;
         this.metricService = metricService;
         this.MAX_LOCK = maxLock;
     }
@@ -147,6 +150,10 @@ public class NhiMetricReportService {
                     if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.TAIPEI_DISTRICT)) {
                         List<TaipeiDistrictDto> contents = nhiMetricResultDto.getTaipeiDistrictDtoList();
                         taipeiDistrictReport.generateReport(wb, csm, contents);
+                    }
+                    if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.EAST_DISTRICT)) {
+                        List<EastDistrictDto> contents = nhiMetricResultDto.getEastDistrictDtoList();
+                        eastDistrictReport.generateReport(wb, csm, contents);
                     }
 
                     wb.write(outStream);
