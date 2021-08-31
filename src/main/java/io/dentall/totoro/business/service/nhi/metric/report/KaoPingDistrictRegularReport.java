@@ -81,28 +81,28 @@ public class KaoPingDistrictRegularReport {
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getK11().doubleValue());
 
             if (content.getJ2h5().doubleValue() >= 30) {
-                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_PERCENTAGE_NUMBER), content.getJ2h5().doubleValue());
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_PERCENTAGE_NUMBER), content.getJ2h5().doubleValue() / 100);
             } else {
-                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getJ2h5().doubleValue());
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getJ2h5().doubleValue() / 100);
             }
 
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getK10().doubleValue());
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getK3().doubleValue());
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getK4().doubleValue());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getK10().doubleValue() / 100);
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getK3().doubleValue() / 100);
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getK4().doubleValue() / 100);
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getK5().doubleValue());
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getK6().doubleValue());
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getK7().doubleValue());
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getK12().doubleValue());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getK6().doubleValue() / 100);
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getK7().doubleValue() / 100);
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getK12().doubleValue() / 100);
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getK14().doubleValue());
         }
 
         // Styles
-        applyTitleStyle(sheet);
+        applyTitleStyle(sheet, csm.get(ExcelUtil.SupportedCellStyle.TITLE));
         applySheetMergeSection(sheet);
         applySheetTemplate(sheet, contents.size());
     }
 
-    private void applyTitleStyle(Sheet sheet) {
+    private void applyTitleStyle(Sheet sheet, CellStyle cellStyle) {
         int fromRow = 0;
         int toRow = 12;
         int fromCol = 0;
@@ -110,7 +110,7 @@ public class KaoPingDistrictRegularReport {
         for (int i = fromRow; i <= toRow; i++) {
             for (int j = fromCol; j <= toCol; j++) {
                 try {
-                    // ExcelUtil.applyTitleCellStyle(sheet.getRow(i).getCell(j));
+                    ExcelUtil.applyStyle(sheet, i, j, cellStyle);
                 } catch(Exception e) {
                     // ignore exception
                 }

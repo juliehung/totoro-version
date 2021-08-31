@@ -3,7 +3,6 @@ package io.dentall.totoro.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.business.service.nhi.metric.*;
 import io.dentall.totoro.business.service.nhi.metric.dto.*;
-import io.dentall.totoro.business.service.nhi.metric.vm.DoctorData;
 import io.dentall.totoro.business.service.nhi.metric.vm.MetricLVM;
 import io.dentall.totoro.business.vm.nhi.NhiMetricReportBodyVM;
 import org.slf4j.Logger;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -211,14 +209,13 @@ public class NhiMetricResource {
                 }
             });
 
-        /**
         CompositeDistrictDto dto = metricService.getCompositeDistrictMetric(
             nhiMetricReportBodyVM.getBegin(),
             nhiMetricReportBodyVM.getExcludeDisposalId(),
             nhiMetricReportBodyVM.getDoctorIds(),
             new ArrayList<>(reportTypeServiceList)
         );
-         **/
+        /**
         CompositeDistrictDto dto = new CompositeDistrictDto();
         TaipeiDistrictDto tdto = new TaipeiDistrictDto();
         dto.setTaipeiDistrictDtoList(Arrays.asList(tdto, tdto));
@@ -240,6 +237,7 @@ public class NhiMetricResource {
         tdto.setF5h6(new BigDecimal(1.2));
         tdto.setF5h7(new BigDecimal(1.2));
         tdto.setF5h8(new BigDecimal(1.2));
+         **/
 
         nhiMetricReportService.generateNhiMetricReport(nhiMetricReportBodyVM, dto);
 

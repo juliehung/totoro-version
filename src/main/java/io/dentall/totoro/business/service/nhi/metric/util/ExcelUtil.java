@@ -28,9 +28,14 @@ public class ExcelUtil {
         return (int) Math.rint((numberOfCharacterOfCell * sizeOfCharacter + 5) / 7 * 256);
     }
 
-    private static void initFonts(Workbook wb) {
-        Font redFont = wb.createFont();
-        redFont.setColor(Font.COLOR_RED);
+    public static void applyStyle(
+        Sheet sheet,
+        int row,
+        int col,
+        CellStyle cellStyle
+    ) {
+        Cell cell = sheet.getRow(row).getCell(col);
+        cell.setCellStyle(cellStyle);
     }
 
     public static void createCellAndApplyStyle(
@@ -54,7 +59,9 @@ public class ExcelUtil {
     ) {
         Cell cell = sheet.getRow(row).createCell(col);
         cell.setCellValue(content);
-        cell.setCellStyle(cellStyle);
+        if (cellStyle != null) {
+            cell.setCellStyle(cellStyle);
+        }
     }
 
     public static Map<SupportedCellStyle, CellStyle> createReportStyle(Workbook wb) {

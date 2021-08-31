@@ -77,25 +77,25 @@ public class SouthDistrictReport {
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getA10().doubleValue());
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getI2().doubleValue());
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getI13().doubleValue());
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getI11().doubleValue());
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getI12().doubleValue());
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getI15().doubleValue());
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getI3().doubleValue());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getI11().doubleValue() / 100);
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getI12().doubleValue() / 100);
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getI15().doubleValue() / 100);
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getI3().doubleValue() / 100);
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getI4().doubleValue());
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getI5().doubleValue());
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getI6().doubleValue());
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getI7().doubleValue());
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getI8().doubleValue());
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getI19().doubleValue());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getI8().doubleValue() / 100);
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getI19().doubleValue() / 100);
         }
 
         // Styles
-        applyTitleStyle(sheet);
+        applyTitleStyle(sheet, csm.get(ExcelUtil.SupportedCellStyle.TITLE));
         applySheetMergeSection(sheet);
         applySheetTemplate(sheet, contents.size());
     }
 
-    private void applyTitleStyle(Sheet sheet) {
+    private void applyTitleStyle(Sheet sheet, CellStyle cellStyle) {
         int fromRow = 0;
         int toRow = 13;
         int fromCol = 0;
@@ -103,7 +103,7 @@ public class SouthDistrictReport {
         for (int i = fromRow; i <= toRow; i++) {
             for (int j = fromCol; j <= toCol; j++) {
                 try {
-                    // ExcelUtil.applyTitleCellStyle(sheet.getRow(i).getCell(j));
+                     ExcelUtil.applyStyle(sheet, i, j, cellStyle);
                 } catch(Exception e) {
                     // ignore exception
                 }

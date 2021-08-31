@@ -63,21 +63,6 @@ public class NorthDistrictReport {
         row.createCell(0).setCellValue("※指標數值係依系統累積資料量進行統計。");
 
         // Assign data
-        for (int colIdx = 2; colIdx < contents.size(); colIdx++){
-            NorthDistrictDto content = contents.get(colIdx);
-            int rowIdx = 0;
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getDoctor().getDoctorName());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getA10().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getA7().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getA8().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getA14().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getA15h1().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getA17h2().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getA9().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getA18h1().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getA18h2().toString());
-        }
-
         for (int contentIdx = 0; contentIdx < contents.size(); contentIdx++) {
             NorthDistrictDto content = contents.get(contentIdx);
             int rowIdx = 0;
@@ -93,27 +78,27 @@ public class NorthDistrictReport {
             }
 
             if (content.getA14().doubleValue() > 4.5) {
-                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_PERCENTAGE_NUMBER), content.getA14().doubleValue());
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_PERCENTAGE_NUMBER), content.getA14().doubleValue() / 100);
             } else {
-                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getA14().doubleValue());
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getA14().doubleValue() / 100);
             }
 
             if (content.getA15h1().doubleValue() > 10) {
-                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_PERCENTAGE_NUMBER), content.getA15h1().doubleValue());
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_PERCENTAGE_NUMBER), content.getA15h1().doubleValue() / 100);
             } else {
-                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getA15h1().doubleValue());
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getA15h1().doubleValue() / 100);
             }
 
             if (content.getA17h2().doubleValue() >= 40) {
-                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_PERCENTAGE_NUMBER), content.getA17h2().doubleValue());
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_PERCENTAGE_NUMBER), content.getA17h2().doubleValue() / 100);
             } else {
-                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getA17h2().doubleValue());
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getA17h2().doubleValue() / 100);
             }
 
             if (content.getA9().doubleValue() >= 64.38) {
-                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_PERCENTAGE_NUMBER), content.getA9().doubleValue());
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_PERCENTAGE_NUMBER), content.getA9().doubleValue() / 100);
             } else {
-                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getA9().doubleValue());
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getA9().doubleValue() / 100);
             }
 
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getA18h1().doubleValue());
@@ -121,8 +106,25 @@ public class NorthDistrictReport {
         }
 
         // Styles
+        applyTitleStyle(sheet, csm.get(ExcelUtil.SupportedCellStyle.TITLE));
         applySheetMergeSection(sheet);
         applySheetTemplate(sheet, contents.size());
+    }
+
+    private void applyTitleStyle(Sheet sheet, CellStyle cellStyle) {
+        int fromRow = 0;
+        int toRow = 9;
+        int fromCol = 0;
+        int toCol = 1;
+        for (int i = fromRow; i <= toRow; i++) {
+            for (int j = fromCol; j <= toCol; j++) {
+                try {
+                    ExcelUtil.applyStyle(sheet, i, j, cellStyle);
+                } catch(Exception e) {
+                    // ignore exception
+                }
+            }
+        }
     }
 
     private void applySheetMergeSection(

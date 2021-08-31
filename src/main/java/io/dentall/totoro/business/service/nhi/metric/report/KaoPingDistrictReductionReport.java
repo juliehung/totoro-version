@@ -53,30 +53,20 @@ public class KaoPingDistrictReductionReport {
         row.createCell(0).setCellValue("※指標數值係依系統累積資料量進行統計。");
 
         // Assign data
-        for (int colIdx = 2; colIdx < contents.size(); colIdx++){
-            KaoPingDistrictReductionDto content = contents.get(colIdx);
-            int rowIdx = 0;
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getDoctor().getDoctorName());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getJ1h1().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getJ1h2().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getJ2h2().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getJ2h3().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getJ2h4().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getJ2h5().toString());
-        }
-
         for (int contentIdx = 0; contentIdx < contents.size(); contentIdx++) {
             KaoPingDistrictReductionDto content = contents.get(contentIdx);
             int rowIdx = 0;
             int colIdx = contentIdx + 2;
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.USER), content.getDoctor().getDoctorName());
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), ""); // content.getJ1h1().doubleValue()
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getJ1h2().doubleValue());
-            if (content.getJ2h2().doubleValue() >= 360000) {
-                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_REAL_NUMBER), content.getJ2h2().doubleValue());
+
+            if (content.getJ1h2().doubleValue() >= 360000) {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_REAL_NUMBER), content.getJ1h2().doubleValue());
             } else {
-                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getJ2h2().doubleValue());
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getJ1h2().doubleValue());
             }
+
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getJ2h2().doubleValue());
 
             if (content.getJ2h3().doubleValue() >= 2) {
                 ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_REAL_NUMBER), content.getJ2h3().doubleValue());
@@ -85,20 +75,35 @@ public class KaoPingDistrictReductionReport {
             }
 
             if (content.getJ2h5().doubleValue() >= 30) {
-                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_PERCENTAGE_NUMBER), content.getJ2h5().doubleValue());
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_PERCENTAGE_NUMBER), content.getJ2h5().doubleValue() / 100);
             } else {
-                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getJ2h5().doubleValue());
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getJ2h5().doubleValue() / 100);
             }
         }
 
         // Styles
+        applyTitleStyle(sheet, csm.get(ExcelUtil.SupportedCellStyle.TITLE));
         applySheetMergeSection(sheet);
         applySheetTemplate(sheet, contents.size());
     }
 
-    private void applySheetMergeSection(
-        Sheet sheet
-    ) {
+    private void applyTitleStyle(Sheet sheet, CellStyle cellStyle) {
+        int fromRow = 0;
+        int toRow = 6;
+        int fromCol = 0;
+        int toCol = 1;
+        for (int i = fromRow; i <= toRow; i++) {
+            for (int j = fromCol; j <= toCol; j++) {
+                try {
+                    ExcelUtil.applyStyle(sheet, i, j, cellStyle);
+                } catch(Exception e) {
+                    // ignore exception
+                }
+            }
+        }
+    }
+
+    private void applySheetMergeSection(Sheet sheet) {
         sheet.addMergedRegion(new CellRangeAddress(1, 5, 0, 0));
         sheet.setColumnWidth(0, ExcelUtil.columnWidth(5, 12));
         sheet.setColumnWidth(1, ExcelUtil.columnWidth(15, 12));

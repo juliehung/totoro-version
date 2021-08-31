@@ -62,15 +62,32 @@ public class MiddleDistrictReport {
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.USER), content.getDoctor().getDoctorName());
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getH1().doubleValue());
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getH2().doubleValue());
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getH4().doubleValue());
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getH3().doubleValue());
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getH5().doubleValue());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getH4().doubleValue() / 100);
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getH3().doubleValue() / 100);
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getH5().doubleValue() / 100);
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getH7().doubleValue());
         }
 
         // Styles
+        applyTitleStyle(sheet, csm.get(ExcelUtil.SupportedCellStyle.TITLE));
         applySheetMergeSection(sheet);
         applySheetTemplate(sheet, contents.size());
+    }
+
+    private void applyTitleStyle(Sheet sheet, CellStyle cellStyle) {
+        int fromRow = 0;
+        int toRow = 6;
+        int fromCol = 0;
+        int toCol = 1;
+        for (int i = fromRow; i <= toRow; i++) {
+            for (int j = fromCol; j <= toCol; j++) {
+                try {
+                    ExcelUtil.applyStyle(sheet, i, j, cellStyle);
+                } catch(Exception e) {
+                    // ignore exception
+                }
+            }
+        }
     }
 
     private void applySheetMergeSection(
