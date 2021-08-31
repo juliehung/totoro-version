@@ -31,11 +31,20 @@ public class EastDistrictReport {
         int rowCounter  = 0;
 
         // Header
-        row = sheet.createRow(rowCounter++);
-        row.createCell(0).setCellValue("※採計分制，基層計分標記總和≧3 分進行抽審");
+        sheet.createRow(rowCounter);
+        ExcelUtil.createCellAndApplyStyle(
+            sheet,
+            rowCounter,
+            0,
+            csm.get(
+                ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
+            ),
+                "※採計分制，基層計分標記總和≧3 分進行抽審"
+        );
+        rowCounter++;
 
         // 申報點數-標題
-        rowCounter++;
+        sheet.createRow(rowCounter);
         ExcelUtil.createCellAndApplyStyle(
             sheet,
             rowCounter,
@@ -72,11 +81,12 @@ public class EastDistrictReport {
             ),
             "標記分數"
         );
+        rowCounter++;
 
         // 申報點數-醫師資料
         for (int i = 0; i < contents.size(); i++) {
-            rowCounter++;
-            double g6 = contents.get(i).getG6().setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            sheet.createRow(rowCounter);
+            double g6 = contents.get(i).getG6().divideToIntegralValue(new BigDecimal(10000)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
             ExcelUtil.createCellAndApplyStyle(
                 sheet,
                 rowCounter,
@@ -113,18 +123,28 @@ public class EastDistrictReport {
                 ),
                 point
             );
+            rowCounter++;
         }
 
         // 申報點數-備註
-        row = sheet.createRow(rowCounter++);
-        row.createCell(1).setCellValue("註：\n" +
-            "申報點數≧45萬點，標記1分\n" +
-            "申報點數≧55萬點，標記2分\n" +
-            "申報點數≧60萬點，標記3分\n" +
-            "以標記分數最高之醫師計(院所有 3 位醫師分別為 1、2、3 分，該院所則以 3 分計)");
+        sheet.createRow(rowCounter);
+        ExcelUtil.createCellAndApplyStyle(
+            sheet,
+            rowCounter,
+            0,
+            csm.get(
+                ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
+            ),
+            "註：\n" +
+                "申報點數≧45萬點，標記1分\n" +
+                "申報點數≧55萬點，標記2分\n" +
+                "申報點數≧60萬點，標記3分\n" +
+                "以標記分數最高之醫師計(院所有 3 位醫師分別為 1、2、3 分，該院所則以 3 分計)"
+        );
+        rowCounter++;
 
         // 專業醫療服務品質項目-標題
-        rowCounter++;
+        sheet.createRow(rowCounter);
         ExcelUtil.createCellAndApplyStyle(
             sheet,
             rowCounter,
@@ -161,11 +181,12 @@ public class EastDistrictReport {
             ),
             "標記分數"
         );
+        rowCounter++;
 
         // 專業醫療服務品質項目-資料
         EastDistrictDto content1 = contents.get(0);
 
-        rowCounter++;
+        sheet.createRow(rowCounter);
         Double data1 = content1.getG8h1().doubleValue() / 100;
         ExcelUtil.createCellAndApplyStyle(
             sheet,
@@ -196,8 +217,9 @@ public class EastDistrictReport {
                 ? 1
                 : 0
         );
-
         rowCounter++;
+
+        sheet.createRow(rowCounter);
         Double data2 = content1.getG8h2().doubleValue() / 100;
         ExcelUtil.createCellAndApplyStyle(
             sheet,
@@ -228,8 +250,9 @@ public class EastDistrictReport {
                 ? 1
                 : 0
         );
-
         rowCounter++;
+
+        sheet.createRow(rowCounter);
         Double data3 = content1.getG8h3().doubleValue() / 100;
         ExcelUtil.createCellAndApplyStyle(
             sheet,
@@ -260,8 +283,9 @@ public class EastDistrictReport {
                 ? 1
                 : 0
         );
-
         rowCounter++;
+
+        sheet.createRow(rowCounter);
         Double data4 = content1.getG8h4().doubleValue() / 100;
         ExcelUtil.createCellAndApplyStyle(
             sheet,
@@ -292,19 +316,32 @@ public class EastDistrictReport {
                 ? 1
                 : 0
         );
+        rowCounter++;
 
         // 專業醫療服務品質項目-備註
-        row = sheet.createRow(rowCounter++);
-        row.createCell(1).setCellValue("註：\n大於每項品質指標值者各標記 1 分");
+        sheet.createRow(rowCounter);
+        ExcelUtil.createCellAndApplyStyle(
+            sheet,
+            rowCounter,
+            0,
+            csm.get(
+                ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
+            ),
+            "註：\n大於每項品質指標值者各標記 1 分"
+        );
+        rowCounter++;
 
         // Styles
-        applySheetMergeSection(sheet);
+        applySheetMergeSection(sheet, contents.size());
     }
 
     private void applySheetMergeSection(
-        Sheet sheet
+        Sheet sheet,
+        int numberOfContent
     ) {
-        sheet.addMergedRegion(new CellRangeAddress(1, 6, 0, 0));
-        sheet.addMergedRegion(new CellRangeAddress(7, 12, 0, 0));
+        sheet.addMergedRegion(new CellRangeAddress(1, 1 + numberOfContent + 1, 0, 0));
+        sheet.addMergedRegion(new CellRangeAddress(1, 1 + numberOfContent + 1, 0, 0));
+        sheet.addMergedRegion(new CellRangeAddress(2 + numberOfContent + 1, 3 + numberOfContent + 5, 0, 0));
+        sheet.addMergedRegion(new CellRangeAddress(1, 1 + numberOfContent + 1, 0, 0));
     }
 }

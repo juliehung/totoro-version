@@ -111,6 +111,7 @@ public class ExcelUtil {
         aroundBorderTitleCellStyle.setBorderRight(BorderStyle.THIN);
         aroundBorderTitleCellStyle.setBorderBottom(BorderStyle.THIN);
         aroundBorderTitleCellStyle.setBorderLeft(BorderStyle.THIN);
+        aroundBorderTitleCellStyle.setWrapText(true);
 
         CellStyle aroundBorderContentRealNumberCellStyle = wb.createCellStyle();
         aroundBorderContentRealNumberCellStyle.setBorderTop(BorderStyle.THIN);
