@@ -2,9 +2,11 @@ package io.dentall.totoro.business.service.nhi.metric.report;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.EastDistrictDto;
 import io.dentall.totoro.business.service.nhi.metric.util.ExcelUtil;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.ss.util.PropertyTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -296,25 +298,7 @@ public class EastDistrictReport {
         row.createCell(1).setCellValue("註：\n大於每項品質指標值者各標記 1 分");
 
         // Styles
-//        applyAROUND_BORDER_TITLEStyle(sheet, csm.get(ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE));
         applySheetMergeSection(sheet);
-//        applySheetTemplate(sheet, contents.size());
-    }
-
-    private void applyAROUND_BORDER_TITLEStyle(Sheet sheet, CellStyle cellStyle) {
-        int fromRow = 0;
-        int toRow = 14;
-        int fromCol = 0;
-        int toCol = 1;
-        for (int i = fromRow; i <= toRow; i++) {
-            for (int j = fromCol; j <= toCol; j++) {
-                try {
-                    ExcelUtil.applyStyle(sheet, i, j, cellStyle);
-                } catch(Exception e) {
-                    // ignore exception
-                }
-            }
-        }
     }
 
     private void applySheetMergeSection(
@@ -322,35 +306,5 @@ public class EastDistrictReport {
     ) {
         sheet.addMergedRegion(new CellRangeAddress(1, 6, 0, 0));
         sheet.addMergedRegion(new CellRangeAddress(7, 12, 0, 0));
-    }
-
-    private void applySheetTemplate(
-        Sheet sheet,
-        int numberOfDocker
-    ) {
-        PropertyTemplate pt = new PropertyTemplate();
-
-        pt.drawBorders(
-            new CellRangeAddress(0, 0, 0, 1 + numberOfDocker),
-            BorderStyle.THICK,
-            BorderExtent.BOTTOM
-        );
-        pt.drawBorders(
-            new CellRangeAddress(4, 4, 0, 1 + numberOfDocker),
-            BorderStyle.THICK,
-            BorderExtent.BOTTOM
-        );
-        pt.drawBorders(
-            new CellRangeAddress(5, 5, 0, 1 + numberOfDocker),
-            BorderStyle.THICK,
-            BorderExtent.BOTTOM
-        );
-        pt.drawBorders(
-            new CellRangeAddress(14, 14, 0, 1 + numberOfDocker),
-            BorderStyle.THICK,
-            BorderExtent.BOTTOM
-        );
-
-        pt.applyBorders(sheet);
     }
 }
