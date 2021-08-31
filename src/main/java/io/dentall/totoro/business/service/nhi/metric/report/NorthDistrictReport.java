@@ -8,6 +8,7 @@ import org.apache.poi.ss.util.PropertyTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class NorthDistrictReport {
@@ -15,6 +16,7 @@ public class NorthDistrictReport {
 
     public void generateReport(
         Workbook wb,
+        Map<ExcelUtil.SupportedCellStyle, CellStyle> csm,
         List<NorthDistrictDto> contents
     ) throws Exception {
         if (wb == null) {
@@ -76,26 +78,51 @@ public class NorthDistrictReport {
             sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getA18h2().toString());
         }
 
-        // Styles
-        applyTitleStyle(sheet);
-        applySheetMergeSection(sheet);
-        applySheetTemplate(sheet, 0);
-    }
+        for (int contentIdx = 0; contentIdx < contents.size(); contentIdx++) {
+            NorthDistrictDto content = contents.get(contentIdx);
+            int rowIdx = 0;
+            int colIdx = contentIdx + 2;
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.USER), content.getDoctor().getDoctorName());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getA10().doubleValue());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getA7().doubleValue());
 
-    private void applyTitleStyle(Sheet sheet) {
-        int fromRow = 0;
-        int toRow = 9;
-        int fromCol = 0;
-        int toCol = 1;
-        for (int i = fromRow; i <= toRow; i++) {
-            for (int j = fromCol; j <= toCol; j++) {
-                try {
-                    // ExcelUtil.applyTitleCellStyle(sheet.getRow(i).getCell(j));
-                } catch(Exception e) {
-                    // ignore exception
-                }
+            if (content.getA8().doubleValue() >= 28.74) {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_PERCENTAGE_NUMBER), content.getA8().doubleValue() / 100);
+            } else {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getA8().doubleValue() / 100);
             }
+
+            if (content.getA14().doubleValue() > 4.5) {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_PERCENTAGE_NUMBER), content.getA14().doubleValue());
+            } else {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getA14().doubleValue());
+            }
+
+            if (content.getA15h1().doubleValue() > 10) {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_PERCENTAGE_NUMBER), content.getA15h1().doubleValue());
+            } else {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getA15h1().doubleValue());
+            }
+
+            if (content.getA17h2().doubleValue() >= 40) {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_PERCENTAGE_NUMBER), content.getA17h2().doubleValue());
+            } else {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getA17h2().doubleValue());
+            }
+
+            if (content.getA9().doubleValue() >= 64.38) {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_PERCENTAGE_NUMBER), content.getA9().doubleValue());
+            } else {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getA9().doubleValue());
+            }
+
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getA18h1().doubleValue());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getA18h2().doubleValue());
         }
+
+        // Styles
+        applySheetMergeSection(sheet);
+        applySheetTemplate(sheet, contents.size());
     }
 
     private void applySheetMergeSection(

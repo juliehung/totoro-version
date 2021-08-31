@@ -16,12 +16,12 @@ public class TaipeiDistrictReport {
 
     public void generateReport(
         Workbook wb,
+        Map<ExcelUtil.SupportedCellStyle, CellStyle> csm,
         List<TaipeiDistrictDto> contents
     ) throws Exception {
         if (wb == null) {
             throw new Exception("Must new a workbook first before create sheet");
         }
-        Map<ExcelUtil.SupportedCellStyle, CellStyle> csm = ExcelUtil.createReportStyle(wb);
 
         Sheet sheet = wb.createSheet(SHEET_NAME);
         Row row = null;

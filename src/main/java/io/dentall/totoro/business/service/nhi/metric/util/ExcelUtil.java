@@ -88,7 +88,13 @@ public class ExcelUtil {
         redRealNumberCellStyle.setFont(redFont);
         redRealNumberCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         redRealNumberCellStyle.setAlignment(HorizontalAlignment.RIGHT);
-        redRealNumberCellStyle.setDataFormat((short) 3);
+        redRealNumberCellStyle.setDataFormat((short) 4);
+
+        CellStyle redPercentageCellStyle = wb.createCellStyle();
+        redPercentageCellStyle.setFont(redFont);
+        redPercentageCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        redPercentageCellStyle.setAlignment(HorizontalAlignment.RIGHT);
+        redPercentageCellStyle.setDataFormat((short) 10);
 
         // assign style to map
         m.put(SupportedCellStyle.USER, userCellStyle);
@@ -96,6 +102,7 @@ public class ExcelUtil {
         m.put(SupportedCellStyle.REAL_NUMBER, realNumberCellStyle);
         m.put(SupportedCellStyle.PERCENTAGE_NUMBER, percentageCellStyle);
         m.put(SupportedCellStyle.RED_REAL_NUMBER, redRealNumberCellStyle);
+        m.put(SupportedCellStyle.RED_PERCENTAGE_NUMBER, redPercentageCellStyle);
 
         return m;
     }

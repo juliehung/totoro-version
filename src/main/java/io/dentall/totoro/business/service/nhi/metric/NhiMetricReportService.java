@@ -3,6 +3,7 @@ package io.dentall.totoro.business.service.nhi.metric;
 import io.dentall.totoro.business.service.ImageGcsBusinessService;
 import io.dentall.totoro.business.service.nhi.metric.dto.*;
 import io.dentall.totoro.business.service.nhi.metric.report.*;
+import io.dentall.totoro.business.service.nhi.metric.util.ExcelUtil;
 import io.dentall.totoro.business.vm.nhi.NhiMetricReportBodyVM;
 import io.dentall.totoro.business.vm.nhi.NhiMetricReportQueryStringVM;
 import io.dentall.totoro.domain.NhiMetricReport;
@@ -14,6 +15,7 @@ import io.dentall.totoro.service.UserService;
 import io.dentall.totoro.service.mapper.NhiMetricReportMapper;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ForkJoinPool;
 
@@ -89,6 +92,8 @@ public class NhiMetricReportService {
          **/
         FileOutputStream outStream = new FileOutputStream("test.xls");
         Workbook wb = new HSSFWorkbook();
+        Map<ExcelUtil.SupportedCellStyle, CellStyle> csm = ExcelUtil.createReportStyle(wb);
+
         Long reportId = 0L;
 
         try {
@@ -121,27 +126,27 @@ public class NhiMetricReportService {
 
                     if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.KAO_PING_REDUCTION_DISTRICT)) {
                         List<KaoPingDistrictReductionDto> contents = nhiMetricResultDto.getKaoPingDistrictReductionDtoList();
-                        kaoPingDistrictReductionReport.generateReport(wb, contents);
+                        kaoPingDistrictReductionReport.generateReport(wb, csm, contents);
                     }
                     if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.KAO_PING_REGULAR_DISTRICT)) {
                         List<KaoPingDistrictRegularDto> contents = nhiMetricResultDto.getKaoPingDistrictRegularDtoList();
-                        kaoPingDistrictRegularReport.generateReport(wb, contents);
+                        kaoPingDistrictRegularReport.generateReport(wb, csm, contents);
                     }
                     if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.MIDDLE_DISTRICT)) {
                         List<MiddleDistrictDto> contents = nhiMetricResultDto.getMiddleDistrictDtoList();
-                        middleDistrictReport.generateReport(wb, contents);
+                        middleDistrictReport.generateReport(wb, csm, contents);
                     }
                     if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.NORTH_DISTRICT)) {
                         List<NorthDistrictDto> contents = nhiMetricResultDto.getNorthDistrictDtoList();
-                        northDistrictReport.generateReport(wb, contents);
+                        northDistrictReport.generateReport(wb, csm, contents);
                     }
                     if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.SOUTH_DISTRICT)) {
                         List<SouthDistrictDto> contents = nhiMetricResultDto.getSouthDistrictDtoList();
-                        southDistrictReport.generateReport(wb, contents);
+                        southDistrictReport.generateReport(wb, csm, contents);
                     }
                     if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.TAIPEI_DISTRICT)) {
                         List<TaipeiDistrictDto> contents = nhiMetricResultDto.getTaipeiDistrictDtoList();
-                        taipeiDistrictReport.generateReport(wb, contents);
+                        taipeiDistrictReport.generateReport(wb, csm, contents);
                     }
 
                     wb.write(outStream);

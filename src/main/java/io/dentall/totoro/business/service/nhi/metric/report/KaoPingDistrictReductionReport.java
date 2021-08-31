@@ -8,6 +8,7 @@ import org.apache.poi.ss.util.PropertyTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class KaoPingDistrictReductionReport {
@@ -15,6 +16,7 @@ public class KaoPingDistrictReductionReport {
 
     public void generateReport(
         Workbook wb,
+        Map<ExcelUtil.SupportedCellStyle, CellStyle> csm,
         List<KaoPingDistrictReductionDto> contents
     ) throws Exception {
         if (wb == null) {
@@ -63,26 +65,35 @@ public class KaoPingDistrictReductionReport {
             sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getJ2h5().toString());
         }
 
-        // Styles
-        applyTitleStyle(sheet);
-        applySheetMergeSection(sheet);
-        applySheetTemplate(sheet, 0);
-    }
+        for (int contentIdx = 0; contentIdx < contents.size(); contentIdx++) {
+            KaoPingDistrictReductionDto content = contents.get(contentIdx);
+            int rowIdx = 0;
+            int colIdx = contentIdx + 2;
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.USER), content.getDoctor().getDoctorName());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), ""); // content.getJ1h1().doubleValue()
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getJ1h2().doubleValue());
+            if (content.getJ2h2().doubleValue() >= 360000) {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_REAL_NUMBER), content.getJ2h2().doubleValue());
+            } else {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getJ2h2().doubleValue());
+            }
 
-    private void applyTitleStyle(Sheet sheet) {
-        int fromRow = 0;
-        int toRow = 6;
-        int fromCol = 0;
-        int toCol = 1;
-        for (int i = fromRow; i <= toRow; i++) {
-            for (int j = fromCol; j <= toCol; j++) {
-                try {
-                    // ExcelUtil.applyTitleCellStyle(sheet.getRow(i).getCell(j));
-                } catch(Exception e) {
-                    // ignore exception
-                }
+            if (content.getJ2h3().doubleValue() >= 2) {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_REAL_NUMBER), content.getJ2h3().doubleValue());
+            } else {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getJ2h3().doubleValue());
+            }
+
+            if (content.getJ2h5().doubleValue() >= 30) {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_PERCENTAGE_NUMBER), content.getJ2h5().doubleValue());
+            } else {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getJ2h5().doubleValue());
             }
         }
+
+        // Styles
+        applySheetMergeSection(sheet);
+        applySheetTemplate(sheet, contents.size());
     }
 
     private void applySheetMergeSection(

@@ -8,6 +8,7 @@ import org.apache.poi.ss.util.PropertyTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SouthDistrictReport {
@@ -15,6 +16,7 @@ public class SouthDistrictReport {
 
     public void generateReport(
         Workbook wb,
+        Map<ExcelUtil.SupportedCellStyle, CellStyle> csm,
         List<SouthDistrictDto> contents
     ) throws Exception {
         if (wb == null) {
@@ -67,29 +69,30 @@ public class SouthDistrictReport {
         row.createCell(0).setCellValue("※指標數值係依系統累積資料量進行統計。");
 
         // Assign data
-        for (int colIdx = 2; colIdx < contents.size(); colIdx++){
-            SouthDistrictDto content = contents.get(colIdx);
+        for (int contentIdx = 0; contentIdx < contents.size(); contentIdx++) {
+            SouthDistrictDto content = contents.get(contentIdx);
             int rowIdx = 0;
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getDoctor().getDoctorName());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getA10().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getI2().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getI13().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getI11().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getI12().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getI15().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getI3().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getI4().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getI5().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getI6().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getI7().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getI8().toString());
-            sheet.getRow(rowIdx++).createCell(colIdx).setCellValue(content.getI19().toString());
+            int colIdx = contentIdx + 2;
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.USER), content.getDoctor().getDoctorName());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getA10().doubleValue());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getI2().doubleValue());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getI13().doubleValue());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getI11().doubleValue());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getI12().doubleValue());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getI15().doubleValue());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getI3().doubleValue());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getI4().doubleValue());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getI5().doubleValue());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getI6().doubleValue());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getI7().doubleValue());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getI8().doubleValue());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getI19().doubleValue());
         }
 
         // Styles
         applyTitleStyle(sheet);
         applySheetMergeSection(sheet);
-        applySheetTemplate(sheet, 0);
+        applySheetTemplate(sheet, contents.size());
     }
 
     private void applyTitleStyle(Sheet sheet) {
