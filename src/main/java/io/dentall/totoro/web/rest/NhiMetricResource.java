@@ -319,11 +319,17 @@ public class NhiMetricResource {
                 if (r != null) {
                     r.setStatus(BatchStatus.DONE);
                     r.getComment().setUrl(fileUrl);
+                    nhiMetricReportRepository.save(r);
+                    nhiMetricReportRepository.flush();
                 }
+
+                outputStream.close();
             } catch (Exception e) {
                 if (r != null) {
                     r.setStatus(BatchStatus.FAILURE);
                     r.getComment().setErrorMessage(e.getMessage());
+                    nhiMetricReportRepository.save(r);
+                    nhiMetricReportRepository.flush();
                 }
             }
         });
