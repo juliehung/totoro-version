@@ -29,22 +29,17 @@ public class EastDistrictReport {
         Sheet sheet = wb.createSheet(SHEET_NAME);
         Row row = null;
         int rowCounter  = 0;
+        int endOfApplyPointSection = 1 + contents.size() + 1;
+        int endOfMedicalServiceSection = endOfApplyPointSection + 6;
 
         // Header
-        sheet.createRow(rowCounter);
-        ExcelUtil.createCellAndApplyStyle(
-            sheet,
-            rowCounter,
-            0,
-            csm.get(
-                ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
-            ),
-                "※採計分制，基層計分標記總和≧3 分進行抽審"
-        );
+        row = sheet.createRow(rowCounter);
+        row.createCell(0).setCellValue("※採計分制，基層計分標記總和≧3 分進行抽審");
         rowCounter++;
 
         // 申報點數-標題
         sheet.createRow(rowCounter);
+        sheet.addMergedRegion(new CellRangeAddress(1, endOfApplyPointSection, 0, 0));
         ExcelUtil.createCellAndApplyStyle(
             sheet,
             rowCounter,
@@ -128,6 +123,7 @@ public class EastDistrictReport {
 
         // 申報點數-備註
         sheet.createRow(rowCounter);
+        sheet.addMergedRegion(new CellRangeAddress(endOfApplyPointSection + 1, endOfMedicalServiceSection, 0, 0));
         ExcelUtil.createCellAndApplyStyle(
             sheet,
             rowCounter,
@@ -145,6 +141,7 @@ public class EastDistrictReport {
 
         // 專業醫療服務品質項目-標題
         sheet.createRow(rowCounter);
+        sheet.addMergedRegion(new CellRangeAddress(endOfApplyPointSection + 1, endOfMedicalServiceSection, 0, 0));
         ExcelUtil.createCellAndApplyStyle(
             sheet,
             rowCounter,
@@ -275,7 +272,7 @@ public class EastDistrictReport {
         ExcelUtil.createCellAndApplyStyle(
             sheet,
             rowCounter,
-            2,
+            3,
             csm.get(
                 ExcelUtil.SupportedCellStyle.AROUND_BORDER_CONTENT_REAL_NUMBER
             ),
@@ -308,7 +305,7 @@ public class EastDistrictReport {
         ExcelUtil.createCellAndApplyStyle(
             sheet,
             rowCounter,
-            2,
+            3,
             csm.get(
                 ExcelUtil.SupportedCellStyle.AROUND_BORDER_CONTENT_REAL_NUMBER
             ),
@@ -320,6 +317,7 @@ public class EastDistrictReport {
 
         // 專業醫療服務品質項目-備註
         sheet.createRow(rowCounter);
+        sheet.addMergedRegion(new CellRangeAddress(endOfApplyPointSection, endOfApplyPointSection, 1, 3));
         ExcelUtil.createCellAndApplyStyle(
             sheet,
             rowCounter,
@@ -339,9 +337,5 @@ public class EastDistrictReport {
         Sheet sheet,
         int numberOfContent
     ) {
-        sheet.addMergedRegion(new CellRangeAddress(1, 1 + numberOfContent + 1, 0, 0));
-        sheet.addMergedRegion(new CellRangeAddress(1, 1 + numberOfContent + 1, 0, 0));
-        sheet.addMergedRegion(new CellRangeAddress(2 + numberOfContent + 1, 3 + numberOfContent + 5, 0, 0));
-        sheet.addMergedRegion(new CellRangeAddress(1, 1 + numberOfContent + 1, 0, 0));
     }
 }
