@@ -14,7 +14,7 @@ public interface NhiMetricReportMapper {
     @Mappings({
         @Mapping(
             target = "yearMonth",
-            expression = "java( io.dentall.totoro.service.util.DateTimeUtil.transformIntYyyymmToFormatedStringYyyymm( nhiMetricReportBodyVM.getYyyymm() ) )"
+            expression = "java( io.dentall.totoro.service.util.DateTimeUtil.transformLocalDateToFormatedStringYyyymm( nhiMetricReportBodyVM.getBegin() ) )"
         ),
         @Mapping(target = "status", constant = "LOCK"),
         @Mapping(target = "comment.nhiMetricReportTypes", source ="nhiMetricReportTypes"),

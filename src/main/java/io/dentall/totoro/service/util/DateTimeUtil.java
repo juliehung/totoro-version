@@ -391,4 +391,12 @@ public final class DateTimeUtil {
 
         return partialACDateTimeString;
     }
+
+    public static String transformLocalDateToFormatedStringYyyymm(LocalDate date) {
+        return date.format(
+            DateTimeFormatter.ofPattern(
+                "yyyy-MM"
+            )
+        );
+    }
 }

@@ -19,9 +19,6 @@ public class NhiMetricReportBodyVM {
     List<Long> doctorIds;
 
     @NotNull
-    private Integer yyyymm;
-
-    @NotNull
     private Set<NhiMetricReportType> nhiMetricReportTypes;
 
     public LocalDate getBegin() {
@@ -46,14 +43,6 @@ public class NhiMetricReportBodyVM {
 
     public void setDoctorIds(List<Long> doctorIds) {
         this.doctorIds = doctorIds;
-    }
-
-    public Integer getYyyymm() {
-        return yyyymm;
-    }
-
-    public void setYyyymm(Integer yyyymm) {
-        this.yyyymm = yyyymm;
     }
 
     public Set<NhiMetricReportType> getNhiMetricReportTypes() {

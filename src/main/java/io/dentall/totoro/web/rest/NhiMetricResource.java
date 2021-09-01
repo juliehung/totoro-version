@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -209,7 +208,7 @@ public class NhiMetricResource {
     @PostMapping("/report")
     @Timed
     @Transactional
-    public ResponseEntity<String> generateNhiMetricReport(@RequestBody NhiMetricReportBodyVM nhiMetricReportBodyVM) throws IOException {
+    public ResponseEntity<String> generateNhiMetricReport(@RequestBody NhiMetricReportBodyVM nhiMetricReportBodyVM) {
         log.debug("REST request to composite district : begin={}, excludeDisposalId={}, doctorIds={}",
             nhiMetricReportBodyVM.getBegin(),
             nhiMetricReportBodyVM.getExcludeDisposalId(),
@@ -289,7 +288,9 @@ public class NhiMetricResource {
                 .concat("/");
             String fileName = String.format(
                     "%s_NhiPoints_%s(報告產生時間%s)",
-                    nhiMetricReportBodyVM.getYyyymm(),
+                    DateTimeUtil.transformLocalDateToFormatedStringYyyymm(
+                        nhiMetricReportBodyVM.getBegin()
+                    ),
                     imageGcsBusinessService.getClinicName(),
                     DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
                         .withZone(ZoneId.of("Asia/Taipei"))
