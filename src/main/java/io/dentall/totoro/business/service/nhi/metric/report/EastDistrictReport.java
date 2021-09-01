@@ -216,7 +216,7 @@ public class EastDistrictReport {
         rowCounter++;
 
         sheet.createRow(rowCounter);
-        Double data2 = content1.getG8h2().doubleValue() / 100;
+        Double data2 = content1.getG8h2().doubleValue();
         ExcelUtil.createCellAndApplyStyle(
             sheet,
             rowCounter,
@@ -233,7 +233,7 @@ public class EastDistrictReport {
             csm.get(
                 ExcelUtil.SupportedCellStyle.AROUND_BORDER_CONTENT_PERCENTAGE_NUMBER
             ),
-            data2
+            data2 / 100
         );
         ExcelUtil.createCellAndApplyStyle(
             sheet,
@@ -249,7 +249,7 @@ public class EastDistrictReport {
         rowCounter++;
 
         sheet.createRow(rowCounter);
-        Double data3 = content1.getG8h3().doubleValue() / 100;
+        Double data3 = content1.getG8h3().doubleValue();
         ExcelUtil.createCellAndApplyStyle(
             sheet,
             rowCounter,
@@ -266,7 +266,7 @@ public class EastDistrictReport {
             csm.get(
                 ExcelUtil.SupportedCellStyle.AROUND_BORDER_CONTENT_PERCENTAGE_NUMBER
             ),
-            data3
+            data3 / 100
         );
         ExcelUtil.createCellAndApplyStyle(
             sheet,
@@ -282,7 +282,7 @@ public class EastDistrictReport {
         rowCounter++;
 
         sheet.createRow(rowCounter);
-        Double data4 = content1.getG8h4().doubleValue() / 100;
+        Double data4 = content1.getG8h4().doubleValue();
         ExcelUtil.createCellAndApplyStyle(
             sheet,
             rowCounter,
@@ -299,7 +299,7 @@ public class EastDistrictReport {
             csm.get(
                 ExcelUtil.SupportedCellStyle.AROUND_BORDER_CONTENT_PERCENTAGE_NUMBER
             ),
-            data4
+            data4 / 100
         );
         ExcelUtil.createCellAndApplyStyle(
             sheet,
