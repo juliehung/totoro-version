@@ -334,5 +334,15 @@ public class EastDistrictReport {
         row.createCell(0).setCellValue("※其餘牽涉他願資料無法計算之指標，請參照健保署最新公告");
         row = sheet.createRow(rowCounter++);
         row.createCell(0).setCellValue("※指標數值係依系統累積資料量進行統計。");
+
+        // Style
+        applyWidth(sheet);
+    }
+
+    private void applyWidth(Sheet sheet) {
+        sheet.setColumnWidth(0, ExcelUtil.columnWidth(5, 12));
+        sheet.setColumnWidth(1, ExcelUtil.columnWidth(15, 12));
+        sheet.setColumnWidth(2, ExcelUtil.columnWidth(10, 12));
+        sheet.setColumnWidth(3, ExcelUtil.columnWidth(10, 12));
     }
 }
