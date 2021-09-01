@@ -30,6 +30,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.ForkJoinPool;
 
 @RestController
 @RequestMapping("/api/nhi/metric")
@@ -242,80 +243,90 @@ public class NhiMetricResource {
             )
         );
 
-        nhiMetricReportBodyVM.getNhiMetricReportTypes()
-            .forEach(t -> {
-                switch (t) {
-                    case TAIPEI_DISTRICT:
-                        reportTypeServiceList.add(TaipeiDistrictService.class);
-                        break;
-                    case NORTH_DISTRICT:
-                        reportTypeServiceList.add(NorthDistrictService.class);
-                        break;
-                    case MIDDLE_DISTRICT:
-                        reportTypeServiceList.add(MiddleDistrictService.class);
-                        break;
-                    case SOUTH_DISTRICT:
-                        reportTypeServiceList.add(SouthDistrictService.class);
-                        break;
-                    case KAO_PING_REDUCTION_DISTRICT:
-                        reportTypeServiceList.add(KaoPingDistrictReductionService.class);
-                        break;
-                    case KAO_PING_REGULAR_DISTRICT:
-                        reportTypeServiceList.add(KaoPingDistrictRegularService.class);
-                        break;
-                    case EAST_DISTRICT:
-                        reportTypeServiceList.add(EastDistrictService.class);
-                        break;
-                }
-            });
+        final Long finalRecordId = reportRecord.getId();
+        ForkJoinPool.commonPool().submit(() -> {
+            nhiMetricReportBodyVM.getNhiMetricReportTypes()
+                .forEach(t -> {
+                    switch (t) {
+                        case TAIPEI_DISTRICT:
+                            reportTypeServiceList.add(TaipeiDistrictService.class);
+                            break;
+                        case NORTH_DISTRICT:
+                            reportTypeServiceList.add(NorthDistrictService.class);
+                            break;
+                        case MIDDLE_DISTRICT:
+                            reportTypeServiceList.add(MiddleDistrictService.class);
+                            break;
+                        case SOUTH_DISTRICT:
+                            reportTypeServiceList.add(SouthDistrictService.class);
+                            break;
+                        case KAO_PING_REDUCTION_DISTRICT:
+                            reportTypeServiceList.add(KaoPingDistrictReductionService.class);
+                            break;
+                        case KAO_PING_REGULAR_DISTRICT:
+                            reportTypeServiceList.add(KaoPingDistrictRegularService.class);
+                            break;
+                        case EAST_DISTRICT:
+                            reportTypeServiceList.add(EastDistrictService.class);
+                            break;
+                    }
+                });
 
-        CompositeDistrictDto dto = metricService.getCompositeDistrictMetric(
-            nhiMetricReportBodyVM.getBegin(),
-            nhiMetricReportBodyVM.getExcludeDisposalId(),
-            nhiMetricReportBodyVM.getDoctorIds(),
-            new ArrayList<>(reportTypeServiceList)
-        );
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        // FileOutputStream outputStream = new FileOutputStream("test.xls"); // develop version of output for store wb as local file
-        try {
-            nhiMetricReportService.generateNhiMetricReport(nhiMetricReportBodyVM, dto, outputStream);
-
-            ImageGcsBusinessService imageGcsBusinessService = applicationContext.getBean(ImageGcsBusinessService.class);
-            String gcsPath = imageGcsBusinessService.getClinicName()
-                .concat("/")
-                .concat(BackupFileCatalog.NHI_METRIC_REPORT.getRemotePath())
-                .concat("/");
-            String fileName = String.format(
-                    "%s_NhiPoints_%s(報告產生時間%s)",
-                    DateTimeUtil.transformLocalDateToFormatedStringYyyymm(
-                        nhiMetricReportBodyVM.getBegin()
-                    ),
-                    imageGcsBusinessService.getClinicName(),
-                    DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
-                        .withZone(ZoneId.of("Asia/Taipei"))
-                        .format(Instant.now())
-                )
-                .concat(".xls");
-            String fileUrl = imageGcsBusinessService.getUrlForDownload()
-                .concat(imageGcsBusinessService.getClinicName())
-                .concat("/")
-                .concat(BackupFileCatalog.NHI_METRIC_REPORT.getRemotePath())
-                .concat("/")
-                .concat(fileName);
-            imageGcsBusinessService.uploadFile(
-                gcsPath,
-                fileName,
-                outputStream.toByteArray(),
-                BackupFileCatalog.NHI_METRIC_REPORT.getFileExtension()
+            CompositeDistrictDto dto = metricService.getCompositeDistrictMetric(
+                nhiMetricReportBodyVM.getBegin(),
+                nhiMetricReportBodyVM.getExcludeDisposalId(),
+                nhiMetricReportBodyVM.getDoctorIds(),
+                new ArrayList<>(reportTypeServiceList)
             );
 
-            reportRecord.setStatus(BatchStatus.DONE);
-            reportRecord.getComment().setUrl(fileName);
-        } catch (Exception e) {
-            reportRecord.setStatus(BatchStatus.FAILURE);
-            reportRecord.getComment().setErrorMessage(e.getMessage());
-        }
+            NhiMetricReport r = nhiMetricReportRepository.findById(finalRecordId)
+                .orElse(null);
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            // FileOutputStream outputStream = new FileOutputStream("test.xls"); // develop version of output for store wb as local file
+            try {
+                nhiMetricReportService.generateNhiMetricReport(nhiMetricReportBodyVM, dto, outputStream);
+
+                ImageGcsBusinessService imageGcsBusinessService = applicationContext.getBean(ImageGcsBusinessService.class);
+                String gcsPath = imageGcsBusinessService.getClinicName()
+                    .concat("/")
+                    .concat(BackupFileCatalog.NHI_METRIC_REPORT.getRemotePath())
+                    .concat("/");
+                String fileName = String.format(
+                        "%s_NhiPoints_%s(報告產生時間%s)",
+                        DateTimeUtil.transformLocalDateToFormatedStringYyyymm(
+                            nhiMetricReportBodyVM.getBegin()
+                        ),
+                        imageGcsBusinessService.getClinicName(),
+                        DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
+                            .withZone(ZoneId.of("Asia/Taipei"))
+                            .format(Instant.now())
+                    )
+                    .concat(".xls");
+                String fileUrl = imageGcsBusinessService.getUrlForDownload()
+                    .concat(imageGcsBusinessService.getClinicName())
+                    .concat("/")
+                    .concat(BackupFileCatalog.NHI_METRIC_REPORT.getRemotePath())
+                    .concat("/")
+                    .concat(fileName);
+                imageGcsBusinessService.uploadFile(
+                    gcsPath,
+                    fileName,
+                    outputStream.toByteArray(),
+                    BackupFileCatalog.NHI_METRIC_REPORT.getFileExtension()
+                );
+
+                if (r != null) {
+                    reportRecord.setStatus(BatchStatus.DONE);
+                    reportRecord.getComment().setUrl(fileUrl);
+                }
+            } catch (Exception e) {
+                if (r != null) {
+                    reportRecord.setStatus(BatchStatus.FAILURE);
+                    reportRecord.getComment().setErrorMessage(e.getMessage());
+                }
+            }
+        });
 
         return ResponseEntity.ok().body("ok");
     }
