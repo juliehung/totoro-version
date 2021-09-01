@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
-import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
 
 /**
@@ -38,8 +37,7 @@ public class G8h3Formula extends AbstractFormula<BigDecimal> {
         Od1Point od1Point = new Od1Point(metricConfig, odSource).apply();
         Point1 point1 = new Point1(metricConfig, source).apply();
         try {
-            BigDecimal tmp = divide(od1Point.getResult(), point1.getResult());
-            return toPercentage(ONE.subtract(tmp));
+            return toPercentage(divide(od1Point.getResult(), point1.getResult()));
         } catch (ArithmeticException e) {
             return ZERO;
         }
