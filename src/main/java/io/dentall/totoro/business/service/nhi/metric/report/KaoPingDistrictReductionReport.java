@@ -89,6 +89,7 @@ public class KaoPingDistrictReductionReport {
 
         // Styles
         applyTitleStyle(sheet, csm.get(ExcelUtil.SupportedCellStyle.TITLE));
+        applyWidth(sheet, contents.size());
         applySheetMergeSection(sheet);
         applySheetTemplate(sheet, contents.size());
     }
@@ -109,10 +110,16 @@ public class KaoPingDistrictReductionReport {
         }
     }
 
-    private void applySheetMergeSection(Sheet sheet) {
-        sheet.addMergedRegion(new CellRangeAddress(1, 5, 0, 0));
+    private void applyWidth(Sheet sheet, int numberOfDoctor) {
         sheet.setColumnWidth(0, ExcelUtil.columnWidth(5, 12));
         sheet.setColumnWidth(1, ExcelUtil.columnWidth(15, 12));
+        for (int i = 0; i < numberOfDoctor; i++) {
+            sheet.setColumnWidth(i + 2, ExcelUtil.columnWidth(10, 12));
+        }
+    }
+
+    private void applySheetMergeSection(Sheet sheet) {
+        sheet.addMergedRegion(new CellRangeAddress(1, 5, 0, 0));
     }
 
     private void applySheetTemplate(

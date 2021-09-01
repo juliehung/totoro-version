@@ -101,6 +101,7 @@ public class TaipeiDistrictReport {
 
         // Styles
         applyTitleStyle(sheet, csm.get(ExcelUtil.SupportedCellStyle.TITLE));
+        applyWidth(sheet, contents.size());
         applySheetMergeSection(sheet);
         applySheetTemplate(sheet, contents.size());
     }
@@ -121,38 +122,44 @@ public class TaipeiDistrictReport {
         }
     }
 
+    private void applyWidth(Sheet sheet, int numberOfDoctor) {
+        sheet.setColumnWidth(0, ExcelUtil.columnWidth(5, 12));
+        sheet.setColumnWidth(1, ExcelUtil.columnWidth(15, 12));
+        for (int i = 0; i < numberOfDoctor; i++) {
+            sheet.setColumnWidth(i + 2, ExcelUtil.columnWidth(10, 12));
+        }
+    }
+
     private void applySheetMergeSection(
         Sheet sheet
     ) {
         sheet.addMergedRegion(new CellRangeAddress(1, 4, 0, 0));
         sheet.addMergedRegion(new CellRangeAddress(6, 14, 0, 0));
-        sheet.setColumnWidth(0, ExcelUtil.columnWidth(5, 12));
-        sheet.setColumnWidth(1, ExcelUtil.columnWidth(15, 12));
     }
 
     private void applySheetTemplate(
         Sheet sheet,
-        int numberOfDocker
+        int numberOfDoctor
     ) {
         PropertyTemplate pt = new PropertyTemplate();
 
         pt.drawBorders(
-            new CellRangeAddress(0, 0, 0, 1 + numberOfDocker),
+            new CellRangeAddress(0, 0, 0, 1 + numberOfDoctor),
             BorderStyle.THICK,
             BorderExtent.BOTTOM
         );
         pt.drawBorders(
-            new CellRangeAddress(4, 4, 0, 1 + numberOfDocker),
+            new CellRangeAddress(4, 4, 0, 1 + numberOfDoctor),
             BorderStyle.THICK,
             BorderExtent.BOTTOM
         );
         pt.drawBorders(
-            new CellRangeAddress(5, 5, 0, 1 + numberOfDocker),
+            new CellRangeAddress(5, 5, 0, 1 + numberOfDoctor),
             BorderStyle.THICK,
             BorderExtent.BOTTOM
         );
         pt.drawBorders(
-            new CellRangeAddress(14, 14, 0, 1 + numberOfDocker),
+            new CellRangeAddress(14, 14, 0, 1 + numberOfDoctor),
             BorderStyle.THICK,
             BorderExtent.BOTTOM
         );
