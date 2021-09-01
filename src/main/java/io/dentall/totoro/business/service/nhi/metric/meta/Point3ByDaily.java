@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyNewTreatmentPoint;
 import static io.dentall.totoro.business.service.nhi.util.NhiProcedureUtil.isExaminationCodeAtSalary;
@@ -37,10 +36,8 @@ public class Point3ByDaily extends SingleSourceMetaCalculator<Map<LocalDate, Lon
                 List<NhiMetricRawVM> sourceByDate = entry.getValue();
                 Long points = sourceByDate.stream()
                     .filter(vm -> !isExaminationCodeAtSalary(vm.getTreatmentProcedureCode()))
-                    .map(vm -> applyNewTreatmentPoint(vm, config))
-                    .filter(Objects::nonNull)
-                    .reduce(Long::sum)
-                    .orElse(0L);
+                    .mapToLong(vm -> applyNewTreatmentPoint(vm, config))
+                    .sum();
                 map.put(date, points);
                 return map;
             },

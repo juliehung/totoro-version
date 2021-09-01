@@ -57,7 +57,6 @@ public abstract class Exam<T> extends SingleSourceMetaCalculator<T> {
 
     protected Map<LocalDate, Long> doCalculateByDaily(MetricConfig metricConfig, List<String> codes) {
         List<Map<LocalDate, List<NhiMetricRawVM>>> source = metricConfig.retrieveSource(source().key());
-        checkPoint6(metricConfig);
         return source.get(0).entrySet().stream().reduce(new HashMap<>(),
             (map, entry) -> {
                 LocalDate date = entry.getKey();

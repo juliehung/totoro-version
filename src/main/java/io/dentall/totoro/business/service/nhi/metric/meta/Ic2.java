@@ -17,7 +17,11 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 public class Ic2 extends SingleSourceMetaCalculator<Long> {
 
     public Ic2(MetricConfig metricConfig, Source<?, ?> source) {
-        super(metricConfig, source);
+        this(metricConfig, null, source);
+    }
+
+    public Ic2(MetricConfig metricConfig, MetaConfig metaConfig, Source<?, ?> source) {
+        super(metricConfig, metaConfig, source);
     }
 
     @Override

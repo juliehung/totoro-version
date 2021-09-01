@@ -1,6 +1,5 @@
 package io.dentall.totoro.business.service.nhi.metric.util;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 import io.dentall.totoro.business.service.nhi.metric.meta.Exclude;
 import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConstants;
@@ -123,29 +122,18 @@ public class NhiMetricHelper {
     }
 
     public static Long applyNewTreatmentPoint(NhiMetricRawVM vm, MetaConfig config) {
+        Long point = vm.getTreatmentProcedureTotal();
+
         if (config.isUseOriginPoint()) {
-            return vm.getNhiOriginPoint();
+            point = vm.getNhiOriginPoint();
         }
 
-        if (config.isExcludeHolidayPoint()) {
+        if (config.isExcludeHolidayPoint() && isHoliday(vm.getDisposalDate(), config.getHolidayMap())) {
             // 國定假日無論有無放假，都要扣除健保代碼點數
-            return isHoliday(vm.getDisposalDate(), config.getHolidayMap()) ? 0L : vm.getTreatmentProcedureTotal();
+            point = 0L;
         }
 
-        return vm.getTreatmentProcedureTotal();
-    }
-
-    public static Long applyNewTreatmentPoint(OdDto dto, MetaConfig config) {
-        if (config.isUseOriginPoint()) {
-            return dto.getNhiOriginPoint();
-        }
-
-        if (config.isExcludeHolidayPoint()) {
-            // 國定假日無論有無放假，都要扣除健保代碼點數
-            return isHoliday(dto.getDisposalDate(), config.getHolidayMap()) ? 0L : dto.getTreatmentProcedureTotal();
-        }
-
-        return dto.getTreatmentProcedureTotal();
+        return ofNullable(point).orElse(0L);
     }
 
     public static boolean isDayOffHoliday(LocalDate date, Map<LocalDate, Optional<Holiday>> holidayMap) {
@@ -187,24 +175,33 @@ public class NhiMetricHelper {
     }
 
     public static BiFunction<Long, NhiMetricRawVM, Long> calculatePt() {
-        List<String> existPatientCardNumber = new ArrayList<>();
-        return (count, vm) -> calculatePtCount(vm.getDisposalDate(), vm.getPatientId(), vm.getCardNumber(), count, existPatientCardNumber);
+        Set<String> existPatientCardNumber = new HashSet<>();
+        Set<Long> existDisposal = new HashSet<>();
+        return (count, vm) -> calculatePtCount(vm.getDisposalId(), vm.getDisposalDate(), vm.getPatientId(), vm.getCardNumber(), count, existPatientCardNumber, existDisposal);
     }
 
-    public static BiFunction<Long, OdDto, Long> calculateOdPt() {
-        List<String> existPatientCardNumber = new ArrayList<>();
-        return (count, dto) -> calculatePtCount(dto.getDisposalDate(), dto.getPatientId(), dto.getCardNumber(), count, existPatientCardNumber);
-    }
-
-    private static long calculatePtCount(LocalDate date, long patientId, String cardNumber, long count, List<String> existPatientCardNumber) {
-        if (isBlank(cardNumber) || date == null) {
+    private static long calculatePtCount(
+        Long disposalId,
+        LocalDate date,
+        long patientId, String cardNumber,
+        long count,
+        Set<String> existPatientCardNumber,
+        Set<Long> existDisposal
+    ) {
+        if (isBlank(cardNumber) || date == null || disposalId == null) {
             return count;
         }
 
-        String key = date.getMonth().getValue() + "_" + patientId + "_" + cardNumber;
+        if (existDisposal.contains(disposalId)) {
+            return count;
+        } else {
+            existDisposal.add(disposalId);
+        }
+
         boolean isNumeric = isNumericCardNumber(cardNumber);
 
         if (isNumeric) {
+            String key = date.getMonth().getValue() + "_" + patientId + "_" + cardNumber;
             if (existPatientCardNumber.contains(key)) {
                 return count;
             } else {

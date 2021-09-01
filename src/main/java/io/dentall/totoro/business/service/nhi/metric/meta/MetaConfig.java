@@ -28,7 +28,10 @@ public class MetaConfig {
     // 國定假日排除點數上限 20,000 點 (超過部分要算入點數)
     private boolean exclude20000Point1ByDay = false;
 
-    private final Map<LocalDate, Optional<Holiday>> holidayMap;
+    private Map<LocalDate, Optional<Holiday>> holidayMap;
+
+    public MetaConfig() {
+    }
 
     public MetaConfig(MetricConfig metricConfig) {
         this.holidayMap = metricConfig.getHolidayMap();
