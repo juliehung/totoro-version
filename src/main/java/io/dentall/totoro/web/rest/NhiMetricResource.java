@@ -1,6 +1,7 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import io.dentall.totoro.business.service.ImageGcsBusinessService;
 import io.dentall.totoro.business.service.nhi.metric.*;
 import io.dentall.totoro.business.service.nhi.metric.dto.*;
 import io.dentall.totoro.business.service.nhi.metric.vm.MetricLVM;
@@ -8,6 +9,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricReportBodyVM;
 import io.dentall.totoro.business.vm.nhi.NhiMetricReportQueryStringVM;
 import io.dentall.totoro.domain.NhiMetricReport;
 import io.dentall.totoro.domain.User;
+import io.dentall.totoro.domain.enumeration.BackupFileCatalog;
 import io.dentall.totoro.domain.enumeration.BatchStatus;
 import io.dentall.totoro.repository.NhiMetricReportRepository;
 import io.dentall.totoro.service.UserService;
@@ -22,9 +24,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
@@ -272,12 +277,11 @@ public class NhiMetricResource {
             new ArrayList<>(reportTypeServiceList)
         );
 
-        // ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        FileOutputStream outputStream = new FileOutputStream("test.xls");
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        // FileOutputStream outputStream = new FileOutputStream("test.xls"); // develop version of output for store wb as local file
         try {
             nhiMetricReportService.generateNhiMetricReport(nhiMetricReportBodyVM, dto, outputStream);
 
-            /**
             ImageGcsBusinessService imageGcsBusinessService = applicationContext.getBean(ImageGcsBusinessService.class);
             String gcsPath = imageGcsBusinessService.getClinicName()
                 .concat("/")
@@ -304,9 +308,9 @@ public class NhiMetricResource {
                 outputStream.toByteArray(),
                 BackupFileCatalog.NHI_METRIC_REPORT.getFileExtension()
             );
-             **/
+
             reportRecord.setStatus(BatchStatus.DONE);
-            reportRecord.getComment().setUrl("");
+            reportRecord.getComment().setUrl(fileName);
         } catch (Exception e) {
             reportRecord.setStatus(BatchStatus.FAILURE);
             reportRecord.getComment().setErrorMessage(e.getMessage());
@@ -330,6 +334,7 @@ public class NhiMetricResource {
 
     @PatchMapping("/report/{id}/delock")
     @Timed
+    @Transactional
     public ResponseEntity<NhiMetricReport> delockNhiMetricReport(
         @PathVariable Long id,
         @RequestBody(required = false) String cancelReason

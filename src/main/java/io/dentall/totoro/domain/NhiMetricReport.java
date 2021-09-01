@@ -39,6 +39,9 @@ public class NhiMetricReport extends AbstractAuditingEntity implements Serializa
     @Column(name = "status")
     private BatchStatus status;
 
+    /**
+     * 若要改動名稱或棄用，會需要做 migration，否則過去資料在取得時會無法 mapping 成 object
+     */
     @Type(type = "jsonb")
     @Column(name = "comment")
     private NhiMetricReportComment comment;
