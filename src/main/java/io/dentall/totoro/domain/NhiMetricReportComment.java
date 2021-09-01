@@ -6,14 +6,34 @@ import java.util.Set;
 
 public class NhiMetricReportComment {
 
-     private Set<NhiMetricReportType> nhiMetricReportTypes;
+    private Set<NhiMetricReportType> nhiMetricReportTypes;
 
-     private Set<Long> doctorIds;
+    private Set<Long> doctorIds;
 
-     private String url;
+    private String url;
+
+    private String errorMessage;
+
+    private String cancelReason;
 
     public Set<NhiMetricReportType> getNhiMetricReportTypes() {
         return nhiMetricReportTypes;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    public String getCancelReason() {
+        return cancelReason;
+    }
+
+    public void setCancelReason(String cancelReason) {
+        this.cancelReason = cancelReason;
     }
 
     public void setNhiMetricReportTypes(Set<NhiMetricReportType> nhiMetricReportTypes) {

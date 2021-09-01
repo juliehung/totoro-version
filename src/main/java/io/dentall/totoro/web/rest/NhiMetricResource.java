@@ -5,11 +5,24 @@ import io.dentall.totoro.business.service.nhi.metric.*;
 import io.dentall.totoro.business.service.nhi.metric.dto.*;
 import io.dentall.totoro.business.service.nhi.metric.vm.MetricLVM;
 import io.dentall.totoro.business.vm.nhi.NhiMetricReportBodyVM;
+import io.dentall.totoro.business.vm.nhi.NhiMetricReportQueryStringVM;
+import io.dentall.totoro.domain.NhiMetricReport;
+import io.dentall.totoro.domain.User;
+import io.dentall.totoro.domain.enumeration.BatchStatus;
+import io.dentall.totoro.repository.NhiMetricReportRepository;
+import io.dentall.totoro.service.UserService;
+import io.dentall.totoro.service.mapper.NhiMetricReportMapper;
+import io.dentall.totoro.service.util.DateTimeUtil;
+import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
@@ -24,12 +37,28 @@ public class NhiMetricResource {
 
     private final NhiMetricReportService nhiMetricReportService;
 
+    private final UserService userService;
+
+    private final NhiMetricReportRepository nhiMetricReportRepository;
+
+    private final ApplicationContext applicationContext;
+
+    private Integer MAX_LOCK;
+
     public NhiMetricResource(
         MetricService metricService,
-        NhiMetricReportService nhiMetricReportService
+        NhiMetricReportService nhiMetricReportService,
+        UserService userService,
+        NhiMetricReportRepository nhiMetricReportRepository,
+        ApplicationContext applicationContext,
+        @Value("${nhi.metric.maxLock}") Integer maxLock
     ) {
         this.metricService = metricService;
         this.nhiMetricReportService = nhiMetricReportService;
+        this.userService = userService;
+        this.nhiMetricReportRepository = nhiMetricReportRepository;
+        this.applicationContext = applicationContext;
+        this.MAX_LOCK = maxLock;
     }
 
     @GetMapping("/dashboard")
@@ -174,6 +203,7 @@ public class NhiMetricResource {
 
     @PostMapping("/report")
     @Timed
+    @Transactional
     public ResponseEntity<String> generateNhiMetricReport(@RequestBody NhiMetricReportBodyVM nhiMetricReportBodyVM) throws IOException {
         log.debug("REST request to composite district : begin={}, excludeDisposalId={}, doctorIds={}",
             nhiMetricReportBodyVM.getBegin(),
@@ -182,6 +212,32 @@ public class NhiMetricResource {
         );
 
         Set<Class<? extends DistrictService>> reportTypeServiceList = new HashSet<>();
+
+        Optional<User> currentUser = userService.getUserWithAuthorities();
+
+        if (!currentUser.isPresent()) {
+            return ResponseEntity.badRequest()
+                .body("Can not found current login user.");
+        }
+
+        if (
+            nhiMetricReportRepository.countByStatusOrderByCreatedDateDesc(BatchStatus.LOCK) >= MAX_LOCK
+        ) {
+            return ResponseEntity.badRequest()
+                .body(
+                    String.format(
+                        "Excess maximum lock (%s), wait until procedure done and download result from url",
+                        this.MAX_LOCK
+                    )
+                );
+        }
+
+        NhiMetricReport reportRecord = nhiMetricReportRepository.save(
+            NhiMetricReportMapper.INSTANCE.convertBodyToDomain(
+                nhiMetricReportBodyVM
+            )
+        );
+
         nhiMetricReportBodyVM.getNhiMetricReportTypes()
             .forEach(t -> {
                 switch (t) {
@@ -215,32 +271,74 @@ public class NhiMetricResource {
             nhiMetricReportBodyVM.getDoctorIds(),
             new ArrayList<>(reportTypeServiceList)
         );
-        /**
-        CompositeDistrictDto dto = new CompositeDistrictDto();
-        TaipeiDistrictDto tdto = new TaipeiDistrictDto();
-        dto.setTaipeiDistrictDtoList(Arrays.asList(tdto, tdto));
-        DoctorData dd = new DoctorData();
-        dd.setDoctorId(5L);
-        dd.setDoctorName("TEST");
-        tdto.setDoctor(dd);
-        tdto.setL1(new BigDecimal(20500));
-        tdto.setF1h2(new BigDecimal(20500));
-        tdto.setF3h1(new BigDecimal(650000));
-        tdto.setF4h3(new BigDecimal(750000));
-        tdto.setI12(new BigDecimal(2));
-        tdto.setF1h3(new BigDecimal(20500));
-        tdto.setF2h4(new BigDecimal(2));
-        tdto.setF3h2(new BigDecimal(20));
-        tdto.setF5h3(new BigDecimal(1.2));
-        tdto.setF5h4(new BigDecimal(2.5));
-        tdto.setF5h5(new BigDecimal(2.5));
-        tdto.setF5h6(new BigDecimal(1.2));
-        tdto.setF5h7(new BigDecimal(1.2));
-        tdto.setF5h8(new BigDecimal(1.2));
-         **/
 
-        nhiMetricReportService.generateNhiMetricReport(nhiMetricReportBodyVM, dto);
+        // ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        FileOutputStream outputStream = new FileOutputStream("test.xls");
+        try {
+            nhiMetricReportService.generateNhiMetricReport(nhiMetricReportBodyVM, dto, outputStream);
+
+            /**
+            ImageGcsBusinessService imageGcsBusinessService = applicationContext.getBean(ImageGcsBusinessService.class);
+            String gcsPath = imageGcsBusinessService.getClinicName()
+                .concat("/")
+                .concat(BackupFileCatalog.NHI_METRIC_REPORT.getRemotePath())
+                .concat("/");
+            String fileName = String.format(
+                    "%s_NhiPoints_%s(報告產生時間%s)",
+                    nhiMetricReportBodyVM.getYyyymm(),
+                    imageGcsBusinessService.getClinicName(),
+                    DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
+                        .withZone(ZoneId.of("Asia/Taipei"))
+                        .format(Instant.now())
+                )
+                .concat(".xls");
+            String fileUrl = imageGcsBusinessService.getUrlForDownload()
+                .concat(imageGcsBusinessService.getClinicName())
+                .concat("/")
+                .concat(BackupFileCatalog.NHI_METRIC_REPORT.getRemotePath())
+                .concat("/")
+                .concat(fileName);
+            imageGcsBusinessService.uploadFile(
+                gcsPath,
+                fileName,
+                outputStream.toByteArray(),
+                BackupFileCatalog.NHI_METRIC_REPORT.getFileExtension()
+            );
+             **/
+            reportRecord.setStatus(BatchStatus.DONE);
+            reportRecord.getComment().setUrl("");
+        } catch (Exception e) {
+            reportRecord.setStatus(BatchStatus.FAILURE);
+            reportRecord.getComment().setErrorMessage(e.getMessage());
+        }
 
         return ResponseEntity.ok().body("ok");
+    }
+
+    @GetMapping("/report")
+    @Timed
+    public ResponseEntity<List<NhiMetricReport>> getNhiMetricReports(NhiMetricReportQueryStringVM queryStringVM) {
+        List<NhiMetricReport> result = nhiMetricReportRepository.findByYearMonthAndCreatedByOrderByCreatedDateDesc(
+            DateTimeUtil.transformIntYyyymmToFormatedStringYyyymm(
+                queryStringVM.getYyyymm()
+            ),
+            queryStringVM.getCreatedBy()
+        );
+
+        return ResponseEntity.ok(result);
+    }
+
+    @PatchMapping("/report/{id}/delock")
+    @Timed
+    public ResponseEntity<NhiMetricReport> delockNhiMetricReport(
+        @PathVariable Long id,
+        @RequestBody(required = false) String cancelReason
+    ) {
+        NhiMetricReport report = nhiMetricReportRepository.findById(id)
+                .orElseThrow(() -> new BadRequestAlertException("Report not found", "NhiMetricReport", "notfound"));
+        report.setStatus(BatchStatus.CANCEL);
+        report.getComment().setCancelReason(cancelReason);
+
+        return ResponseEntity.ok(report);
     }
 }

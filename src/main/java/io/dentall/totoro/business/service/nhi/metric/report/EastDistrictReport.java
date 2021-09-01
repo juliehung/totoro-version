@@ -2,11 +2,9 @@ package io.dentall.totoro.business.service.nhi.metric.report;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.EastDistrictDto;
 import io.dentall.totoro.business.service.nhi.metric.util.ExcelUtil;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.RegionUtil;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -339,8 +337,20 @@ public class EastDistrictReport {
         row.createCell(0).setCellValue("※指標數值係依系統累積資料量進行統計。");
 
         // Style
-        sheet.addMergedRegion(new CellRangeAddress(1, endOfApplyPointSection, 0, 0));
-        sheet.addMergedRegion(new CellRangeAddress(endOfApplyPointSection + 1, endOfMedicalServiceSection, 0, 0));
+        CellRangeAddress applyPointRegion = new CellRangeAddress(1, endOfApplyPointSection, 0, 0);
+        RegionUtil.setBorderTop(BorderStyle.THIN, applyPointRegion, sheet);
+        RegionUtil.setBorderRight(BorderStyle.THIN, applyPointRegion, sheet);
+        RegionUtil.setBorderBottom(BorderStyle.THIN, applyPointRegion, sheet);
+        RegionUtil.setBorderLeft(BorderStyle.THIN, applyPointRegion, sheet);
+        sheet.addMergedRegion(applyPointRegion);
+
+        CellRangeAddress medicalServiceRegion = new CellRangeAddress(endOfApplyPointSection + 1, endOfMedicalServiceSection, 0, 0);
+        RegionUtil.setBorderTop(BorderStyle.THIN, medicalServiceRegion, sheet);
+        RegionUtil.setBorderRight(BorderStyle.THIN, medicalServiceRegion, sheet);
+        RegionUtil.setBorderBottom(BorderStyle.THIN, medicalServiceRegion, sheet);
+        RegionUtil.setBorderLeft(BorderStyle.THIN, medicalServiceRegion, sheet);
+        sheet.addMergedRegion(medicalServiceRegion);
+
         sheet.addMergedRegion(new CellRangeAddress(endOfApplyPointSection, endOfApplyPointSection, 1, 3));
         sheet.addMergedRegion(new CellRangeAddress(endOfMedicalServiceSection, endOfMedicalServiceSection, 1, 3));
 
