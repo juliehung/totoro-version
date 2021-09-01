@@ -317,13 +317,13 @@ public class NhiMetricResource {
                 );
 
                 if (r != null) {
-                    reportRecord.setStatus(BatchStatus.DONE);
-                    reportRecord.getComment().setUrl(fileUrl);
+                    r.setStatus(BatchStatus.DONE);
+                    r.getComment().setUrl(fileUrl);
                 }
             } catch (Exception e) {
                 if (r != null) {
-                    reportRecord.setStatus(BatchStatus.FAILURE);
-                    reportRecord.getComment().setErrorMessage(e.getMessage());
+                    r.setStatus(BatchStatus.FAILURE);
+                    r.getComment().setErrorMessage(e.getMessage());
                 }
             }
         });

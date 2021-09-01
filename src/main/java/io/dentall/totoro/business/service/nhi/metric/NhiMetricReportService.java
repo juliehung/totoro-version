@@ -74,30 +74,72 @@ public class NhiMetricReportService {
         Map<ExcelUtil.SupportedCellStyle, CellStyle> csm = ExcelUtil.createReportStyle(wb);
 
         if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.TAIPEI_DISTRICT)) {
+            if (nhiMetricResultDto == null ||
+                nhiMetricResultDto.getTaipeiDistrictDtoList() == null ||
+                nhiMetricResultDto.getTaipeiDistrictDtoList().size() == 0
+            ) {
+                throw new Exception("There is not data in taipei district dto.");
+            }
             List<TaipeiDistrictDto> contents = nhiMetricResultDto.getTaipeiDistrictDtoList();
             taipeiDistrictReport.generateReport(wb, csm, contents);
         }
         if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.NORTH_DISTRICT)) {
+            if (nhiMetricResultDto == null ||
+                nhiMetricResultDto.getNorthDistrictDtoList() == null ||
+                nhiMetricResultDto.getNorthDistrictDtoList().size() == 0
+            ) {
+                throw new Exception("There is not data in north district dto.");
+            }
             List<NorthDistrictDto> contents = nhiMetricResultDto.getNorthDistrictDtoList();
             northDistrictReport.generateReport(wb, csm, contents);
         }
         if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.MIDDLE_DISTRICT)) {
+            if (nhiMetricResultDto == null ||
+                nhiMetricResultDto.getMiddleDistrictDtoList() == null ||
+                nhiMetricResultDto.getMiddleDistrictDtoList().size() == 0
+            ) {
+                throw new Exception("There is not data in middle district dto.");
+            }
             List<MiddleDistrictDto> contents = nhiMetricResultDto.getMiddleDistrictDtoList();
             middleDistrictReport.generateReport(wb, csm, contents);
         }
         if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.SOUTH_DISTRICT)) {
+            if (nhiMetricResultDto == null ||
+                nhiMetricResultDto.getSouthDistrictDtoList() == null ||
+                nhiMetricResultDto.getSouthDistrictDtoList().size() == 0
+            ) {
+                throw new Exception("There is not data in south district dto.");
+            }
             List<SouthDistrictDto> contents = nhiMetricResultDto.getSouthDistrictDtoList();
             southDistrictReport.generateReport(wb, csm, contents);
         }
         if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.KAO_PING_REDUCTION_DISTRICT)) {
+            if (nhiMetricResultDto == null ||
+                nhiMetricResultDto.getKaoPingDistrictReductionDtoList() == null ||
+                nhiMetricResultDto.getKaoPingDistrictReductionDtoList().size() == 0
+            ) {
+                throw new Exception("There is not data in kao-ping-reduction district dto.");
+            }
             List<KaoPingDistrictReductionDto> contents = nhiMetricResultDto.getKaoPingDistrictReductionDtoList();
             kaoPingDistrictReductionReport.generateReport(wb, csm, contents);
         }
         if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.KAO_PING_REGULAR_DISTRICT)) {
+            if (nhiMetricResultDto == null ||
+                nhiMetricResultDto.getKaoPingDistrictRegularDtoList() == null ||
+                nhiMetricResultDto.getKaoPingDistrictRegularDtoList().size() == 0
+            ) {
+                throw new Exception("There is not data in kao-ping-regular district dto.");
+            }
             List<KaoPingDistrictRegularDto> contents = nhiMetricResultDto.getKaoPingDistrictRegularDtoList();
             kaoPingDistrictRegularReport.generateReport(wb, csm, contents);
         }
         if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.EAST_DISTRICT)) {
+            if (nhiMetricResultDto == null ||
+                nhiMetricResultDto.getEastDistrictDtoList() == null ||
+                nhiMetricResultDto.getEastDistrictDtoList().size() == 0
+            ) {
+                throw new Exception("There is not data in east district dto.");
+            }
             List<EastDistrictDto> contents = nhiMetricResultDto.getEastDistrictDtoList();
             eastDistrictReport.generateReport(wb, csm, contents);
         }
