@@ -127,6 +127,22 @@ public class NhiMetricReportService {
                 try {
                     ImageGcsBusinessService imageGcsBusinessService = applicationContext.getBean(ImageGcsBusinessService.class);
 
+                    if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.TAIPEI_DISTRICT)) {
+                        List<TaipeiDistrictDto> contents = nhiMetricResultDto.getTaipeiDistrictDtoList();
+                        taipeiDistrictReport.generateReport(wb, csm, contents);
+                    }
+                    if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.NORTH_DISTRICT)) {
+                        List<NorthDistrictDto> contents = nhiMetricResultDto.getNorthDistrictDtoList();
+                        northDistrictReport.generateReport(wb, csm, contents);
+                    }
+                    if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.MIDDLE_DISTRICT)) {
+                        List<MiddleDistrictDto> contents = nhiMetricResultDto.getMiddleDistrictDtoList();
+                        middleDistrictReport.generateReport(wb, csm, contents);
+                    }
+                    if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.SOUTH_DISTRICT)) {
+                        List<SouthDistrictDto> contents = nhiMetricResultDto.getSouthDistrictDtoList();
+                        southDistrictReport.generateReport(wb, csm, contents);
+                    }
                     if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.KAO_PING_REDUCTION_DISTRICT)) {
                         List<KaoPingDistrictReductionDto> contents = nhiMetricResultDto.getKaoPingDistrictReductionDtoList();
                         kaoPingDistrictReductionReport.generateReport(wb, csm, contents);
@@ -134,22 +150,6 @@ public class NhiMetricReportService {
                     if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.KAO_PING_REGULAR_DISTRICT)) {
                         List<KaoPingDistrictRegularDto> contents = nhiMetricResultDto.getKaoPingDistrictRegularDtoList();
                         kaoPingDistrictRegularReport.generateReport(wb, csm, contents);
-                    }
-                    if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.MIDDLE_DISTRICT)) {
-                        List<MiddleDistrictDto> contents = nhiMetricResultDto.getMiddleDistrictDtoList();
-                        middleDistrictReport.generateReport(wb, csm, contents);
-                    }
-                    if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.NORTH_DISTRICT)) {
-                        List<NorthDistrictDto> contents = nhiMetricResultDto.getNorthDistrictDtoList();
-                        northDistrictReport.generateReport(wb, csm, contents);
-                    }
-                    if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.SOUTH_DISTRICT)) {
-                        List<SouthDistrictDto> contents = nhiMetricResultDto.getSouthDistrictDtoList();
-                        southDistrictReport.generateReport(wb, csm, contents);
-                    }
-                    if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.TAIPEI_DISTRICT)) {
-                        List<TaipeiDistrictDto> contents = nhiMetricResultDto.getTaipeiDistrictDtoList();
-                        taipeiDistrictReport.generateReport(wb, csm, contents);
                     }
                     if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.EAST_DISTRICT)) {
                         List<EastDistrictDto> contents = nhiMetricResultDto.getEastDistrictDtoList();
