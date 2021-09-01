@@ -39,7 +39,6 @@ public class EastDistrictReport {
 
         // 申報點數-標題
         sheet.createRow(rowCounter);
-        sheet.addMergedRegion(new CellRangeAddress(1, endOfApplyPointSection, 0, 0));
         ExcelUtil.createCellAndApplyStyle(
             sheet,
             rowCounter,
@@ -122,8 +121,10 @@ public class EastDistrictReport {
         }
 
         // 申報點數-備註
-        sheet.createRow(rowCounter);
-        sheet.addMergedRegion(new CellRangeAddress(endOfApplyPointSection, endOfApplyPointSection, 1, 3));
+        row = sheet.createRow(rowCounter);
+        row.setHeightInPoints((short) 80);
+        row.createCell(2).setCellStyle(csm.get(ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE));
+        row.createCell(3).setCellStyle(csm.get(ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE));
         ExcelUtil.createCellAndApplyStyle(
             sheet,
             rowCounter,
@@ -135,13 +136,13 @@ public class EastDistrictReport {
                 "申報點數≧45萬點，標記1分\n" +
                 "申報點數≧55萬點，標記2分\n" +
                 "申報點數≧60萬點，標記3分\n" +
-                "以標記分數最高之醫師計(院所有 3 位醫師分別為 1、2、3 分，該院所則以 3 分計)"
+                "以標記分數最高之醫師計(院所有 3 位醫師分別為 1、2、3 分，\n" +
+                "該院所則以 3 分計)"
         );
         rowCounter++;
 
         // 專業醫療服務品質項目-標題
         sheet.createRow(rowCounter);
-        sheet.addMergedRegion(new CellRangeAddress(endOfApplyPointSection + 1, endOfMedicalServiceSection, 0, 0));
         ExcelUtil.createCellAndApplyStyle(
             sheet,
             rowCounter,
@@ -316,8 +317,10 @@ public class EastDistrictReport {
         rowCounter++;
 
         // 專業醫療服務品質項目-備註
-        sheet.createRow(rowCounter);
-        sheet.addMergedRegion(new CellRangeAddress(endOfMedicalServiceSection, endOfMedicalServiceSection, 1, 3));
+        row = sheet.createRow(rowCounter);
+        row.setHeightInPoints((short) 25);
+        row.createCell(2).setCellStyle(csm.get(ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE));
+        row.createCell(3).setCellStyle(csm.get(ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE));
         ExcelUtil.createCellAndApplyStyle(
             sheet,
             rowCounter,
@@ -336,6 +339,11 @@ public class EastDistrictReport {
         row.createCell(0).setCellValue("※指標數值係依系統累積資料量進行統計。");
 
         // Style
+        sheet.addMergedRegion(new CellRangeAddress(1, endOfApplyPointSection, 0, 0));
+        sheet.addMergedRegion(new CellRangeAddress(endOfApplyPointSection + 1, endOfMedicalServiceSection, 0, 0));
+        sheet.addMergedRegion(new CellRangeAddress(endOfApplyPointSection, endOfApplyPointSection, 1, 3));
+        sheet.addMergedRegion(new CellRangeAddress(endOfMedicalServiceSection, endOfMedicalServiceSection, 1, 3));
+
         applyWidth(sheet);
     }
 

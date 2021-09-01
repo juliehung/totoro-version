@@ -185,9 +185,12 @@ public class NhiMetricReportService {
                         BackupFileCatalog.NHI_METRIC_REPORT.getFileExtension()
                     );
 
-                    reportRecord.setStatus(BatchStatus.DONE);
-                    reportRecord.getComment().setUrl(fileUrl);
+                     r.getComment().setUrl(e.getMessage());
                      **/
+                    System.out.println("final record id " + finalReportId);
+                    NhiMetricReport r = nhiMetricReportRepository.findById(finalReportId)
+                        .orElse(new NhiMetricReport());
+                    r.setStatus(BatchStatus.DONE);
                 } catch (Exception e) {
                     NhiMetricReport r = nhiMetricReportRepository.findById(finalReportId)
                         .orElse(new NhiMetricReport());

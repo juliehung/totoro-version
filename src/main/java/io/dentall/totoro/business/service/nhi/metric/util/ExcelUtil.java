@@ -118,18 +118,18 @@ public class ExcelUtil {
         aroundBorderContentRealNumberCellStyle.setBorderRight(BorderStyle.THIN);
         aroundBorderContentRealNumberCellStyle.setBorderBottom(BorderStyle.THIN);
         aroundBorderContentRealNumberCellStyle.setBorderLeft(BorderStyle.THIN);
-        redRealNumberCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-        redRealNumberCellStyle.setAlignment(HorizontalAlignment.RIGHT);
-        redRealNumberCellStyle.setDataFormat((short) 4);
+        aroundBorderContentRealNumberCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        aroundBorderContentRealNumberCellStyle.setAlignment(HorizontalAlignment.RIGHT);
+        aroundBorderContentRealNumberCellStyle.setDataFormat((short) 4);
 
         CellStyle aroundBorderContentPercentageNumberCellStyle = wb.createCellStyle();
         aroundBorderContentPercentageNumberCellStyle.setBorderTop(BorderStyle.THIN);
         aroundBorderContentPercentageNumberCellStyle.setBorderRight(BorderStyle.THIN);
         aroundBorderContentPercentageNumberCellStyle.setBorderBottom(BorderStyle.THIN);
         aroundBorderContentPercentageNumberCellStyle.setBorderLeft(BorderStyle.THIN);
-        redPercentageCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-        redPercentageCellStyle.setAlignment(HorizontalAlignment.RIGHT);
-        redPercentageCellStyle.setDataFormat((short) 10);
+        aroundBorderContentPercentageNumberCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        aroundBorderContentPercentageNumberCellStyle.setAlignment(HorizontalAlignment.RIGHT);
+        aroundBorderContentPercentageNumberCellStyle.setDataFormat((short) 10);
 
         // assign style to map
         m.put(SupportedCellStyle.USER, userCellStyle);
