@@ -58,7 +58,12 @@ public class KaoPingDistrictReductionReport {
             int rowIdx = 0;
             int colIdx = contentIdx + 2;
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.USER), content.getDoctor().getDoctorName());
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getJ1h1().doubleValue());
+
+            if (content.getJ1h1().doubleValue() >= 525000) {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_REAL_NUMBER), content.getJ1h1().doubleValue());
+            } else {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getJ1h1().doubleValue());
+            }
 
             if (content.getJ1h2().doubleValue() >= 360000) {
                 ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_REAL_NUMBER), content.getJ1h2().doubleValue());
