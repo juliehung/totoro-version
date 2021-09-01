@@ -81,7 +81,7 @@ public class EastDistrictReport {
         // 申報點數-醫師資料
         for (int i = 0; i < contents.size(); i++) {
             sheet.createRow(rowCounter);
-            double g6 = contents.get(i).getG6().divideToIntegralValue(new BigDecimal(10000)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            double g6 = contents.get(i).getG6().divide(new BigDecimal(10000), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
             ExcelUtil.createCellAndApplyStyle(
                 sheet,
                 rowCounter,
@@ -123,7 +123,7 @@ public class EastDistrictReport {
 
         // 申報點數-備註
         sheet.createRow(rowCounter);
-        sheet.addMergedRegion(new CellRangeAddress(endOfApplyPointSection + 1, endOfMedicalServiceSection, 0, 0));
+        sheet.addMergedRegion(new CellRangeAddress(endOfApplyPointSection, endOfApplyPointSection, 1, 3));
         ExcelUtil.createCellAndApplyStyle(
             sheet,
             rowCounter,
@@ -317,7 +317,7 @@ public class EastDistrictReport {
 
         // 專業醫療服務品質項目-備註
         sheet.createRow(rowCounter);
-        sheet.addMergedRegion(new CellRangeAddress(endOfApplyPointSection, endOfApplyPointSection, 1, 3));
+        sheet.addMergedRegion(new CellRangeAddress(endOfMedicalServiceSection, endOfMedicalServiceSection, 1, 3));
         ExcelUtil.createCellAndApplyStyle(
             sheet,
             rowCounter,
@@ -329,13 +329,5 @@ public class EastDistrictReport {
         );
         rowCounter++;
 
-        // Styles
-        applySheetMergeSection(sheet, contents.size());
-    }
-
-    private void applySheetMergeSection(
-        Sheet sheet,
-        int numberOfContent
-    ) {
     }
 }
