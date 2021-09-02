@@ -14,13 +14,12 @@ import java.math.BigDecimal;
 import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro6;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
-import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
 
 /**
  * (季)OD 點數佔率
  *
- * @ date-10@ 的 [1-(@OD-1@/@Point-3@)]*100%
+ * @ date-10@ 的 [(@OD-1@/@Point-3@)]*100%
  */
 public class K4Formula extends AbstractFormula<BigDecimal> {
 
@@ -41,8 +40,7 @@ public class K4Formula extends AbstractFormula<BigDecimal> {
         Od1Point od1Point = new Od1Point(metricConfig, odSource).apply();
         Point3 point3 = new Point3(metricConfig, source).apply();
         try {
-            BigDecimal tmp = divide(od1Point.getResult(), point3.getResult());
-            return toPercentage(ONE.subtract(tmp));
+            return toPercentage(divide(od1Point.getResult(), point3.getResult()));
         } catch (ArithmeticException e) {
             return ZERO;
         }

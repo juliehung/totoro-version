@@ -5,7 +5,6 @@ import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
-import java.util.Objects;
 
 import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstants.CodesBySc1;
 import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyNewTreatmentPoint;
@@ -32,10 +31,8 @@ public class Sc1Point extends SingleSourceMetaCalculator<Long> {
 
         return nhiMetricRawVMList.stream()
             .filter(vm -> codes.contains(vm.getTreatmentProcedureCode()))
-            .map(vm -> applyNewTreatmentPoint(vm, config))
-            .filter(Objects::nonNull)
-            .reduce(Long::sum)
-            .orElse(0L);
+            .mapToLong(vm -> applyNewTreatmentPoint(vm, config))
+            .sum();
     }
 
     @Override
