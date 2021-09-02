@@ -377,6 +377,20 @@ task cucumber() {
     }
 }
 
+task cucumber_metric() {
+    def cucumberTags = project.getProperties().get("cucumber.filter.tags", "@metric")
+    dependsOn assemble, testClasses
+    doLast {
+        assert cucumberTags.length() > 0
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'html:build/reports/cucumber/cucumber-metric.html', '--plugin', 'de.monochromata.cucumber.report.PrettyReports:build/reports/cucumber/cucumber-metric', '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features/metric']
+            environment = ['spring.profiles.active': 'test,no-swagger,embedded-postgres,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml', 'cucumber.filter.tags': "${cucumberTags}"]
+        }
+    }
+}
+
 /**
  * Execute flow
  */

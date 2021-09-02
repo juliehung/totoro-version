@@ -8,10 +8,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTreatment;
-import io.dentall.totoro.business.service.nhi.metric.meta.Calculator;
-import io.dentall.totoro.business.service.nhi.metric.meta.Meta;
-import io.dentall.totoro.business.service.nhi.metric.meta.MetaCalculator;
-import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
+import io.dentall.totoro.business.service.nhi.metric.meta.*;
 import io.dentall.totoro.business.service.nhi.metric.source.*;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.ExtendUser;
@@ -33,6 +30,8 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -41,9 +40,11 @@ import java.util.Map;
 
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -83,6 +84,8 @@ public class MetricStepDefinition extends AbstractStepDefinition {
 
     private final String metaClassPackage = "io.dentall.totoro.business.service.nhi.metric.meta";
 
+    private final String sourceClassPackage = "io.dentall.totoro.business.service.nhi.metric.source";
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -96,45 +99,63 @@ public class MetricStepDefinition extends AbstractStepDefinition {
             .build();
     }
 
-    @ParameterType(value = ".+")
+    @ParameterType(value = "\\d{4}-\\d{2}-\\d{2}")
     public LocalDate baseDate(String date) {
         return LocalDate.parse(date);
     }
 
-    @ParameterType(value = ".+")
-    public Class<? extends Source<? extends NhiMetricRawVM, ?>> sourceDateRange(String range) {
-        if ("1個月".equals(range)) {
-            return MonthSelectedSource.class;
-        } else if ("每日1個月".equals(range)) {
-            return DailyByMonthSelectedSource.class;
-        } else if ("季".equals(range)) {
-            return QuarterSource.class;
-        } else if ("OD1個月".equals(range)) {
-            return OdMonthSelectedSource.class;
-        } else if ("OD季".equals(range)) {
-            return OdQuarterSource.class;
-        } else if ("OD季牙齒".equals(range)) {
-            return OdQuarterByPatientSource.class;
-        } else if ("OD季乳牙".equals(range)) {
-            return OdDeciduousQuarterByPatientSource.class;
-        } else if ("OD季恆牙".equals(range)) {
-            return OdPermanentQuarterByPatientSource.class;
-        } else if ("OD1年牙齒".equals(range)) {
-            return OdOneYearNearByPatientSource.class;
-        } else if ("OD1年乳牙".equals(range)) {
-            return OdDeciduousOneYearNearByPatientSource.class;
-        } else if ("OD1年恆牙".equals(range)) {
-            return OdPermanentOneYearNearByPatientSource.class;
-        }
-
-        throw new UnsupportedOperationException("Unsupported Source Range: " + range);
+    @ParameterType(value = ".+Source")
+    public Class<? extends Source<? extends NhiMetricRawVM, ?>> sourceDateRange(String range) throws ClassNotFoundException {
+        return (Class<? extends Source<? extends NhiMetricRawVM, ?>>) Class.forName(sourceClassPackage + "." + range);
     }
 
-    private static class OdReDateRange {
+    private static class AgeRage {
+        private int upper = Integer.MAX_VALUE;
+        private int bottom = Integer.MIN_VALUE;
+
+        public int getUpper() {
+            return upper;
+        }
+
+        public void setUpper(int upper) {
+            this.upper = upper;
+        }
+
+        public int getBottom() {
+            return bottom;
+        }
+
+        public void setBottom(int bottom) {
+            this.bottom = bottom;
+        }
+    }
+
+    @ParameterType(".*~.*")
+    public AgeRage ageRange(String value) {
+        AgeRage ageRage = new AgeRage();
+        String[] tmp = value.split("~");
+
+        if (tmp.length > 0 && isNotBlank(tmp[0])) {
+            ageRage.setBottom(Integer.parseInt(tmp[0]));
+        }
+
+        if (tmp.length > 1 && isNotBlank(tmp[1])) {
+            ageRage.setUpper(Integer.parseInt(tmp[1]));
+        }
+
+        return ageRage;
+    }
+
+    @ParameterType("\\d+C")
+    public String treatment(String value) {
+        return value;
+    }
+
+    private static class ReDateRange {
         private int begin;
         private int end;
 
-        public OdReDateRange(int begin, int end) {
+        public ReDateRange(int begin, int end) {
             this.begin = begin;
             this.end = end;
         }
@@ -148,11 +169,13 @@ public class MetricStepDefinition extends AbstractStepDefinition {
         }
     }
 
-    private OdReDateRange getOdReDateRange(Class<? extends Source<? extends NhiMetricRawVM, ?>> sourceType) {
+    private ReDateRange getOdReDateRange(Class<? extends Source<? extends NhiMetricRawVM, ?>> sourceType) {
         if (OdOneYearNearByPatientSource.class.isAssignableFrom(sourceType) ||
             OdDeciduousOneYearNearByPatientSource.class.isAssignableFrom(sourceType) ||
             OdPermanentOneYearNearByPatientSource.class.isAssignableFrom(sourceType)) {
-            return new OdReDateRange(1, 365);
+            return new ReDateRange(1, 365);
+        } else if (EndoAndOdHalfYearNearByPatientSource.class.isAssignableFrom(sourceType)) {
+            return new ReDateRange(1, 180);
         }
 
         throw new UnsupportedOperationException("Unsupported Source Type: " + sourceType.getName());
@@ -163,8 +186,13 @@ public class MetricStepDefinition extends AbstractStepDefinition {
         return (Class<? extends MetaCalculator<?>>) Class.forName(metaClassPackage + "." + value);
     }
 
-    @ParameterType(value = ".+")
+    @ParameterType(value = "\\d+")
     public long metaValue(String value) {
+        return Long.parseLong(value);
+    }
+
+    @ParameterType(value = "\\d+")
+    public long sourceCount(String value) {
         return Long.parseLong(value);
     }
 
@@ -177,10 +205,12 @@ public class MetricStepDefinition extends AbstractStepDefinition {
         return datalist.stream().map(data -> {
             MetricTreatment metricTreatment = MetricTestMapper.INSTANCE.mapToMetricTreatment(data);
 
-            ofNullable(subject).ifPresent(s -> {
-                metricTreatment.setDoctorId(subject.getId());
-                metricTreatment.setDoctorName(subject.getFirstName());
-            });
+            if (metricTreatment.getDoctorName() == null) {
+                ofNullable(subject).ifPresent(s -> {
+                    metricTreatment.setDoctorId(subject.getId());
+                    metricTreatment.setDoctorName(subject.getFirstName());
+                });
+            }
 
             patients.stream()
                 .filter(p -> p.getName().equals(metricTreatment.getPatientName()))
@@ -237,6 +267,16 @@ public class MetricStepDefinition extends AbstractStepDefinition {
         MetaConfig metaConfig = metricTestInfoHolder.getMetaConfig();
         return metaType.getDeclaredConstructor(MetricConfig.class, MetaConfig.class, Source.class, Source.class, int.class, int.class)
             .newInstance(metricConfig, metaConfig, source1, source2, dayShiftBegin, dayShiftEnd);
+    }
+
+    private Calculator<?> toTreatmentAngAgeMetaInstance(
+        Class<? extends MetaCalculator<?>> metaType,
+        MetricConfig metricConfig,
+        Source<? extends NhiMetricRawVM, ?> source,
+        String treatment) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        MetaConfig metaConfig = metricTestInfoHolder.getMetaConfig();
+        return metaType.getDeclaredConstructor(MetricConfig.class, MetaConfig.class, Source.class, List.class)
+            .newInstance(metricConfig, metaConfig, source, asList(treatment));
     }
 
     private Source<? extends NhiMetricRawVM, ?> toSourceInstance(
@@ -334,6 +374,7 @@ public class MetricStepDefinition extends AbstractStepDefinition {
     }
 
     @Then("指定執行日期 {baseDate}，補牙時間範圍 {sourceDateRange}／重補時間範圍 {sourceDateRange}，檢查 {metaType}，計算結果數值應為 {metaValue}")
+    @Then("指定執行日期 {baseDate}，拔牙時間範圍 {sourceDateRange}／根管與補牙時間範圍 {sourceDateRange}，檢查 {metaType}，計算結果數值應為 {metaValue}")
     public void checkOdRe(
         LocalDate baseDate,
         Class<? extends Source<? extends NhiMetricRawVM, ?>> sourceType1,
@@ -344,9 +385,28 @@ public class MetricStepDefinition extends AbstractStepDefinition {
         MetricConfig metricConfig = getMetricConfig(baseDate);
         Source<? extends NhiMetricRawVM, ?> sourceInstance1 = toSourceInstance(sourceType1, metricConfig);
         Source<? extends NhiMetricRawVM, ?> sourceInstance2 = toSourceInstance(sourceType2, metricConfig);
-        OdReDateRange odReDateRange = getOdReDateRange(sourceType2);
+        ReDateRange reDateRange = getOdReDateRange(sourceType2);
         Calculator<?> metaCalculatorInstance =
-            toOdReMetaInstance(metaType, metricConfig, sourceInstance1, sourceInstance2, odReDateRange.getBegin(), odReDateRange.getEnd());
+            toOdReMetaInstance(metaType, metricConfig, sourceInstance1, sourceInstance2, reDateRange.getBegin(), reDateRange.getEnd());
+        Meta<Long> meta = (Meta<Long>) metaCalculatorInstance.calculate();
+
+        long value = meta.value();
+        assertThat(value).isEqualTo(metaValue);
+    }
+
+    @Then("指定執行日期 {baseDate}，來源資料使用 {sourceDateRange}／醫令 {treatment}／年齡 {ageRange}，檢查 {metaType}，計算結果數值應為 {metaValue}")
+    public void checkTreatmentAndAge(
+        LocalDate baseDate,
+        Class<? extends Source<? extends NhiMetricRawVM, ?>> sourceType,
+        String treatment,
+        AgeRage ageRage,
+        Class<? extends MetaCalculator<?>> metaType,
+        long metaValue) throws Exception {
+
+        MetricConfig metricConfig = getMetricConfig(baseDate);
+        Source<? extends NhiMetricRawVM, ?> sourceInstance = toSourceInstance(sourceType, metricConfig);
+        Calculator<?> metaCalculatorInstance = toTreatmentAngAgeMetaInstance(metaType, metricConfig, sourceInstance, treatment);
+        ((TreatmentAndAgeCount) metaCalculatorInstance).setBottomAge(ageRage.getBottom()).setUpperAge(ageRage.getUpper());
         Meta<Long> meta = (Meta<Long>) metaCalculatorInstance.calculate();
 
         long value = meta.value();
@@ -377,4 +437,37 @@ public class MetricStepDefinition extends AbstractStepDefinition {
         });
 
     }
+
+    @Then("指定執行日期 {baseDate}，來源資料使用 {sourceDateRange}，預期筆數應為 {sourceCount}")
+    public void checkSource(
+        LocalDate baseDate,
+        Class<? extends Source<? extends NhiMetricRawVM, ?>> sourceType,
+        long sourceCount) throws Exception {
+
+        MetricConfig metricConfig = getMetricConfig(baseDate);
+        Source<? extends NhiMetricRawVM, ?> sourceInstance = toSourceInstance(sourceType, metricConfig);
+
+        Type[] actualTypeArguments = getTypeArguments(sourceType);
+
+        if (actualTypeArguments.length == 2 &&
+            actualTypeArguments[1] instanceof ParameterizedType &&
+            ((ParameterizedType) actualTypeArguments[1]).getRawType() == Map.class) {
+            List<Map<?, ?>> result = metricConfig.retrieveSource(sourceInstance.key());
+            assertThat(result.get(0).size()).isEqualTo(sourceCount);
+        } else {
+            List<NhiMetricRawVM> result = metricConfig.retrieveSource(sourceInstance.key());
+            assertThat(result.size()).isEqualTo(sourceCount);
+        }
+
+    }
+
+    private Type[] getTypeArguments(Class<?> clz) {
+        Type genericSuperclass = clz.getGenericSuperclass();
+        if (!(genericSuperclass instanceof ParameterizedType)) {
+            return getTypeArguments(clz.getSuperclass());
+        }
+        ParameterizedType parameterizedType = (ParameterizedType) genericSuperclass;
+        return parameterizedType.getActualTypeArguments();
+    }
+
 }
