@@ -2905,4 +2905,39 @@ public class NhiRuleCheckUtil {
     public String getCurrentTxNhiCode(NhiRuleCheckDTO dto) {
         return dto.getNhiExtendTreatmentProcedure().getA73();
     }
+
+    public NhiRuleCheckResultDTO appendSuccessSourceInfo(
+        NhiRuleCheckDTO dto,
+        String code
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO();
+        result.validated(true)
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.SUCCESS);
+
+        List<NhiHybridRecordDTO> records = this.findNhiHypeRecordsDTO(
+            dto.getPatient().getId(),
+            Arrays.asList(code),
+            Arrays.asList(0L)
+        );
+        if (records != null &&
+            records.size() > 0
+        ) {
+            NhiHybridRecordDTO firstRecord = records.get(0);
+            String m = String.format(
+                "目前可申報，近一次處置為%s中%s（為提升準確性，請常讀取IC卡取得最新資訊）",
+                "IC".equals(firstRecord.getRecordSource())
+                    ? "健保IC卡"
+                    : "系統"
+                ,
+                DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                    firstRecord.getRecordDateTime()
+                )
+            );
+            result.message(m);
+        } else {
+            result.message("系統及健保卡皆無紀錄，請查詢雲端藥歷取得正確資訊");
+        }
+
+        return result;
+    }
 }
