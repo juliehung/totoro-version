@@ -6,8 +6,6 @@ import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.util.List;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyExcludeByDto;
-
 /**
  * @ OD-1@齒數
  */
@@ -24,8 +22,7 @@ public class Od1ToothCount extends SingleSourceMetaCalculator<Long> {
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
         List<OdDto> odDtoList = metricConfig.retrieveSource(source().key());
-        Exclude exclude = getExclude();
-        return odDtoList.stream().filter(applyExcludeByDto(exclude)).count();
+        return (long) odDtoList.size();
     }
 
     @Override

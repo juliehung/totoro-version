@@ -8,8 +8,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyExcludeByDto;
-
 /**
  * 申報OD之乳牙顆數
  */
@@ -26,12 +24,10 @@ public class OdDeciduousToothCount extends SingleSourceMetaCalculator<Long> {
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
         List<Map<Long, Map<String, List<OdDto>>>> source = metricConfig.retrieveSource(source().key());
-        Exclude exclude = getExclude();
         return source.get(0).values().stream()
             .map(Map::values)
             .flatMap(Collection::stream)
             .flatMap(Collection::stream)
-            .filter(applyExcludeByDto(exclude))
             .count();
     }
 

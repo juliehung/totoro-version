@@ -6,7 +6,7 @@ import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import java.time.LocalDate;
 import java.util.Map;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.codesByExam2;
+import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstants.CodesByExam2;
 
 /**
  * 一般牙科門診診察費(Xray)
@@ -23,7 +23,7 @@ public class Exam2ByDaily extends Exam<Map<LocalDate, Long>> {
 
     @Override
     public Map<LocalDate, Long> doCalculate(MetricConfig metricConfig) {
-        return doCalculateByDaily(metricConfig, codesByExam2);
+        return doCalculateByDaily(metricConfig, CodesByExam2);
     }
 
     @Override

@@ -7,7 +7,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import java.util.Map;
 import java.util.function.Function;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.codesByExam4;
+import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstants.CodesByExam4;
 
 /**
  * 符合牙醫門診加強感染管制實施方案之牙科門診診察費(Xray) 病患點數 or 醫師點數
@@ -30,7 +30,7 @@ public class Exam4ByClassifier extends Exam<Map<Long, Long>> {
 
     @Override
     public Map<Long, Long> doCalculate(MetricConfig metricConfig) {
-        return doCalculateByClassifier(metricConfig, codesByExam4, classifier);
+        return doCalculateByClassifier(metricConfig, CodesByExam4, classifier);
     }
 
     @Override

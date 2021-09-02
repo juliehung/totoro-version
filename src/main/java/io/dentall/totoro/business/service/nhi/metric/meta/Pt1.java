@@ -6,7 +6,6 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyExcludeByVM;
 import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.calculatePt;
 
 /**
@@ -25,10 +24,8 @@ public class Pt1 extends SingleSourceMetaCalculator<Long> {
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
         List<NhiMetricRawVM> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
-        Exclude exclude = getExclude();
 
         return nhiMetricRawVMList.stream()
-            .filter(applyExcludeByVM(exclude))
             .reduce(0L, calculatePt(), Long::sum);
     }
 

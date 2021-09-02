@@ -4,6 +4,7 @@ import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
@@ -14,20 +15,14 @@ public abstract class AbstractMetaCalculator<T> implements MetaCalculator<T> {
 
     private Meta<T> meta;
 
-    private final Exclude exclude;
-
     private final MetaConfig config;
 
     private final Source<?, ?>[] sources;
 
-    private final MetaCalculatorKey key;
-
     public AbstractMetaCalculator(MetricConfig metricConfig, MetaConfig config, Source<?, ?>[] sources) {
         this.metricConfig = metricConfig;
         this.config = ofNullable(config).orElse(new MetaConfig(this.metricConfig));
-        this.exclude = this.config.getExclude();
         this.sources = sources;
-        this.key = new MetaCalculatorKey(this);
     }
 
     @Override
@@ -49,12 +44,8 @@ public abstract class AbstractMetaCalculator<T> implements MetaCalculator<T> {
 
     public abstract T doCalculate(MetricConfig metricConfig);
 
-    public Exclude getExclude() {
-        return exclude;
-    }
-
     public final MetaCalculatorKey key() {
-        return key;
+        return new MetaCalculatorKey(this);
     }
 
     public final Meta<T> getMeta() {
@@ -76,4 +67,8 @@ public abstract class AbstractMetaCalculator<T> implements MetaCalculator<T> {
         return this.config;
     }
 
+    @Override
+    public List<?> getExtraKeyAttribute() {
+        return null;
+    }
 }

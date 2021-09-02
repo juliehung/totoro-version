@@ -2,7 +2,7 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.meta.Endo90015CTreatment;
 import io.dentall.totoro.business.service.nhi.metric.meta.EndoTreatment;
-import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
+import io.dentall.totoro.business.service.nhi.metric.meta.Tro1ButPoint6Config;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
@@ -11,6 +11,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
+import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro1;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ONE;
@@ -26,11 +27,12 @@ public class L21Formula extends AbstractFormula<BigDecimal> {
     public L21Formula(MetricConfig metricConfig) {
         super(metricConfig);
         this.source = new ThreeMonthNearSource(metricConfig);
+        this.source.setExclude(Tro1);
     }
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        MetaConfig config = new Tro1Config(metricConfig);
+        Tro1ButPoint6Config config = new Tro1ButPoint6Config(metricConfig);
         EndoTreatment endoTreatment = new EndoTreatment(metricConfig, config, source).apply();
         Endo90015CTreatment endo90015CTreatment = new Endo90015CTreatment(metricConfig, config, source).apply();
         try {

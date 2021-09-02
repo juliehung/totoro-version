@@ -1,7 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
-import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentReToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
@@ -14,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro1;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ZERO;
@@ -34,11 +34,13 @@ public class L35Formula extends AbstractFormula<BigDecimal> {
         super(metricConfig);
         this.odQuarterSource = new OdPermanentQuarterByPatientSource(metricConfig);
         this.odThreeYearNearSource = new OdPermanentThreeYearNearByPatientSource(metricConfig);
+        this.odQuarterSource.setExclude(Tro1);
+        this.odThreeYearNearSource.setExclude(Tro1);
     }
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        MetaConfig config = new Tro1Config(metricConfig);
+        Tro1Config config = new Tro1Config(metricConfig);
         OdPermanentToothCount odPermanentToothCount = new OdPermanentToothCount(metricConfig, config, odQuarterSource).apply();
         OdPermanentReToothCount odPermanentReToothCount =
             new OdPermanentReToothCount(metricConfig, config, odQuarterSource, odThreeYearNearSource, 1, 1095).apply();

@@ -1,7 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
-import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousReToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousToothCount;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
@@ -34,14 +33,15 @@ public class L27Formula extends AbstractFormula<BigDecimal> {
         super(metricConfig);
         this.odQuarterSource = new OdDeciduousQuarterByPatientSource(metricConfig);
         this.odTwoYearNearSource = new OdDeciduousTwoYearNearByPatientSource(metricConfig);
+        this.odQuarterSource.setExclude(N89013C);
+        this.odTwoYearNearSource.setExclude(N89013C);
     }
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        MetaConfig config = new MetaConfig(metricConfig).setExclude(N89013C);
-        OdDeciduousToothCount odDeciduousToothCount = new OdDeciduousToothCount(metricConfig, config, odQuarterSource).apply();
+        OdDeciduousToothCount odDeciduousToothCount = new OdDeciduousToothCount(metricConfig, odQuarterSource).apply();
         OdDeciduousReToothCount odDeciduousReToothCount =
-            new OdDeciduousReToothCount(metricConfig, config, odQuarterSource, odTwoYearNearSource, 1, 730).apply();
+            new OdDeciduousReToothCount(metricConfig, odQuarterSource, odTwoYearNearSource, 1, 730).apply();
         try {
             return toPercentage(divide(odDeciduousReToothCount.getResult(), odDeciduousToothCount.getResult()));
         } catch (ArithmeticException e) {

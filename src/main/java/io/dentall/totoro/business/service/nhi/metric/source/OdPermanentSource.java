@@ -4,6 +4,7 @@ import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -25,10 +26,10 @@ public abstract class OdPermanentSource extends AbstractSource<OdDto, Map<Long, 
     }
 
     @Override
-    public List<Map<Long, Map<String, List<OdDto>>>> filter(List<OdDto> source) {
-        return singletonList(source.stream().parallel()
-            .filter(dto -> teeth.contains(dto.getTooth()))
-            .collect(groupingBy(OdDto::getPatientId, groupingBy(OdDto::getTooth))));
+    public List<Map<Long, Map<String, List<OdDto>>>> doFilter(Stream<OdDto> source) {
+        return singletonList(source
+            .filter(dto -> teeth.contains(dto.getTreatmentProcedureTooth()))
+            .collect(groupingBy(OdDto::getPatientId, groupingBy(OdDto::getTreatmentProcedureTooth))));
     }
 
 }

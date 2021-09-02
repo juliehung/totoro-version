@@ -5,6 +5,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static io.dentall.totoro.business.service.nhi.NhiSpecialCode.OTHER;
 import static java.util.Collections.singletonList;
@@ -20,8 +21,8 @@ public class SpecialCodeMonthSelectedSource extends AbstractSource<NhiMetricRawV
     }
 
     @Override
-    public List<Map<NhiSpecialCode, List<NhiMetricRawVM>>> filter(List<NhiMetricRawVM> source) {
-        return singletonList(source.stream().parallel()
+    public List<Map<NhiSpecialCode, List<NhiMetricRawVM>>> doFilter(Stream<NhiMetricRawVM> source) {
+        return singletonList(source
             .filter(vm -> vm.getTreatmentProcedureSpecificCode() != null)
             .collect(groupingBy(vm -> vm.getTreatmentProcedureSpecificCode() != null ? vm.getTreatmentProcedureSpecificCode() : OTHER)));
     }
