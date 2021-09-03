@@ -1,6 +1,6 @@
 {
-  "totoroAdmin": "stg-2.6.2-hotfix-2",
-  "totoroAdminModifiedTime": "2021-09-02T09:36+00:00",
+  "totoroAdmin": "stg-2.7.1",
+  "totoroAdminModifiedTime": "2021-09-03T02:33+00:00",
   "totoroWeb": "stg-1.10.3",
   "totoroWebModifiedTime": "2021-09-02T09:25+00:00",
   "deploy8085Time": "1900-01-01T00:00+00:00",
