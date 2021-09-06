@@ -22,16 +22,21 @@ public class EndoAndOdHalfYearNearSource extends AbstractSource<NhiMetricRawVM, 
 
     private final LocalDate begin;
 
+    private final LocalDate end;
+
     public EndoAndOdHalfYearNearSource(MetricConfig metricConfig) {
         super(metricConfig.getSubjectSource());
         this.begin = toLocalDate(metricConfig.getQuarterRange().getBegin()).minus(180, DAYS);
+        this.end = toLocalDate(metricConfig.getQuarterRange().getEnd());
     }
 
     @Override
     public List<OdDto> doFilter(Stream<NhiMetricRawVM> source) {
         AtomicInteger i = new AtomicInteger();
         return source
-            .filter(vm -> begin.isBefore(vm.getDisposalDate()) || begin.isEqual(vm.getDisposalDate()))
+            .filter(vm -> (begin.isBefore(vm.getDisposalDate()) && end.isAfter(vm.getDisposalDate()))
+                || begin.isEqual(vm.getDisposalDate())
+                || end.isEqual(vm.getDisposalDate()))
             .filter(vm -> CodesByEndo1.contains(vm.getTreatmentProcedureCode()) || CodesByOd.contains(vm.getTreatmentProcedureCode()))
             .filter(vm -> isNotBlank(vm.getTreatmentProcedureTooth()))
             .map(vm -> {

@@ -1,10 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.dto;
 
-import io.dentall.totoro.business.service.nhi.NhiSpecialCode;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import java.time.LocalDate;
 
 public class MetricTreatment implements NhiMetricRawVM {
@@ -53,8 +50,7 @@ public class MetricTreatment implements NhiMetricRawVM {
 
     Long nhiOriginPoint;
 
-    @Enumerated(EnumType.STRING)
-    NhiSpecialCode treatmentProcedureSpecificCode;
+    String treatmentProcedureSpecificCode;
 
     Long doctorId;
 
@@ -212,11 +208,11 @@ public class MetricTreatment implements NhiMetricRawVM {
         this.nhiOriginPoint = nhiOriginPoint;
     }
 
-    public NhiSpecialCode getTreatmentProcedureSpecificCode() {
+    public String getTreatmentProcedureSpecificCode() {
         return treatmentProcedureSpecificCode;
     }
 
-    public void setTreatmentProcedureSpecificCode(NhiSpecialCode treatmentProcedureSpecificCode) {
+    public void setTreatmentProcedureSpecificCode(String treatmentProcedureSpecificCode) {
         this.treatmentProcedureSpecificCode = treatmentProcedureSpecificCode;
     }
 

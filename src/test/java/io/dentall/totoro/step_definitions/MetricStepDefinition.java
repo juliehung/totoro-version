@@ -4,6 +4,7 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.ParameterType;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -38,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstants.CLINIC;
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -282,7 +284,10 @@ public class MetricStepDefinition extends AbstractStepDefinition {
     private Source<? extends NhiMetricRawVM, ?> toSourceInstance(
         Class<? extends Source<? extends NhiMetricRawVM, ?>> sourceType,
         MetricConfig metricConfig) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        return sourceType.getDeclaredConstructor(MetricConfig.class).newInstance(metricConfig);
+        Exclude exclude = metricTestInfoHolder.getExclude();
+        Source<? extends NhiMetricRawVM, ?> source = sourceType.getDeclaredConstructor(MetricConfig.class).newInstance(metricConfig);
+        source.setExclude(exclude);
+        return source;
     }
 
     private MetricConfig getMetricConfig(LocalDate date) {
@@ -309,6 +314,12 @@ public class MetricStepDefinition extends AbstractStepDefinition {
         metaConfig.setIncludePoint6By12MPoints(true);
     }
 
+    @And("設定排除 {word}")
+    public void setExclude(String text) {
+        Exclude exclude = Exclude.valueOf(text);
+        metricTestInfoHolder.setExclude(exclude);
+    }
+
     @Given("設定指標主體類型為醫師 {word}")
     public void createUser(String doctorName) throws Exception {
         ExtendUser extendUser = new ExtendUser();
@@ -329,6 +340,11 @@ public class MetricStepDefinition extends AbstractStepDefinition {
         ResultActions resultActions = this.mvc.perform(requestBuilder);
         User user = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsByteArray(), User.class);
         metricTestInfoHolder.setSubject(user);
+    }
+
+    @Given("設定指標主體類型為診所")
+    public void createUser() {
+        metricTestInfoHolder.setSubject(CLINIC);
     }
 
     @Given("設定病人 {word} {int} 歲")

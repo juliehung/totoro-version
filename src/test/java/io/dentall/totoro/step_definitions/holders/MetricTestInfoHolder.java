@@ -1,6 +1,7 @@
 package io.dentall.totoro.step_definitions.holders;
 
 import io.cucumber.spring.ScenarioScope;
+import io.dentall.totoro.business.service.nhi.metric.meta.Exclude;
 import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.Patient;
@@ -23,4 +24,6 @@ public class MetricTestInfoHolder {
     private List<? extends NhiMetricRawVM> source;
 
     private MetaConfig metaConfig = new MetaConfig();
+
+    private Exclude exclude;
 }
