@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -98,9 +99,9 @@ public class MetricDashboardService {
         BigDecimal metricL55 = new L55Formula(metricConfig).calculate();
         BigDecimal metricL56 = new L56Formula(metricConfig).calculate();
         SpecialTreatmentAnalysisDto specialTreatmentAnalysisDto = new SpecialTreatmentFormula(metricConfig).calculate();
-        Map<LocalDate, BigDecimal> dailyPoints = new DailyPointsFormula(metricConfig).calculate();
-        Map<LocalDate, BigDecimal> dailyPt1 = new DailyPt1Formula(metricConfig).calculate();
-        Map<LocalDate, BigDecimal> dailyIc3 = new DailyIc3Formula(metricConfig).calculate();
+        List<Entry<LocalDate, BigDecimal>> dailyPoints = new DailyPointsFormula(metricConfig).calculate();
+        List<Entry<LocalDate, BigDecimal>> dailyPt1 = new DailyPt1Formula(metricConfig).calculate();
+        List<Entry<LocalDate, BigDecimal>> dailyIc3 = new DailyIc3Formula(metricConfig).calculate();
 
         NameValue nameValue = new NameValue();
         List<DoctorSummaryDto> doctorSummaryDtoList = null;

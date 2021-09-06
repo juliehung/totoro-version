@@ -102,12 +102,12 @@ public class MetricService implements ApplicationContextAware {
             Section6 section6 = new Section6();
             section6.setL5(new MetricData(dto.getL5()));
             section6.setL6(new MetricData(dto.getL6()));
-            section6.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dto.getDailyPt1().entrySet()));
+            section6.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dto.getDailyPt1()));
 
             Section7 section7 = new Section7();
             section7.setL7(new MetricData(dto.getL7()));
             section7.setL8(new MetricData(dto.getL8()));
-            section7.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dto.getDailyIc3().entrySet()));
+            section7.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dto.getDailyIc3()));
 
             Section8 section8 = new Section8();
             if (metricSubjectType == clinic) {
@@ -117,7 +117,7 @@ public class MetricService implements ApplicationContextAware {
             }
 
             Section9 section9 = new Section9();
-            section9.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dto.getDailyPoints().entrySet()));
+            section9.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dto.getDailyPoints()));
 
             Section10 section10 = new Section10();
             section10.setL11(new MetricData(dto.getL11()));

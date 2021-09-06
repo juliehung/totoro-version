@@ -11,11 +11,16 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import static java.util.Comparator.naturalOrder;
+import static java.util.Map.Entry.comparingByKey;
+import static java.util.stream.Collectors.toList;
 
 /**
  * 每天申報件數
  */
-public class DailyIc3Formula extends AbstractFormula<Map<LocalDate, BigDecimal>> {
+public class DailyIc3Formula extends AbstractFormula<List<Entry<LocalDate, BigDecimal>>> {
 
     private final Source<NhiMetricRawVM, Map<LocalDate, List<NhiMetricRawVM>>> source;
 
@@ -25,9 +30,9 @@ public class DailyIc3Formula extends AbstractFormula<Map<LocalDate, BigDecimal>>
     }
 
     @Override
-    public Map<LocalDate, BigDecimal> doCalculate(MetricConfig metricConfig) {
+    public List<Entry<LocalDate, BigDecimal>> doCalculate(MetricConfig metricConfig) {
         Ic3ByDaily ic3ByDaily = new Ic3ByDaily(metricConfig, source).apply();
-        return ic3ByDaily.getResult().entrySet().stream().reduce(new HashMap<>(),
+        Map<LocalDate, BigDecimal> result = ic3ByDaily.getResult().entrySet().stream().reduce(new HashMap<>(),
             (map, entry) -> {
                 map.put(entry.getKey(), new BigDecimal(entry.getValue()));
                 return map;
@@ -36,5 +41,7 @@ public class DailyIc3Formula extends AbstractFormula<Map<LocalDate, BigDecimal>>
                 map1.putAll(map2);
                 return map1;
             });
+
+        return result.entrySet().stream().sorted(comparingByKey(naturalOrder())).collect(toList());
     }
 }
