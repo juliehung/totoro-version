@@ -7,7 +7,7 @@ import io.dentall.totoro.business.service.nhi.metric.vm.NameValue;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
+import java.util.Map.Entry;
 
 public class DashboardDto {
 
@@ -78,11 +78,11 @@ public class DashboardDto {
 
     private SpecialTreatmentAnalysisDto specialTreatmentAnalysisDto;
 
-    private Map<LocalDate, BigDecimal> dailyPoints;
+    private List<Entry<LocalDate, BigDecimal>> dailyPoints;
 
-    private Map<LocalDate, BigDecimal> dailyPt1;
+    private List<Entry<LocalDate, BigDecimal>> dailyPt1;
 
-    private Map<LocalDate, BigDecimal> dailyIc3;
+    private List<Entry<LocalDate, BigDecimal>> dailyIc3;
 
     public MetricSubjectType getType() {
         return type;
@@ -572,27 +572,27 @@ public class DashboardDto {
         this.specialTreatmentAnalysisDto = specialTreatmentAnalysisDto;
     }
 
-    public Map<LocalDate, BigDecimal> getDailyPoints() {
+    public List<Entry<LocalDate, BigDecimal>> getDailyPoints() {
         return dailyPoints;
     }
 
-    public void setDailyPoints(Map<LocalDate, BigDecimal> dailyPoints) {
+    public void setDailyPoints(List<Entry<LocalDate, BigDecimal>> dailyPoints) {
         this.dailyPoints = dailyPoints;
     }
 
-    public Map<LocalDate, BigDecimal> getDailyPt1() {
+    public List<Entry<LocalDate, BigDecimal>> getDailyPt1() {
         return dailyPt1;
     }
 
-    public void setDailyPt1(Map<LocalDate, BigDecimal> dailyPt1) {
+    public void setDailyPt1(List<Entry<LocalDate, BigDecimal>> dailyPt1) {
         this.dailyPt1 = dailyPt1;
     }
 
-    public Map<LocalDate, BigDecimal> getDailyIc3() {
+    public List<Entry<LocalDate, BigDecimal>> getDailyIc3() {
         return dailyIc3;
     }
 
-    public void setDailyIc3(Map<LocalDate, BigDecimal> dailyIc3) {
+    public void setDailyIc3(List<Entry<LocalDate, BigDecimal>> dailyIc3) {
         this.dailyIc3 = dailyIc3;
     }
 }
