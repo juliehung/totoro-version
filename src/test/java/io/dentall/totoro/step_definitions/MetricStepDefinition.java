@@ -78,6 +78,9 @@ public class MetricStepDefinition extends AbstractStepDefinition {
     @Autowired
     private MetricTestInfoHolder metricTestInfoHolder;
 
+    @Autowired
+    private NhiMetricServiceTest nhiMetricService;
+
     private final String userApiPath = "/api/users";
 
     private final String apiPath = "/api/patients";
@@ -470,4 +473,8 @@ public class MetricStepDefinition extends AbstractStepDefinition {
         return parameterizedType.getActualTypeArguments();
     }
 
+    @Then("載入指定檔案資料集")
+    public void loadDataSet1() {
+        metricTestInfoHolder.setSource(nhiMetricService.loadDataSet());
+    }
 }
