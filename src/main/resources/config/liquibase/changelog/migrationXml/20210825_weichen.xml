@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20210825-weichen" author="WeiChen">
+        <sql>
+            CREATE TABLE nhi_metric_report(
+                id bigint PRIMARY KEY,
+                jhi_year_month varchar(255),
+                status varchar,
+                comment jsonb,
+                created_by varchar(50),
+                created_date timestamp,
+                last_modified_by varchar(50),
+                last_modified_date timestamp
+            );
+        </sql>
+        <createIndex tableName="nhi_metric_report" indexName="idx_nhi_metric_report_id" unique="false">
+            <column name="id"/>
+        </createIndex>
+        <createSequence sequenceName="nhi_metric_report_seq"/>
+    </changeSet>
+</databaseChangeLog>

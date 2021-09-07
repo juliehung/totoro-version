@@ -36,7 +36,6 @@ import static io.dentall.totoro.security.AuthoritiesConstants.DOCTOR;
 import static io.dentall.totoro.service.util.DateTimeUtil.convertLocalDateToBeginOfDayInstant;
 import static io.dentall.totoro.service.util.DateTimeUtil.getCurrentQuarterMonthsRangeInstant;
 import static java.time.temporal.ChronoUnit.DAYS;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
@@ -103,12 +102,12 @@ public class MetricService implements ApplicationContextAware {
             Section6 section6 = new Section6();
             section6.setL5(new MetricData(dto.getL5()));
             section6.setL6(new MetricData(dto.getL6()));
-            section6.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dto.getDailyPt1().entrySet()));
+            section6.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dto.getDailyPt1()));
 
             Section7 section7 = new Section7();
             section7.setL7(new MetricData(dto.getL7()));
             section7.setL8(new MetricData(dto.getL8()));
-            section7.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dto.getDailyIc3().entrySet()));
+            section7.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dto.getDailyIc3()));
 
             Section8 section8 = new Section8();
             if (metricSubjectType == clinic) {
@@ -118,7 +117,7 @@ public class MetricService implements ApplicationContextAware {
             }
 
             Section9 section9 = new Section9();
-            section9.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dto.getDailyPoints().entrySet()));
+            section9.setTimeline(TimeLineDataMapper.INSTANCE.mapToTimeLineData(dto.getDailyPoints()));
 
             Section10 section10 = new Section10();
             section10.setL11(new MetricData(dto.getL11()));
@@ -231,57 +230,17 @@ public class MetricService implements ApplicationContextAware {
         }).collect(toList());
     }
 
-    public List<TaipeiDistrictDto> getTaipeiDistrictMetric(LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
-        CompositeDistrictDto compositeDistrictDto =
-            getCompositeDistrictMetric(baseDate, excludeDisposalIds, doctorIds, asList(TaipeiDistrictService.class));
-        return compositeDistrictDto.getTaipeiDistrictDtoList();
-    }
-
-    public List<NorthDistrictDto> getNorthDistrictMetric(LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
-        CompositeDistrictDto compositeDistrictDto =
-            getCompositeDistrictMetric(baseDate, excludeDisposalIds, doctorIds, asList(NorthDistrictService.class));
-        return compositeDistrictDto.getNorthDistrictDtoList();
-    }
-
-    public List<MiddleDistrictDto> getMiddleDistrictMetric(LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
-        CompositeDistrictDto compositeDistrictDto =
-            getCompositeDistrictMetric(baseDate, excludeDisposalIds, doctorIds, asList(MiddleDistrictService.class));
-        return compositeDistrictDto.getMiddleDistrictDtoList();
-    }
-
-    public List<SouthDistrictDto> getSouthDistrictMetric(LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
-        CompositeDistrictDto compositeDistrictDto =
-            getCompositeDistrictMetric(baseDate, excludeDisposalIds, doctorIds, asList(SouthDistrictService.class));
-        return compositeDistrictDto.getSouthDistrictDtoList();
-    }
-
-    public List<EastDistrictDto> getEastDistrictMetric(final LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
-        CompositeDistrictDto compositeDistrictDto =
-            getCompositeDistrictMetric(baseDate, excludeDisposalIds, doctorIds, asList(EastDistrictService.class));
-        return compositeDistrictDto.getEastDistrictDtoList();
-    }
-
-    public List<KaoPingDistrictRegularDto> getKaoPingDistrictRegularMetric(LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
-        CompositeDistrictDto compositeDistrictDto =
-            getCompositeDistrictMetric(baseDate, excludeDisposalIds, doctorIds, asList(KaoPingDistrictRegularService.class));
-        return compositeDistrictDto.getKaoPingDistrictRegularDtoList();
-    }
-
-    public List<KaoPingDistrictReductionDto> getKaoPingDistrictReductionMetric(LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds) {
-        CompositeDistrictDto compositeDistrictDto =
-            getCompositeDistrictMetric(baseDate, excludeDisposalIds, doctorIds, asList(KaoPingDistrictReductionService.class));
-        return compositeDistrictDto.getKaoPingDistrictReductionDtoList();
-    }
-
     public CompositeDistrictDto getCompositeDistrictMetric(
-        LocalDate baseDate, List<Long> excludeDisposalIds, List<Long> doctorIds, List<Class<? extends DistrictService>> metricServiceClass) {
-        Optional<User> userOptional = this.userService.getUserWithAuthorities();
-        if (!userOptional.isPresent()) {
+        LocalDate baseDate, List<Long> excludeDisposalIds,
+        List<Long> doctorIds,
+        List<Class<? extends DistrictService>> metricServiceClass,
+        User user
+    ) {
+        if (user == null) {
             return new CompositeDistrictDto();
         }
 
         doctorIds = Optional.ofNullable(doctorIds).orElse(emptyList());
-        User user = userOptional.get();
         excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
         List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
         DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));

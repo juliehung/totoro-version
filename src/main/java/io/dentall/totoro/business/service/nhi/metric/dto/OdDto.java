@@ -1,6 +1,5 @@
 package io.dentall.totoro.business.service.nhi.metric.dto;
 
-import io.dentall.totoro.business.service.nhi.NhiSpecialCode;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.time.LocalDate;
@@ -45,7 +44,7 @@ public class OdDto implements NhiMetricRawVM {
 
     private Long nhiOriginPoint;
 
-    private NhiSpecialCode treatmentProcedureSpecificCode;
+    private String treatmentProcedureSpecificCode;
 
     private Long doctorId;
 
@@ -227,11 +226,11 @@ public class OdDto implements NhiMetricRawVM {
     }
 
     @Override
-    public NhiSpecialCode getTreatmentProcedureSpecificCode() {
+    public String getTreatmentProcedureSpecificCode() {
         return treatmentProcedureSpecificCode;
     }
 
-    public void setTreatmentProcedureSpecificCode(NhiSpecialCode treatmentProcedureSpecificCode) {
+    public void setTreatmentProcedureSpecificCode(String treatmentProcedureSpecificCode) {
         this.treatmentProcedureSpecificCode = treatmentProcedureSpecificCode;
     }
 

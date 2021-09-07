@@ -51,8 +51,8 @@ public interface MetricTestMapper {
     }
 
     @Named("DisposalId")
-    default String toDisposalId(Map<String, String> map) {
-        return map.get("DisposalId");
+    default Long toDisposalId(Map<String, String> map) {
+        return ofNullable(map.get("DisposalId")).map(Long::parseLong).orElse(null);
     }
 
     @Named("DisposalDate")
@@ -111,13 +111,13 @@ public interface MetricTestMapper {
     }
 
     @Named("Point")
-    default String toPoint(Map<String, String> map) {
-        return map.get("Point");
+    default Long toPoint(Map<String, String> map) {
+        return ofNullable(map.get("Point")).map(Long::parseLong).orElse(null);
     }
 
     @Named("OriginPoint")
-    default String toOriginPoint(Map<String, String> map) {
-        return map.get("OriginPoint");
+    default Long toOriginPoint(Map<String, String> map) {
+        return ofNullable(map.get("OriginPoint")).map(Long::parseLong).orElse(null);
     }
 
     @Named("SpecificCode")
