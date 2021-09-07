@@ -1,7 +1,6 @@
 package io.dentall.totoro.dto;
 
 import com.univocity.parsers.annotations.Parsed;
-import io.dentall.totoro.business.service.nhi.NhiSpecialCode;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.time.LocalDate;
@@ -152,10 +151,8 @@ public class NhiMetricRawVMDTO implements NhiMetricRawVM {
     }
 
     @Override
-    public NhiSpecialCode getTreatmentProcedureSpecificCode() {
-        return NhiSpecialCode.valueOf(
-                this.treatmentProcedureSpecificCode
-            );
+    public String getTreatmentProcedureSpecificCode() {
+        return this.treatmentProcedureSpecificCode;
     }
 
     @Override
