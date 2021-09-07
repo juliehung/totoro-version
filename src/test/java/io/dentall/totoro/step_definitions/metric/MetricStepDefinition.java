@@ -1,5 +1,8 @@
 package io.dentall.totoro.step_definitions.metric;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
 import io.cucumber.java.DataTableType;
@@ -27,13 +30,17 @@ import org.springframework.test.context.ContextConfiguration;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static com.fasterxml.jackson.databind.DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS;
+import static com.fasterxml.jackson.databind.node.JsonNodeFactory.withExactBigDecimals;
 import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstants.CLINIC;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -46,6 +53,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @CucumberContextConfiguration
 @ContextConfiguration(classes = {MetricTestInfoHolder.class, TimeConfig.class}, initializers = MetricStepDefinition.Initializer.class)
 public class MetricStepDefinition {
+
+    private final ObjectMapper objectMapper = new ObjectMapper()
+        .setNodeFactory(withExactBigDecimals(true))
+        .enable(USE_BIG_DECIMAL_FOR_FLOATS);
 
     static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
@@ -151,6 +162,11 @@ public class MetricStepDefinition {
     @ParameterType(value = ".+")
     public Class<? extends MetaCalculator<?>> metaType(String value) throws ClassNotFoundException {
         return (Class<? extends MetaCalculator<?>>) Class.forName(metaClassPackage + "." + value);
+    }
+
+    @ParameterType(value = "\\{.+\\}")
+    public JsonNode objectValue(String jsonValue) throws JsonProcessingException {
+        return objectMapper.readTree(jsonValue);
     }
 
     @ParameterType(value = "\\d+")
@@ -358,6 +374,34 @@ public class MetricStepDefinition {
         assertThat(value).isEqualTo(metaValue);
     }
 
+    @Then("指定執行日期 {baseDate}，來源資料使用 {sourceDateRange}，檢查 {metaType}，計算結果應為 {objectValue}")
+    public void checkObject(
+        LocalDate baseDate,
+        Class<? extends Source<? extends NhiMetricRawVM, ?>> sourceType,
+        Class<? extends MetaCalculator<?>> metaType,
+        JsonNode expectedValue) throws Exception {
+
+        MetricConfig metricConfig = getMetricConfig(baseDate);
+        Source<? extends NhiMetricRawVM, ?> sourceInstance = toSourceInstance(sourceType, metricConfig);
+        Calculator<?> metaCalculatorInstance = toMetaInstance(metaType, metricConfig, sourceInstance);
+        Meta<?> result = (Meta<?>) metaCalculatorInstance.calculate();
+        JsonNode resultJsonNode = objectMapper.valueToTree(result.value());
+        Iterator<Map.Entry<String, JsonNode>> fields = expectedValue.fields();
+
+        while (fields.hasNext()) {
+            Map.Entry<String, JsonNode> fieldEntry = fields.next();
+            String key = fieldEntry.getKey();
+            String value = fieldEntry.getValue().asText();
+            assertThat(resultJsonNode.has(key)).isTrue();
+
+            if (resultJsonNode.get(key).isNumber()) {
+                assertThat(resultJsonNode.get(key).decimalValue()).isEqualTo(new BigDecimal(value));
+            } else {
+                assertThat(resultJsonNode.get(key).asText()).isEqualTo(value);
+            }
+        }
+    }
+
     @Then("指定執行日期 {baseDate}，補牙時間範圍 {sourceDateRange}／重補時間範圍 {sourceDateRange}，檢查 {metaType}，計算結果數值應為 {metaValue}")
     @Then("指定執行日期 {baseDate}，拔牙時間範圍 {sourceDateRange}／根管與補牙時間範圍 {sourceDateRange}，檢查 {metaType}，計算結果數值應為 {metaValue}")
     public void checkOdRe(
@@ -412,9 +456,7 @@ public class MetricStepDefinition {
 
         Map<LocalDate, Long> actualDailyValue = meta.value();
 
-        expectedDailyValue.entrySet().forEach(entry -> {
-            LocalDate date = entry.getKey();
-            Long expectedValue = entry.getValue();
+        expectedDailyValue.forEach((date, expectedValue) -> {
             Long actualValue = actualDailyValue.get(date);
 
             assertThat(actualValue).isNotNull();

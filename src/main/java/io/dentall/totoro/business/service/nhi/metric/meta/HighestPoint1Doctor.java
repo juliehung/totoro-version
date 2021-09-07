@@ -25,7 +25,11 @@ import static java.util.Optional.ofNullable;
 public class HighestPoint1Doctor extends SingleSourceMetaCalculator<HighestDoctorDto> {
 
     public HighestPoint1Doctor(MetricConfig metricConfig, Source<?, ?> source) {
-        super(metricConfig, source);
+        this(metricConfig, null, source);
+    }
+
+    public HighestPoint1Doctor(MetricConfig metricConfig, MetaConfig metaConfig, Source<?, ?> source) {
+        super(metricConfig, metaConfig, source);
     }
 
     @Override

@@ -9,8 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.stream.Collectors.groupingBy;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.calculatePt;
 
 /**
  * 每天申報件數
@@ -21,7 +20,11 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 public class Ic3ByDaily extends SingleSourceMetaCalculator<Map<LocalDate, Long>> {
 
     public Ic3ByDaily(MetricConfig metricConfig, Source<?, ?> source) {
-        super(metricConfig, source);
+        this(metricConfig, null, source);
+    }
+
+    public Ic3ByDaily(MetricConfig metricConfig, MetaConfig metaConfig, Source<?, ?> source) {
+        super(metricConfig, metaConfig, source);
     }
 
     @Override
@@ -32,11 +35,7 @@ public class Ic3ByDaily extends SingleSourceMetaCalculator<Map<LocalDate, Long>>
             (map, entry) -> {
                 LocalDate date = entry.getKey();
                 List<NhiMetricRawVM> sourceByDate = entry.getValue();
-                Long value = (long) sourceByDate.stream()
-                    .filter(vm -> vm.getDisposalDate() != null && isNotBlank(vm.getCardNumber()))
-                    .map(vm -> vm.getDisposalDate() + vm.getCardNumber())
-                    .collect(groupingBy(key -> key))
-                    .keySet().size();
+                Long value = sourceByDate.stream().reduce(0L, calculatePt(), Long::sum);
                 map.put(date, value);
                 return map;
             },
