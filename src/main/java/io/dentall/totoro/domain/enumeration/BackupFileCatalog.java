@@ -5,6 +5,7 @@ public enum BackupFileCatalog {
     DAY_UPLOAD_XML("day-upload-xml", "day-upload-xml", "text/xml"),
     MONTH_DECLARE_XML("month-declare-xml", "month-declare-xml",  "text/xml"),
     MONTH_DECLARE_RULE_CHECK_REPORT("month-declare-rule-check-report", "month-declare-rule-check-report",  "text/csv"),
+    NHI_METRIC_REPORT("nhi-metric-report", "nhi-metric-report",  "application/vnd.ms-excel"),
     ;
 
     private String urlPath;
