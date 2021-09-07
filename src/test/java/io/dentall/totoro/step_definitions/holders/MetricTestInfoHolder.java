@@ -21,6 +21,8 @@ public class MetricTestInfoHolder {
 
     private List<Patient> patients = new ArrayList<>();
 
+    private List<User> doctors = new ArrayList<>();
+
     private List<? extends NhiMetricRawVM> source;
 
     private MetaConfig metaConfig = new MetaConfig();

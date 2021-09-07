@@ -6,7 +6,7 @@ Feature: Exclude 89013C
         Given 設定病人 Jerry 24 歲
         When 設定指標資料
             | DisposalId | DisposalDate | ExamCode | ExamPoint | Code   | Point | OriginPoint | Tooth | Surface | SpecificCode | CardNumber | NhiCategory | DoctorName | PatientName | PartialBurden | PatientIdentity | SerialNumber |
-            | 1          | 2020-05-01   | 00315C   | 635       | 89110C | 1000  | 1000        | 11    | MOD     | OTHER        | 001        |             |            | Jerry       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89110C | 1000  | 1000        | 11    | MOD     | OTHER        | 001        |             |            | Jerry       | 50            |                 |              |
         And 設定排除 N89013C
         Then 指定執行日期 2020-05-01，來源資料使用 MonthSelectedSource，預期筆數應為 1
 
@@ -15,7 +15,7 @@ Feature: Exclude 89013C
         Given 設定病人 Jerry 24 歲
         When 設定指標資料
             | DisposalId | DisposalDate | ExamCode | ExamPoint | Code   | Point | OriginPoint | Tooth | Surface | SpecificCode | CardNumber | NhiCategory | DoctorName | PatientName | PartialBurden | PatientIdentity | SerialNumber |
-            | 1          | 2020-05-01   | 00315C   | 635       | 89013C | 1000  | 1000        | 11    | MOD     | OTHER        | 001        |             |            | Jerry       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89013C | 1000  | 1000        | 11    | MOD     | OTHER        | 001        |             |            | Jerry       | 50            |                 |              |
         And 設定排除 N89013C
         Then 指定執行日期 2020-05-01，來源資料使用 MonthSelectedSource，預期筆數應為 0
 
