@@ -31,14 +31,6 @@ public class NhiRuleCheckScript96XXXC {
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isAllLimitedTooth(
-                dto,
-                ToothConstraint.DECIDUOUS_TOOTH_AND_PERMANENT_WEIRD_TOOTH
-            ),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDateV2(
                 dto,
                 null,
