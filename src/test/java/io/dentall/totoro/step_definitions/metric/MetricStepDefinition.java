@@ -19,6 +19,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.config.TimeConfig;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.User;
+import io.dentall.totoro.service.NhiMetricServiceTest;
 import io.dentall.totoro.step_definitions.holders.MetricTestInfoHolder;
 import io.dentall.totoro.test.mapper.MetricTestMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @CucumberContextConfiguration
-@ContextConfiguration(classes = {MetricTestInfoHolder.class, TimeConfig.class}, initializers = MetricStepDefinition.Initializer.class)
+@ContextConfiguration(classes = {NhiMetricServiceTest.class, MetricTestInfoHolder.class, TimeConfig.class}, initializers = MetricStepDefinition.Initializer.class)
 public class MetricStepDefinition {
 
     private final ObjectMapper objectMapper = new ObjectMapper()
@@ -68,6 +69,9 @@ public class MetricStepDefinition {
 
     @Autowired
     private MetricTestInfoHolder metricTestInfoHolder;
+
+    @Autowired
+    private NhiMetricServiceTest nhiMetricService;
 
     private final String metaClassPackage = "io.dentall.totoro.business.service.nhi.metric.meta";
 
@@ -497,4 +501,8 @@ public class MetricStepDefinition {
         return parameterizedType.getActualTypeArguments();
     }
 
+    @Then("載入指定檔案資料集")
+    public void loadDataSet1() {
+        metricTestInfoHolder.setSource(nhiMetricService.loadDataSet());
+    }
 }
