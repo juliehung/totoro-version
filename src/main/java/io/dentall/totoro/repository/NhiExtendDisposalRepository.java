@@ -712,6 +712,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "         left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
             "         where  a.patient_id = :patientId " +
             "         and    netp.a73 in (:codes) " +
+            "         and    d.id not in (:excludeDisposalIds) " +
             "         and    trim(ned.a18) <> '' " +
             "         and    tp.nhi_procedure_id is not null " +
             "     ) " +
@@ -733,7 +734,6 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "where sys_records.recordDateTime is null " +
             "    and sum_records.recordDateTime is not null " +
             "    and sum_records.code is not null " +
-            "    and sum_records.disposalId not in (:excludeDisposalIds) " +
             "order by sum_records.recordDateTime desc "
     )
     List<NhiHybridRecord> findNhiHybridRecord(
@@ -771,6 +771,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "         left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
             "         left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
             "         where  a.patient_id = :patientId " +
+            "         and    d.id not in (:excludeDisposalIds) " +
             "         and    trim(ned.a18) <> '' " +
             "         and    tp.nhi_procedure_id is not null " +
             "     ) " +
@@ -792,7 +793,6 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "where sys_records.recordDateTime is null " +
             "    and sum_records.recordDateTime is not null " +
             "    and sum_records.code is not null " +
-            "    and sum_records.disposalId not in (:excludeDisposalIds) " +
             "order by sum_records.recordDateTime desc "
     )
     List<NhiHybridRecord> findNhiHybridRecord(
