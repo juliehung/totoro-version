@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousReToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
@@ -26,9 +26,9 @@ import static java.math.BigDecimal.ZERO;
  */
 public class L26Formula extends AbstractFormula<BigDecimal> {
 
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odQuarterSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odQuarterSource;
 
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odTwoYearNearSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odTwoYearNearSource;
 
     public L26Formula(MetricConfig metricConfig) {
         super(metricConfig);

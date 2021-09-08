@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.source;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 
 import java.util.List;
 import java.util.Map;
@@ -9,16 +9,16 @@ import java.util.stream.Stream;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.groupingBy;
 
-public class OdOneYearNearByPatientSource extends AbstractSource<OdDto, Map<Long, Map<String, List<OdDto>>>> {
+public class OdOneYearNearByPatientSource extends AbstractSource<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> {
 
     public OdOneYearNearByPatientSource(MetricConfig metricConfig) {
         super(new OdOneYearNearSource(metricConfig));
     }
 
     @Override
-    public List<Map<Long, Map<String, List<OdDto>>>> doFilter(Stream<OdDto> source) {
+    public List<Map<Long, Map<String, List<MetricTooth>>>> doFilter(Stream<MetricTooth> source) {
         return singletonList(source
-            .collect(groupingBy(OdDto::getPatientId, groupingBy(OdDto::getTreatmentProcedureTooth))));
+            .collect(groupingBy(MetricTooth::getPatientId, groupingBy(MetricTooth::getTreatmentProcedureTooth))));
     }
 
 }

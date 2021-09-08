@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1ReToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1ToothCount;
 import io.dentall.totoro.business.service.nhi.metric.source.*;
@@ -23,11 +23,11 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.to
  */
 public class K7Formula extends AbstractFormula<BigDecimal> {
 
-    private final Source<NhiMetricRawVM, OdDto> odSource;
+    private final Source<NhiMetricRawVM, MetricTooth> odSource;
 
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odByPatientSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odByPatientSource;
 
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odPastByPatientSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odPastByPatientSource;
 
     public K7Formula(MetricConfig metricConfig) {
         super(metricConfig);

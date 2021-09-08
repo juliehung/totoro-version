@@ -20,7 +20,11 @@ import static java.util.Optional.ofNullable;
 public class SpecialTreatment extends SingleSourceMetaCalculator<SpecialTreatmentAnalysisDto> {
 
     public SpecialTreatment(MetricConfig metricConfig, Source<?, ?> source) {
-        super(metricConfig, source);
+        this(metricConfig, null, source);
+    }
+
+    public SpecialTreatment(MetricConfig metricConfig, MetaConfig metaConfig, Source<?, ?> source) {
+        super(metricConfig, metaConfig, source);
     }
 
     @Override

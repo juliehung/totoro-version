@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
@@ -38,35 +38,35 @@ public class OdDeciduousReToothCount extends AbstractMetaCalculator<Long> {
 
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
-        List<Map<Long, Map<String, List<OdDto>>>> odSource = metricConfig.retrieveSource(this.odSource.key());
-        List<Map<Long, Map<String, List<OdDto>>>> odPastSource = metricConfig.retrieveSource(this.odPastSource.key());
-        Map<Long, Map<String, List<OdDto>>> odSourceMap = odSource.get(0);
-        Map<Long, Map<String, List<OdDto>>> odPastSourceMap = odPastSource.get(0);
+        List<Map<Long, Map<String, List<MetricTooth>>>> odSource = metricConfig.retrieveSource(this.odSource.key());
+        List<Map<Long, Map<String, List<MetricTooth>>>> odPastSource = metricConfig.retrieveSource(this.odPastSource.key());
+        Map<Long, Map<String, List<MetricTooth>>> odSourceMap = odSource.get(0);
+        Map<Long, Map<String, List<MetricTooth>>> odPastSourceMap = odPastSource.get(0);
 
         return odSourceMap.entrySet().stream()
             .filter(entry -> odPastSourceMap.get(entry.getKey()) != null && odPastSourceMap.get(entry.getKey()).size() > 0)
             .mapToLong(entry -> {
                 Long patientId = entry.getKey();
-                Map<String, List<OdDto>> odToothMap = entry.getValue();
-                Map<String, List<OdDto>> odToothPastMap = odPastSourceMap.get(patientId);
+                Map<String, List<MetricTooth>> odToothMap = entry.getValue();
+                Map<String, List<MetricTooth>> odToothPastMap = odPastSourceMap.get(patientId);
 
                 // 該季中如果同顆牙有多次，則取最後一次
-                Map<String, Optional<OdDto>> odMap = odToothMap.values().stream()
+                Map<String, Optional<MetricTooth>> odMap = odToothMap.values().stream()
                     .flatMap(Collection::stream)
-                    .collect(groupingBy(OdDto::getTreatmentProcedureTooth, maxBy(comparing(OdDto::getDisposalDate))));
+                    .collect(groupingBy(MetricTooth::getTreatmentProcedureTooth, maxBy(comparing(MetricTooth::getDisposalDate))));
 
                 return odMap.entrySet().stream()
                     .filter(entryOd -> entryOd.getValue().isPresent())
                     .filter(entryOd -> odToothPastMap.get(entryOd.getKey()) != null)
                     .filter(entryOd -> {
-                        OdDto odDto = entryOd.getValue().get();
-                        Iterator<OdDto> existReDtoItor = odToothPastMap.get(entryOd.getKey()).stream()
+                        MetricTooth metricTooth = entryOd.getValue().get();
+                        Iterator<MetricTooth> existReDtoItor = odToothPastMap.get(entryOd.getKey()).stream()
                             .iterator();
                         boolean found = false;
 
                         while (existReDtoItor.hasNext() && !found) {
-                            OdDto reDoDto = existReDtoItor.next();
-                            long days = DAYS.between(reDoDto.getDisposalDate(), odDto.getDisposalDate());
+                            MetricTooth reDoDto = existReDtoItor.next();
+                            long days = DAYS.between(reDoDto.getDisposalDate(), metricTooth.getDisposalDate());
                             if (days >= dayShiftBegin && days <= dayShiftEnd) {
                                 found = true;
                             }

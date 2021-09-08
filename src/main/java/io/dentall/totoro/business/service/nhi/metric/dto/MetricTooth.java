@@ -4,7 +4,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.time.LocalDate;
 
-public class OdDto implements NhiMetricRawVM {
+public class MetricTooth implements NhiMetricRawVM {
 
     private Long patientId;
 

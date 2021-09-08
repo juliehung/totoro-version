@@ -246,6 +246,28 @@ public class MetricStepDefinition {
             });
     }
 
+    @DataTableType
+    public Map<String, JsonNode> convertToJsonNodeMap(DataTable dataTable) {
+        List<Map<String, String>> datalist = dataTable.asMaps();
+        return datalist.stream().reduce(
+            new HashMap<>(),
+            (map, data) -> {
+                String fieldName = data.get("FieldName");
+                JsonNode value = null;
+                try {
+                    value = objectMapper.readTree(data.get("JsonValue"));
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+                map.put(fieldName, value);
+                return map;
+            },
+            (m1, m2) -> {
+                m1.putAll(m2);
+                return m1;
+            });
+    }
+
     private Calculator<?> toMetaInstance(
         Class<? extends MetaCalculator<?>> metaType,
         MetricConfig metricConfig,
@@ -404,6 +426,33 @@ public class MetricStepDefinition {
                 assertThat(resultJsonNode.get(key).asText()).isEqualTo(value);
             }
         }
+    }
+
+    @Then("指定執行日期 {baseDate}，來源資料使用 {sourceDateRange}，檢查 {metaType}，計算結果應為")
+    public void checkObjects(
+        LocalDate baseDate,
+        Class<? extends Source<? extends NhiMetricRawVM, ?>> sourceType,
+        Class<? extends MetaCalculator<?>> metaType,
+        Map<String, JsonNode> expectedValueMap) throws Exception {
+
+        MetricConfig metricConfig = getMetricConfig(baseDate);
+        Source<? extends NhiMetricRawVM, ?> sourceInstance = toSourceInstance(sourceType, metricConfig);
+        Calculator<?> metaCalculatorInstance = toMetaInstance(metaType, metricConfig, sourceInstance);
+        Meta<?> result = (Meta<?>) metaCalculatorInstance.calculate();
+        JsonNode resultJsonNode = objectMapper.valueToTree(result.value());
+
+        expectedValueMap.forEach((fieldName, expectedJsonNode) -> {
+            JsonNode jsonNode = resultJsonNode.findPath(fieldName);
+            assertThat(jsonNode.isMissingNode()).isFalse();
+            try {
+                String actual = objectMapper.writeValueAsString(jsonNode);
+                String expected = objectMapper.writeValueAsString(expectedJsonNode);
+                assertThat(fieldName + "=" + actual).isEqualTo(fieldName + "=" + expected);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        });
+
     }
 
     @Then("指定執行日期 {baseDate}，補牙時間範圍 {sourceDateRange}／重補時間範圍 {sourceDateRange}，檢查 {metaType}，計算結果數值應為 {metaValue}")

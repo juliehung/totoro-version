@@ -1,10 +1,9 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1Point;
 import io.dentall.totoro.business.service.nhi.metric.meta.Point1;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1ButPoint6Config;
-import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.MonthSelectedSource;
 import io.dentall.totoro.business.service.nhi.metric.source.OdMonthSelectedSource;
@@ -26,7 +25,7 @@ public class H3Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 
-    private final Source<OdDto, OdDto> odSource;
+    private final Source<MetricTooth, MetricTooth> odSource;
 
     public H3Formula(MetricConfig metricConfig) {
         super(metricConfig);

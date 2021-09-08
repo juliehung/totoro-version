@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1ReToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1ToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
@@ -25,11 +25,11 @@ import static java.math.BigDecimal.ZERO;
  */
 public class F5h3Formula extends AbstractFormula<BigDecimal> {
 
-    private final Source<NhiMetricRawVM, OdDto> odSource;
+    private final Source<NhiMetricRawVM, MetricTooth> odSource;
 
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odByPatientSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odByPatientSource;
 
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odPastByPatientSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odPastByPatientSource;
 
     public F5h3Formula(MetricConfig metricConfig) {
         super(metricConfig);

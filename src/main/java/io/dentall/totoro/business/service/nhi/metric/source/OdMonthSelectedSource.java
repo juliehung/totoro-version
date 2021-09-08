@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.source;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,7 +13,7 @@ import static java.util.stream.Collectors.toList;
 /**
  * date-15 月(自選案件)
  */
-public class OdMonthSelectedSource extends OdSource<OdDto> {
+public class OdMonthSelectedSource extends OdSource<MetricTooth> {
 
     private final LocalDate begin;
 
@@ -27,7 +27,7 @@ public class OdMonthSelectedSource extends OdSource<OdDto> {
     }
 
     @Override
-    public List<OdDto> doFilter(Stream<OdDto> source) {
+    public List<MetricTooth> doFilter(Stream<MetricTooth> source) {
         return source
             .filter(dto ->
                 begin.isEqual(dto.getDisposalDate())
