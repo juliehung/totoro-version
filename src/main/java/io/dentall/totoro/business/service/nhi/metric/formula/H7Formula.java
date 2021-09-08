@@ -36,7 +36,7 @@ public class H7Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro1ButPoint6Config config = new Tro1ButPoint6Config(metricConfig);
+        Tro1ButPoint6Config config = new Tro1ButPoint6Config();
         Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, config, odSource).apply();
         Pt1 pt1 = new Pt1(metricConfig, config, source).apply();
         try {

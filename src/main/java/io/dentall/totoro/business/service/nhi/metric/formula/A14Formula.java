@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.NhiCategory_SpecificCode_Group1;
-import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ZERO;
 
@@ -43,7 +42,7 @@ public class A14Formula extends AbstractFormula<BigDecimal> {
         OdPermanentReToothCount odPermanentReTreatment =
             new OdPermanentReToothCount(metricConfig, odQuarterSource, odTwoYearNearSource, 1, 730).apply();
         try {
-            return toPercentage(divide(odPermanentReTreatment.getResult(), odPermanentTreatment.getResult()));
+            return toPercentage(odPermanentReTreatment.getResult(), odPermanentTreatment.getResult());
         } catch (ArithmeticException e) {
             return ZERO;
         }

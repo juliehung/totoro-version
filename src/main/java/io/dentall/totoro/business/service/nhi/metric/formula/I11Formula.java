@@ -30,7 +30,7 @@ public class I11Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro1Config config = new Tro1Config(metricConfig);
+        Tro1Config config = new Tro1Config();
         Point1 point1 = new Point1(metricConfig, config, source).apply();
         Endo1Point endo1Point = new Endo1Point(metricConfig, config, source).apply();
         try {

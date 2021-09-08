@@ -19,7 +19,11 @@ import static java.util.stream.Collectors.maxBy;
 public class CourseCase extends SingleSourceMetaCalculator<Long> {
 
     public CourseCase(MetricConfig metricConfig, Source<?, ?> source) {
-        super(metricConfig, source);
+        this(metricConfig, null, source);
+    }
+
+    public CourseCase(MetricConfig metricConfig, MetaConfig metaConfig, Source<?, ?> source) {
+        super(metricConfig, metaConfig, source);
     }
 
     @Override

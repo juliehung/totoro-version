@@ -12,7 +12,6 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import java.math.BigDecimal;
 
 import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro1;
-import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ZERO;
 
@@ -33,11 +32,11 @@ public class I6Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro1Config config = new Tro1Config(metricConfig);
+        Tro1Config config = new Tro1Config();
         Od1Pt1 od1Pt1 = new Od1Pt1(metricConfig, config, source).apply();
         Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, config, source).apply();
         try {
-            return toPercentage(divide(od1ToothCount.getResult(), od1Pt1.getResult()));
+            return toPercentage(od1ToothCount.getResult(), od1Pt1.getResult());
         } catch (ArithmeticException e) {
             return ZERO;
         }

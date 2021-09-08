@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro1;
-import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ZERO;
 
@@ -40,12 +39,12 @@ public class L35Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro1Config config = new Tro1Config(metricConfig);
+        Tro1Config config = new Tro1Config();
         OdPermanentToothCount odPermanentToothCount = new OdPermanentToothCount(metricConfig, config, odQuarterSource).apply();
         OdPermanentReToothCount odPermanentReToothCount =
             new OdPermanentReToothCount(metricConfig, config, odQuarterSource, odThreeYearNearSource, 1, 1095).apply();
         try {
-            return toPercentage(divide(odPermanentReToothCount.getResult(), odPermanentToothCount.getResult()));
+            return toPercentage(odPermanentReToothCount.getResult(), odPermanentToothCount.getResult());
         } catch (ArithmeticException e) {
             return ZERO;
         }

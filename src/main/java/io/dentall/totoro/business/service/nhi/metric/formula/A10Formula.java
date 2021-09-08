@@ -26,7 +26,7 @@ public class A10Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro5Config config = new Tro5Config(metricConfig);
+        Tro5Config config = new Tro5Config();
         Point2 point2 = new Point2(metricConfig, config, source).apply();
         return new BigDecimal(point2.getResult());
     }

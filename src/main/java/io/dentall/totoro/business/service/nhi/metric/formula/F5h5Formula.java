@@ -30,7 +30,7 @@ public class F5h5Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro1Config config = new Tro1Config(metricConfig);
+        Tro1Config config = new Tro1Config();
         Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, config, source).apply();
         Od1Pt2 od1Pt2 = new Od1Pt2(metricConfig, config, source).apply();
         try {

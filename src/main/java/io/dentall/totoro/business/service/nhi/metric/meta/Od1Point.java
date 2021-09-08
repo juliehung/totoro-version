@@ -34,7 +34,7 @@ public class Od1Point extends SingleSourceMetaCalculator<Long> {
             // 因為資料是從Treatment層級，依牙齒切成多筆，所以需要先依 disposalId + code + treatmentSeq 做 group
             .collect(groupingBy(dto -> dto.getDisposalId() + dto.getTreatmentProcedureCode() + dto.getTreatmentSeq(), maxBy(comparing(MetricTooth::getDisposalId))))
             .values().stream().filter(Optional::isPresent).map(Optional::get)
-            .mapToLong(dto -> applyNewTreatmentPoint(dto, config))
+            .mapToLong(dto -> applyNewTreatmentPoint(dto, config, metricConfig.getHolidayMap()))
             .sum();
     }
 

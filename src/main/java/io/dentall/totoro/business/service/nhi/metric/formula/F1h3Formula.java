@@ -30,7 +30,7 @@ public class F1h3Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro1Config config = new Tro1Config(metricConfig);
+        Tro1Config config = new Tro1Config();
         Od1Point od1Point = new Od1Point(metricConfig, config, source).apply();
         Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, config, source).apply();
         try {

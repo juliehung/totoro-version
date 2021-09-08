@@ -17,6 +17,7 @@ import io.dentall.totoro.business.service.nhi.metric.meta.*;
 import io.dentall.totoro.business.service.nhi.metric.source.*;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.config.TimeConfig;
+import io.dentall.totoro.domain.Holiday;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.service.NhiMetricServiceTest;
@@ -34,10 +35,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS;
@@ -45,8 +43,9 @@ import static com.fasterxml.jackson.databind.node.JsonNodeFactory.withExactBigDe
 import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstants.CLINIC;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -74,6 +73,8 @@ public class MetricStepDefinition {
     private NhiMetricServiceTest nhiMetricService;
 
     private final String metaClassPackage = "io.dentall.totoro.business.service.nhi.metric.meta";
+
+    private final String formulaClassPackage = "io.dentall.totoro.business.service.nhi.metric.formula";
 
     private final String sourceClassPackage = "io.dentall.totoro.business.service.nhi.metric.source";
 
@@ -168,6 +169,11 @@ public class MetricStepDefinition {
         return (Class<? extends MetaCalculator<?>>) Class.forName(metaClassPackage + "." + value);
     }
 
+    @ParameterType(value = ".+Formula")
+    public Class<? extends Calculator<?>> formulaType(String value) throws ClassNotFoundException {
+        return (Class<? extends Calculator<?>>) Class.forName(formulaClassPackage + "." + value);
+    }
+
     @ParameterType(value = "\\{.+\\}")
     public JsonNode objectValue(String jsonValue) throws JsonProcessingException {
         return objectMapper.readTree(jsonValue);
@@ -176,6 +182,11 @@ public class MetricStepDefinition {
     @ParameterType(value = "\\d+")
     public long metaValue(String value) {
         return Long.parseLong(value);
+    }
+
+    @ParameterType(value = "[\\d\\.]+")
+    public BigDecimal metricValue(String value) {
+        return new BigDecimal(value);
     }
 
     @ParameterType(value = "\\d+")
@@ -268,6 +279,12 @@ public class MetricStepDefinition {
             });
     }
 
+    private Calculator<?> toFormulaInstance(
+        Class<? extends Calculator<?>> formulaType,
+        MetricConfig metricConfig) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        return formulaType.getDeclaredConstructor(MetricConfig.class).newInstance(metricConfig);
+    }
+
     private Calculator<?> toMetaInstance(
         Class<? extends MetaCalculator<?>> metaType,
         MetricConfig metricConfig,
@@ -318,7 +335,9 @@ public class MetricStepDefinition {
     private MetricConfig getMetricConfig(LocalDate date) {
         User subject = metricTestInfoHolder.getSubject();
         List<? extends NhiMetricRawVM> source = metricTestInfoHolder.getSource();
-        return new MetricConfig(subject, date, source);
+        Map<LocalDate, Optional<Holiday>> holidayMap =
+            nhiMetricService.loadHolidayDataSet().stream().collect(groupingBy(Holiday::getDate, maxBy(comparing(Holiday::getDate))));
+        return new MetricConfig(subject, date, source).applyHolidayMap(holidayMap);
     }
 
     @Given("設定使用00121C點數計算")
@@ -339,6 +358,24 @@ public class MetricStepDefinition {
         metaConfig.setIncludePoint6By12MPoints(true);
     }
 
+    @Given("使用原始點數計算")
+    public void setUseOriginPoint() {
+        MetaConfig metaConfig = metricTestInfoHolder.getMetaConfig();
+        metaConfig.setUseOriginPoint(true);
+    }
+
+    @Given("排除國定假日點數")
+    public void setExcludeHolidayPoint() {
+        MetaConfig metaConfig = metricTestInfoHolder.getMetaConfig();
+        metaConfig.setExcludeHolidayPoint(true);
+    }
+
+    @Given("國定假日排除點數上限20,000點")
+    public void setExclude20000Point1ByDay() {
+        MetaConfig metaConfig = metricTestInfoHolder.getMetaConfig();
+        metaConfig.setExclude20000Point1ByDay(true);
+    }
+
     @And("設定排除 {word}")
     public void setExclude(String text) {
         Exclude exclude = Exclude.valueOf(text);
@@ -349,6 +386,14 @@ public class MetricStepDefinition {
     public void createSubject(String doctorName) {
         User subject = new User();
         subject.setId(0L);
+        subject.setFirstName(doctorName);
+        metricTestInfoHolder.setSubject(subject);
+    }
+
+    @Given("設定指標主體類型為醫師 {word} id {word}")
+    public void createSubject(String doctorName, String id) {
+        User subject = new User();
+        subject.setId(Long.parseLong(id));
         subject.setFirstName(doctorName);
         metricTestInfoHolder.setSubject(subject);
     }
@@ -380,8 +425,21 @@ public class MetricStepDefinition {
     }
 
     @When("設定指標資料")
-    public void checkExam1(List<? extends NhiMetricRawVM> source) {
+    public void setupSource(List<? extends NhiMetricRawVM> source) {
         metricTestInfoHolder.setSource(source);
+    }
+
+    @Then("指定執行日期 {baseDate}，檢查指標 {formulaType}，計算結果數值應為 {metricValue}")
+    public void checkFormula(
+        LocalDate baseDate,
+        Class<? extends Calculator<?>> formulaType,
+        BigDecimal expectedMetricValue) throws Exception {
+
+        MetricConfig metricConfig = getMetricConfig(baseDate);
+        Calculator<?> formulaInstance = toFormulaInstance(formulaType, metricConfig);
+        BigDecimal result = (BigDecimal) formulaInstance.calculate();
+
+        assertThat(result).isEqualTo(expectedMetricValue);
     }
 
     @Then("指定執行日期 {baseDate}，來源資料使用 {sourceDateRange}，檢查 {metaType}，計算結果數值應為 {metaValue}")
@@ -476,8 +534,18 @@ public class MetricStepDefinition {
         assertThat(value).isEqualTo(metaValue);
     }
 
+    @Then("指定執行日期 {baseDate}，來源資料使用 {sourceDateRange}／醫令 {treatment}，檢查 {metaType}，計算結果數值應為 {metaValue}")
+    public void checkTreatmentCount(
+        LocalDate baseDate,
+        Class<? extends Source<? extends NhiMetricRawVM, ?>> sourceType,
+        String treatment,
+        Class<? extends MetaCalculator<?>> metaType,
+        long metaValue) throws Exception {
+        checkTreatmentAndAgeCount(baseDate, sourceType, treatment, new AgeRage(), metaType, metaValue);
+    }
+
     @Then("指定執行日期 {baseDate}，來源資料使用 {sourceDateRange}／醫令 {treatment}／年齡 {ageRange}，檢查 {metaType}，計算結果數值應為 {metaValue}")
-    public void checkTreatmentAndAge(
+    public void checkTreatmentAndAgeCount(
         LocalDate baseDate,
         Class<? extends Source<? extends NhiMetricRawVM, ?>> sourceType,
         String treatment,
@@ -550,8 +618,8 @@ public class MetricStepDefinition {
         return parameterizedType.getActualTypeArguments();
     }
 
-    @Then("載入指定檔案資料集")
-    public void loadDataSet1() {
-        metricTestInfoHolder.setSource(nhiMetricService.loadDataSet());
+    @Then("載入指定檔案資料集 {word}")
+    public void loadDataSet(String filePath) {
+        metricTestInfoHolder.setSource(nhiMetricService.loadDataSet(filePath));
     }
 }

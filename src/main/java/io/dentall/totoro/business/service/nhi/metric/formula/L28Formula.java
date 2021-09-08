@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ZERO;
 
@@ -39,7 +38,7 @@ public class L28Formula extends AbstractFormula<BigDecimal> {
         OdDeciduousToothCount odDeciduousToothCount = new OdDeciduousToothCount(metricConfig, odQuarterSource).apply();
         OdDeciduousReToothCount odDeciduousReToothCount = new OdDeciduousReToothCount(metricConfig, odQuarterSource, odTwoYearNearSource, 366, 730).apply();
         try {
-            return toPercentage(divide(odDeciduousReToothCount.getResult(), odDeciduousToothCount.getResult()));
+            return toPercentage(odDeciduousReToothCount.getResult(), odDeciduousToothCount.getResult());
         } catch (ArithmeticException e) {
             return ZERO;
         }

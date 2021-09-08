@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro1;
-import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ZERO;
 
@@ -43,11 +42,11 @@ public class F5h3Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro1Config config = new Tro1Config(metricConfig);
+        Tro1Config config = new Tro1Config();
         Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, config, odSource).apply();
         Od1ReToothCount odReTreatment = new Od1ReToothCount(metricConfig, config, odByPatientSource, odPastByPatientSource, 1, 1095).apply();
         try {
-            return toPercentage(divide(odReTreatment.getResult(), od1ToothCount.getResult()));
+            return toPercentage(odReTreatment.getResult(), od1ToothCount.getResult());
         } catch (ArithmeticException e) {
             return ZERO;
         }

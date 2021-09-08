@@ -12,7 +12,6 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import java.math.BigDecimal;
 
 import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.NhiCategory1416;
-import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ZERO;
 
@@ -40,7 +39,7 @@ public class A9Formula extends AbstractFormula<BigDecimal> {
         Od1Point od1Point = new Od1Point(metricConfig, odSource).apply();
         Point1 point1 = new Point1(metricConfig, source).apply();
         try {
-            return toPercentage(divide(od1Point.getResult(), point1.getResult()));
+            return toPercentage(od1Point.getResult(), point1.getResult());
         } catch (ArithmeticException e) {
             return ZERO;
         }

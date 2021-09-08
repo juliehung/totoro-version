@@ -13,7 +13,6 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import java.math.BigDecimal;
 
 import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro1;
-import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 
 /**
@@ -37,11 +36,11 @@ public class H3Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro1ButPoint6Config config = new Tro1ButPoint6Config(metricConfig);
+        Tro1ButPoint6Config config = new Tro1ButPoint6Config();
         Od1Point od1Point = new Od1Point(metricConfig, config, odSource).apply();
         Point1 point1 = new Point1(metricConfig, config, source).apply();
         try {
-            return toPercentage(divide(od1Point.getResult(), point1.getResult()));
+            return toPercentage(od1Point.getResult(), point1.getResult());
         } catch (ArithmeticException e) {
             return BigDecimal.ZERO;
         }

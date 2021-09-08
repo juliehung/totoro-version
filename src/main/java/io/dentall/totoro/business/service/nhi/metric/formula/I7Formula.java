@@ -31,7 +31,7 @@ public class I7Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro1Config config = new Tro1Config(metricConfig);
+        Tro1Config config = new Tro1Config();
         Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, config, source).apply();
         Od456SurfaceCount od456SurfaceCount = new Od456SurfaceCount(metricConfig, config, source).apply();
         try {

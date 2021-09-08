@@ -121,14 +121,14 @@ public class NhiMetricHelper {
         return examPoint;
     }
 
-    public static Long applyNewTreatmentPoint(NhiMetricRawVM vm, MetaConfig config) {
+    public static Long applyNewTreatmentPoint(NhiMetricRawVM vm, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
         Long point = vm.getTreatmentProcedureTotal();
 
         if (config.isUseOriginPoint()) {
             point = vm.getNhiOriginPoint();
         }
 
-        if (config.isExcludeHolidayPoint() && isHoliday(vm.getDisposalDate(), config.getHolidayMap())) {
+        if (config.isExcludeHolidayPoint() && isHoliday(vm.getDisposalDate(), holidayMap)) {
             // 國定假日無論有無放假，都要扣除健保代碼點數
             point = 0L;
         }
@@ -141,7 +141,7 @@ public class NhiMetricHelper {
     }
 
     public static boolean isHoliday(LocalDate date, Map<LocalDate, Optional<Holiday>> holidayMap) {
-        return ofNullable(holidayMap.get(date)).map(Optional::isPresent).orElse(false);
+        return ofNullable(holidayMap).map(map -> map.get(date)).map(Optional::isPresent).orElse(false);
     }
 
     public static Predicate<NhiMetricRawVM> applyExcludeByVM(Exclude exclude) {

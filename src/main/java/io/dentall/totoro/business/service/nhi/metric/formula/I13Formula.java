@@ -29,7 +29,7 @@ public class I13Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro1Config config = new Tro1Config(metricConfig);
+        Tro1Config config = new Tro1Config();
         Ic1 ic1 = new Ic1(metricConfig, config, source).apply();
         Pt1 pt1 = new Pt1(metricConfig, config, source).apply();
         try {

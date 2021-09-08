@@ -10,9 +10,12 @@ import java.util.Set;
 
 public class Point2ByDaily extends SingleSourceMetaCalculator<Map<LocalDate, Long>> {
 
-
     public Point2ByDaily(MetricConfig metricConfig, Source<?, ?> source) {
-        super(metricConfig, source);
+        this(metricConfig, null, source);
+    }
+
+    public Point2ByDaily(MetricConfig metricConfig, MetaConfig metaConfig, Source<?, ?> source) {
+        super(metricConfig, metaConfig, source);
     }
 
     @Override

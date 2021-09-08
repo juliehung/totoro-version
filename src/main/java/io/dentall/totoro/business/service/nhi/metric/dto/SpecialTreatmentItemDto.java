@@ -42,7 +42,7 @@ public class SpecialTreatmentItemDto {
 
     public void calculatePercentageOfCaseCount(int totalCaseNumber) {
         try {
-            percentageOfCaseCount = toPercentage(divide(caseCount, totalCaseNumber));
+            percentageOfCaseCount = toPercentage(caseCount, totalCaseNumber);
         } catch (ArithmeticException e) {
             percentageOfCaseCount = BigDecimal.ZERO;
         }
@@ -54,7 +54,7 @@ public class SpecialTreatmentItemDto {
 
     public void calculatePercentageOfPoints(Long totalPoints) {
         try {
-            percentageOfPoints = toPercentage(divide(points, totalPoints));
+            percentageOfPoints = toPercentage(points, totalPoints);
         } catch (ArithmeticException e) {
             percentageOfPoints = BigDecimal.ZERO;
         }

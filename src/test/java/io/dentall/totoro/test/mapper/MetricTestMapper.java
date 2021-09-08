@@ -1,6 +1,8 @@
 package io.dentall.totoro.test.mapper;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTreatment;
+import io.dentall.totoro.domain.Holiday;
+import io.dentall.totoro.dto.HolidayTestDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -129,4 +131,6 @@ public interface MetricTestMapper {
     default String toDoctorName(Map<String, String> map) {
         return map.get("DoctorName");
     }
+
+    Holiday mapToHoliday(HolidayTestDTO dto);
 }

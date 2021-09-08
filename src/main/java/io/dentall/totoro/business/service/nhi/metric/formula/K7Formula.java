@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro6;
-import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 
 /**
@@ -44,7 +43,7 @@ public class K7Formula extends AbstractFormula<BigDecimal> {
         Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, odSource).apply();
         Od1ReToothCount od1ReToothCount = new Od1ReToothCount(metricConfig, odByPatientSource, odPastByPatientSource, 731, 1095).apply();
         try {
-            return toPercentage(divide(od1ReToothCount.getResult(), od1ToothCount.getResult()));
+            return toPercentage(od1ReToothCount.getResult(), od1ToothCount.getResult());
         } catch (ArithmeticException e) {
             return BigDecimal.ZERO;
         }

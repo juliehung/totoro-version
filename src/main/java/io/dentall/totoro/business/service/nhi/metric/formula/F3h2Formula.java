@@ -35,7 +35,7 @@ public class F3h2Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro1Config config = new Tro1Config(metricConfig);
+        Tro1Config config = new Tro1Config();
         Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, config, odSource).apply();
         Pt2 pt2 = new Pt2(metricConfig, config, source).apply();
         try {

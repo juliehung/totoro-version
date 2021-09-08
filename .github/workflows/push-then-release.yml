@@ -47,6 +47,25 @@ jobs:
                 env:
                     SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/totoro
 
+    Metric-Test:
+        runs-on: ubuntu-18.04
+        container: openjdk:8-jdk-stretch
+        steps:
+            -   name: "Check out totoro admin"
+                uses: actions/checkout@v2
+            -   uses: actions/cache@v2
+                with:
+                    path: |
+                        ~/.gradle/caches
+                        ~/.gradle/wrapper
+                    key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+                    restore-keys: |
+                        ${{ runner.os }}-gradle-
+            -   name: "Grant execute permission for gradlew"
+                run: chmod +x gradlew
+            -   name: "Run Metric test"
+                run: ./gradlew cucumber_metric --no-daemon
+
     Props:
         runs-on: ubuntu-18.04
         if: ${{ startsWith(github.ref, 'refs/heads/') || startsWith(github.ref, 'refs/tags/') }}
@@ -74,7 +93,7 @@ jobs:
     Build-War:
         runs-on: ubuntu-18.04
         container: openjdk:8-jdk-stretch
-        needs: [ Regular-Test, Props ]
+        needs: [ Regular-Test, Metric-Test, Props ]
         if: ${{ startsWith(github.ref, 'refs/heads/') || startsWith(github.ref, 'refs/tags/') }}
         env:
             WAR_NAME: ${{ needs.Props.outputs.war-name }}

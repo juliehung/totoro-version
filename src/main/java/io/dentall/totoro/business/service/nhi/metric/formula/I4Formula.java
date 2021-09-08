@@ -32,7 +32,7 @@ public class I4Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro1Config config = new Tro1Config(metricConfig);
+        Tro1Config config = new Tro1Config();
         Od1Pt1 od1Pt1 = new Od1Pt1(metricConfig, config, source).apply();
         Od1Point endo1Point = new Od1Point(metricConfig, config, source).apply();
         try {

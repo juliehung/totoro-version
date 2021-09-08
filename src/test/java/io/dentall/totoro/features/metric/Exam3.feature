@@ -23,7 +23,6 @@ Feature: 符合牙醫門診加強感染管制實施方案之牙科門診診察�
 
     Scenario: 計算Exam3點數，使用00121C點數計算
         Given 設定指標主體類型為醫師 Stan
-        Given 設定使用00121C點數計算
         Given 設定病人 Jerry 24 歲
         When 設定指標資料
             | DisposalId | DisposalDate | ExamCode | ExamPoint | Code   | Point | OriginPoint | Tooth | Surface | SpecificCode | CardNumber | NhiCategory | PatientName | PartialBurden | PatientIdentity | SerialNumber |
@@ -37,6 +36,7 @@ Feature: 符合牙醫門診加強感染管制實施方案之牙科門診診察�
             |            | 2020-05-13   | 00312C   | 320       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
             |            | 2020-05-13   | 00313C   | 320       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
             |            | 2020-05-13   | 00314C   | 350       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
+        And 設定使用00121C點數計算
         Then 指定執行日期 2020-05-01，來源資料使用 MonthSelectedSource，檢查 Exam1，計算結果數值應為 0
         Then 指定執行日期 2020-05-01，來源資料使用 MonthSelectedSource，檢查 Exam2，計算結果數值應為 0
         Then 指定執行日期 2020-05-01，來源資料使用 MonthSelectedSource，檢查 Exam3，計算結果數值應為 2300
@@ -44,7 +44,6 @@ Feature: 符合牙醫門診加強感染管制實施方案之牙科門診診察�
 
     Scenario: 計算Exam3點數，排除山地離島診察費差額
         Given 設定指標主體類型為醫師 Stan
-        Given 設定排除山地離島診察費差額
         Given 設定病人 Jerry 24 歲
         When 設定指標資料
             | DisposalId | DisposalDate | ExamCode | ExamPoint | Code   | Point | OriginPoint | Tooth | Surface | SpecificCode | CardNumber | NhiCategory | PatientName | PartialBurden | PatientIdentity | SerialNumber |
@@ -58,6 +57,7 @@ Feature: 符合牙醫門診加強感染管制實施方案之牙科門診診察�
             |            | 2020-05-13   | 00312C   | 320       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
             |            | 2020-05-13   | 00313C   | 320       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
             |            | 2020-05-13   | 00314C   | 350       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
+        And 設定排除山地離島診察費差額
         Then 指定執行日期 2020-05-01，來源資料使用 MonthSelectedSource，檢查 Exam1，計算結果數值應為 0
         Then 指定執行日期 2020-05-01，來源資料使用 MonthSelectedSource，檢查 Exam2，計算結果數值應為 0
         Then 指定執行日期 2020-05-01，來源資料使用 MonthSelectedSource，檢查 Exam3，計算結果數值應為 3240

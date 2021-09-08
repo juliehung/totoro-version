@@ -17,7 +17,11 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper
 public class Pt1ByDaily extends SingleSourceMetaCalculator<Map<LocalDate, Long>> {
 
     public Pt1ByDaily(MetricConfig metricConfig, Source<?, ?> source) {
-        super(metricConfig, source);
+        this(metricConfig, null, source);
+    }
+
+    public Pt1ByDaily(MetricConfig metricConfig, MetaConfig metaConfig, Source<?, ?> source) {
+        super(metricConfig, metaConfig, source);
     }
 
     @Override

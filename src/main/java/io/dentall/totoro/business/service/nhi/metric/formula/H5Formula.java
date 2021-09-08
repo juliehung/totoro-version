@@ -1,7 +1,10 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
-import io.dentall.totoro.business.service.nhi.metric.meta.*;
+import io.dentall.totoro.business.service.nhi.metric.meta.Od1ToothCount;
+import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousReToothCount;
+import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentReToothCount;
+import io.dentall.totoro.business.service.nhi.metric.meta.Tro1ButPoint6Config;
 import io.dentall.totoro.business.service.nhi.metric.source.*;
 
 import java.math.BigDecimal;
@@ -36,7 +39,7 @@ public class H5Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro1ButPoint6Config config = new Tro1ButPoint6Config(metricConfig);
+        Tro1ButPoint6Config config = new Tro1ButPoint6Config();
         Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, config, odMonthSelectedSource).apply();
         OdDeciduousReToothCount odDeciduousToothCount =
             new OdDeciduousReToothCount(metricConfig, config, odMonthSelectedByPatientSource, odOneAndHalfYearByPatientSource, 1, 450).apply();

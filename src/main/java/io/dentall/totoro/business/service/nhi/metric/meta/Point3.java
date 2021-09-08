@@ -29,7 +29,7 @@ public class Point3 extends SingleSourceMetaCalculator<Long> {
 
         return nhiMetricRawVMList.stream()
             .filter(vm -> !isExaminationCodeAtSalary(vm.getTreatmentProcedureCode()))
-            .mapToLong(vm -> applyNewTreatmentPoint(vm, config))
+            .mapToLong(vm -> applyNewTreatmentPoint(vm, config, metricConfig.getHolidayMap()))
             .sum();
     }
 

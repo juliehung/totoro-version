@@ -36,7 +36,7 @@ public class Point3ByDaily extends SingleSourceMetaCalculator<Map<LocalDate, Lon
                 List<NhiMetricRawVM> sourceByDate = entry.getValue();
                 Long points = sourceByDate.stream()
                     .filter(vm -> !isExaminationCodeAtSalary(vm.getTreatmentProcedureCode()))
-                    .mapToLong(vm -> applyNewTreatmentPoint(vm, config))
+                    .mapToLong(vm -> applyNewTreatmentPoint(vm, config, metricConfig.getHolidayMap()))
                     .sum();
                 map.put(date, points);
                 return map;

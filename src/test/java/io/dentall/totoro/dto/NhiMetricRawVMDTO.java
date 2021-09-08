@@ -6,6 +6,8 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static java.util.Optional.ofNullable;
+
 public class NhiMetricRawVMDTO implements NhiMetricRawVM {
 
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -102,7 +104,7 @@ public class NhiMetricRawVMDTO implements NhiMetricRawVM {
 
     @Override
     public LocalDate getCardReplenishmentDisposalDate() {
-        return LocalDate.parse(this.cardReplenishmentDisposalDate, dateTimeFormatter);
+        return ofNullable(this.cardReplenishmentDisposalDate).map(date -> LocalDate.parse(date, dateTimeFormatter)).orElse(null);
     }
 
     @Override
@@ -157,7 +159,7 @@ public class NhiMetricRawVMDTO implements NhiMetricRawVM {
 
     @Override
     public Long getDoctorId() {
-        return this.getDoctorId();
+        return this.doctorId;
     }
 
     @Override
@@ -190,6 +192,6 @@ public class NhiMetricRawVMDTO implements NhiMetricRawVM {
 
     @Override
     public String getDoctorName() {
-        return this.getDoctorName();
+        return this.doctorName;
     }
 }
