@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -133,6 +134,31 @@ public class NhiMedicalRecordQueryService extends QueryService<NhiMedicalRecord>
         final Specification<NhiMedicalRecord> specification = createSpecification(criteria);
         List<NhiMedicalRecordVM> entityList = new ArrayList<>();
         nhiMedicalRecordRepository.findAll(specification, pageable).forEach(e -> {
+            NhiMedicalRecordVM vm = new NhiMedicalRecordVM();
+            vm.setNhiMedicalRecord(e);
+            if (e.getNhiCategory() != null && e.getNhiCategory().equals(NhiMedicalRecordCategory.MEDICINE.getNumber())) {
+                NhiMedicine m = nhiMedicineRepository.findTop1ByMedicineCodeAndMedicineMandarinIsNotNullOrderByIdDesc(e.getNhiCode());
+                if (m != null) {
+                    vm.setMandarin(m.getMedicineMandarin());
+                }
+            } else {
+                NhiTx t = nhiTxRepository.findTop1ByNhiCodeAndNhiMandarinIsNotNullOrderByIdDesc(e.getNhiCode());
+                if (t != null) {
+                    vm.setMandarin(t.getNhiMandarin());
+                }
+            }
+            entityList.add(vm);
+        });
+
+        return new PageImpl<>(entityList);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<NhiMedicalRecordVM> findVmByCriteria(NhiMedicalRecordCriteria criteria) {
+        final Specification<NhiMedicalRecord> specification = createSpecification(criteria);
+        List<NhiMedicalRecordVM> entityList = new ArrayList<>();
+        Sort sort = new Sort(Sort.Direction.DESC, "date");
+        nhiMedicalRecordRepository.findAll(specification, sort).forEach(e -> {
             NhiMedicalRecordVM vm = new NhiMedicalRecordVM();
             vm.setNhiMedicalRecord(e);
             if (e.getNhiCategory() != null && e.getNhiCategory().equals(NhiMedicalRecordCategory.MEDICINE.getNumber())) {

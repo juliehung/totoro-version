@@ -19,6 +19,7 @@ import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -131,14 +133,14 @@ public class NhiMedicalRecordResource {
         log.debug("REST request to get NhiMedicalRecords by criteria: {}", criteria);
         // TODO: This method has some bug. Sometime it will found no data. If there has chance to integrate all ui to
         // one api. Then remove this one and ensure all ui using the same interface
-        Page<NhiMedicalRecordVM> entityList = nhiMedicalRecordQueryService.findVmByCriteria(criteria, pageable);
-
-        List<NhiMedicalRecordVM> contents = entityList.getContent();
+        Page<NhiMedicalRecordVM> entityList = new PageImpl<>(new ArrayList<>());
+        List<NhiMedicalRecordVM> contents = new ArrayList<>();
         if (NhiRuleCheckSourceType.SYSTEM_RECORD.equals(criteria.getIgnoreSourceType()) &&
             criteria.getNhiExtendPatientId() != null &&
             criteria.getNhiExtendPatientId().getEquals() != null
         ) {
-           List<String> recordDateList = nhiExtendDisposalRepository.findNhiHybridRecord(
+            entityList = nhiMedicalRecordQueryService.findVmByCriteria(criteria);
+            List<String> recordDateList = nhiExtendDisposalRepository.findNhiHybridRecord(
                criteria.getNhiExtendPatientId().getEquals().longValue(),
                Arrays.asList(0L)
            ).stream()
@@ -149,6 +151,9 @@ public class NhiMedicalRecordResource {
            contents = entityList.stream()
                .filter(e -> !recordDateList.contains(e.getNhiMedicalRecord().getDate()))
                .collect(Collectors.toList());
+        } else {
+            entityList = nhiMedicalRecordQueryService.findVmByCriteria(criteria, pageable);
+            entityList.getContent();
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(entityList, "/api/nhi-medical-records");
         return ResponseEntity.ok().headers(headers).body(contents);
