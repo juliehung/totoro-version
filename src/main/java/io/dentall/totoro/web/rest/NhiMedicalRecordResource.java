@@ -142,6 +142,7 @@ public class NhiMedicalRecordResource {
                criteria.getNhiExtendPatientId().getEquals().longValue(),
                Arrays.asList(0L)
            ).stream()
+               .filter(d -> "SYS".equals(d.getRecordSource()))
                .map(NhiHybridRecord::getRecordDateTime)
                .collect(Collectors.toList());
 
