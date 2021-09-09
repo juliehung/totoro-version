@@ -133,7 +133,8 @@ public class NhiMedicalRecordQueryService extends QueryService<NhiMedicalRecord>
         log.debug("find by criteria : {}", criteria);
         final Specification<NhiMedicalRecord> specification = createSpecification(criteria);
         List<NhiMedicalRecordVM> entityList = new ArrayList<>();
-        nhiMedicalRecordRepository.findAll(specification, pageable).forEach(e -> {
+        Page<NhiMedicalRecord> queryResult = nhiMedicalRecordRepository.findAll(specification, pageable);
+        queryResult.forEach(e -> {
             NhiMedicalRecordVM vm = new NhiMedicalRecordVM();
             vm.setNhiMedicalRecord(e);
             if (e.getNhiCategory() != null && e.getNhiCategory().equals(NhiMedicalRecordCategory.MEDICINE.getNumber())) {
@@ -150,7 +151,7 @@ public class NhiMedicalRecordQueryService extends QueryService<NhiMedicalRecord>
             entityList.add(vm);
         });
 
-        return new PageImpl<>(entityList);
+        return new PageImpl<>(entityList, pageable, queryResult.getTotalElements());
     }
 
     @Transactional(readOnly = true)
