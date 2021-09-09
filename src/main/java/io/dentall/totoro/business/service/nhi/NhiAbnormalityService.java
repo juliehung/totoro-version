@@ -374,7 +374,7 @@ public class NhiAbnormalityService {
                     nhiExtendTreatmentProcedure -> nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getCreatedBy(),
                     groupingBy(nhiExtendTreatmentProcedure ->
                         new AbstractMap.SimpleEntry<>(
-                            nhiExtendTreatmentProcedure.getTreatmentProcedure().getTreatmentTask().getTreatmentPlan().getTreatment().getPatient().getId(),
+                            nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getRegistration().getAppointment().getPatient().getId(),
                             nhiExtendDisposalDate.apply(nhiExtendTreatmentProcedure.getTreatmentProcedure().getDisposal().getNhiExtendDisposals().iterator().next())
                         )
                     )

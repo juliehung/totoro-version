@@ -1,6 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.report;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.KaoPingDistrictReductionDto;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType;
 import io.dentall.totoro.business.service.nhi.metric.util.ExcelUtil;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -57,7 +58,11 @@ public class KaoPingDistrictReductionReport {
             KaoPingDistrictReductionDto content = contents.get(contentIdx);
             int rowIdx = 0;
             int colIdx = contentIdx + 2;
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.USER), content.getDoctor().getDoctorName());
+            if (content.getType().equals(MetricSubjectType.doctor)) {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.USER), content.getDoctor().getDoctorName());
+            } else {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.USER), "全院所");
+            }
 
             if (content.getJ1h1().doubleValue() >= 525000) {
                 ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_REAL_NUMBER), content.getJ1h1().doubleValue());

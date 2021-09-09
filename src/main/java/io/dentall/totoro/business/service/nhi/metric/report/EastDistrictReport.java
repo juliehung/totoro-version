@@ -1,6 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.report;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.EastDistrictDto;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType;
 import io.dentall.totoro.business.service.nhi.metric.util.ExcelUtil;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -77,6 +78,12 @@ public class EastDistrictReport {
 
         // 申報點數-醫師資料
         for (int i = 0; i < contents.size(); i++) {
+            if (!contents.get(i).getType().equals(MetricSubjectType.doctor)) {
+                endOfApplyPointSection = endOfApplyPointSection - 1;
+                endOfMedicalServiceSection = endOfMedicalServiceSection - 1;
+                continue;
+            }
+
             sheet.createRow(rowCounter);
             double g6 = contents.get(i).getG6().divide(new BigDecimal(10000), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
             ExcelUtil.createCellAndApplyStyle(

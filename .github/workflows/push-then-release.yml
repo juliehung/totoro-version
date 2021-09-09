@@ -275,7 +275,7 @@ jobs:
             -   name: "Setup Common"
                 run: |
                     echo "CURL_CONTENT_TYPE=Content-Type: application/json" >> $GITHUB_ENV
-                    echo "SLACK_INFO={\"text\": \"(IN TEST) Hey everyone in <!here>, ${DORA_MANAGERED_SERVER_PORT} is ready with version: ${TAG_NAME}\"}" >> $GITHUB_ENV
+                    echo "SLACK_INFO={\"text\": \"Hey everyone in <!here>, ${DORA_MANAGERED_SERVER_PORT} is ready with version: ${TAG_NAME}\"}" >> $GITHUB_ENV
                 env:
                     DORA_MANAGERED_SERVER_PORT: ${{ env.DORA_MANAGERED_SERVER_PORT }}
                     TAG_NAME: ${{ env.TAG_NAME }}
