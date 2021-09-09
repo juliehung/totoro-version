@@ -153,7 +153,7 @@ public class NhiMedicalRecordResource {
                .collect(Collectors.toList());
         } else {
             entityList = nhiMedicalRecordQueryService.findVmByCriteria(criteria, pageable);
-            entityList.getContent();
+            contents = entityList.getContent();
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(entityList, "/api/nhi-medical-records");
         return ResponseEntity.ok().headers(headers).body(contents);
