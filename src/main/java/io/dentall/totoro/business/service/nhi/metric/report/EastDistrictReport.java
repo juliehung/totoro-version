@@ -342,6 +342,8 @@ public class EastDistrictReport {
         row.createCell(0).setCellValue("※其餘牽涉他願資料無法計算之指標，請參照健保署最新公告");
         row = sheet.createRow(rowCounter++);
         row.createCell(0).setCellValue("※指標數值係依系統累積資料量進行統計。");
+        row = sheet.createRow(rowCounter++);
+        row.createCell(0).setCellValue("※指標項目限制數值，如係針對個別醫師限制者，均已特別標註，其餘皆係指全院所的限制數值");
 
         // Style
         CellRangeAddress applyPointRegion = new CellRangeAddress(1, endOfApplyPointSection, 0, 0);
