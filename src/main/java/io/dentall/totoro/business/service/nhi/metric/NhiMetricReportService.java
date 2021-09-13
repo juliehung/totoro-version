@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -73,6 +74,7 @@ public class NhiMetricReportService {
         Workbook wb = new HSSFWorkbook();
         Map<ExcelUtil.SupportedCellStyle, CellStyle> csm = ExcelUtil.createReportStyle(wb);
 
+        // 由於 dto interface 沒有提供 type，這邊就沒有提出來使用共通的 sort comparator，之後有需要再調整
         if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.TAIPEI_DISTRICT)) {
             if (nhiMetricResultDto == null ||
                 nhiMetricResultDto.getTaipeiDistrictDtoList() == null ||
@@ -80,7 +82,17 @@ public class NhiMetricReportService {
             ) {
                 throw new Exception("There is not data in taipei district dto.");
             }
-            List<TaipeiDistrictDto> contents = nhiMetricResultDto.getTaipeiDistrictDtoList();
+            List<TaipeiDistrictDto> contents = nhiMetricResultDto.getTaipeiDistrictDtoList().stream()
+                .sorted((a, b) -> {
+                    if (a.getType() != null &&
+                        a.getType().equals("clinic")
+                    ) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                })
+                .collect(Collectors.toList());
             taipeiDistrictReport.generateReport(wb, csm, contents);
         }
         if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.NORTH_DISTRICT)) {
@@ -90,7 +102,17 @@ public class NhiMetricReportService {
             ) {
                 throw new Exception("There is not data in north district dto.");
             }
-            List<NorthDistrictDto> contents = nhiMetricResultDto.getNorthDistrictDtoList();
+            List<NorthDistrictDto> contents = nhiMetricResultDto.getNorthDistrictDtoList().stream()
+                .sorted((a, b) -> {
+                    if (a.getType() != null &&
+                        a.getType().equals("clinic")
+                    ) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                })
+                .collect(Collectors.toList());
             northDistrictReport.generateReport(wb, csm, contents);
         }
         if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.MIDDLE_DISTRICT)) {
@@ -100,7 +122,17 @@ public class NhiMetricReportService {
             ) {
                 throw new Exception("There is not data in middle district dto.");
             }
-            List<MiddleDistrictDto> contents = nhiMetricResultDto.getMiddleDistrictDtoList();
+            List<MiddleDistrictDto> contents = nhiMetricResultDto.getMiddleDistrictDtoList().stream()
+                .sorted((a, b) -> {
+                    if (a.getType() != null &&
+                        a.getType().equals("clinic")
+                    ) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                })
+                .collect(Collectors.toList());
             middleDistrictReport.generateReport(wb, csm, contents);
         }
         if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.SOUTH_DISTRICT)) {
@@ -110,7 +142,17 @@ public class NhiMetricReportService {
             ) {
                 throw new Exception("There is not data in south district dto.");
             }
-            List<SouthDistrictDto> contents = nhiMetricResultDto.getSouthDistrictDtoList();
+            List<SouthDistrictDto> contents = nhiMetricResultDto.getSouthDistrictDtoList().stream()
+                .sorted((a, b) -> {
+                    if (a.getType() != null &&
+                        a.getType().equals("clinic")
+                    ) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                })
+                .collect(Collectors.toList());
             southDistrictReport.generateReport(wb, csm, contents);
         }
         if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.KAO_PING_REDUCTION_DISTRICT)) {
@@ -120,7 +162,17 @@ public class NhiMetricReportService {
             ) {
                 throw new Exception("There is not data in kao-ping-reduction district dto.");
             }
-            List<KaoPingDistrictReductionDto> contents = nhiMetricResultDto.getKaoPingDistrictReductionDtoList();
+            List<KaoPingDistrictReductionDto> contents = nhiMetricResultDto.getKaoPingDistrictReductionDtoList().stream()
+                .sorted((a, b) -> {
+                    if (a.getType() != null &&
+                        a.getType().equals("clinic")
+                    ) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                })
+                .collect(Collectors.toList());
             kaoPingDistrictReductionReport.generateReport(wb, csm, contents);
         }
         if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.KAO_PING_REGULAR_DISTRICT)) {
@@ -130,7 +182,17 @@ public class NhiMetricReportService {
             ) {
                 throw new Exception("There is not data in kao-ping-regular district dto.");
             }
-            List<KaoPingDistrictRegularDto> contents = nhiMetricResultDto.getKaoPingDistrictRegularDtoList();
+            List<KaoPingDistrictRegularDto> contents = nhiMetricResultDto.getKaoPingDistrictRegularDtoList().stream()
+                .sorted((a, b) -> {
+                    if (a.getType() != null &&
+                        a.getType().equals("clinic")
+                    ) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                })
+                .collect(Collectors.toList());
             kaoPingDistrictRegularReport.generateReport(wb, csm, contents);
         }
         if (nhiMetricReportBodyVM.getNhiMetricReportTypes().contains(NhiMetricReportType.EAST_DISTRICT)) {
