@@ -411,6 +411,61 @@ Feature: 資料源
             |            | 2020-07-01   | 00317C   | 635       | 89004C | 1050  | 1050        | 6162  | MOD     | OTHER        | 001        |             | Jun         | 50            |                 |              |
         Then 指定執行日期 2020-05-01，來源資料使用 OdDeciduousThreeYearNearByPatientSource，預期筆數應為 2
 
+    Scenario Outline: 檢查非 Deciduous Tooth
+        Given 設定指標主體類型為醫師 Stan
+        Given 設定病人 Jerry 24 歲
+        Given 設定病人 Danny 24 歲
+        Given 設定病人 Jun 24 歲
+        Given 設定病人 Kevin 24 歲
+        Given 設定病人 Issac 24 歲
+        When 設定指標資料
+            | DisposalId | DisposalDate | ExamCode | ExamPoint | Code   | Point | OriginPoint | Tooth | Surface | SpecificCode | CardNumber | NhiCategory | PatientName | PartialBurden | PatientIdentity | SerialNumber |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 11    | MOD     | OTHER        | 001        |             | Kevin       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 12    | MOD     | OTHER        | 001        |             | Kevin       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 13    | MOD     | OTHER        | 001        |             | Kevin       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 14    | MOD     | OTHER        | 001        |             | Kevin       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 15    | MOD     | OTHER        | 001        |             | Kevin       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 16    | MOD     | OTHER        | 001        |             | Kevin       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 17    | MOD     | OTHER        | 001        |             | Kevin       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 18    | MOD     | OTHER        | 001        |             | Kevin       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 19    | MOD     | OTHER        | 001        |             | Kevin       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 21    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 22    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 23    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 24    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 25    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 26    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 27    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 28    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 29    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 31    | MOD     | OTHER        | 001        |             | Issac       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 32    | MOD     | OTHER        | 001        |             | Issac       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 33    | MOD     | OTHER        | 001        |             | Issac       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 34    | MOD     | OTHER        | 001        |             | Issac       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 35    | MOD     | OTHER        | 001        |             | Issac       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 36    | MOD     | OTHER        | 001        |             | Issac       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 37    | MOD     | OTHER        | 001        |             | Issac       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 38    | MOD     | OTHER        | 001        |             | Issac       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 39    | MOD     | OTHER        | 001        |             | Issac       | 50            |                 |              |
+            |            | 2020-05-01   | 00317C   | 635       | 89001C | 1050  | 1050        | 41    | MOD     | OTHER        | 001        |             | Danny       | 50            |                 |              |
+            |            | 2020-05-01   | 00317C   | 635       | 89001C | 1050  | 1050        | 42    | MOD     | OTHER        | 001        |             | Danny       | 50            |                 |              |
+            |            | 2020-05-01   | 00317C   | 635       | 89001C | 1050  | 1050        | 43    | MOD     | OTHER        | 001        |             | Danny       | 50            |                 |              |
+            |            | 2020-05-01   | 00317C   | 635       | 89001C | 1050  | 1050        | 44    | MOD     | OTHER        | 001        |             | Danny       | 50            |                 |              |
+            |            | 2020-05-01   | 00317C   | 635       | 89001C | 1050  | 1050        | 45    | MOD     | OTHER        | 001        |             | Danny       | 50            |                 |              |
+            |            | 2020-05-01   | 00317C   | 635       | 89001C | 1050  | 1050        | 46    | MOD     | OTHER        | 001        |             | Danny       | 50            |                 |              |
+            |            | 2020-05-01   | 00317C   | 635       | 89001C | 1050  | 1050        | 47    | MOD     | OTHER        | 001        |             | Danny       | 50            |                 |              |
+            |            | 2020-05-01   | 00317C   | 635       | 89001C | 1050  | 1050        | 48    | MOD     | OTHER        | 001        |             | Danny       | 50            |                 |              |
+            |            | 2020-05-01   | 00317C   | 635       | 89001C | 1050  | 1050        | 49    | MOD     | OTHER        | 001        |             | Danny       | 50            |                 |              |
+            |            | 2020-05-01   | 00317C   | 635       | 89001C | 1050  | 1050        | 99    | MOD     | OTHER        | 001        |             | Jun         | 50            |                 |              |
+        Then 指定執行日期 2020-05-01，來源資料使用 <Source>，預期筆數應為 <Value>
+        Examples:
+            | Source                                       | Value |
+            | OdDeciduousQuarterByPatientSource            | 0     |
+            | OdDeciduousOneYearNearByPatientSource        | 0     |
+            | OdDeciduousOneAndHalfYearNearByPatientSource | 0     |
+            | OdDeciduousTwoYearNearByPatientSource        | 0     |
+            | OdDeciduousThreeYearNearByPatientSource      | 0     |
+
     Scenario: 檢查 OdPermanentQuarterByPatientSource
         Given 設定指標主體類型為醫師 Stan
         Given 設定病人 Jerry 24 歲
@@ -474,6 +529,73 @@ Feature: 資料源
             |            | 2020-06-30   | 00317C   | 635       | 89003C | 1050  | 1050        | 2122  | MOD     | OTHER        | 001        |             | Danny       | 50            |                 |              |
             |            | 2020-07-01   | 00317C   | 635       | 89004C | 1050  | 1050        | 2122  | MOD     | OTHER        | 001        |             | Jun         | 50            |                 |              |
         Then 指定執行日期 2020-05-01，來源資料使用 OdPermanentThreeYearNearByPatientSource，預期筆數應為 2
+
+    Scenario Outline: 檢查非 Permanent Tooth
+        Given 設定指標主體類型為醫師 Stan
+        Given 設定病人 Jerry 24 歲
+        Given 設定病人 Danny 24 歲
+        Given 設定病人 Kevin 24 歲
+        Given 設定病人 Issac 24 歲
+        When 設定指標資料
+            | DisposalId | DisposalDate | ExamCode | ExamPoint | Code   | Point | OriginPoint | Tooth | Surface | SpecificCode | CardNumber | NhiCategory | PatientName | PartialBurden | PatientIdentity | SerialNumber |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 51    | MOD     | OTHER        | 001        |             | Kevin       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 52    | MOD     | OTHER        | 001        |             | Kevin       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 53    | MOD     | OTHER        | 001        |             | Kevin       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 54    | MOD     | OTHER        | 001        |             | Kevin       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 55    | MOD     | OTHER        | 001        |             | Kevin       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 61    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 62    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 63    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 64    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 65    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 71    | MOD     | OTHER        | 001        |             | Issac       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 72    | MOD     | OTHER        | 001        |             | Issac       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 73    | MOD     | OTHER        | 001        |             | Issac       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 74    | MOD     | OTHER        | 001        |             | Issac       | 50            |                 |              |
+            |            | 2020-05-01   | 00315C   | 635       | 89001C | 1000  | 1000        | 75    | MOD     | OTHER        | 001        |             | Issac       | 50            |                 |              |
+            |            | 2020-05-01   | 00317C   | 635       | 89001C | 1050  | 1050        | 81    | MOD     | OTHER        | 001        |             | Danny       | 50            |                 |              |
+            |            | 2020-05-01   | 00317C   | 635       | 89001C | 1050  | 1050        | 82    | MOD     | OTHER        | 001        |             | Danny       | 50            |                 |              |
+            |            | 2020-05-01   | 00317C   | 635       | 89001C | 1050  | 1050        | 83    | MOD     | OTHER        | 001        |             | Danny       | 50            |                 |              |
+            |            | 2020-05-01   | 00317C   | 635       | 89001C | 1050  | 1050        | 84    | MOD     | OTHER        | 001        |             | Danny       | 50            |                 |              |
+            |            | 2020-05-01   | 00317C   | 635       | 89001C | 1050  | 1050        | 85    | MOD     | OTHER        | 001        |             | Danny       | 50            |                 |              |
+        Then 指定執行日期 2020-05-01，來源資料使用 <Source>，預期筆數應為 <Value>
+        Examples:
+            | Source                                  | Value |
+            | OdPermanentQuarterByPatientSource       | 0     |
+            | OdPermanentOneYearNearByPatientSource   | 0     |
+            | OdPermanentTwoYearNearByPatientSource   | 0     |
+            | OdPermanentThreeYearNearByPatientSource | 0     |
+
+    Scenario Outline: 檢查非 OD Treatment
+        Given 設定指標主體類型為醫師 Stan
+        Given 設定病人 Jerry 24 歲
+        When 設定指標資料
+            | DisposalId | DisposalDate | ExamCode | ExamPoint | Code   | Point | OriginPoint | Tooth | Surface | SpecificCode | CardNumber | NhiCategory | PatientName | PartialBurden | PatientIdentity | SerialNumber |
+            |            | 2017-04-01   | 00315C   | 635       | 90001C | 1000  | 1000        | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
+            |            | 2017-04-01   | 00315C   | 635       | 90001C | 1000  | 1000        | 51    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
+        Then 指定執行日期 2020-05-01，來源資料使用 <Source>，預期筆數應為 <Value>
+        Examples:
+            | Source                                       | Value |
+            | OdMonthSelectedSource                        | 0     |
+            | OdMonthSelectedByPatientSource               | 0     |
+            | OdQuarterSource                              | 0     |
+            | OdQuarterByPatientSource                     | 0     |
+            | OdOneYearNearSource                          | 0     |
+            | OdOneYearNearByPatientSource                 | 0     |
+            | OdOneAndHalfYearNearSource                   | 0     |
+            | OdTwoYearNearSource                          | 0     |
+            | OdTwoYearNearByPatientSource                 | 0     |
+            | OdThreeYearNearSource                        | 0     |
+            | OdThreeYearNearByPatientSource               | 0     |
+            | OdDeciduousQuarterByPatientSource            | 0     |
+            | OdDeciduousOneYearNearByPatientSource        | 0     |
+            | OdDeciduousOneAndHalfYearNearByPatientSource | 0     |
+            | OdDeciduousTwoYearNearByPatientSource        | 0     |
+            | OdDeciduousThreeYearNearByPatientSource      | 0     |
+            | OdPermanentQuarterByPatientSource            | 0     |
+            | OdPermanentOneYearNearByPatientSource        | 0     |
+            | OdPermanentTwoYearNearByPatientSource        | 0     |
+            | OdPermanentThreeYearNearByPatientSource      | 0     |
 
   # Endo And OD
     Scenario: 檢查 EndoAndOdHalfYearNearSource

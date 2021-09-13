@@ -34,7 +34,8 @@ Feature: 合計點數
         When 設定指標資料
             | DisposalId | DisposalDate | ExamCode | ExamPoint | Code   | Point | OriginPoint | Tooth | Surface | SpecificCode | CardNumber | NhiCategory | PatientName | PartialBurden | PatientIdentity | SerialNumber |
             |            | 2020-05-02   | 00315C   | 100       | 89110C | 19900 | 1000        | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
-            |            | 2020-05-09   | 00316C   | 100       | 89111C | 19901 | 400         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
+            | 1          | 2020-05-09   | 00316C   | 100       | 89111C | 9901  | 400         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
+            | 1          | 2020-05-09   | 00316C   | 100       | 89112C | 10000 | 400         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
         And 國定假日排除點數上限20,000點
         Then 指定執行日期 2020-05-01，來源資料使用 DailyByMonthSelectedSource，檢查 Point1ByDaily，每日數值
             | Date       | Value |
