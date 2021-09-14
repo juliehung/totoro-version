@@ -1242,15 +1242,19 @@ public class NhiRuleCheckUtil {
                 d.getTooth(),
                 dto.getNhiExtendTreatmentProcedure().getA74()
             );
-            duplicatedTooth.stream().forEach(t -> {
-                if (d.getRecordDateTime().plus(DateTimeUtil.NHI_30_DAY.getDays(), ChronoUnit.DAYS).isEqual(currentDate) ||
-                    d.getRecordDateTime().plus(DateTimeUtil.NHI_30_DAY.getDays(), ChronoUnit.DAYS).isAfter(currentDate)
-                ) {
-                    if (!detected89006CToothTxMap.containsKey(t)) {
-                        detected89006CToothTxMap.put(t, d);
+            if (d.getCode() != null &&
+                d.getCode().equals("89006C")
+            ) {
+                duplicatedTooth.stream().forEach(t -> {
+                    if (d.getRecordDateTime().plus(DateTimeUtil.NHI_30_DAY.getDays(), ChronoUnit.DAYS).isEqual(currentDate) ||
+                        d.getRecordDateTime().plus(DateTimeUtil.NHI_30_DAY.getDays(), ChronoUnit.DAYS).isAfter(currentDate)
+                    ) {
+                        if (!detected89006CToothTxMap.containsKey(t)) {
+                            detected89006CToothTxMap.put(t, d);
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         if (detected89006CToothTxMap.size() > 0) {
