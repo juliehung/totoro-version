@@ -339,7 +339,7 @@ public class EastDistrictReport {
 
         // 備註
         row = sheet.createRow(rowCounter++);
-        row.createCell(0).setCellValue("※其餘牽涉他願資料無法計算之指標，請參照健保署最新公告");
+        row.createCell(0).setCellValue("※其餘牽涉他院資料無法計算之指標，請參照健保署最新公告");
         row = sheet.createRow(rowCounter++);
         row.createCell(0).setCellValue("※指標數值係依系統累積資料量進行統計。");
         row = sheet.createRow(rowCounter++);
