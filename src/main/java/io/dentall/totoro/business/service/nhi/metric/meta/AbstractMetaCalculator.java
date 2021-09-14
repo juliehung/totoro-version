@@ -21,7 +21,7 @@ public abstract class AbstractMetaCalculator<T> implements MetaCalculator<T> {
 
     public AbstractMetaCalculator(MetricConfig metricConfig, MetaConfig config, Source<?, ?>[] sources) {
         this.metricConfig = metricConfig;
-        this.config = ofNullable(config).orElse(new MetaConfig(this.metricConfig));
+        this.config = ofNullable(config).orElse(new MetaConfig());
         this.sources = sources;
     }
 

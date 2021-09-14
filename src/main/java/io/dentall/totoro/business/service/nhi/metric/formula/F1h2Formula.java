@@ -29,7 +29,7 @@ public class F1h2Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     protected BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro1Config config = new Tro1Config(metricConfig);
+        Tro1Config config = new Tro1Config();
         Point1 point1 = new Point1(metricConfig, config, source).apply();
         Pt1 pt1 = new Pt1(metricConfig, config, source).apply();
 

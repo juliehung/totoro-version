@@ -13,7 +13,6 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static io.dentall.totoro.business.service.nhi.metric.meta.MetaType.*;
-import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ZERO;
 import static java.util.Map.Entry.comparingByValue;
@@ -25,7 +24,11 @@ import static java.util.Optional.ofNullable;
 public class HighestPoint1Patient extends SingleSourceMetaCalculator<HighestPatientDto> {
 
     public HighestPoint1Patient(MetricConfig metricConfig, Source<?, ?> source) {
-        super(metricConfig, source);
+        this(metricConfig, null, source);
+    }
+
+    public HighestPoint1Patient(MetricConfig metricConfig, MetaConfig metaConfig, Source<?, ?> source) {
+        super(metricConfig, metaConfig, source);
     }
 
     @Override
@@ -55,7 +58,7 @@ public class HighestPoint1Patient extends SingleSourceMetaCalculator<HighestPati
         BigDecimal value;
 
         try {
-            value = toPercentage(divide(entry.getValue(), point1.getResult()));
+            value = toPercentage(entry.getValue(), point1.getResult());
         } catch (ArithmeticException e) {
             value = ZERO;
         }

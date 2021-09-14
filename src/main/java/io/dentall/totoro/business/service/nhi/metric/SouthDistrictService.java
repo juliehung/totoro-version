@@ -58,7 +58,7 @@ public class SouthDistrictService implements DistrictService {
         BigDecimal metricI6 = new I6Formula(metricConfig).calculate();
         BigDecimal metricI7 = new I7Formula(metricConfig).calculate();
         BigDecimal metricI8 = new I8Formula(metricConfig).calculate();
-        BigDecimal metricI19 = new I9Formula(metricConfig).calculate();
+        BigDecimal metricI19 = new I19Formula(metricConfig).calculate();
 
         SouthDistrictDto southDistrictDto = new SouthDistrictDto();
         southDistrictDto.setType(metricSubjectType);

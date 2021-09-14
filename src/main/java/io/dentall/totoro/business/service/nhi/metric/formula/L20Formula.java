@@ -9,9 +9,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
-import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
-import static java.math.BigDecimal.ONE;
+import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toOppositePercentage;
 import static java.math.BigDecimal.ZERO;
 
 /**
@@ -31,8 +29,7 @@ public class L20Formula extends AbstractFormula<BigDecimal> {
         EndoTreatment endoTreatment = new EndoTreatment(metricConfig, source).apply();
         Endo90015CTreatment endo90015CTreatment = new Endo90015CTreatment(metricConfig, source).apply();
         try {
-            BigDecimal tmp = divide(endoTreatment.getResult(), endo90015CTreatment.getResult());
-            return toPercentage(ONE.subtract(tmp));
+            return toOppositePercentage(endoTreatment.getResult(), endo90015CTreatment.getResult());
         } catch (ArithmeticException e) {
             return ZERO;
         }

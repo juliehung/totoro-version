@@ -8,6 +8,7 @@ import java.util.List;
 
 import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.calculatePt;
 import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.isPreventionCardNumber;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * 總人數(有診察費)
@@ -28,6 +29,8 @@ public class Pt2 extends SingleSourceMetaCalculator<Long> {
 
         return nhiMetricRawVMList.stream()
             .filter(vm -> !isPreventionCardNumber(vm.getCardNumber()))
+            .filter(vm -> isNotBlank(vm.getExamPoint()))
+            .filter(vm -> !"0".equals(vm.getExamCode()))
             .reduce(0L, calculatePt(), Long::sum);
     }
 

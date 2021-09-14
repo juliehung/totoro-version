@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
@@ -23,9 +23,9 @@ public class Od1Pt1 extends SingleSourceMetaCalculator<Long> {
 
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
-        List<OdDto> odDtoList = metricConfig.retrieveSource(source().key());
+        List<MetricTooth> metricToothList = metricConfig.retrieveSource(source().key());
 
-        return odDtoList.stream()
+        return metricToothList.stream()
             .reduce(0L, calculatePt(), Long::sum);
     }
 

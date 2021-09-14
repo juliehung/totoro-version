@@ -6,6 +6,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
 
+import static java.util.stream.Collectors.groupingBy;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
@@ -28,10 +29,11 @@ public class Ic1 extends SingleSourceMetaCalculator<Long> {
     public Long doCalculate(MetricConfig metricConfig) {
         List<NhiMetricRawVM> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
 
-        return nhiMetricRawVMList.stream()
+        return (long) nhiMetricRawVMList.stream()
             .filter(vm -> isNotBlank(vm.getExamPoint()))
             .filter(vm -> isNotBlank(vm.getCardNumber()))
-            .count();
+            .collect(groupingBy(NhiMetricRawVM::getDisposalId))
+            .keySet().size();
     }
 
     @Override

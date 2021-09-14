@@ -41,7 +41,7 @@ public abstract class Exam<T> extends SingleSourceMetaCalculator<T> {
     protected Long doCalculateRegular(MetricConfig metricConfig, List<String> codes) {
         List<NhiMetricRawVM> source = metricConfig.retrieveSource(source().key());
         checkPoint6(metricConfig);
-        return calculateExamRegular(source, codes, getConfig());
+        return calculateExamRegular(source, codes, getConfig(), metricConfig.getHolidayMap());
     }
 
     protected Long doCalculateDifference(MetricConfig metricConfig, List<String> codes) {
@@ -52,7 +52,7 @@ public abstract class Exam<T> extends SingleSourceMetaCalculator<T> {
     protected Map<Long, Long> doCalculateByClassifier(MetricConfig metricConfig, List<String> codes, Function<NhiMetricRawVM, Long> classifier) {
         List<NhiMetricRawVM> source = metricConfig.retrieveSource(source().key());
         checkPoint6(metricConfig);
-        return calculateExamByClassifier(source, codes, classifier, getConfig());
+        return calculateExamByClassifier(source, codes, classifier, getConfig(), metricConfig.getHolidayMap());
     }
 
     protected Map<LocalDate, Long> doCalculateByDaily(MetricConfig metricConfig, List<String> codes) {
@@ -61,7 +61,7 @@ public abstract class Exam<T> extends SingleSourceMetaCalculator<T> {
             (map, entry) -> {
                 LocalDate date = entry.getKey();
                 List<NhiMetricRawVM> sourceByDate = entry.getValue();
-                Long points = calculateExamRegular(sourceByDate, codes, getConfig());
+                Long points = calculateExamRegular(sourceByDate, codes, getConfig(), metricConfig.getHolidayMap());
                 map.put(date, points);
                 return map;
             },

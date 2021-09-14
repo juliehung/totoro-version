@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1ReToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1ToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro1;
-import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 
 /**
@@ -24,11 +23,11 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.to
  */
 public class G8h2Formula extends AbstractFormula<BigDecimal> {
 
-    private final Source<NhiMetricRawVM, OdDto> odSource;
+    private final Source<NhiMetricRawVM, MetricTooth> odSource;
 
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odByPatientSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odByPatientSource;
 
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odPastByPatientSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odPastByPatientSource;
 
     public G8h2Formula(MetricConfig metricConfig) {
         super(metricConfig);
@@ -42,11 +41,11 @@ public class G8h2Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro1Config config = new Tro1Config(metricConfig);
+        Tro1Config config = new Tro1Config();
         Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, config, odSource).apply();
         Od1ReToothCount od1ReToothCount = new Od1ReToothCount(metricConfig, config, odByPatientSource, odPastByPatientSource, 1, 730).apply();
         try {
-            return toPercentage(divide(od1ReToothCount.getResult(), od1ToothCount.getResult()));
+            return toPercentage(od1ReToothCount.getResult(), od1ToothCount.getResult());
         } catch (ArithmeticException e) {
             return BigDecimal.ZERO;
         }

@@ -1,7 +1,10 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
-import io.dentall.totoro.business.service.nhi.metric.meta.*;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
+import io.dentall.totoro.business.service.nhi.metric.meta.Od1ToothCount;
+import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousReToothCount;
+import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentReToothCount;
+import io.dentall.totoro.business.service.nhi.metric.meta.Tro1ButPoint6Config;
 import io.dentall.totoro.business.service.nhi.metric.source.*;
 
 import java.math.BigDecimal;
@@ -17,10 +20,10 @@ import static java.math.BigDecimal.ZERO;
  */
 public class H5Formula extends AbstractFormula<BigDecimal> {
 
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odOneAndHalfYearByPatientSource;
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odTwoYearByPatientSource;
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odMonthSelectedByPatientSource;
-    private final Source<OdDto, OdDto> odMonthSelectedSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odOneAndHalfYearByPatientSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odTwoYearByPatientSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odMonthSelectedByPatientSource;
+    private final Source<MetricTooth, MetricTooth> odMonthSelectedSource;
 
     public H5Formula(MetricConfig metricConfig) {
         super(metricConfig);
@@ -36,7 +39,7 @@ public class H5Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro1ButPoint6Config config = new Tro1ButPoint6Config(metricConfig);
+        Tro1ButPoint6Config config = new Tro1ButPoint6Config();
         Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, config, odMonthSelectedSource).apply();
         OdDeciduousReToothCount odDeciduousToothCount =
             new OdDeciduousReToothCount(metricConfig, config, odMonthSelectedByPatientSource, odOneAndHalfYearByPatientSource, 1, 450).apply();

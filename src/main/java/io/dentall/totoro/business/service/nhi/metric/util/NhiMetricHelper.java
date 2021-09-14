@@ -6,6 +6,7 @@ import io.dentall.totoro.business.service.nhi.metric.source.MetricConstants;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.Holiday;
 import io.dentall.totoro.service.HolidayService;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -27,24 +28,35 @@ public class NhiMetricHelper {
     private NhiMetricHelper() {
     }
 
-    public static Long applyNewExamPoint(NhiMetricRawVM vm, MetaConfig config) {
+    public static Long applyNewExamPoint(NhiMetricRawVM vm, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
+        long point = ofNullable(vm.getExamPoint()).filter(StringUtils::isNotBlank).map(Long::parseLong).orElse(0L);
+
+        if (point == 0L) {
+            return point;
+        }
+
         if (config.isExcludeHideoutPoint() && MetricConstants.CodesByHideout.contains(vm.getExamCode())) {
             // 山地離島的健保代碼要扣除多出來的點數
             // 30點差額是00125C(260 point)、00126C(260 pont)扣除00121C(230 point)的差額與00309C(385 point)、00310C(385 pont)扣除00305C(355 point)的差額
-            return parseLong(vm.getExamPoint()) - 30L;
+            point -= 30L;
         }
 
         if (config.isUse00121CPoint()) {
-            return 230L;
+            point = 230L;
         }
 
-        return parseLong(vm.getExamPoint());
+        if (!config.isExclude20000Point1ByDay() && config.isExcludeHolidayPoint() && isHoliday(vm.getDisposalDate(), holidayMap)) {
+            // 國定假日無論有無放假，都要扣除健保代碼點數
+            point = 0L;
+        }
+
+        return point;
     }
 
-    public static Long calculateExam(Stream<Optional<NhiMetricRawVM>> stream, MetaConfig config) {
+    public static Long calculateExam(Stream<Optional<NhiMetricRawVM>> stream, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
         return stream.filter(Optional::isPresent)
             .map(Optional::get)
-            .map(vm -> applyNewExamPoint(vm, config))
+            .map(vm -> applyNewExamPoint(vm, config, holidayMap))
             .reduce(Long::sum)
             .orElse(0L);
     }
@@ -57,9 +69,9 @@ public class NhiMetricHelper {
             .values().stream();
     }
 
-    public static Long calculateExamRegular(List<NhiMetricRawVM> source, List<String> codes, MetaConfig config) {
+    public static Long calculateExamRegular(List<NhiMetricRawVM> source, List<String> codes, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
         Stream<Optional<NhiMetricRawVM>> stream = groupByDisposal(source, codes);
-        return calculateExam(stream, config);
+        return calculateExam(stream, config, holidayMap);
     }
 
     public static Long calculateExamDifference(List<NhiMetricRawVM> source, List<String> codes) {
@@ -71,7 +83,12 @@ public class NhiMetricHelper {
             .orElse(0L);
     }
 
-    public static Map<Long, Long> calculateExamByClassifier(List<NhiMetricRawVM> source, List<String> codes, Function<NhiMetricRawVM, Long> classifier, MetaConfig config) {
+    public static Map<Long, Long> calculateExamByClassifier(
+        List<NhiMetricRawVM> source,
+        List<String> codes,
+        Function<NhiMetricRawVM, Long> classifier,
+        MetaConfig config,
+        Map<LocalDate, Optional<Holiday>> holidayMap) {
         return source.stream()
             .filter(vm -> isNotBlank(vm.getExamPoint()))
             .filter(vm -> codes.contains(vm.getExamCode()))
@@ -84,7 +101,7 @@ public class NhiMetricHelper {
                     map.compute(keyId, (key, point) -> {
                         Map<Long, Optional<NhiMetricRawVM>> subMap = entry.getValue();
                         Stream<Optional<NhiMetricRawVM>> stream = subMap.values().stream();
-                        Long examPoint = calculateExam(stream, config);
+                        Long examPoint = calculateExam(stream, config, holidayMap);
                         return ofNullable(point).orElse(0L) + examPoint;
                     });
 
@@ -121,14 +138,14 @@ public class NhiMetricHelper {
         return examPoint;
     }
 
-    public static Long applyNewTreatmentPoint(NhiMetricRawVM vm, MetaConfig config) {
+    public static Long applyNewTreatmentPoint(NhiMetricRawVM vm, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
         Long point = vm.getTreatmentProcedureTotal();
 
         if (config.isUseOriginPoint()) {
             point = vm.getNhiOriginPoint();
         }
 
-        if (config.isExcludeHolidayPoint() && isHoliday(vm.getDisposalDate(), config.getHolidayMap())) {
+        if (!config.isExclude20000Point1ByDay() && config.isExcludeHolidayPoint() && isHoliday(vm.getDisposalDate(), holidayMap)) {
             // 國定假日無論有無放假，都要扣除健保代碼點數
             point = 0L;
         }
@@ -141,7 +158,7 @@ public class NhiMetricHelper {
     }
 
     public static boolean isHoliday(LocalDate date, Map<LocalDate, Optional<Holiday>> holidayMap) {
-        return ofNullable(holidayMap.get(date)).map(Optional::isPresent).orElse(false);
+        return ofNullable(holidayMap).map(map -> map.get(date)).map(Optional::isPresent).orElse(false);
     }
 
     public static Predicate<NhiMetricRawVM> applyExcludeByVM(Exclude exclude) {

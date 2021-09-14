@@ -9,7 +9,6 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.util.Collections.singletonList;
 
@@ -32,7 +31,7 @@ public class A17h2Formula extends AbstractFormula<BigDecimal> {
         TreatmentCount treatmentCount = new TreatmentCount(metricConfig, source, singletonList("89013C")).apply();
 
         try {
-            return toPercentage(divide(treatmentAndAgeCount.getResult(), treatmentCount.getResult()));
+            return toPercentage(treatmentAndAgeCount.getResult(), treatmentCount.getResult());
         } catch (ArithmeticException e) {
             return BigDecimal.ZERO;
         }

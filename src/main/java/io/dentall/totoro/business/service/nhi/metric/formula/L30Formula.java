@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousReToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousToothCount;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ZERO;
 
@@ -24,9 +23,9 @@ import static java.math.BigDecimal.ZERO;
  */
 public class L30Formula extends AbstractFormula<BigDecimal> {
 
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odQuarterSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odQuarterSource;
 
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odThreeYearNearSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odThreeYearNearSource;
 
     public L30Formula(MetricConfig metricConfig) {
         super(metricConfig);
@@ -39,7 +38,7 @@ public class L30Formula extends AbstractFormula<BigDecimal> {
         OdDeciduousToothCount odDeciduousToothCount = new OdDeciduousToothCount(metricConfig, odQuarterSource).apply();
         OdDeciduousReToothCount odDeciduousReToothCount = new OdDeciduousReToothCount(metricConfig, odQuarterSource, odThreeYearNearSource, 731, 1095).apply();
         try {
-            return toPercentage(divide(odDeciduousReToothCount.getResult(), odDeciduousToothCount.getResult()));
+            return toPercentage(odDeciduousReToothCount.getResult(), odDeciduousToothCount.getResult());
         } catch (ArithmeticException e) {
             return ZERO;
         }

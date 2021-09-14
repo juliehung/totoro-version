@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.source;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,7 +11,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-public class OdTwoYearNearSource extends OdSource<OdDto> {
+public class OdTwoYearNearSource extends OdSource<MetricTooth> {
 
     private final LocalDate begin;
 
@@ -21,7 +21,7 @@ public class OdTwoYearNearSource extends OdSource<OdDto> {
     }
 
     @Override
-    public List<OdDto> doFilter(Stream<OdDto> source) {
+    public List<MetricTooth> doFilter(Stream<MetricTooth> source) {
         return source
             .filter(dto -> begin.isBefore(dto.getDisposalDate()) || begin.isEqual(dto.getDisposalDate()))
             .filter(dto -> codes.contains(dto.getTreatmentProcedureCode()))

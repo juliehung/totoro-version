@@ -1,15 +1,18 @@
 package io.dentall.totoro.business.service.nhi.metric.source;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.mapper.NhiMetricRawMapper;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import static io.dentall.totoro.business.service.nhi.util.ToothUtil.splitA74;
+import static io.dentall.totoro.service.util.DateTimeUtil.toLocalDate;
+import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -24,24 +27,33 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  */
 public class OdThreeYearNearSource extends OdSource<NhiMetricRawVM> {
 
+    private final LocalDate begin;
+
+    private final LocalDate end;
+
     public OdThreeYearNearSource(MetricConfig metricConfig) {
         super(metricConfig.getSubjectSource());
+        this.begin = toLocalDate(metricConfig.getQuarterRange().getBegin()).minus(1095, DAYS);
+        this.end = toLocalDate(metricConfig.getQuarterRange().getEnd());
     }
 
     @Override
-    public List<OdDto> doFilter(Stream<NhiMetricRawVM> source) {
+    public List<MetricTooth> doFilter(Stream<NhiMetricRawVM> source) {
         AtomicInteger i = new AtomicInteger();
         return source
+            .filter(vm -> (begin.isBefore(vm.getDisposalDate()) && end.isAfter(vm.getDisposalDate()))
+                || begin.isEqual(vm.getDisposalDate())
+                || end.isEqual(vm.getDisposalDate()))
             .filter(vm -> codes.contains(vm.getTreatmentProcedureCode()))
             .filter(vm -> isNotBlank(vm.getTreatmentProcedureTooth()))
             .map(vm -> {
                     List<String> teeth = splitA74(vm.getTreatmentProcedureTooth());
                     int seq = i.getAndIncrement();
                     return teeth.stream().map(tooth -> {
-                            OdDto odDto = NhiMetricRawMapper.INSTANCE.mapToOdDto(vm);
-                            odDto.setTreatmentProcedureTooth(tooth);
-                            odDto.setTreatmentSeq(seq);
-                            return odDto;
+                            MetricTooth metricTooth = NhiMetricRawMapper.INSTANCE.mapToOdDto(vm);
+                            metricTooth.setTreatmentProcedureTooth(tooth);
+                            metricTooth.setTreatmentSeq(seq);
+                            return metricTooth;
                         }
                     ).collect(toList());
                 }

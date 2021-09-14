@@ -1,12 +1,10 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.ExcludeDto;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.function.Predicate;
 
 import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.PredicateHolder.*;
-import static java.util.Optional.ofNullable;
 
 public enum Exclude {
     Tro1(tro1), Tro2(tro2), Tro5(tro5), Tro6(tro6),
@@ -38,9 +36,9 @@ public enum Exclude {
         static final Predicate<NhiMetricRawVM> nhiCategoryByTro6 = nhiCategory14.and(nhiCategory16).and(nhiCategoryA3).and(nhiCategoryB6).and(nhiCategoryB7);
 
         // 特殊治療項目
-        static final Predicate<NhiMetricRawVM> specificCodeG9 = dto -> !"G9".equals(ofNullable(dto.getTreatmentProcedureSpecificCode()).map(Enum::name).orElse(null));
-        static final Predicate<NhiMetricRawVM> specificCodeJA = dto -> !"JA".equals(ofNullable(dto.getTreatmentProcedureSpecificCode()).map(Enum::name).orElse(null));
-        static final Predicate<NhiMetricRawVM> specificCodeJB = dto -> !"JB".equals(ofNullable(dto.getTreatmentProcedureSpecificCode()).map(Enum::name).orElse(null));
+        static final Predicate<NhiMetricRawVM> specificCodeG9 = dto -> !"G9".equals(dto.getTreatmentProcedureSpecificCode());
+        static final Predicate<NhiMetricRawVM> specificCodeJA = dto -> !"JA".equals(dto.getTreatmentProcedureSpecificCode());
+        static final Predicate<NhiMetricRawVM> specificCodeJB = dto -> !"JB".equals(dto.getTreatmentProcedureSpecificCode());
         static final Predicate<NhiMetricRawVM> specificCodeByTro1 = specificCodeG9.and(specificCodeJA).and(specificCodeJB);
         static final Predicate<NhiMetricRawVM> specificCodeByTro2 = specificCodeG9.and(specificCodeJA).and(specificCodeJB);
         static final Predicate<NhiMetricRawVM> specificCodeByTro5 = specificCodeG9.and(specificCodeJA);

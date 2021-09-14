@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.source;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 
 import java.util.List;
 import java.util.Map;
@@ -11,7 +11,7 @@ import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.groupingBy;
 
-public abstract class OdPermanentSource extends AbstractSource<OdDto, Map<Long, Map<String, List<OdDto>>>> {
+public abstract class OdPermanentSource extends AbstractSource<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> {
 
     protected static final List<String> teeth = unmodifiableList(asList(
         "11", "12", "13", "14", "15", "16", "17", "18", "19",
@@ -26,10 +26,10 @@ public abstract class OdPermanentSource extends AbstractSource<OdDto, Map<Long, 
     }
 
     @Override
-    public List<Map<Long, Map<String, List<OdDto>>>> doFilter(Stream<OdDto> source) {
+    public List<Map<Long, Map<String, List<MetricTooth>>>> doFilter(Stream<MetricTooth> source) {
         return singletonList(source
             .filter(dto -> teeth.contains(dto.getTreatmentProcedureTooth()))
-            .collect(groupingBy(OdDto::getPatientId, groupingBy(OdDto::getTreatmentProcedureTooth))));
+            .collect(groupingBy(MetricTooth::getPatientId, groupingBy(MetricTooth::getTreatmentProcedureTooth))));
     }
 
 }

@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentReToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentToothCount;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ZERO;
 
@@ -24,9 +23,9 @@ import static java.math.BigDecimal.ZERO;
  */
 public class L31Formula extends AbstractFormula<BigDecimal> {
 
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odQuarterSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odQuarterSource;
 
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odOneYearNearSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odOneYearNearSource;
 
     public L31Formula(MetricConfig metricConfig) {
         super(metricConfig);
@@ -39,7 +38,7 @@ public class L31Formula extends AbstractFormula<BigDecimal> {
         OdPermanentToothCount odPermanentToothCount = new OdPermanentToothCount(metricConfig, odQuarterSource).apply();
         OdPermanentReToothCount odPermanentReToothCount = new OdPermanentReToothCount(metricConfig, odQuarterSource, odOneYearNearSource, 1, 365).apply();
         try {
-            return toPercentage(divide(odPermanentReToothCount.getResult(), odPermanentToothCount.getResult()));
+            return toPercentage(odPermanentReToothCount.getResult(), odPermanentToothCount.getResult());
         } catch (ArithmeticException e) {
             return ZERO;
         }

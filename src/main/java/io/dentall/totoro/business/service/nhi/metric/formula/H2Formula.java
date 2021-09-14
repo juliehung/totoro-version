@@ -3,7 +3,6 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 import io.dentall.totoro.business.service.nhi.metric.meta.Point2;
 import io.dentall.totoro.business.service.nhi.metric.meta.Pt1;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1ButPoint6Config;
-import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.MonthSelectedSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
@@ -29,7 +28,7 @@ public class H2Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro1ButPoint6Config config = new Tro1ButPoint6Config(metricConfig);
+        Tro1ButPoint6Config config = new Tro1ButPoint6Config();
         Point2 point2 = new Point2(metricConfig, config, source).apply();
         Pt1 pt1 = new Pt1(metricConfig, config, source).apply();
         try {

@@ -32,7 +32,7 @@ public class Endo1Point extends SingleSourceMetaCalculator<Long> {
 
         return nhiMetricRawVMList.stream()
             .filter(vm -> codes.contains(vm.getTreatmentProcedureCode()))
-            .mapToLong(vm -> applyNewTreatmentPoint(vm, config))
+            .mapToLong(vm -> applyNewTreatmentPoint(vm, config, metricConfig.getHolidayMap()))
             .sum();
     }
 

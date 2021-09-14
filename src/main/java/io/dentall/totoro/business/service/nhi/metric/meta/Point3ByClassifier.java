@@ -48,7 +48,7 @@ public class Point3ByClassifier extends SingleSourceMetaCalculator<Map<Long, Lon
                     map.compute(keyId, (key, point) -> {
                         long points = entry.getValue().stream()
                             .filter(vm -> !isExaminationCodeAtSalary(vm.getTreatmentProcedureCode()))
-                            .mapToLong(vm -> applyNewTreatmentPoint(vm, config))
+                            .mapToLong(vm -> applyNewTreatmentPoint(vm, config, metricConfig.getHolidayMap()))
                             .sum();
 
                         return ofNullable(point).orElse(0L) + points;

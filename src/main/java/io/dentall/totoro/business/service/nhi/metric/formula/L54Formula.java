@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od456SurfaceCount;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.OdQuarterSource;
@@ -15,7 +15,7 @@ import java.math.BigDecimal;
  */
 public class L54Formula extends AbstractFormula<BigDecimal> {
 
-    private final Source<NhiMetricRawVM, OdDto> source;
+    private final Source<NhiMetricRawVM, MetricTooth> source;
 
     public L54Formula(MetricConfig metricConfig) {
         super(metricConfig);

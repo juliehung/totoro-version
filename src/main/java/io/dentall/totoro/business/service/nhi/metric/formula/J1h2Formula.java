@@ -2,6 +2,7 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.meta.DoctorCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Point1ByDaily;
+import io.dentall.totoro.business.service.nhi.metric.meta.Tro2AndTro3Config;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro3Config;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.QuarterByDailyOfLastYearSource;
@@ -36,7 +37,7 @@ public class J1h2Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     protected BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro3Config config = new Tro3Config(metricConfig);
+        Tro2AndTro3Config config = new Tro2AndTro3Config();
         Point1ByDaily point1ByDaily = new Point1ByDaily(metricConfig, config, quarterByDailySource).apply();
         DoctorCount doctorCount = new DoctorCount(metricConfig, config, quarterSource).apply();
 
@@ -44,7 +45,7 @@ public class J1h2Formula extends AbstractFormula<BigDecimal> {
             Long totalPoint1 = point1ByDaily.getResult().values().stream().reduce(Long::sum).orElse(0L);
             return divide(totalPoint1, doctorCount.getResult());
         } catch (ArithmeticException e) {
-            return BigDecimal.ONE;
+            return BigDecimal.ZERO;
         }
     }
 

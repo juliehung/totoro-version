@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1ReToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1ToothCount;
 import io.dentall.totoro.business.service.nhi.metric.source.*;
@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro6;
-import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 
 /**
@@ -23,11 +22,11 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.to
  */
 public class K7Formula extends AbstractFormula<BigDecimal> {
 
-    private final Source<NhiMetricRawVM, OdDto> odSource;
+    private final Source<NhiMetricRawVM, MetricTooth> odSource;
 
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odByPatientSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odByPatientSource;
 
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odPastByPatientSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odPastByPatientSource;
 
     public K7Formula(MetricConfig metricConfig) {
         super(metricConfig);
@@ -44,7 +43,7 @@ public class K7Formula extends AbstractFormula<BigDecimal> {
         Od1ToothCount od1ToothCount = new Od1ToothCount(metricConfig, odSource).apply();
         Od1ReToothCount od1ReToothCount = new Od1ReToothCount(metricConfig, odByPatientSource, odPastByPatientSource, 731, 1095).apply();
         try {
-            return toPercentage(divide(od1ReToothCount.getResult(), od1ToothCount.getResult()));
+            return toPercentage(od1ReToothCount.getResult(), od1ToothCount.getResult());
         } catch (ArithmeticException e) {
             return BigDecimal.ZERO;
         }

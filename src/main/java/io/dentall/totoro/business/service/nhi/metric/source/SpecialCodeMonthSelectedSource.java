@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 import static io.dentall.totoro.business.service.nhi.NhiSpecialCode.OTHER;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.groupingBy;
 
 /**
@@ -22,9 +23,15 @@ public class SpecialCodeMonthSelectedSource extends AbstractSource<NhiMetricRawV
 
     @Override
     public List<Map<NhiSpecialCode, List<NhiMetricRawVM>>> doFilter(Stream<NhiMetricRawVM> source) {
-        return singletonList(source
-            .filter(vm -> vm.getTreatmentProcedureSpecificCode() != null)
-            .collect(groupingBy(vm -> vm.getTreatmentProcedureSpecificCode() != null ? vm.getTreatmentProcedureSpecificCode() : OTHER)));
+        return singletonList(source.collect(groupingBy(vm -> mapToSpecialCode(vm.getTreatmentProcedureSpecificCode()))));
+    }
+
+    private NhiSpecialCode mapToSpecialCode(String specialCode) {
+        try {
+            return ofNullable(specialCode).map(NhiSpecialCode::valueOf).orElse(OTHER);
+        } catch (IllegalArgumentException e) {
+            return OTHER;
+        }
     }
 
 }

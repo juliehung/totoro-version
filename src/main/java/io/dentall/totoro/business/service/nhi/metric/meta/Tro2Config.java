@@ -1,11 +1,8 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
-
 public class Tro2Config extends MetaConfig {
 
-    public Tro2Config(MetricConfig metricConfig) {
-        super(metricConfig);
+    public Tro2Config() {
         this.setExcludeHolidayPoint(true);
     }
 

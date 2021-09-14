@@ -5,7 +5,12 @@ import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
+
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.maxBy;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * 部分負擔點數
@@ -25,8 +30,12 @@ public class Point4 extends SingleSourceMetaCalculator<Long> {
         List<NhiMetricRawVM> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
 
         return nhiMetricRawVMList.stream()
+            .filter(vm -> isNotBlank(vm.getPartialBurden()))
+            .collect(groupingBy(NhiMetricRawVM::getDisposalId, maxBy(comparing(NhiMetricRawVM::getDisposalId))))
+            .values().stream()
+            .filter(Optional::isPresent)
+            .map(Optional::get)
             .map(NhiMetricRawVM::getPartialBurden)
-            .filter(Objects::nonNull)
             .map(Long::valueOf)
             .reduce(Long::sum)
             .orElse(0L);

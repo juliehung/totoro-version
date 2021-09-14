@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousReToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousToothCount;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.NhiCategory_SpecificCode_Group1;
-import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ZERO;
 
@@ -25,9 +24,9 @@ import static java.math.BigDecimal.ZERO;
  */
 public class A15h1Formula extends AbstractFormula<BigDecimal> {
 
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odQuarterSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odQuarterSource;
 
-    private final Source<OdDto, Map<Long, Map<String, List<OdDto>>>> odTwoYearNearSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odTwoYearNearSource;
 
     public A15h1Formula(MetricConfig metricConfig) {
         super(metricConfig);
@@ -42,7 +41,7 @@ public class A15h1Formula extends AbstractFormula<BigDecimal> {
         OdDeciduousToothCount odDeciduousTreatment = new OdDeciduousToothCount(metricConfig, odQuarterSource).apply();
         OdDeciduousReToothCount odDeciduousReTreatment = new OdDeciduousReToothCount(metricConfig, odQuarterSource, odTwoYearNearSource, 1, 450).apply();
         try {
-            return toPercentage(divide(odDeciduousReTreatment.getResult(), odDeciduousTreatment.getResult()));
+            return toPercentage(odDeciduousReTreatment.getResult(), odDeciduousTreatment.getResult());
         } catch (ArithmeticException e) {
             return ZERO;
         }

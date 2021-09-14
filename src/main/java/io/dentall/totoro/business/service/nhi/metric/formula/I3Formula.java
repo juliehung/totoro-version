@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.OdDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1Point;
 import io.dentall.totoro.business.service.nhi.metric.meta.Point3;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
@@ -13,7 +13,6 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import java.math.BigDecimal;
 
 import static io.dentall.totoro.business.service.nhi.metric.meta.Exclude.Tro1;
-import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.divide;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ZERO;
 
@@ -26,7 +25,7 @@ public class I3Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
 
-    private final Source<NhiMetricRawVM, OdDto> odSource;
+    private final Source<NhiMetricRawVM, MetricTooth> odSource;
 
     public I3Formula(MetricConfig metricConfig) {
         super(metricConfig);
@@ -38,11 +37,11 @@ public class I3Formula extends AbstractFormula<BigDecimal> {
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Tro1Config config = new Tro1Config(metricConfig);
+        Tro1Config config = new Tro1Config();
         Point3 point3 = new Point3(metricConfig, config, source).apply();
         Od1Point od1Point = new Od1Point(metricConfig, config, odSource).apply();
         try {
-            return toPercentage(divide(od1Point.getResult(), point3.getResult()));
+            return toPercentage(od1Point.getResult(), point3.getResult());
         } catch (ArithmeticException e) {
             return ZERO;
         }

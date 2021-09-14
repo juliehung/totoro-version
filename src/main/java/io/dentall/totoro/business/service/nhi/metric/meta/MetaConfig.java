@@ -1,12 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
-import io.dentall.totoro.domain.Holiday;
-
-import java.time.LocalDate;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 public class MetaConfig {
 
@@ -28,13 +22,7 @@ public class MetaConfig {
     // 國定假日排除點數上限 20,000 點 (超過部分要算入點數)
     private boolean exclude20000Point1ByDay = false;
 
-    private Map<LocalDate, Optional<Holiday>> holidayMap;
-
     public MetaConfig() {
-    }
-
-    public MetaConfig(MetricConfig metricConfig) {
-        this.holidayMap = metricConfig.getHolidayMap();
     }
 
     public boolean isUse00121CPoint() {
@@ -87,10 +75,6 @@ public class MetaConfig {
         this.excludeHolidayPoint = excludeHolidayPoint;
     }
 
-    public Map<LocalDate, Optional<Holiday>> getHolidayMap() {
-        return holidayMap;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -105,12 +89,11 @@ public class MetaConfig {
             includePoint6By12MPoints == config.includePoint6By12MPoints &&
             useOriginPoint == config.useOriginPoint &&
             excludeHolidayPoint == config.excludeHolidayPoint &&
-            exclude20000Point1ByDay == config.exclude20000Point1ByDay &&
-            Objects.equals(holidayMap, config.holidayMap);
+            exclude20000Point1ByDay == config.exclude20000Point1ByDay;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(use00121CPoint, excludeHideoutPoint, includePoint6By12MPoints, useOriginPoint, excludeHolidayPoint, exclude20000Point1ByDay, holidayMap);
+        return Objects.hash(use00121CPoint, excludeHideoutPoint, includePoint6By12MPoints, useOriginPoint, excludeHolidayPoint, exclude20000Point1ByDay);
     }
 }
