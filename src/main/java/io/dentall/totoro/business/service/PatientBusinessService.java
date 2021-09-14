@@ -16,7 +16,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.zalando.problem.Status;
 
@@ -28,6 +32,7 @@ import java.util.stream.Collectors;
 
 import static io.dentall.totoro.service.util.DateTimeUtil.convertLocalDateToBeginOfDayInstant;
 import static io.dentall.totoro.service.util.DateTimeUtil.convertLocalDateToEndOfDayInstant;
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class PatientBusinessService {
@@ -94,7 +99,7 @@ public class PatientBusinessService {
                 .getTeethGraphPermanentSwitch()
                 .chars()
                 .mapToObj(i -> (char) i)
-                .collect(Collectors.toList()));
+                .collect(toList()));
     }
 
     public PatientVM findPatientWithFirstVisitDate(Long id) {
@@ -138,13 +143,24 @@ public class PatientBusinessService {
         return patientRepository.findByMedicalId(result, page);
     }
 
-    public List<PatientSearchVM> findByRegistration(Instant begin, Instant end) {
+    public List<PatientSearchVM> findByRegistration(Instant begin, Instant end, Direction direction) {
         if (begin == null || end == null) {
             begin = convertLocalDateToBeginOfDayInstant(LocalDate.now());
             end = convertLocalDateToEndOfDayInstant(LocalDate.now());
         }
 
-        return patientRepository.findAllByRegistration(begin, end)
-            .stream().map(PatientDomainMapper.INSTANCE::mapToSearchVM).collect(Collectors.toList());
+        Order order = new Order(direction, "arrival_time");
+        Sort sort = Sort.by(
+            order, Order.asc("id"),
+            Order.asc("name"),
+            Order.asc("birth"),
+            Order.asc("medical_id"),
+            Order.asc("gender"));
+        PageRequest pageRequest = PageRequest.of(0, Integer.MAX_VALUE, sort);
+
+        List<PatientSearchVM> result = patientRepository.findAllByRegistration(begin, end, pageRequest)
+            .stream().map(PatientDomainMapper.INSTANCE::mapToSearchVM).collect(toList());
+
+        return result.stream().distinct().collect(toList());
     }
 }

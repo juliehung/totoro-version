@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -99,10 +101,13 @@ public class InternalPatientResource {
 
     @GetMapping("/has-registration")
     @Timed
-    public ResponseEntity<List<PatientSearchVM>> findByRegistration(@RequestParam(required = false) Instant begin, @RequestParam(required = false) Instant end) {
-        log.debug("REST request to get a page of Patients, begin[{}], end[{}]", begin, end);
+    public ResponseEntity<List<PatientSearchVM>> findByRegistration(
+        @RequestParam(required = false) Instant begin,
+        @RequestParam(required = false) Instant end,
+        @RequestParam(required = false, defaultValue = "DESC") Direction direction) {
+        log.debug("REST request to get Patients, begin[{}], end[{}], direction[{}]", begin, end, direction);
 
-        List<PatientSearchVM> list = patientBusinessService.findByRegistration(begin, end);
+        List<PatientSearchVM> list = patientBusinessService.findByRegistration(begin, end, direction);
         return ResponseEntity.ok().body(list);
     }
 }
