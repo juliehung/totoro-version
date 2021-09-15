@@ -337,8 +337,10 @@ public class NhiRuleCheckUtil {
                         excludeTreatmentProcedureIds.add(txSnapshot.getId());
                     }
 
-                    // Check if it is belong to target nhi code
-                    if (code.equals(txSnapshot.getNhiCode())) {
+                    // Check if it is belong to target nhi code and been indicated as target
+                    if (code.equals(txSnapshot.getNhiCode()) &&
+                        txSnapshot.isTargetTx()
+                    ) {
                         NhiExtendTreatmentProcedure netp = new NhiExtendTreatmentProcedure()
                             .a71(body.getDisposalTime())
                             .a73(txSnapshot.getNhiCode())
@@ -510,6 +512,17 @@ public class NhiRuleCheckUtil {
             // Operate NRC logic for current disposal's treatment procedures
             for (NhiRuleCheckMonthDeclarationTx v : vs) {
                 try {
+                    // select target tx
+                    body.getTxSnapshots().stream()
+                        .map(d -> {
+                            if (v.getTreatmentProcedureId().equals(d.getId())) {
+                                d.setTargetTx(true);
+                            } else {
+                                d.setTargetTx(false);
+                            }
+                            return d;
+                        });
+                    // do rule check logic
                     NhiRuleCheckResultVM vm = this.dispatch(v.getNhiCode(), body);
                     List<String> distinctMessage = new ArrayList<>();
                     for (String vmMsg : vm.getMessages()) {

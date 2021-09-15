@@ -4,6 +4,9 @@ import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import org.apache.commons.lang3.StringUtils;
 
 public class NhiRuleCheckTxSnapshot {
+
+    private boolean isTargetTx;
+
     private Long id;
 
     private String nhiCode;
@@ -11,6 +14,14 @@ public class NhiRuleCheckTxSnapshot {
     private String teeth;
 
     private String surface;
+
+    public boolean isTargetTx() {
+        return isTargetTx;
+    }
+
+    public void setTargetTx(boolean targetTx) {
+        isTargetTx = targetTx;
+    }
 
     public Long getId() {
         return id;

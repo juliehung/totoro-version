@@ -578,7 +578,6 @@ public class PatientService extends QueryService<Patient> {
 
     /**
      * 特殊 rule check 只實作指定代碼(81/91004C)，部分檢核，若原生代碼有異動，則需一併調整
-     * TODO: Fix this later
      */
     public NhiRuleCheckResultVM getPatientNhiStatus(
         String code,
@@ -587,6 +586,7 @@ public class PatientService extends QueryService<Patient> {
         NhiRuleCheckBody body = new NhiRuleCheckBody();
         List<NhiRuleCheckTxSnapshot> snapshots = new ArrayList();
         NhiRuleCheckTxSnapshot snapshot = new NhiRuleCheckTxSnapshot();
+        snapshot.setTargetTx(true);
         snapshots.add(snapshot);
         body.setTxSnapshots(snapshots);
         body.setPatientId(patientId);
