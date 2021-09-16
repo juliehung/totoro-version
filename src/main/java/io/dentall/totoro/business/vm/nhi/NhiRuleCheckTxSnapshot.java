@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public class NhiRuleCheckTxSnapshot {
 
+    // 用來指定要檢驗哪個 snapshot 的項目用
     private boolean isTargetTx;
 
     private Long id;

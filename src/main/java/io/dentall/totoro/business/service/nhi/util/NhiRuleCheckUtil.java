@@ -513,7 +513,7 @@ public class NhiRuleCheckUtil {
             for (NhiRuleCheckMonthDeclarationTx v : vs) {
                 try {
                     // select target tx
-                    body.getTxSnapshots().stream()
+                    List<NhiRuleCheckTxSnapshot> newSnapshot = body.getTxSnapshots().stream()
                         .map(d -> {
                             if (v.getTreatmentProcedureId().equals(d.getId())) {
                                 d.setTargetTx(true);
@@ -521,7 +521,10 @@ public class NhiRuleCheckUtil {
                                 d.setTargetTx(false);
                             }
                             return d;
-                        });
+                        })
+                        .collect(Collectors.toList());
+                    body.setTxSnapshots(newSnapshot);
+
                     // do rule check logic
                     NhiRuleCheckResultVM vm = this.dispatch(v.getNhiCode(), body);
                     List<String> distinctMessage = new ArrayList<>();
