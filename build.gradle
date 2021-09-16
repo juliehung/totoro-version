@@ -4,8 +4,8 @@
 buildscript {
     repositories {
         mavenLocal()
-        maven { url "https://plugins.gradle.org/m2/" }
         maven { url "https://repo.spring.io/plugins-release" }
+        maven { url "https://plugins.gradle.org/m2/" }
         mavenCentral()
         google()
     }
