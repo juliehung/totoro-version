@@ -9,12 +9,12 @@ import io.dentall.totoro.business.vm.NhiMonthDeclarationRuleCheckReportVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckBody;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckReportBody;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckTxSnapshot;
 import io.dentall.totoro.domain.NhiMonthDeclarationRuleCheckReport;
 import io.dentall.totoro.domain.enumeration.BatchStatus;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
@@ -44,6 +44,49 @@ public class NhiRuleCheckResource {
     ) {
         this.nhiRuleCheckUtil = nhiRuleCheckUtil;
         this.applicationContext = applicationContext;
+    }
+
+    @PostMapping("/validation")
+    @Timed
+    public ResponseEntity<NhiRuleCheckResultVM> validate(
+        @RequestBody NhiRuleCheckBody body
+    ) throws
+        InvocationTargetException,
+        IllegalAccessException
+    {
+        try {
+            NhiRuleCheckResultVM result = new NhiRuleCheckResultVM();
+            for (NhiRuleCheckTxSnapshot snapshot : body.getTxSnapshots()) {
+                List<NhiRuleCheckTxSnapshot> newSnapshots = body.getTxSnapshots().stream()
+                    .map(d -> {
+                        if (snapshot.getId().equals(d.getId())) {
+                            d.setTargetTx(true);
+                        } else {
+                            d.setTargetTx(false);
+                        }
+                        return d;
+                    })
+                    .collect(Collectors.toList());
+                body.setTxSnapshots(newSnapshots);
+                NhiRuleCheckResultVM tmp = nhiRuleCheckUtil.dispatch(snapshot.getNhiCode(), body);
+
+                // Assemble results
+                result.validated(result.isValidated() && tmp.isValidated());
+                result.getMessages().addAll(tmp.getMessages());
+                result.getCheckHistory().addAll(tmp.getCheckHistory());
+            }
+            return new ResponseEntity<>(
+                result,
+                HttpStatus.OK
+            );
+        } catch (NoSuchMethodException | NoSuchFieldException e) {
+            logger.error("NhiRuleCheckResource requested a code not supported");
+            return new ResponseEntity<>(
+                new NhiRuleCheckResultVM()
+                    .validated(true),
+                HttpStatus.OK
+            );
+        }
     }
 
     // 即便 vm validation 為 false ，仍有需要顯示的 message
