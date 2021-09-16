@@ -59,7 +59,9 @@ public class NhiRuleCheckResource {
             for (NhiRuleCheckTxSnapshot snapshot : body.getTxSnapshots()) {
                 List<NhiRuleCheckTxSnapshot> newSnapshots = body.getTxSnapshots().stream()
                     .map(d -> {
-                        if (snapshot.getId().equals(d.getId())) {
+                        if (snapshot.getId() == null ||
+                            snapshot.getId().equals(d.getId())
+                        ) {
                             d.setTargetTx(true);
                         } else {
                             d.setTargetTx(false);
