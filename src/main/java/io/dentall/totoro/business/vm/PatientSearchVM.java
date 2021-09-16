@@ -3,6 +3,7 @@ package io.dentall.totoro.business.vm;
 import io.dentall.totoro.domain.enumeration.Gender;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class PatientSearchVM {
 
@@ -99,4 +100,27 @@ public class PatientSearchVM {
         this.vipPatient = vipPatient;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        PatientSearchVM that = (PatientSearchVM) o;
+        return Objects.equals(id, that.id)
+            && Objects.equals(name, that.name)
+            && Objects.equals(medicalId, that.medicalId)
+            && Objects.equals(birth, that.birth)
+            && Objects.equals(phone, that.phone)
+            && Objects.equals(nationalId, that.nationalId)
+            && gender == that.gender
+            && Objects.equals(vipPatient, that.vipPatient);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, medicalId, birth, phone, nationalId, gender, vipPatient);
+    }
 }

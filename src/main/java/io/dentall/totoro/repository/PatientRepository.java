@@ -108,25 +108,29 @@ public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpec
 
 
     @Query(nativeQuery = true,
-        value = "select distinct" +
-            "       p.id," +
-            "       p.name," +
-            "       p.medical_id as medicalId," +
-            "       p.birth," +
-            "       p.phone," +
-            "       p.national_id as nationalId," +
-            "       p.gender," +
-            "       p.vip_patient as vipPatient " +
-            "from appointment a, " +
-            "     registration r, " +
-            "     patient p " +
-            "where a.registration_id = r.id" +
-            "  and a.patient_id = p.id" +
-            "  and a.expected_arrival_time between ?1  and ?2 " +
-            "order by p.id," +
-            "         p.name," +
-            "         p.birth," +
-            "         p.medical_id," +
-            "         p.gender")
-    List<PatientSearchDTO> findAllByRegistration(Instant start, Instant end);
+        value = "select a.id, " +
+            "       a.name, " +
+            "       a.medical_id  as medicalId, " +
+            "       a.birth, " +
+            "       a.phone, " +
+            "       a.national_id as nationalId, " +
+            "       a.gender, " +
+            "       a.vip_patient as vipPatient, " +
+            "       a.arrival_time " +
+            "from (select p.id, " +
+            "             p.name, " +
+            "             p.medical_id, " +
+            "             p.birth, " +
+            "             p.phone, " +
+            "             p.national_id, " +
+            "             p.gender, " +
+            "             p.vip_patient, " +
+            "             r.arrival_time " +
+            "      from appointment a, " +
+            "           registration r, " +
+            "           patient p " +
+            "      where a.registration_id = r.id " +
+            "        and a.patient_id = p.id " +
+            "        and a.expected_arrival_time between ?1 and ?2) a")
+    List<PatientSearchDTO> findAllByRegistration(Instant start, Instant end, Pageable pageable);
 }
