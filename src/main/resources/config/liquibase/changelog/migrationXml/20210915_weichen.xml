@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20210915-weichen" author="WeiChen">
+        <sql>
+            create table treatment_procedure_del
+            (
+                id                 bigint       not null
+                    constraint pk_treatment_procedure_del
+                        primary key,
+                status             varchar(255) not null,
+                quantity           integer,
+                total              double precision,
+                note               varchar(5100),
+                completed_date     timestamp,
+                price              double precision,
+                nhi_category       varchar(255),
+                nhi_description    varchar(5100),
+                nhi_procedure_id   bigint,
+                treatment_task_id  bigint,
+                procedure_id       bigint,
+                appointment_id     bigint,
+                disposal_id        bigint,
+                doctor_user_id     bigint,
+                created_by         varchar(50)  not null,
+                created_date       timestamp    not null,
+                last_modified_by   varchar(50),
+                last_modified_date timestamp,
+                nhi_icd_10_cm      varchar(255),
+                ic_card_eject      boolean
+            );
+        </sql>
+    </changeSet>
+</databaseChangeLog>
