@@ -598,6 +598,7 @@ public class PatientService extends QueryService<Patient> {
 
         NhiRuleCheckDTO dto = null;
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+        snapshot.setTargetTx(true);
 
         switch(code) {
             case "81":
