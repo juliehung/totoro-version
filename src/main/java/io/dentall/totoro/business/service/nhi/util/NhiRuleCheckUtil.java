@@ -2646,6 +2646,13 @@ public class NhiRuleCheckUtil {
                         DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate)
                     );
                     break;
+                case D1_5:
+                    m = String.format(
+                        NhiRuleCheckFormat.D1_5.getFormat(),
+                        targetCode,
+                        limitValueString
+                    );
+                    break;
                 case D2_1:
                     m = String.format(
                         NhiRuleCheckFormat.D2_1.getFormat(),
