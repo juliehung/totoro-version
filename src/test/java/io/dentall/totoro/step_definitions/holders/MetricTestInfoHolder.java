@@ -3,6 +3,7 @@ package io.dentall.totoro.step_definitions.holders;
 import io.cucumber.spring.ScenarioScope;
 import io.dentall.totoro.business.service.nhi.metric.meta.Exclude;
 import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricSubject;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.User;
@@ -17,7 +18,7 @@ import java.util.List;
 @Data
 public class MetricTestInfoHolder {
 
-    private User subject;
+    private MetricSubject subject;
 
     private List<Patient> patients = new ArrayList<>();
 

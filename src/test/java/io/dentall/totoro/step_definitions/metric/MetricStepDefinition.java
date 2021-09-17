@@ -197,7 +197,7 @@ public class MetricStepDefinition {
     @DataTableType
     public List<? extends NhiMetricRawVM> convertToNhiMetricRawVM(DataTable dataTable) {
         List<Map<String, String>> datalist = dataTable.asMaps();
-        User subject = metricTestInfoHolder.getSubject();
+        MetricSubject subject = metricTestInfoHolder.getSubject();
         List<User> doctors = metricTestInfoHolder.getDoctors();
         List<Patient> patients = metricTestInfoHolder.getPatients();
         Map<Long, Long> disposalIdMap = new HashMap<>();
@@ -219,7 +219,7 @@ public class MetricStepDefinition {
             if (metricTreatment.getDoctorName() == null) {
                 ofNullable(subject).ifPresent(s -> {
                     metricTreatment.setDoctorId(subject.getId());
-                    metricTreatment.setDoctorName(subject.getFirstName());
+                    metricTreatment.setDoctorName(subject.getName());
                 });
             } else {
                 doctors.stream()
@@ -333,7 +333,7 @@ public class MetricStepDefinition {
     }
 
     private MetricConfig getMetricConfig(LocalDate date) {
-        User subject = metricTestInfoHolder.getSubject();
+        MetricSubject subject = metricTestInfoHolder.getSubject();
         List<? extends NhiMetricRawVM> source = metricTestInfoHolder.getSource();
         Map<LocalDate, Optional<Holiday>> holidayMap =
             nhiMetricService.loadHolidayDataSet().stream().collect(groupingBy(Holiday::getDate, maxBy(comparing(Holiday::getDate))));
@@ -387,7 +387,7 @@ public class MetricStepDefinition {
         User subject = new User();
         subject.setId(0L);
         subject.setFirstName(doctorName);
-        metricTestInfoHolder.setSubject(subject);
+        metricTestInfoHolder.setSubject(new DoctorSubject(subject));
     }
 
     @Given("設定指標主體類型為醫師 {word} id {word}")
@@ -395,7 +395,7 @@ public class MetricStepDefinition {
         User subject = new User();
         subject.setId(Long.parseLong(id));
         subject.setFirstName(doctorName);
-        metricTestInfoHolder.setSubject(subject);
+        metricTestInfoHolder.setSubject(new DoctorSubject(subject));
     }
 
     @Given("設定醫師 {word}")
@@ -409,7 +409,7 @@ public class MetricStepDefinition {
 
     @Given("設定指標主體類型為診所")
     public void createSubject() {
-        metricTestInfoHolder.setSubject(CLINIC);
+        metricTestInfoHolder.setSubject(new ClinicSubject());
     }
 
     @Given("設定病人 {word} {int} 歲")

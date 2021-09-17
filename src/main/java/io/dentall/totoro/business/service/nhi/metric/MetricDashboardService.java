@@ -2,15 +2,11 @@ package io.dentall.totoro.business.service.nhi.metric;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.*;
 import io.dentall.totoro.business.service.nhi.metric.formula.*;
-import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
-import io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType;
-import io.dentall.totoro.business.service.nhi.metric.source.MonthSelectedSource;
-import io.dentall.totoro.business.service.nhi.metric.source.SourceKey;
+import io.dentall.totoro.business.service.nhi.metric.source.*;
 import io.dentall.totoro.business.service.nhi.metric.vm.DoctorData;
 import io.dentall.totoro.business.service.nhi.metric.vm.NameValue;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.Holiday;
-import io.dentall.totoro.domain.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,14 +25,16 @@ import static java.util.stream.Collectors.toList;
 @Transactional
 public class MetricDashboardService {
 
-    public List<DashboardDto> metric(final LocalDate baseDate, List<User> subjects, List<? extends NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
+    public List<DashboardDto> metric(
+        final LocalDate baseDate, List<MetricSubject> subjects, List<? extends NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
         return subjects.parallelStream()
             .map(subject -> buildMetric(baseDate, subjects, subject, source, holidayMap))
             .filter(Objects::nonNull)
             .collect(toList());
     }
 
-    private DashboardDto buildMetric(LocalDate baseDate, List<User> allSubject, User subject, List<? extends NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
+    private DashboardDto buildMetric(
+        LocalDate baseDate, List<MetricSubject> allSubject, MetricSubject subject, List<? extends NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
         MetricConfig metricConfig = new MetricConfig(subject, baseDate, source).applyHolidayMap(holidayMap);
 
         if (!metricConfig.isSourceExist(metricConfig.getSubjectSource().key()) || metricConfig.retrieveSource(metricConfig.getSubjectSource().key()).size() == 0) {
@@ -108,7 +106,7 @@ public class MetricDashboardService {
         List<DisposalSummaryDto> disposalSummaryDtoList = null;
         if (metricSubjectType == clinic) {
             HighestDoctorDto highestDoctorDto = new L9Formula(metricConfig).calculate();
-            allSubject.stream().filter(val -> val.getId().equals(highestDoctorDto.getId())).map(User::getFirstName).findFirst().ifPresent(nameValue::setName);
+            allSubject.stream().filter(val -> val.getId().equals(highestDoctorDto.getId())).map(MetricSubject::getName).findFirst().ifPresent(nameValue::setName);
             nameValue.setValue(highestDoctorDto.getValue());
             doctorSummaryDtoList = new DoctorSummaryFormula(metricConfig).calculate();
         } else {
@@ -186,8 +184,8 @@ public class MetricDashboardService {
         } else {
             dashboardDto.setL10(nameValue);
             DoctorData doctorData = new DoctorData();
-            doctorData.setDoctorId(metricConfig.getSubject().getId());
-            doctorData.setDoctorName(metricConfig.getSubject().getFirstName());
+            doctorData.setDoctorId(metricConfig.getMetricSubject().getId());
+            doctorData.setDoctorName(metricConfig.getMetricSubject().getName());
             dashboardDto.setDoctor(doctorData);
             dashboardDto.setDisposalSummary(disposalSummaryDtoList);
         }

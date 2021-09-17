@@ -3,13 +3,24 @@ package io.dentall.totoro.business.service.nhi.metric.source;
 import io.dentall.totoro.business.service.nhi.metric.meta.Exclude;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
-public abstract class SubjectSource<S extends NhiMetricRawVM, R> extends AbstractSource<S, R> {
+import java.util.List;
+import java.util.stream.Stream;
+
+public abstract class SubjectSource extends AbstractSource<NhiMetricRawVM, NhiMetricRawVM> {
 
     private final MetricConfig metricConfig;
+
+    private final MetricSubject metricSubject;
 
     public SubjectSource(MetricConfig metricConfig) {
         super(metricConfig.getInitialSource());
         this.metricConfig = metricConfig;
+        this.metricSubject = metricConfig.getMetricSubject();
+    }
+
+    @Override
+    public List<NhiMetricRawVM> doFilter(Stream<NhiMetricRawVM> stream) {
+        return this.metricSubject.getFilterFunction().apply(stream);
     }
 
     @Override
