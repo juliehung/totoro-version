@@ -9,7 +9,6 @@ import io.dentall.totoro.business.vm.NhiMonthDeclarationRuleCheckReportVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckBody;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckReportBody;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
-import io.dentall.totoro.business.vm.nhi.NhiRuleCheckTxSnapshot;
 import io.dentall.totoro.domain.NhiMonthDeclarationRuleCheckReport;
 import io.dentall.totoro.domain.enumeration.BatchStatus;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
@@ -56,21 +55,18 @@ public class NhiRuleCheckResource {
     {
         try {
             NhiRuleCheckResultVM result = new NhiRuleCheckResultVM();
-            for (NhiRuleCheckTxSnapshot snapshot : body.getTxSnapshots()) {
-                List<NhiRuleCheckTxSnapshot> newSnapshots = body.getTxSnapshots().stream()
-                    .map(d -> {
-                        if (snapshot.getId() == null ||
-                            snapshot.getId().equals(d.getId())
-                        ) {
-                            d.setTargetTx(true);
-                        } else {
-                            d.setTargetTx(false);
-                        }
-                        return d;
-                    })
-                    .collect(Collectors.toList());
-                body.setTxSnapshots(newSnapshots);
-                NhiRuleCheckResultVM tmp = nhiRuleCheckUtil.dispatch(snapshot.getNhiCode(), body);
+            for (int i = 0; i < body.getTxSnapshots().size(); i++) {
+                for (int j = 0; j < body.getTxSnapshots().size(); j++) {
+                    if (j != i) {
+                        body.getTxSnapshots().get(j).setTargetTx(false);
+                    } else {
+                        body.getTxSnapshots().get(j).setTargetTx(true);
+                    }
+                }
+                NhiRuleCheckResultVM tmp = nhiRuleCheckUtil.dispatch(
+                    body.getTxSnapshots().get(i).getNhiCode(),
+                    body
+                );
 
                 // Assemble results
                 result.validated(result.isValidated() && tmp.isValidated());
