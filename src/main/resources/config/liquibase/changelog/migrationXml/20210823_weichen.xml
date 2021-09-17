@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20210823-weichen" author="WeiChen">
+        <update tableName="nhi_procedure">
+            <column name="description" value="Dx：FM Gingivitis or FM Periodontitis.\nPMH：Type II diabetes mellitus for 3 years\n(1)or(2)\n(1)P't was treated with Metfomin(biguanides)\nor  Basal insulin or other DM drugs.\n(2)HbA1c=6.5% for past 2~3 months.\nTx：\n1.Plaque control with topical application of disclosing agent,OHI.\n2.FM scaling." />
+            <column name="chief_complaint" value="Gum bleeding or Gum tenderness"/>
+            <where>id = 236 and code = '91089C'</where>
+        </update>
+        <update tableName="nhi_procedure">
+            <column name="default_icd_10_cm_id" value="14"/>
+            <where>id = 211 and code = '91021C'</where>
+        </update>
+        <update tableName="nhi_procedure">
+            <column name="default_icd_10_cm_id" value="14"/>
+            <where>id = 212 and code = '91022C'</where>
+        </update>
+        <update tableName="nhi_procedure">
+            <column name="default_icd_10_cm_id" value="14"/>
+            <where>id = 213 and code = '91023C'</where>
+        </update>
+    </changeSet>
+</databaseChangeLog>

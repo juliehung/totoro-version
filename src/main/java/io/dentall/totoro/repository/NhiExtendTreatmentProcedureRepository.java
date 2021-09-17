@@ -77,7 +77,11 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
             "       p.name as patientName, " +
             "       a.doctor_user_id as doctorId, " +
             "       ju.first_name as doctorName, " +
-            "       ned.a17 as disposalTime, " +
+            "       case when ned.a19 = '1' " +
+            "           then ned.a17 " +
+            "           else ned.a54 " +
+            "       end as disposalTime, " +
+            "       d.date_time as displayDisposalTime, " +
             "       ned.a23 as nhiCategory, " +
             "       tp.id as treatmentProcedureId, " +
             "       netp.a73 as nhiCode, " +
