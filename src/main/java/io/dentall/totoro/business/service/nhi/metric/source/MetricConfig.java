@@ -74,11 +74,7 @@ public class MetricConfig {
     }
 
     public Source<?, ?> getSubjectSource() {
-        if (this.subjectType == clinic) {
-            return new ClinicSource(this);
-        } else {
-            return new DoctorSource(this);
-        }
+        return this.metricSubject.getSource(this);
     }
 
     public MetricSubjectType getSubjectType() {
