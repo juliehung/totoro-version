@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20210922-weichen" author="WeiChen">
+        <sql>
+            create table treatment_procedure_ic_operation_record
+            (
+                id                 bigint       not null
+                    constraint pk_treatment_procedure_ic_operation_record
+                        primary key,
+                treatment_procedure_id bigint not null,
+                error_code varchar,
+                error_message varchar
+            );
+        </sql>
+        <createIndex tableName="treatment_procedure_ic_operation_record" indexName="idx_treatment_procedure_ic_operation_record_id">
+            <column name="id"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

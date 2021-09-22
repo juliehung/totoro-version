@@ -192,10 +192,14 @@ public class TreatmentProcedureService {
     public void delete(Long id) throws BadRequestAlertException {
         log.debug("Request to delete TreatmentProcedure : {}", id);
         TreatmentProcedure tp = treatmentProcedureRepository.findById(id)
-            .orElseThrow(() -> new BadRequestAlertException("", "", ""));
-        TreatmentProcedureDel tpd = new TreatmentProcedureDel();
-        TreatmentProcedureDelMapper.INSTANCE.transformTreatmentProcedureToTreatmentProcedureDel(tp, tpd);
-        treatmentProcedureDelRepository.save(tpd);
+            .orElseThrow(() -> new BadRequestAlertException("Not found tp with id", "TREATMENT_PROCEDURE", "idnotfound"));
+        Optional<NhiExtendTreatmentProcedure> netp =
+            nhiExtendTreatmentProcedureRepository.findByTreatmentProcedure_IdAndA79IsNull(tp.getId());
+        if (netp.isPresent()) {
+            TreatmentProcedureDel tpd = new TreatmentProcedureDel();
+            TreatmentProcedureDelMapper.INSTANCE.transformTreatmentProcedureToTreatmentProcedureDel(tp, tpd);
+            treatmentProcedureDelRepository.save(tpd);
+        }
         treatmentProcedureRepository.deleteById(id);
     }
 
