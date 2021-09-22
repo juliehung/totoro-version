@@ -127,7 +127,7 @@ Feature: 92031C 小臼齒根尖切除術
             | 92031C       | 86         | DL           | NotPass   |
             | 92031C       | 91         | DL           | NotPass   |
 
-    Scenario Outline: （HIS）730天內，不應有 92031C 診療項目
+    Scenario Outline: （HIS）730天內，同牙位不應有 92031C 診療項目
         Given 建立醫師
         Given Scott 24 歲病人
         Given 在過去第 <PastTreatmentDays> 天，建立預約
@@ -142,10 +142,16 @@ Feature: 92031C 小臼齒根尖切除術
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
+        Then 病患的牙齒 <TreatmentTeeth> 在 <PastTreatmentDays> 天前，被申報 <TreatmentNhiCode> 健保代碼，而現在病患的牙齒 <IssueTeeth> 要被申報 <IssueNhiCode> 健保代碼，是否抵觸同顆牙齒在 <DayRange> 天內不得申報指定健保代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_3
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | GapDay | PassOrNot |
-            | 92031C       | 14         | DL           | 0                 | 92031C           | 14             | 730    | NotPass   |
-            | 92031C       | 14         | DL           | 729               | 92031C           | 14             | 730    | NotPass   |
-            | 92031C       | 14         | DL           | 730               | 92031C           | 14             | 730    | NotPass   |
-            | 92031C       | 14         | DL           | 731               | 92031C           | 14             | 730    | Pass      |
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | DayRange | PassOrNot |
+            # 同牙
+            | 92031C       | 14         | DL           | 0                 | 92031C           | 14             | 730      | NotPass   |
+            | 92031C       | 14         | DL           | 729               | 92031C           | 14             | 730      | NotPass   |
+            | 92031C       | 14         | DL           | 730               | 92031C           | 14             | 730      | NotPass   |
+            | 92031C       | 14         | DL           | 731               | 92031C           | 14             | 730      | Pass      |
+            # 不同牙
+            | 92031C       | 14         | DL           | 0                 | 92031C           | 15             | 730      | Pass      |
+            | 92031C       | 14         | DL           | 729               | 92031C           | 15             | 730      | Pass      |
+            | 92031C       | 14         | DL           | 730               | 92031C           | 15             | 730      | Pass      |
+            | 92031C       | 14         | DL           | 731               | 92031C           | 15             | 730      | Pass      |

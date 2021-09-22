@@ -174,7 +174,7 @@ Feature: 91001C 牙周病緊急處置
             | 91001C       | 81         | MOB          | 當月初             | 91001C         | 51           | Pass      |
             | 91001C       | 81         | MOB          | 當月初             | 91001C         | 81           | NotPass   |
 
-    Scenario Outline: （Disposal）同日不得同時有 91003C~91005C/91017C/91019C/91103C~91104C 診療項目
+    Scenario Outline: （Disposal）同日不得同時有 91003C~91005C/91017C/91019C/91089C/91103C~91104C 診療項目
         Given 建立醫師
         Given Stan 24 歲病人
         Given 建立預約
@@ -192,10 +192,11 @@ Feature: 91001C 牙周病緊急處置
             | 91001C       | 11         | MOB          | 91005C           | 11             | MOB              | NotPass   |
             | 91001C       | 11         | MOB          | 91017C           | 11             | MOB              | NotPass   |
             | 91001C       | 11         | MOB          | 91019C           | 11             | MOB              | NotPass   |
+            | 91001C       | 11         | MOB          | 91089C           | 11             | MOB              | NotPass   |
             | 91001C       | 11         | MOB          | 91103C           | 11             | MOB              | NotPass   |
             | 91001C       | 11         | MOB          | 91104C           | 11             | MOB              | NotPass   |
 
-    Scenario Outline: （HIS-Today）同日不得同時有 91003C~91005C/91017C/91019C/91103C~91104C 診療項目
+    Scenario Outline: （HIS-Today）同日不得同時有 91003C~91005C/91017C/91019C/91089C/91103C~91104C 診療項目
         Given 建立醫師
         Given Stan 24 歲病人
         Given 在 <PastTreatmentDate> ，建立預約
@@ -218,6 +219,7 @@ Feature: 91001C 牙周病緊急處置
             | 91001C       | 11         | MOB          | 當日                | 91005C           | 11             | MOB              | NotPass   |
             | 91001C       | 11         | MOB          | 當日                | 91017C           | 11             | MOB              | NotPass   |
             | 91001C       | 11         | MOB          | 當日                | 91019C           | 11             | MOB              | NotPass   |
+            | 91001C       | 11         | MOB          | 當日                | 91089C           | 11             | MOB              | NotPass   |
             | 91001C       | 11         | MOB          | 當日                | 91103C           | 11             | MOB              | NotPass   |
             | 91001C       | 11         | MOB          | 當日                | 91104C           | 11             | MOB              | NotPass   |
             | 91001C       | 11         | MOB          | 昨日                | 91003C           | 11             | MOB              | Pass      |
@@ -225,10 +227,11 @@ Feature: 91001C 牙周病緊急處置
             | 91001C       | 11         | MOB          | 昨日                | 91005C           | 11             | MOB              | Pass      |
             | 91001C       | 11         | MOB          | 昨日                | 91017C           | 11             | MOB              | Pass      |
             | 91001C       | 11         | MOB          | 昨日                | 91019C           | 11             | MOB              | Pass      |
+            | 91001C       | 11         | MOB          | 昨日                | 91089C           | 11             | MOB              | Pass      |
             | 91001C       | 11         | MOB          | 昨日                | 91103C           | 11             | MOB              | Pass      |
             | 91001C       | 11         | MOB          | 昨日                | 91104C           | 11             | MOB              | Pass      |
 
-    Scenario Outline: （IC）同日不得同時有 91003C~91005C/91017C/91019C/91103C~91104C 診療項目
+    Scenario Outline: （IC）同日不得同時有 91003C~91005C/91017C/91019C/91089C/91103C~91104C 診療項目
         Given 建立醫師
         Given Stan 24 歲病人
         Given 新增健保醫療:
@@ -248,12 +251,14 @@ Feature: 91001C 牙周病緊急處置
             | 91001C       | 11         | MOB          | 當日              | 91005C         | 11           | NotPass   |
             | 91001C       | 11         | MOB          | 當日              | 91017C         | 11           | NotPass   |
             | 91001C       | 11         | MOB          | 當日              | 91019C         | 11           | NotPass   |
+            | 91001C       | 11         | MOB          | 當日              | 91089C         | 11           | NotPass   |
             | 91001C       | 11         | MOB          | 當日              | 91103C         | 11           | NotPass   |
             | 91001C       | 11         | MOB          | 當日              | 91104C         | 11           | NotPass   |
             | 91001C       | 11         | MOB          | 昨日              | 91003C         | 11           | Pass      |
             | 91001C       | 11         | MOB          | 昨日              | 91004C         | 11           | Pass      |
             | 91001C       | 11         | MOB          | 昨日              | 91005C         | 11           | Pass      |
             | 91001C       | 11         | MOB          | 昨日              | 91017C         | 11           | Pass      |
+            | 91001C       | 11         | MOB          | 昨日              | 91089C         | 11           | Pass      |
             | 91001C       | 11         | MOB          | 昨日              | 91019C         | 11           | Pass      |
             | 91001C       | 11         | MOB          | 昨日              | 91103C         | 11           | Pass      |
             | 91001C       | 11         | MOB          | 昨日              | 91104C         | 11           | Pass      |

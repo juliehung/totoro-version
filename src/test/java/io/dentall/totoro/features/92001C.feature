@@ -93,3 +93,101 @@ Feature: 92001C 非特定局部治療
             | IssueNhiCode | IssueTeeth | IssueSurface | Nums | PassOrNot |
             | 92001C       | 11         | DL           | 1    | Pass      |
             | 92001C       | 11         | DL           | 2    | NotPass   |
+
+    Scenario Outline: 檢查治療的牙位是否為 VALIDATED_ALL_EXCLUDE_FM
+        Given 建立醫師
+        Given Stan 24 歲病人
+        Given 建立預約
+        Given 建立掛號
+        Given 產生診療計畫
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
+        Then 檢查 <IssueTeeth> 牙位，依 VALIDATED_ALL_EXCLUDE_FM 判定是否為核可牙位，確認結果是否為 <PassOrNot>
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
+            # 乳牙
+            | 92001C       | 51         | DL           | Pass      |
+            | 92001C       | 52         | DL           | Pass      |
+            | 92001C       | 53         | DL           | Pass      |
+            | 92001C       | 54         | DL           | Pass      |
+            | 92001C       | 55         | DL           | Pass      |
+            | 92001C       | 61         | DL           | Pass      |
+            | 92001C       | 62         | DL           | Pass      |
+            | 92001C       | 63         | DL           | Pass      |
+            | 92001C       | 64         | DL           | Pass      |
+            | 92001C       | 65         | DL           | Pass      |
+            | 92001C       | 71         | DL           | Pass      |
+            | 92001C       | 72         | DL           | Pass      |
+            | 92001C       | 73         | DL           | Pass      |
+            | 92001C       | 74         | DL           | Pass      |
+            | 92001C       | 75         | DL           | Pass      |
+            | 92001C       | 81         | DL           | Pass      |
+            | 92001C       | 82         | DL           | Pass      |
+            | 92001C       | 83         | DL           | Pass      |
+            | 92001C       | 84         | DL           | Pass      |
+            | 92001C       | 85         | DL           | Pass      |
+            # 恆牙
+            | 92001C       | 11         | DL           | Pass      |
+            | 92001C       | 12         | DL           | Pass      |
+            | 92001C       | 13         | DL           | Pass      |
+            | 92001C       | 14         | DL           | Pass      |
+            | 92001C       | 15         | DL           | Pass      |
+            | 92001C       | 16         | DL           | Pass      |
+            | 92001C       | 17         | DL           | Pass      |
+            | 92001C       | 18         | DL           | Pass      |
+            | 92001C       | 21         | DL           | Pass      |
+            | 92001C       | 22         | DL           | Pass      |
+            | 92001C       | 23         | DL           | Pass      |
+            | 92001C       | 24         | DL           | Pass      |
+            | 92001C       | 25         | DL           | Pass      |
+            | 92001C       | 26         | DL           | Pass      |
+            | 92001C       | 27         | DL           | Pass      |
+            | 92001C       | 28         | DL           | Pass      |
+            | 92001C       | 31         | DL           | Pass      |
+            | 92001C       | 32         | DL           | Pass      |
+            | 92001C       | 33         | DL           | Pass      |
+            | 92001C       | 34         | DL           | Pass      |
+            | 92001C       | 35         | DL           | Pass      |
+            | 92001C       | 36         | DL           | Pass      |
+            | 92001C       | 37         | DL           | Pass      |
+            | 92001C       | 38         | DL           | Pass      |
+            | 92001C       | 41         | DL           | Pass      |
+            | 92001C       | 42         | DL           | Pass      |
+            | 92001C       | 43         | DL           | Pass      |
+            | 92001C       | 44         | DL           | Pass      |
+            | 92001C       | 45         | DL           | Pass      |
+            | 92001C       | 46         | DL           | Pass      |
+            | 92001C       | 47         | DL           | Pass      |
+            | 92001C       | 48         | DL           | Pass      |
+            # 無牙
+            | 92001C       |            | DL           | NotPass   |
+            #
+            | 92001C       | 19         | DL           | Pass      |
+            | 92001C       | 29         | DL           | Pass      |
+            | 92001C       | 39         | DL           | Pass      |
+            | 92001C       | 49         | DL           | Pass      |
+            | 92001C       | 59         | DL           | NotPass   |
+            | 92001C       | 69         | DL           | NotPass   |
+            | 92001C       | 79         | DL           | NotPass   |
+            | 92001C       | 89         | DL           | NotPass   |
+            | 92001C       | 99         | DL           | Pass      |
+            # 牙位為區域型態
+            | 92001C       | FM         | DL           | NotPass   |
+            | 92001C       | UR         | DL           | Pass      |
+            | 92001C       | UL         | DL           | Pass      |
+            | 92001C       | UA         | DL           | Pass      |
+            | 92001C       | UB         | DL           | NotPass   |
+            | 92001C       | LL         | DL           | Pass      |
+            | 92001C       | LR         | DL           | Pass      |
+            | 92001C       | LA         | DL           | Pass      |
+            | 92001C       | LB         | DL           | NotPass   |
+            # 非法牙位
+            | 92001C       | 00         | DL           | NotPass   |
+            | 92001C       | 01         | DL           | NotPass   |
+            | 92001C       | 10         | DL           | NotPass   |
+            | 92001C       | 56         | DL           | NotPass   |
+            | 92001C       | 66         | DL           | NotPass   |
+            | 92001C       | 76         | DL           | NotPass   |
+            | 92001C       | 86         | DL           | NotPass   |
+            | 92001C       | 91         | DL           | NotPass   |

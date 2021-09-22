@@ -15,7 +15,7 @@ Feature: 91019C 懷孕婦女牙周緊急處置
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 91019C       | 11         | MOB          | Pass      |
 
-    Scenario Outline: （Disposal）同日不得同時有 91001C/91003C/91004C/91017C/91103C/91104C 診療項目
+    Scenario Outline: （Disposal）同日不得同時有 91001C/91003C/91004C/91005C/91017C/91089C/91103C/91104C 診療項目
         Given 建立醫師
         Given Kelly 24 歲病人
         Given 建立預約
@@ -31,11 +31,13 @@ Feature: 91019C 懷孕婦女牙周緊急處置
             | 91019C       | 11         | MOB          | 91001C           | 11             | MOB              | NotPass   |
             | 91019C       | 11         | MOB          | 91003C           | 11             | MOB              | NotPass   |
             | 91019C       | 11         | MOB          | 91004C           | 11             | MOB              | NotPass   |
+            | 91019C       | 11         | MOB          | 91005C           | 11             | MOB              | NotPass   |
             | 91019C       | 11         | MOB          | 91017C           | 11             | MOB              | NotPass   |
+            | 91019C       | 11         | MOB          | 91089C           | 11             | MOB              | NotPass   |
             | 91019C       | 11         | MOB          | 91103C           | 11             | MOB              | NotPass   |
             | 91019C       | 11         | MOB          | 91104C           | 11             | MOB              | NotPass   |
 
-    Scenario Outline: （HIS-Today）同日不得同時有 91001C/91003C/91004C/91017C/91103C/91104C 診療項目
+    Scenario Outline: （HIS-Today）同日不得同時有 91001C/91003C/91004C/91005C/91017C/91089C/91103C/91104C 診療項目
         Given 建立醫師
         Given Kelly 24 歲病人
         Given 在 <PastTreatmentDate> ，建立預約
@@ -56,17 +58,21 @@ Feature: 91019C 懷孕婦女牙周緊急處置
             | 91019C       | 11         | MOB          | 當日                | 91001C           | 11             | MOB              | NotPass   |
             | 91019C       | 11         | MOB          | 當日                | 91003C           | 11             | MOB              | NotPass   |
             | 91019C       | 11         | MOB          | 當日                | 91004C           | 11             | MOB              | NotPass   |
+            | 91019C       | 11         | MOB          | 當日                | 91005C           | 11             | MOB              | NotPass   |
             | 91019C       | 11         | MOB          | 當日                | 91017C           | 11             | MOB              | NotPass   |
+            | 91019C       | 11         | MOB          | 當日                | 91089C           | 11             | MOB              | NotPass   |
             | 91019C       | 11         | MOB          | 當日                | 91103C           | 11             | MOB              | NotPass   |
             | 91019C       | 11         | MOB          | 當日                | 91104C           | 11             | MOB              | NotPass   |
             | 91019C       | 11         | MOB          | 昨日                | 91001C           | 11             | MOB              | Pass      |
             | 91019C       | 11         | MOB          | 昨日                | 91003C           | 11             | MOB              | Pass      |
             | 91019C       | 11         | MOB          | 昨日                | 91004C           | 11             | MOB              | Pass      |
+            | 91019C       | 11         | MOB          | 昨日                | 91005C           | 11             | MOB              | Pass      |
             | 91019C       | 11         | MOB          | 昨日                | 91017C           | 11             | MOB              | Pass      |
+            | 91019C       | 11         | MOB          | 昨日                | 91089C           | 11             | MOB              | Pass      |
             | 91019C       | 11         | MOB          | 昨日                | 91103C           | 11             | MOB              | Pass      |
             | 91019C       | 11         | MOB          | 昨日                | 91104C           | 11             | MOB              | Pass      |
 
-    Scenario Outline: （IC）同日不得同時有 91001C/91003C/91004C/91017C/91103C/91104C 診療項目
+    Scenario Outline: （IC）同日不得同時有 91001C/91003C/91004C/91005C/91017C/91089C/91103C/91104C 診療項目
         Given 建立醫師
         Given Kelly 24 歲病人
         Given 新增健保醫療:
@@ -84,15 +90,60 @@ Feature: 91019C 懷孕婦女牙周緊急處置
             | 91019C       | 11         | MOB          | 當日              | 91001C         | 11           | NotPass   |
             | 91019C       | 11         | MOB          | 當日              | 91003C         | 11           | NotPass   |
             | 91019C       | 11         | MOB          | 當日              | 91004C         | 11           | NotPass   |
+            | 91019C       | 11         | MOB          | 當日              | 91005C         | 11           | NotPass   |
             | 91019C       | 11         | MOB          | 當日              | 91017C         | 11           | NotPass   |
+            | 91019C       | 11         | MOB          | 當日              | 91089C         | 11           | NotPass   |
             | 91019C       | 11         | MOB          | 當日              | 91103C         | 11           | NotPass   |
             | 91019C       | 11         | MOB          | 當日              | 91104C         | 11           | NotPass   |
             | 91019C       | 11         | MOB          | 昨日              | 91001C         | 11           | Pass      |
             | 91019C       | 11         | MOB          | 昨日              | 91003C         | 11           | Pass      |
             | 91019C       | 11         | MOB          | 昨日              | 91004C         | 11           | Pass      |
+            | 91019C       | 11         | MOB          | 昨日              | 91005C         | 11           | Pass      |
             | 91019C       | 11         | MOB          | 昨日              | 91017C         | 11           | Pass      |
+            | 91019C       | 11         | MOB          | 昨日              | 91089C         | 11           | Pass      |
             | 91019C       | 11         | MOB          | 昨日              | 91103C         | 11           | Pass      |
             | 91019C       | 11         | MOB          | 昨日              | 91104C         | 11           | Pass      |
+
+    Scenario Outline: （HIS）90天內，不應有 91089C 診療項目
+        Given 建立醫師
+        Given Kelly 24 歲病人
+        Given 在過去第 <PastTreatmentDays> 天，建立預約
+        Given 在過去第 <PastTreatmentDays> 天，建立掛號
+        Given 在過去第 <PastTreatmentDays> 天，產生診療計畫
+        And 新增診療代碼:
+            | PastDays            | A72 | A73                | A74              | A75 | A76 | A77 | A78 | A79 |
+            | <PastTreatmentDays> | 3   | <TreatmentNhiCode> | <TreatmentTeeth> | MOB | 0   | 1.0 | 03  |     |
+        Given 建立預約
+        Given 建立掛號
+        Given 產生診療計畫
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
+        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | GapDay | PassOrNot |
+            | 91019C       | 11         | DL           | 89                | 91089C           | 11             | 90     | NotPass   |
+            | 91019C       | 11         | DL           | 90                | 91089C           | 11             | 90     | NotPass   |
+            | 91019C       | 11         | DL           | 91                | 91089C           | 11             | 90     | Pass      |
+
+    Scenario Outline: （IC）90天內，不應有 91089C 診療項目
+        Given 建立醫師
+        Given Kelly 24 歲病人
+        Given 新增健保醫療:
+            | PastDays          | NhiCode          | Teeth          |
+            | <PastMedicalDays> | <MedicalNhiCode> | <MedicalTeeth> |
+        Given 建立預約
+        Given 建立掛號
+        Given 產生診療計畫
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
+        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapDay | PassOrNot |
+            | 91019C       | 11         | DL           | 89              | 91089C         | 11           | 90     | NotPass   |
+            | 91019C       | 11         | DL           | 90              | 91089C         | 11           | 90     | NotPass   |
+            | 91019C       | 11         | DL           | 91              | 91089C         | 11           | 90     | Pass      |
 
     Scenario Outline: 檢查治療的牙位是否為 VALIDATED_ALL_EXCLUDE_FM
         Given 建立醫師
