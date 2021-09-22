@@ -1,7 +1,6 @@
 package io.dentall.totoro.repository;
 
 import io.dentall.totoro.domain.NhiExtendTreatmentDrug;
-import io.dentall.totoro.domain.NhiExtendTreatmentProcedure;
 import io.dentall.totoro.service.dto.table.NhiExtendTreatmentDrugTable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
@@ -21,5 +20,7 @@ public interface NhiExtendTreatmentDrugRepository extends JpaRepository<NhiExten
     Set<NhiExtendTreatmentDrugTable> findNhiExtendTreatmentDrugsByTreatmentDrug_Prescription_Disposal_Id(@Param(value = "disposalId") Long disposalId);
 
     Optional<NhiExtendTreatmentDrugTable> findNhiExtendTreatmentDrugByTreatmentDrug_Id(Long id);
+
+    Optional<NhiExtendTreatmentDrug> findByTreatmentDrug_IdAndA79IsNull(Long treatmentDrugId);
 
 }
