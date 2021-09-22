@@ -13,11 +13,16 @@
                         primary key,
                 treatment_procedure_id bigint not null,
                 error_code varchar,
-                error_message varchar
+                error_message varchar,
+                created_by varchar(50),
+                created_date timestamp,
+                last_modified_by varchar(50),
+                last_modified_date timestamp
             );
         </sql>
         <createIndex tableName="treatment_procedure_ic_operation_record" indexName="idx_treatment_procedure_ic_operation_record_id">
             <column name="id"/>
         </createIndex>
+        <createSequence sequenceName="treatment_procedure_ic_operation_record_seq" incrementBy="50"/>
     </changeSet>
 </databaseChangeLog>
