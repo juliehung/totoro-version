@@ -1,9 +1,7 @@
 package io.dentall.totoro.web.rest.vm;
 
-import java.util.List;
-
 public class TreatmentProcedureDelQueryVM {
-    // for query tx del belone to disposal
+    // for query tp del belone to disposal
     private Long disposalId;
 
     public Long getDisposalId() {
