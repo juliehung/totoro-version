@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20210922-weichen-2" author="WeiChen">
+        <sql>
+            create table treatment_drug_del
+            (
+                id              bigint not null
+                    constraint pk_treatment_drug_del
+                        primary key,
+                day             integer,
+                frequency       varchar(255),
+                way             varchar(255),
+                quantity        double precision,
+                prescription_id bigint,
+                drug_id         bigint,
+                total_amount    double precision,
+                nhi_sign        varchar,
+                ic_card_eject      boolean
+            );
+        </sql>
+    </changeSet>
+</databaseChangeLog>
