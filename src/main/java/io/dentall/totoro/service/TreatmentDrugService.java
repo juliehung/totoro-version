@@ -4,6 +4,7 @@ import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.mapper.TreatmentDrugDelMapper;
 import io.dentall.totoro.service.util.ProblemUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,8 +120,12 @@ public class TreatmentDrugService {
                     optionalPrescription.get().removeTreatmentDrug(treatmentDrug);
                 }
                 Optional<NhiExtendTreatmentDrug> netd =
-                    nhiExtendTreatmentDrugRepository.findByTreatmentDrug_IdAndA79IsNull(treatmentDrug.getId());
-                if (netd.isPresent()) {
+                    nhiExtendTreatmentDrugRepository.findByTreatmentDrug_Id(treatmentDrug.getId());
+                if (netd.isPresent() &&
+                    StringUtils.isNotBlank(
+                        netd.get().getA79()
+                    )
+                ) {
                     TreatmentDrugDel tdd = new TreatmentDrugDel();
                     TreatmentDrugDelMapper.INSTANCE.transformTreatmentDrugToTreatmentDrugDel(treatmentDrug, tdd);
                     treatmentDrugDelRepository.save(tdd);

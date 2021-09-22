@@ -194,8 +194,12 @@ public class TreatmentProcedureService {
         TreatmentProcedure tp = treatmentProcedureRepository.findById(id)
             .orElseThrow(() -> new BadRequestAlertException("Not found tp with id", "TREATMENT_PROCEDURE", "idnotfound"));
         Optional<NhiExtendTreatmentProcedure> netp =
-            nhiExtendTreatmentProcedureRepository.findByTreatmentProcedure_IdAndA79IsNull(tp.getId());
-        if (netp.isPresent()) {
+            nhiExtendTreatmentProcedureRepository.findByTreatmentProcedure_Id(tp.getId());
+        if (netp.isPresent() &&
+            StringUtils.isNotBlank(
+                netp.get().getA79()
+            )
+        ) {
             TreatmentProcedureDel tpd = new TreatmentProcedureDel();
             TreatmentProcedureDelMapper.INSTANCE.transformTreatmentProcedureToTreatmentProcedureDel(tp, tpd);
             treatmentProcedureDelRepository.save(tpd);

@@ -21,6 +21,6 @@ public interface NhiExtendTreatmentDrugRepository extends JpaRepository<NhiExten
 
     Optional<NhiExtendTreatmentDrugTable> findNhiExtendTreatmentDrugByTreatmentDrug_Id(Long id);
 
-    Optional<NhiExtendTreatmentDrug> findByTreatmentDrug_IdAndA79IsNull(Long treatmentDrugId);
+    Optional<NhiExtendTreatmentDrug> findByTreatmentDrug_Id(Long treatmentDrugId);
 
 }
