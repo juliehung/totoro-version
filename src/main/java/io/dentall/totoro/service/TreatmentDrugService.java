@@ -1,10 +1,10 @@
 package io.dentall.totoro.service;
 
-import io.dentall.totoro.domain.NhiExtendTreatmentDrug;
-import io.dentall.totoro.domain.Prescription;
-import io.dentall.totoro.domain.TreatmentDrug;
+import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.mapper.TreatmentDrugDelMapper;
 import io.dentall.totoro.service.util.ProblemUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,16 +33,24 @@ public class TreatmentDrugService {
 
     private final NhiExtendTreatmentDrugService nhiExtendTreatmentDrugService;
 
+    private final NhiExtendTreatmentDrugRepository nhiExtendTreatmentDrugRepository;
+
+    private final TreatmentDrugDelRepository treatmentDrugDelRepository;
+
     public TreatmentDrugService(
         TreatmentDrugRepository treatmentDrugRepository,
         DrugRepository drugRepository,
         PrescriptionRepository prescriptionRepository,
-        NhiExtendTreatmentDrugService nhiExtendTreatmentDrugService
+        NhiExtendTreatmentDrugService nhiExtendTreatmentDrugService,
+        NhiExtendTreatmentDrugRepository nhiExtendTreatmentDrugRepository,
+        TreatmentDrugDelRepository treatmentDrugDelRepository
     ) {
         this.treatmentDrugRepository = treatmentDrugRepository;
         this.drugRepository = drugRepository;
         this.prescriptionRepository = prescriptionRepository;
         this.nhiExtendTreatmentDrugService = nhiExtendTreatmentDrugService;
+        this.nhiExtendTreatmentDrugRepository = nhiExtendTreatmentDrugRepository;
+        this.treatmentDrugDelRepository = treatmentDrugDelRepository;
     }
 
     /**
@@ -110,6 +118,17 @@ public class TreatmentDrugService {
                 Optional<Prescription> optionalPrescription = prescriptionRepository.findById(treatmentDrug.getPrescription().getId());
                 if (optionalPrescription.isPresent()) {
                     optionalPrescription.get().removeTreatmentDrug(treatmentDrug);
+                }
+                Optional<NhiExtendTreatmentDrug> netd =
+                    nhiExtendTreatmentDrugRepository.findByTreatmentDrug_Id(treatmentDrug.getId());
+                if (netd.isPresent() &&
+                    StringUtils.isNotBlank(
+                        netd.get().getA79()
+                    )
+                ) {
+                    TreatmentDrugDel tdd = new TreatmentDrugDel();
+                    TreatmentDrugDelMapper.INSTANCE.transformTreatmentDrugToTreatmentDrugDel(treatmentDrug, tdd);
+                    treatmentDrugDelRepository.save(tdd);
                 }
             }
 

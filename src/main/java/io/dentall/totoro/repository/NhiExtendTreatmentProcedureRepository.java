@@ -105,4 +105,6 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
         @Param(value = "yearMonthQueryClause") String yearMonthQueryClause,
         @Param(value = "excludeDisposals") List<Long> excludeDisposals
     );
+
+    Optional<NhiExtendTreatmentProcedure> findByTreatmentProcedure_Id(Long treatmentProcedureId);
 }

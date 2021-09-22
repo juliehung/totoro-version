@@ -696,6 +696,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "        where  nhi_extend_patient_patient_id = :patientId " +
             "        and    np.id is not null " +
             "        and    nhi_code in (:codes) " +
+            "        and    nhi_category <> 'c' " +
             "    ), " +
             "     sys_records as ( " +
             "         select cast('SYS' as text) as recordSource, " +
@@ -756,6 +757,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "        left join nhi_procedure np on np.code = nmr.nhi_code" +
             "        where  nhi_extend_patient_patient_id = :patientId " +
             "        and    np.id is not null " +
+            "        and    nhi_category <> 'c' " +
             "    ), " +
             "     sys_records as ( " +
             "         select cast('SYS' as text) as recordSource, " +

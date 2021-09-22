@@ -8,6 +8,7 @@ import io.dentall.totoro.service.dto.table.NhiExtendTreatmentProcedureTable;
 import io.dentall.totoro.service.dto.table.ProcedureTable;
 import io.dentall.totoro.service.mapper.*;
 import io.dentall.totoro.service.util.StreamUtil;
+import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +65,8 @@ public class TreatmentProcedureService {
 
     private final ToothRepository toothRepository;
 
+    private final TreatmentProcedureDelRepository treatmentProcedureDelRepository;
+
     static Predicate<TreatmentProcedure> isDeletable = treatmentProcedure -> {
         if (treatmentProcedure.getProcedure() == null && treatmentProcedure.getNhiProcedure() == null) {
             return true;
@@ -96,7 +99,9 @@ public class TreatmentProcedureService {
         NhiExtendTreatmentProcedureMapper nhiExtendTreatmentProcedureMapper,
         ExtendUserRepository extendUserRepository,
         NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository,
-        ToothRepository toothRepository) {
+        ToothRepository toothRepository,
+        TreatmentProcedureDelRepository treatmentProcedureDelRepository
+    ) {
         this.treatmentProcedureRepository = treatmentProcedureRepository;
         this.procedureRepository = procedureRepository;
         this.appointmentRepository = appointmentRepository;
@@ -113,6 +118,7 @@ public class TreatmentProcedureService {
         this.extendUserRepository = extendUserRepository;
         this.nhiExtendTreatmentProcedureRepository = nhiExtendTreatmentProcedureRepository;
         this.toothRepository = toothRepository;
+        this.treatmentProcedureDelRepository = treatmentProcedureDelRepository;
     }
 
     /**
@@ -183,8 +189,21 @@ public class TreatmentProcedureService {
      *
      * @param id the id of the entity
      */
-    public void delete(Long id) {
+    public void delete(Long id) throws BadRequestAlertException {
         log.debug("Request to delete TreatmentProcedure : {}", id);
+        TreatmentProcedure tp = treatmentProcedureRepository.findById(id)
+            .orElseThrow(() -> new BadRequestAlertException("Not found tp with id", "TREATMENT_PROCEDURE", "idnotfound"));
+        Optional<NhiExtendTreatmentProcedure> netp =
+            nhiExtendTreatmentProcedureRepository.findByTreatmentProcedure_Id(tp.getId());
+        if (netp.isPresent() &&
+            StringUtils.isNotBlank(
+                netp.get().getA79()
+            )
+        ) {
+            TreatmentProcedureDel tpd = new TreatmentProcedureDel();
+            TreatmentProcedureDelMapper.INSTANCE.transformTreatmentProcedureToTreatmentProcedureDel(tp, tpd);
+            treatmentProcedureDelRepository.save(tpd);
+        }
         treatmentProcedureRepository.deleteById(id);
     }
 
