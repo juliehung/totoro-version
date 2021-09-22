@@ -12,6 +12,7 @@
                     constraint pk_treatment_procedure_ic_operation_record
                         primary key,
                 treatment_procedure_id bigint not null,
+                operation varchar(50),
                 error_code varchar,
                 error_message varchar,
                 created_by varchar(50),
@@ -23,6 +24,6 @@
         <createIndex tableName="treatment_procedure_ic_operation_record" indexName="idx_treatment_procedure_ic_operation_record_id">
             <column name="id"/>
         </createIndex>
-        <createSequence sequenceName="treatment_procedure_ic_operation_record_seq" incrementBy="50"/>
+        <createSequence sequenceName="treatment_procedure_ic_operation_record_seq" incrementBy="1"/>
     </changeSet>
 </databaseChangeLog>
