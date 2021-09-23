@@ -52,7 +52,7 @@ Feature: 91014C 牙周暨齲齒控制基本處置
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 同日得有 91004C/91005C/91020C 診療項目，確認結果是否為 <PassOrNot>
+        Then 同日得有 91003C/91004C/91005C/91020C 診療項目，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDate | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
             | 91014C       | FM         | MOB          | 當日                | 91003C           | FM             | MOB              | Pass      |
@@ -76,7 +76,7 @@ Feature: 91014C 牙周暨齲齒控制基本處置
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 同日得有 91004C/91005C/91020C 診療項目，確認結果是否為 <PassOrNot>
+        Then 同日得有 91003C/91004C/91005C/91020C 診療項目，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDate | MedicalNhiCode | MedicalTeeth | PassOrNot |
             | 91014C       | FM         | MOB          | 當日              | 91003C         | FM           | Pass      |

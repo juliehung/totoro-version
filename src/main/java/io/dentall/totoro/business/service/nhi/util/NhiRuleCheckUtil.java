@@ -1184,7 +1184,7 @@ public class NhiRuleCheckUtil {
                                     foundAnyInPastDays.get(0)
                                 ),
                                 dto.getNhiExtendTreatmentProcedure().getA73(),
-                                this.getCurrentTxNhiCode(dto),
+                                foundAnyInPastDays.get(0).getCode(),
                                 foundAnyInPastDays.get(0).getRecordDateTime(),
                                 noOtherTxDisplayDuration,
                                 null,

@@ -147,7 +147,7 @@ Feature: 89015C 後牙雙鄰接面複合樹脂充填
             # 測試TreatmentNhiCode為非指定代碼且同牙位
             | 89015C       | 54         | MOBL         | 15                | 01271C           | 54             | 30                 | NotPass   |
             # 測試TreatmentNhiCode為非指定代碼且不同牙位
-            | 89015C       | 54         | MOBL         | 15                | 01271C           | 55             | 30                 | NotPass   |
+            | 89015C       | 54         | MOBL         | 15                | 01271C           | 55             | 30                 | Pass      |
             # 測試89006C在超過30天前建立且同牙位
             | 89015C       | 54         | MOBL         | 15                | 01271C           | 54             | 31                 | Pass      |
             # 測試89006C在超過30天前建立且不同牙位
@@ -159,11 +159,11 @@ Feature: 89015C 後牙雙鄰接面複合樹脂充填
             | 89015C       | 54         | MOBL         | 29                | 90019C           | 54             | 30                 | Pass      |
             | 89015C       | 54         | MOBL         | 29                | 90020C           | 54             | 30                 | Pass      |
             # 測試TreatmentNhiCode是產生在89006C之後，但在30天內且不同牙位
-            | 89015C       | 54         | MOBL         | 29                | 90001C           | 55             | 30                 | NotPass   |
-            | 89015C       | 54         | MOBL         | 29                | 90002C           | 55             | 30                 | NotPass   |
-            | 89015C       | 54         | MOBL         | 29                | 90003C           | 55             | 30                 | NotPass   |
-            | 89015C       | 54         | MOBL         | 29                | 90019C           | 55             | 30                 | NotPass   |
-            | 89015C       | 54         | MOBL         | 29                | 90020C           | 55             | 30                 | NotPass   |
+            | 89015C       | 54         | MOBL         | 29                | 90001C           | 55             | 30                 | Pass      |
+            | 89015C       | 54         | MOBL         | 29                | 90002C           | 55             | 30                 | Pass      |
+            | 89015C       | 54         | MOBL         | 29                | 90003C           | 55             | 30                 | Pass      |
+            | 89015C       | 54         | MOBL         | 29                | 90019C           | 55             | 30                 | Pass      |
+            | 89015C       | 54         | MOBL         | 29                | 90020C           | 55             | 30                 | Pass      |
             # 測試TreatmentNhiCode是產生在89006C之前，但超過30天且同牙位
             | 89015C       | 54         | MOBL         | 31                | 90001C           | 54             | 30                 | NotPass   |
             | 89015C       | 54         | MOBL         | 31                | 90002C           | 54             | 30                 | NotPass   |
@@ -171,11 +171,11 @@ Feature: 89015C 後牙雙鄰接面複合樹脂充填
             | 89015C       | 54         | MOBL         | 31                | 90019C           | 54             | 30                 | NotPass   |
             | 89015C       | 54         | MOBL         | 31                | 90020C           | 54             | 30                 | NotPass   |
             # 測試TreatmentNhiCode是產生在89006C之前，但超過30天且不同牙位
-            | 89015C       | 54         | MOBL         | 31                | 90001C           | 55             | 30                 | NotPass   |
-            | 89015C       | 54         | MOBL         | 31                | 90002C           | 55             | 30                 | NotPass   |
-            | 89015C       | 54         | MOBL         | 31                | 90003C           | 55             | 30                 | NotPass   |
-            | 89015C       | 54         | MOBL         | 31                | 90019C           | 55             | 30                 | NotPass   |
-            | 89015C       | 54         | MOBL         | 31                | 90020C           | 55             | 30                 | NotPass   |
+            | 89015C       | 54         | MOBL         | 31                | 90001C           | 55             | 30                 | Pass      |
+            | 89015C       | 54         | MOBL         | 31                | 90002C           | 55             | 30                 | Pass      |
+            | 89015C       | 54         | MOBL         | 31                | 90003C           | 55             | 30                 | Pass      |
+            | 89015C       | 54         | MOBL         | 31                | 90019C           | 55             | 30                 | Pass      |
+            | 89015C       | 54         | MOBL         | 31                | 90020C           | 55             | 30                 | Pass      |
             # 測試TreatmentNhiCode與89006C都在同一天且同牙位
             | 89015C       | 54         | MOBL         | 30                | 90001C           | 54             | 30                 | NotPass   |
             | 89015C       | 54         | MOBL         | 30                | 90002C           | 54             | 30                 | NotPass   |
@@ -183,11 +183,11 @@ Feature: 89015C 後牙雙鄰接面複合樹脂充填
             | 89015C       | 54         | MOBL         | 30                | 90019C           | 54             | 30                 | NotPass   |
             | 89015C       | 54         | MOBL         | 30                | 90020C           | 54             | 30                 | NotPass   |
             # 測試TreatmentNhiCode與89006C都在同一天且不同牙位
-            | 89015C       | 54         | MOBL         | 30                | 90001C           | 55             | 30                 | NotPass   |
-            | 89015C       | 54         | MOBL         | 30                | 90002C           | 55             | 30                 | NotPass   |
-            | 89015C       | 54         | MOBL         | 30                | 90003C           | 55             | 30                 | NotPass   |
-            | 89015C       | 54         | MOBL         | 30                | 90019C           | 55             | 30                 | NotPass   |
-            | 89015C       | 54         | MOBL         | 30                | 90020C           | 55             | 30                 | NotPass   |
+            | 89015C       | 54         | MOBL         | 30                | 90001C           | 55             | 30                 | Pass      |
+            | 89015C       | 54         | MOBL         | 30                | 90002C           | 55             | 30                 | Pass      |
+            | 89015C       | 54         | MOBL         | 30                | 90003C           | 55             | 30                 | Pass      |
+            | 89015C       | 54         | MOBL         | 30                | 90019C           | 55             | 30                 | Pass      |
+            | 89015C       | 54         | MOBL         | 30                | 90020C           | 55             | 30                 | Pass      |
 
     Scenario Outline: （IC）同牙位前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外
         Given 建立醫師
@@ -208,7 +208,7 @@ Feature: 89015C 後牙雙鄰接面複合樹脂充填
             # 測試TreatmentNhiCode為非指定代碼且同牙位
             | 89015C       | 54         | MOBL         | 15              | 01271C         | 54           | 30                    | NotPass   |
             # 測試TreatmentNhiCode為非指定代碼且不同牙位
-            | 89015C       | 54         | MOBL         | 15              | 01271C         | 55           | 30                    | NotPass   |
+            | 89015C       | 54         | MOBL         | 15              | 01271C         | 55           | 30                    | Pass      |
             # 測試89006C在超過30天前建立且同牙位
             | 89015C       | 54         | MOBL         | 15              | 01271C         | 54           | 31                    | Pass      |
             # 測試89006C在超過30天前建立且不同牙位
@@ -220,11 +220,11 @@ Feature: 89015C 後牙雙鄰接面複合樹脂充填
             | 89015C       | 54         | MOBL         | 29              | 90019C         | 54           | 30                    | Pass      |
             | 89015C       | 54         | MOBL         | 29              | 90020C         | 54           | 30                    | Pass      |
             # 測試TreatmentNhiCode是產生在89006C之後，但在30天內且不同牙位
-            | 89015C       | 54         | MOBL         | 29              | 90001C         | 55           | 30                    | NotPass   |
-            | 89015C       | 54         | MOBL         | 29              | 90002C         | 55           | 30                    | NotPass   |
-            | 89015C       | 54         | MOBL         | 29              | 90003C         | 55           | 30                    | NotPass   |
-            | 89015C       | 54         | MOBL         | 29              | 90019C         | 55           | 30                    | NotPass   |
-            | 89015C       | 54         | MOBL         | 29              | 90020C         | 55           | 30                    | NotPass   |
+            | 89015C       | 54         | MOBL         | 29              | 90001C         | 55           | 30                    | Pass      |
+            | 89015C       | 54         | MOBL         | 29              | 90002C         | 55           | 30                    | Pass      |
+            | 89015C       | 54         | MOBL         | 29              | 90003C         | 55           | 30                    | Pass      |
+            | 89015C       | 54         | MOBL         | 29              | 90019C         | 55           | 30                    | Pass      |
+            | 89015C       | 54         | MOBL         | 29              | 90020C         | 55           | 30                    | Pass      |
             # 測試TreatmentNhiCode是產生在89006C之前，但超過30天且同牙位
             | 89015C       | 54         | MOBL         | 31              | 90001C         | 54           | 30                    | NotPass   |
             | 89015C       | 54         | MOBL         | 31              | 90002C         | 54           | 30                    | NotPass   |
@@ -232,11 +232,11 @@ Feature: 89015C 後牙雙鄰接面複合樹脂充填
             | 89015C       | 54         | MOBL         | 31              | 90019C         | 54           | 30                    | NotPass   |
             | 89015C       | 54         | MOBL         | 31              | 90020C         | 54           | 30                    | NotPass   |
             # 測試TreatmentNhiCode是產生在89006C之前，但超過30天且不同牙位
-            | 89015C       | 54         | MOBL         | 31              | 90001C         | 55           | 30                    | NotPass   |
-            | 89015C       | 54         | MOBL         | 31              | 90002C         | 55           | 30                    | NotPass   |
-            | 89015C       | 54         | MOBL         | 31              | 90003C         | 55           | 30                    | NotPass   |
-            | 89015C       | 54         | MOBL         | 31              | 90019C         | 55           | 30                    | NotPass   |
-            | 89015C       | 54         | MOBL         | 31              | 90020C         | 55           | 30                    | NotPass   |
+            | 89015C       | 54         | MOBL         | 31              | 90001C         | 55           | 30                    | Pass      |
+            | 89015C       | 54         | MOBL         | 31              | 90002C         | 55           | 30                    | Pass      |
+            | 89015C       | 54         | MOBL         | 31              | 90003C         | 55           | 30                    | Pass      |
+            | 89015C       | 54         | MOBL         | 31              | 90019C         | 55           | 30                    | Pass      |
+            | 89015C       | 54         | MOBL         | 31              | 90020C         | 55           | 30                    | Pass      |
             # 測試TreatmentNhiCode與89006C都在同一天且同牙位
             | 89015C       | 54         | MOBL         | 30              | 90001C         | 54           | 30                    | NotPass   |
             | 89015C       | 54         | MOBL         | 30              | 90002C         | 54           | 30                    | NotPass   |
@@ -244,11 +244,11 @@ Feature: 89015C 後牙雙鄰接面複合樹脂充填
             | 89015C       | 54         | MOBL         | 30              | 90019C         | 54           | 30                    | NotPass   |
             | 89015C       | 54         | MOBL         | 30              | 90020C         | 54           | 30                    | NotPass   |
             # 測試TreatmentNhiCode與89006C都在同一天且不同牙位
-            | 89015C       | 54         | MOBL         | 30              | 90001C         | 55           | 30                    | NotPass   |
-            | 89015C       | 54         | MOBL         | 30              | 90002C         | 55           | 30                    | NotPass   |
-            | 89015C       | 54         | MOBL         | 30              | 90003C         | 55           | 30                    | NotPass   |
-            | 89015C       | 54         | MOBL         | 30              | 90019C         | 55           | 30                    | NotPass   |
-            | 89015C       | 54         | MOBL         | 30              | 90020C         | 55           | 30                    | NotPass   |
+            | 89015C       | 54         | MOBL         | 30              | 90001C         | 55           | 30                    | Pass      |
+            | 89015C       | 54         | MOBL         | 30              | 90002C         | 55           | 30                    | Pass      |
+            | 89015C       | 54         | MOBL         | 30              | 90003C         | 55           | 30                    | Pass      |
+            | 89015C       | 54         | MOBL         | 30              | 90019C         | 55           | 30                    | Pass      |
+            | 89015C       | 54         | MOBL         | 30              | 90020C         | 55           | 30                    | Pass      |
 
     Scenario Outline: （HIS）同牙未曾申報過 92013C~92015C
         Given 建立醫師
