@@ -188,7 +188,7 @@ Feature: 90020C 恆牙根管治療（五根以上）
             | 90020C       | 86         | DL           | NotPass   |
             | 90020C       | 91         | DL           | NotPass   |
 
-    Scenario Outline: （HIS）60 天內，曾經有 90015C 治療項目
+    Scenario Outline: （HIS）60 天內，同牙位應有 90015C 治療項目
         Given 建立醫師
         Given Wind 24 歲病人
         Given 在過去第 <PastTreatmentDays> 天，建立預約
@@ -206,11 +206,16 @@ Feature: 90020C 恆牙根管治療（五根以上）
         Then 檢查 60 天內，應有 <TreatmentNhiCode> 診療項目存在，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | PassOrNot |
+            # 同牙
             | 90020C       | 11         | MOB          | 59                | 90015C           | 11             | Pass      |
             | 90020C       | 11         | MOB          | 60                | 90015C           | 11             | Pass      |
             | 90020C       | 11         | MOB          | 61                | 90015C           | 11             | NotPass   |
+            # 不同牙
+            | 90020C       | 11         | MOB          | 59                | 90015C           | 12             | NotPass   |
+            | 90020C       | 11         | MOB          | 60                | 90015C           | 12             | NotPass   |
+            | 90020C       | 11         | MOB          | 61                | 90015C           | 12             | NotPass   |
 
-    Scenario Outline: （IC）60 天內，曾經有 90015C 治療項目
+    Scenario Outline: （IC）60 天內，同牙位應有 90015C 治療項目
         Given 建立醫師
         Given Wind 24 歲病人
         Given 新增健保醫療:
@@ -225,9 +230,14 @@ Feature: 90020C 恆牙根管治療（五根以上）
         Then 檢查 60 天內，應有 <MedicalNhiCode> 診療項目存在，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | PassOrNot |
+            # 同牙
             | 90020C       | 11         | MOB          | 59              | 90015C         | 11           | Pass      |
             | 90020C       | 11         | MOB          | 60              | 90015C         | 11           | Pass      |
             | 90020C       | 11         | MOB          | 61              | 90015C         | 11           | NotPass   |
+            # 不同牙
+            | 90020C       | 11         | MOB          | 59              | 90015C         | 12           | NotPass   |
+            | 90020C       | 11         | MOB          | 60              | 90015C         | 12           | NotPass   |
+            | 90020C       | 11         | MOB          | 61              | 90015C         | 12           | NotPass   |
 
     Scenario Outline: 提醒須檢附影像
         Given 建立醫師

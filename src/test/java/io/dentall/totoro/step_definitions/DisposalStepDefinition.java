@@ -16,10 +16,7 @@ import io.dentall.totoro.service.*;
 import io.dentall.totoro.step_definitions.holders.*;
 import io.dentall.totoro.test.mapper.NhiMedicalRecordTestMapper;
 import io.dentall.totoro.test.mapper.TreatmentProcedureTestMapper;
-import io.dentall.totoro.web.rest.DisposalResource;
-import io.dentall.totoro.web.rest.NhiExtendDisposalResource;
-import io.dentall.totoro.web.rest.NhiMedicalRecordResource;
-import io.dentall.totoro.web.rest.TreatmentProcedureResource;
+import io.dentall.totoro.web.rest.*;
 import lombok.extern.slf4j.Slf4j;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,6 +104,12 @@ public class DisposalStepDefinition extends AbstractStepDefinition {
     private UserRepository userRepository;
 
     @Autowired
+    private NhiProcedureService nhiProcedureService;
+
+    @Autowired
+    private NhiProcedureRepository nhiProcedureRepository;
+
+    @Autowired
     private AppointmentStepDefinition appointmentStepDefinition;
 
     @Autowired
@@ -120,6 +123,8 @@ public class DisposalStepDefinition extends AbstractStepDefinition {
 
     private String nhiMedicalRecordApiPath = "/api/nhi-medical-records";
 
+    private String nhiProcedureApiPath = "/api/nhi-procedures";
+
     private final Pattern datePattern = Pattern.compile(DateParamTypeRegularExpression);
 
     @Before
@@ -129,7 +134,8 @@ public class DisposalStepDefinition extends AbstractStepDefinition {
         final NhiExtendDisposalResource resource2 = new NhiExtendDisposalResource(nhiExtendDisposalService, disposalService);
         final TreatmentProcedureResource resource3 = new TreatmentProcedureResource(treatmentProcedureService, treatmentProcedureQueryService);
         final NhiMedicalRecordResource resource4 = new NhiMedicalRecordResource(nhiMedicalRecordService, nhiMedicalRecordQueryService, nhiTxRepository, nhiMedicineRepository, nhiExtendDisposalRepository);
-        this.mvc = MockMvcBuilders.standaloneSetup(resource1, resource2, resource3, resource4)
+        final NhiProcedureResource resource5 = new NhiProcedureResource(nhiProcedureService, nhiProcedureRepository);
+        this.mvc = MockMvcBuilders.standaloneSetup(resource1, resource2, resource3, resource4, resource5)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
@@ -253,7 +259,14 @@ public class DisposalStepDefinition extends AbstractStepDefinition {
         Appointment appointment = appointmentTestInfoHolder.getAppointment();
         Disposal disposal = disposalTestInfoHolder.getDisposal();
         User user = userTestInfoHolder.getUser();
-        return dataList.stream().map(data -> newTreatmentProcedure(appointment, disposal, user, data)).collect(Collectors.toSet());
+        return dataList.stream().map(data -> {
+            try {
+                return newTreatmentProcedure(appointment, disposal, user, data);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }).collect(Collectors.toSet());
     }
 
     private int retrievePastDays(Map<String, String> data) {
@@ -267,13 +280,15 @@ public class DisposalStepDefinition extends AbstractStepDefinition {
             .orElse(pastDays);
     }
 
-    private TreatmentProcedure newTreatmentProcedure(Appointment appointment, Disposal disposal, User user, Map<String, String> data) {
+    private TreatmentProcedure newTreatmentProcedure(Appointment appointment, Disposal disposal, User user, Map<String, String> data) throws Exception {
+        NhiProcedure nhiProcedure = doCreateNhiProcedure();
         int pastDays = retrievePastDays(data);
         TreatmentProcedure treatmentProcedure = new TreatmentProcedure();
         treatmentProcedure.setAppointment(appointment);
         treatmentProcedure.setDisposal(disposal);
         treatmentProcedure.setDoctor(user.getExtendUser());
         treatmentProcedure.setStatus(TreatmentProcedureStatus.IN_PROGRESS);
+        treatmentProcedure.setNhiProcedure(nhiProcedure);
 
         NhiExtendTreatmentProcedure nhiExtendTreatmentProcedure = newNhiExtendTreatmentProcedure(data);
         nhiExtendTreatmentProcedure.setTreatmentProcedure(treatmentProcedure);
@@ -306,6 +321,16 @@ public class DisposalStepDefinition extends AbstractStepDefinition {
 
         ResultActions resultActions = this.mvc.perform(requestBuilder);
         return objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsByteArray(), TreatmentProcedure.class);
+    }
+
+    private NhiProcedure doCreateNhiProcedure() throws Exception {
+        NhiProcedure nhiProcedure = new NhiProcedure();
+        MockHttpServletRequestBuilder requestBuilder = post(nhiProcedureApiPath)
+            .contentType(APPLICATION_JSON)
+            .content(objectMapper.writeValueAsBytes(nhiProcedure));
+
+        ResultActions resultActions = this.mvc.perform(requestBuilder);
+        return objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsByteArray(), NhiProcedure.class);
     }
 
     @And("新增健保醫療:")

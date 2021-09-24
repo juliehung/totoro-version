@@ -11,10 +11,10 @@ on:
                 required: true
     push:
         branches:
-            - '**nhi-rule'
+            - '**nhi-rule**'
     pull_request:
         branches:
-            - '**nhi-rule'
+            - '**nhi-rule**'
 
 jobs:
     nhi-rule-test:
@@ -31,12 +31,12 @@ jobs:
                 run: chmod +x gradlew
             -   name: Run NHI Rule Integration Test Automatic
                 if: ${{github.event.inputs.tags == '' }}
-                run: ./gradlew -Pcucumber.filter.tags=@nhi cucumber
+                run: ./gradlew cucumber_nhi_rule
             -   name: Run NHI Rule Integration Test Manually
                 if: ${{github.event.inputs.tags != '' }}
-                run: ./gradlew -Pcucumber.filter.tags=${{github.event.inputs.tags}} cucumber
+                run: ./gradlew -Pcucumber.filter.tags=${{github.event.inputs.tags}} cucumber_nhi_rule
             -   name: Upload Cucumber Report
-                if: ${{ always() }}
+                if: ${{ failure() }}
                 uses: actions/upload-artifact@v2.2.4
                 with:
                     name: cucumber-artifact

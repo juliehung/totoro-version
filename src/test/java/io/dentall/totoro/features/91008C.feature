@@ -82,7 +82,7 @@ Feature: 91008C 齒齦下括除術(含牙根整平術)-局部(3齒以內)
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 91008C       | 11         | MOB          | Pass      |
 
-    Scenario Outline: 檢查治療的牙位是否為 GENERAL_TOOTH
+    Scenario Outline: 檢查治療的牙位是否為 FOUR_PHASE_ZONE_AND_PERMANENT_TOOTH
         Given 建立醫師
         Given Stan 24 歲病人
         Given 建立預約
@@ -91,30 +91,30 @@ Feature: 91008C 齒齦下括除術(含牙根整平術)-局部(3齒以內)
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 檢查 <IssueTeeth> 牙位，依 GENERAL_TOOTH 判定是否為核可牙位，確認結果是否為 <PassOrNot>
+        Then 檢查 <IssueTeeth> 牙位，依 FOUR_PHASE_ZONE_AND_PERMANENT_TOOTH 判定是否為核可牙位，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             # 乳牙
-            | 91008C       | 51         | DL           | Pass      |
-            | 91008C       | 52         | DL           | Pass      |
-            | 91008C       | 53         | DL           | Pass      |
-            | 91008C       | 54         | DL           | Pass      |
-            | 91008C       | 55         | DL           | Pass      |
-            | 91008C       | 61         | DL           | Pass      |
-            | 91008C       | 62         | DL           | Pass      |
-            | 91008C       | 63         | DL           | Pass      |
-            | 91008C       | 64         | DL           | Pass      |
-            | 91008C       | 65         | DL           | Pass      |
-            | 91008C       | 71         | DL           | Pass      |
-            | 91008C       | 72         | DL           | Pass      |
-            | 91008C       | 73         | DL           | Pass      |
-            | 91008C       | 74         | DL           | Pass      |
-            | 91008C       | 75         | DL           | Pass      |
-            | 91008C       | 81         | DL           | Pass      |
-            | 91008C       | 82         | DL           | Pass      |
-            | 91008C       | 83         | DL           | Pass      |
-            | 91008C       | 84         | DL           | Pass      |
-            | 91008C       | 85         | DL           | Pass      |
+            | 91008C       | 51         | DL           | NotPass   |
+            | 91008C       | 52         | DL           | NotPass   |
+            | 91008C       | 53         | DL           | NotPass   |
+            | 91008C       | 54         | DL           | NotPass   |
+            | 91008C       | 55         | DL           | NotPass   |
+            | 91008C       | 61         | DL           | NotPass   |
+            | 91008C       | 62         | DL           | NotPass   |
+            | 91008C       | 63         | DL           | NotPass   |
+            | 91008C       | 64         | DL           | NotPass   |
+            | 91008C       | 65         | DL           | NotPass   |
+            | 91008C       | 71         | DL           | NotPass   |
+            | 91008C       | 72         | DL           | NotPass   |
+            | 91008C       | 73         | DL           | NotPass   |
+            | 91008C       | 74         | DL           | NotPass   |
+            | 91008C       | 75         | DL           | NotPass   |
+            | 91008C       | 81         | DL           | NotPass   |
+            | 91008C       | 82         | DL           | NotPass   |
+            | 91008C       | 83         | DL           | NotPass   |
+            | 91008C       | 84         | DL           | NotPass   |
+            | 91008C       | 85         | DL           | NotPass   |
             # 恆牙
             | 91008C       | 11         | DL           | Pass      |
             | 91008C       | 12         | DL           | Pass      |
@@ -162,12 +162,12 @@ Feature: 91008C 齒齦下括除術(含牙根整平術)-局部(3齒以內)
             | 91008C       | 99         | DL           | Pass      |
             # 牙位為區域型態
             | 91008C       | FM         | DL           | NotPass   |
-            | 91008C       | UR         | DL           | NotPass   |
-            | 91008C       | UL         | DL           | NotPass   |
+            | 91008C       | UR         | DL           | Pass      |
+            | 91008C       | UL         | DL           | Pass      |
             | 91008C       | UA         | DL           | NotPass   |
             | 91008C       | UB         | DL           | NotPass   |
-            | 91008C       | LL         | DL           | NotPass   |
-            | 91008C       | LR         | DL           | NotPass   |
+            | 91008C       | LL         | DL           | Pass      |
+            | 91008C       | LR         | DL           | Pass      |
             | 91008C       | LA         | DL           | NotPass   |
             | 91008C       | LB         | DL           | NotPass   |
             # 非法牙位

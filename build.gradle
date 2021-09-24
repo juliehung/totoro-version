@@ -363,8 +363,8 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
 }
 
-task cucumber() {
-    def cucumberTags = project.getProperties().get("cucumber.filter.tags", "")
+task cucumber_nhi_rule() {
+    def cucumberTags = project.getProperties().get("cucumber.filter.tags", "@nhi")
     dependsOn assemble, testClasses
     doLast {
         assert cucumberTags.length() > 0

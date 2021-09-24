@@ -38,32 +38,6 @@ public class NhiRuleCheckScript012XXC {
         );
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
-                dto,
-                null,
-                null,
-                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_1095_DAY),
-                String.valueOf(DateTimeUtil.NHI_1095_DAY.getDays()),
-                1,
-                NhiRuleCheckFormat.D1_2
-            ),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isCodeBeforeDateV2(
-                dto,
-                NhiRuleCheckSourceType.SYSTEM_RECORD,
-                Arrays.asList("01271C"),
-                null,
-                null,
-                1,
-                NhiRuleCheckFormat.D1_1
-            ),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.addNotification(
                 String.format(
                     NhiRuleCheckFormat.XRAY.getFormat(),

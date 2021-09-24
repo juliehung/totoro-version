@@ -19,7 +19,7 @@ Feature: 91014C 牙周暨齲齒控制基本處置
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 91014C       | FM         | MOB          | Pass      |
 
-    Scenario Outline: （Disposal）同日得同時有 91004C/91005C/91020C 診療項目
+    Scenario Outline: （Disposal）同日得同時有 91003C/91004C/91005C/91020C 診療項目
         Given 建立醫師
         Given Kelly 24 歲病人
         Given 建立預約
@@ -32,11 +32,12 @@ Feature: 91014C 牙周暨齲齒控制基本處置
         Then 同日得有 91004C/91005C/91020C 診療項目，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
+            | 91014C       | FM         | MOB          | 91003C           | FM             | MOB              | Pass      |
             | 91014C       | FM         | MOB          | 91004C           | FM             | MOB              | Pass      |
             | 91014C       | FM         | MOB          | 91005C           | FM             | MOB              | Pass      |
             | 91014C       | FM         | MOB          | 91020C           | FM             | MOB              | Pass      |
 
-    Scenario Outline: （HIS-Today）同日得同時有 91004C/91005C/91020C 診療項目
+    Scenario Outline: （HIS-Today）同日得同時有 91003C/91004C/91005C/91020C 診療項目
         Given 建立醫師
         Given Kelly 24 歲病人
         Given 在 <PastTreatmentDate> ，建立預約
@@ -51,17 +52,19 @@ Feature: 91014C 牙周暨齲齒控制基本處置
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 同日得有 91004C/91005C/91020C 診療項目，確認結果是否為 <PassOrNot>
+        Then 同日得有 91003C/91004C/91005C/91020C 診療項目，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDate | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | PassOrNot |
+            | 91014C       | FM         | MOB          | 當日                | 91003C           | FM             | MOB              | Pass      |
             | 91014C       | FM         | MOB          | 當日                | 91004C           | FM             | MOB              | Pass      |
             | 91014C       | FM         | MOB          | 當日                | 91005C           | FM             | MOB              | Pass      |
             | 91014C       | FM         | MOB          | 當日                | 91020C           | FM             | MOB              | Pass      |
+            | 91014C       | FM         | MOB          | 昨日                | 91003C           | FM             | MOB              | NotPass   |
             | 91014C       | FM         | MOB          | 昨日                | 91004C           | FM             | MOB              | NotPass   |
             | 91014C       | FM         | MOB          | 昨日                | 91005C           | FM             | MOB              | NotPass   |
             | 91014C       | FM         | MOB          | 昨日                | 91020C           | FM             | MOB              | NotPass   |
 
-    Scenario Outline: （IC）同日得同時有 91004C/91005C/91020C 診療項目
+    Scenario Outline: （IC）同日得同時有 91003C/91004C/91005C/91020C 診療項目
         Given 建立醫師
         Given Kelly 24 歲病人
         Given 新增健保醫療:
@@ -73,17 +76,19 @@ Feature: 91014C 牙周暨齲齒控制基本處置
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 同日得有 91004C/91005C/91020C 診療項目，確認結果是否為 <PassOrNot>
+        Then 同日得有 91003C/91004C/91005C/91020C 診療項目，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDate | MedicalNhiCode | MedicalTeeth | PassOrNot |
+            | 91014C       | FM         | MOB          | 當日              | 91003C         | FM           | Pass      |
             | 91014C       | FM         | MOB          | 當日              | 91004C         | FM           | Pass      |
             | 91014C       | FM         | MOB          | 當日              | 91005C         | FM           | Pass      |
             | 91014C       | FM         | MOB          | 當日              | 91020C         | FM           | Pass      |
+            | 91014C       | FM         | MOB          | 昨日              | 91003C         | FM           | NotPass   |
             | 91014C       | FM         | MOB          | 昨日              | 91004C         | FM           | NotPass   |
             | 91014C       | FM         | MOB          | 昨日              | 91005C         | FM           | NotPass   |
             | 91014C       | FM         | MOB          | 昨日              | 91020C         | FM           | NotPass   |
 
-    Scenario Outline: （HIS）與91004C或91005C同時申報時，每360天限申報一次。與91020C同時申報時，則每180天限申報一次
+    Scenario Outline: （HIS）與91003C或91004C或91005C同時申報時，每360天限申報一次。與91020C同時申報時，則每180天限申報一次
         Given 建立醫師
         Given Kelly 24 歲病人
         Given 在過去第 <PastTreatmentDays> 天，建立預約
@@ -103,6 +108,9 @@ Feature: 91014C 牙周暨齲齒控制基本處置
         Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <IssueNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | GapDay | PassOrNot |
+            | 91014C       | FM         | MOB          | 359               | 91003C           | FM             | MOB              | 360    | NotPass   |
+            | 91014C       | FM         | MOB          | 360               | 91003C           | FM             | MOB              | 360    | NotPass   |
+            | 91014C       | FM         | MOB          | 361               | 91003C           | FM             | MOB              | 360    | Pass      |
             | 91014C       | FM         | MOB          | 359               | 91004C           | FM             | MOB              | 360    | NotPass   |
             | 91014C       | FM         | MOB          | 360               | 91004C           | FM             | MOB              | 360    | NotPass   |
             | 91014C       | FM         | MOB          | 361               | 91004C           | FM             | MOB              | 360    | Pass      |
@@ -113,7 +121,7 @@ Feature: 91014C 牙周暨齲齒控制基本處置
             | 91014C       | FM         | MOB          | 180               | 91020C           | FM             | MOB              | 180    | NotPass   |
             | 91014C       | FM         | MOB          | 181               | 91020C           | FM             | MOB              | 180    | Pass      |
 
-    Scenario Outline: （IC）與91004C或91005C同時申報時，每360天限申報一次。與91020C同時申報時，則每180天限申報一次
+    Scenario Outline: （IC）與91003C或91004C或91005C同時申報時，每360天限申報一次。與91020C同時申報時，則每180天限申報一次
         Given 建立醫師
         Given Kelly 24 歲病人
         Given 新增健保醫療:
@@ -130,6 +138,9 @@ Feature: 91014C 牙周暨齲齒控制基本處置
         Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <IssueNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D4_1
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapDay | PassOrNot |
+            | 91014C       | FM         | MOB          | 359             | 91003C         | FM           | 360    | NotPass   |
+            | 91014C       | FM         | MOB          | 360             | 91003C         | FM           | 360    | NotPass   |
+            | 91014C       | FM         | MOB          | 361             | 91003C         | FM           | 360    | Pass      |
             | 91014C       | FM         | MOB          | 359             | 91004C         | FM           | 360    | NotPass   |
             | 91014C       | FM         | MOB          | 360             | 91004C         | FM           | 360    | NotPass   |
             | 91014C       | FM         | MOB          | 361             | 91004C         | FM           | 360    | Pass      |

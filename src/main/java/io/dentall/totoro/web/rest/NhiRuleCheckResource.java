@@ -53,16 +53,17 @@ public class NhiRuleCheckResource {
         InvocationTargetException,
         IllegalAccessException
     {
-        try {
-            NhiRuleCheckResultVM result = new NhiRuleCheckResultVM();
-            for (int i = 0; i < body.getTxSnapshots().size(); i++) {
-                for (int j = 0; j < body.getTxSnapshots().size(); j++) {
-                    if (j != i) {
-                        body.getTxSnapshots().get(j).setTargetTx(false);
-                    } else {
-                        body.getTxSnapshots().get(j).setTargetTx(true);
-                    }
+        NhiRuleCheckResultVM result = new NhiRuleCheckResultVM();
+        for (int i = 0; i < body.getTxSnapshots().size(); i++) {
+            for (int j = 0; j < body.getTxSnapshots().size(); j++) {
+                if (j != i) {
+                    body.getTxSnapshots().get(j).setTargetTx(false);
+                } else {
+                    body.getTxSnapshots().get(j).setTargetTx(true);
                 }
+            }
+
+            try {
                 NhiRuleCheckResultVM tmp = nhiRuleCheckUtil.dispatch(
                     body.getTxSnapshots().get(i).getNhiCode(),
                     body
@@ -72,19 +73,14 @@ public class NhiRuleCheckResource {
                 result.validated(result.isValidated() && tmp.isValidated());
                 result.getMessages().addAll(tmp.getMessages());
                 result.getCheckHistory().addAll(tmp.getCheckHistory());
+            } catch (NoSuchMethodException | NoSuchFieldException e) {
+                logger.error("NhiRuleCheckResource requested a code not supported");
             }
-            return new ResponseEntity<>(
-                result,
-                HttpStatus.OK
-            );
-        } catch (NoSuchMethodException | NoSuchFieldException e) {
-            logger.error("NhiRuleCheckResource requested a code not supported");
-            return new ResponseEntity<>(
-                new NhiRuleCheckResultVM()
-                    .validated(true),
-                HttpStatus.OK
-            );
         }
+        return new ResponseEntity<>(
+            result,
+            HttpStatus.OK
+        );
     }
 
     // 即便 vm validation 為 false ，仍有需要顯示的 message

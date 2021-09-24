@@ -29,93 +29,137 @@ Feature: 89115C 特殊狀況之後牙雙鄰接面複合樹脂充填
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 89115C       | 14         | MOB          | Pass      |
 
-    Scenario Outline: （HIS）前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外
+    Scenario Outline: （HIS）同牙位前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外
         Given 建立醫師
         Given Wind 24 歲病人
         Given 在過去第 <89006CTreatmentDay> 天，建立預約
         Given 在過去第 <89006CTreatmentDay> 天，建立掛號
         Given 在過去第 <89006CTreatmentDay> 天，產生診療計畫
         And 新增診療代碼:
-            | PastDays             | A72 | A73    | A74 | A75 | A76 | A77 | A78 | A79 |
-            | <89006CTreatmentDay> | 3   | 89006C | 54  | MOB | 0   | 1.0 | 03  |     |
+            | PastDays             | A72 | A73    | A74              | A75 | A76 | A77 | A78 | A79 |
+            | <89006CTreatmentDay> | 3   | 89006C | <TreatmentTeeth> | MOB | 0   | 1.0 | 03  |     |
         Given 在過去第 <PastTreatmentDays> 天，建立預約
         Given 在過去第 <PastTreatmentDays> 天，建立掛號
         Given 在過去第 <PastTreatmentDays> 天，產生診療計畫
         And 新增診療代碼:
-            | PastDays            | A72 | A73                | A74 | A75 | A76 | A77 | A78 | A79 |
-            | <PastTreatmentDays> | 3   | <TreatmentNhiCode> | 54  | MOB | 0   | 1.0 | 03  |     |
+            | PastDays            | A72 | A73                | A74              | A75 | A76 | A77 | A78 | A79 |
+            | <PastTreatmentDays> | 3   | <TreatmentNhiCode> | <TreatmentTeeth> | MOB | 0   | 1.0 | 03  |     |
         Given 建立預約
         Given 建立掛號
         Given 產生診療計畫
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 89006C 在前 <89006CTreatmentDay> 天建立， <TreatmentNhiCode> 在前 <PastTreatmentDays> 天建立，確認結果是否為 <PassOrNot>
+        Then 89006C 在前 <89006CTreatmentDay> 天建立， <TreatmentNhiCode> 在前 <PastTreatmentDays> 天建立，治療牙位為 <IssueTeeth> ，確認結果是否為 <PassOrNot>
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | 89006CTreatmentDay | PassOrNot |
-            # 測試TreatmentNhiCode為非指定代碼
-            | 89115C       | 14         | MOB          | 15                | 01271C           | 30                 | NotPass   |
-            # 測試89006C在超過30天前建立
-            | 89115C       | 14         | MOB          | 15                | 01271C           | 31                 | Pass      |
-            # 測試TreatmentNhiCode是產生在89006C之後，但在30天內
-            | 89115C       | 14         | MOB          | 29                | 90001C           | 30                 | Pass      |
-            | 89115C       | 14         | MOB          | 29                | 90002C           | 30                 | Pass      |
-            | 89115C       | 14         | MOB          | 29                | 90003C           | 30                 | Pass      |
-            | 89115C       | 14         | MOB          | 29                | 90019C           | 30                 | Pass      |
-            | 89115C       | 14         | MOB          | 29                | 90020C           | 30                 | Pass      |
-            # 測試TreatmentNhiCode是產生在89006C之前，但超過30天
-            | 89115C       | 14         | MOB          | 31                | 90001C           | 30                 | NotPass   |
-            | 89115C       | 14         | MOB          | 31                | 90002C           | 30                 | NotPass   |
-            | 89115C       | 14         | MOB          | 31                | 90003C           | 30                 | NotPass   |
-            | 89115C       | 14         | MOB          | 31                | 90019C           | 30                 | NotPass   |
-            | 89115C       | 14         | MOB          | 31                | 90020C           | 30                 | NotPass   |
-            # 測試TreatmentNhiCode與89006C都在同一天
-            | 89115C       | 14         | MOB          | 30                | 90001C           | 30                 | NotPass   |
-            | 89115C       | 14         | MOB          | 30                | 90002C           | 30                 | NotPass   |
-            | 89115C       | 14         | MOB          | 30                | 90003C           | 30                 | NotPass   |
-            | 89115C       | 14         | MOB          | 30                | 90019C           | 30                 | NotPass   |
-            | 89115C       | 14         | MOB          | 30                | 90020C           | 30                 | NotPass   |
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | 89006CTreatmentDay | PassOrNot |
+            # 測試TreatmentNhiCode為非指定代碼且同牙位
+            | 89115C       | 14         | MOBL         | 15                | 01271C           | 14             | 30                 | NotPass   |
+            # 測試TreatmentNhiCode為非指定代碼且不同牙位
+            | 89115C       | 14         | MOBL         | 15                | 01271C           | 15             | 30                 | Pass      |
+            # 測試89006C在超過30天前建立且同牙位
+            | 89115C       | 14         | MOBL         | 15                | 01271C           | 14             | 31                 | Pass      |
+            # 測試89006C在超過30天前建立且不同牙位
+            | 89115C       | 14         | MOBL         | 15                | 01271C           | 15             | 31                 | Pass      |
+            # 測試TreatmentNhiCode是產生在89006C之後，但在30天內且同牙位
+            | 89115C       | 14         | MOBL         | 29                | 90001C           | 14             | 30                 | Pass      |
+            | 89115C       | 14         | MOBL         | 29                | 90002C           | 14             | 30                 | Pass      |
+            | 89115C       | 14         | MOBL         | 29                | 90003C           | 14             | 30                 | Pass      |
+            | 89115C       | 14         | MOBL         | 29                | 90019C           | 14             | 30                 | Pass      |
+            | 89115C       | 14         | MOBL         | 29                | 90020C           | 14             | 30                 | Pass      |
+            # 測試TreatmentNhiCode是產生在89006C之後，但在30天內且不同牙位
+            | 89115C       | 14         | MOBL         | 29                | 90001C           | 15             | 30                 | Pass      |
+            | 89115C       | 14         | MOBL         | 29                | 90002C           | 15             | 30                 | Pass      |
+            | 89115C       | 14         | MOBL         | 29                | 90003C           | 15             | 30                 | Pass      |
+            | 89115C       | 14         | MOBL         | 29                | 90019C           | 15             | 30                 | Pass      |
+            | 89115C       | 14         | MOBL         | 29                | 90020C           | 15             | 30                 | Pass      |
+            # 測試TreatmentNhiCode是產生在89006C之前，但超過30天且同牙位
+            | 89115C       | 14         | MOBL         | 31                | 90001C           | 14             | 30                 | NotPass   |
+            | 89115C       | 14         | MOBL         | 31                | 90002C           | 14             | 30                 | NotPass   |
+            | 89115C       | 14         | MOBL         | 31                | 90003C           | 14             | 30                 | NotPass   |
+            | 89115C       | 14         | MOBL         | 31                | 90019C           | 14             | 30                 | NotPass   |
+            | 89115C       | 14         | MOBL         | 31                | 90020C           | 14             | 30                 | NotPass   |
+            # 測試TreatmentNhiCode是產生在89006C之前，但超過30天且不同牙位
+            | 89115C       | 14         | MOBL         | 31                | 90001C           | 15             | 30                 | Pass      |
+            | 89115C       | 14         | MOBL         | 31                | 90002C           | 15             | 30                 | Pass      |
+            | 89115C       | 14         | MOBL         | 31                | 90003C           | 15             | 30                 | Pass      |
+            | 89115C       | 14         | MOBL         | 31                | 90019C           | 15             | 30                 | Pass      |
+            | 89115C       | 14         | MOBL         | 31                | 90020C           | 15             | 30                 | Pass      |
+            # 測試TreatmentNhiCode與89006C都在同一天且同牙位
+            | 89115C       | 14         | MOBL         | 30                | 90001C           | 14             | 30                 | NotPass   |
+            | 89115C       | 14         | MOBL         | 30                | 90002C           | 14             | 30                 | NotPass   |
+            | 89115C       | 14         | MOBL         | 30                | 90003C           | 14             | 30                 | NotPass   |
+            | 89115C       | 14         | MOBL         | 30                | 90019C           | 14             | 30                 | NotPass   |
+            | 89115C       | 14         | MOBL         | 30                | 90020C           | 14             | 30                 | NotPass   |
+            # 測試TreatmentNhiCode與89006C都在同一天且不同牙位
+            | 89115C       | 14         | MOBL         | 30                | 90001C           | 15             | 30                 | Pass      |
+            | 89115C       | 14         | MOBL         | 30                | 90002C           | 15             | 30                 | Pass      |
+            | 89115C       | 14         | MOBL         | 30                | 90003C           | 15             | 30                 | Pass      |
+            | 89115C       | 14         | MOBL         | 30                | 90019C           | 15             | 30                 | Pass      |
+            | 89115C       | 14         | MOBL         | 30                | 90020C           | 15             | 30                 | Pass      |
 
-    Scenario Outline: （IC）前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外
+    Scenario Outline: （IC）同牙位前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外
         Given 建立醫師
         Given Wind 24 歲病人
         Given 新增健保醫療:
-            | PastDays                | NhiCode          | Teeth |
-            | <89006CPastMedicalDays> | 89006C           | 14    |
-            | <PastMedicalDays>       | <MedicalNhiCode> | 14    |
+            | PastDays                | NhiCode          | Teeth          |
+            | <89006CPastMedicalDays> | 89006C           | <MedicalTeeth> |
+            | <PastMedicalDays>       | <MedicalNhiCode> | <MedicalTeeth> |
         Given 建立預約
         Given 建立掛號
         Given 產生診療計畫
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 89006C 在前 <89006CPastMedicalDays> 天建立， <MedicalNhiCode> 在前 <PastMedicalDays> 天建立，確認結果是否為 <PassOrNot>
+        Then 89006C 在前 <89006CPastMedicalDays> 天建立， <MedicalNhiCode> 在前 <PastMedicalDays> 天建立，治療牙位為 <IssueTeeth> ，確認結果是否為 <PassOrNot>
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | 89006CPastMedicalDays | PassOrNot |
-            # 測試TreatmentNhiCode為非指定代碼
-            | 89115C       | 14         | MOB          | 15              | 01271C         | 30                    | NotPass   |
-            # 測試89006C在超過30天前建立
-            | 89115C       | 14         | MOB          | 15              | 01271C         | 31                    | Pass      |
-            # 測試TreatmentNhiCode是產生在89006C之後，但在30天內
-            | 89115C       | 14         | MOB          | 29              | 90001C         | 30                    | Pass      |
-            | 89115C       | 14         | MOB          | 29              | 90002C         | 30                    | Pass      |
-            | 89115C       | 14         | MOB          | 29              | 90003C         | 30                    | Pass      |
-            | 89115C       | 14         | MOB          | 29              | 90019C         | 30                    | Pass      |
-            | 89115C       | 14         | MOB          | 29              | 90020C         | 30                    | Pass      |
-            # 測試TreatmentNhiCode是產生在89006C之前，但超過30天
-            | 89115C       | 14         | MOB          | 31              | 90001C         | 30                    | NotPass   |
-            | 89115C       | 14         | MOB          | 31              | 90002C         | 30                    | NotPass   |
-            | 89115C       | 14         | MOB          | 31              | 90003C         | 30                    | NotPass   |
-            | 89115C       | 14         | MOB          | 31              | 90019C         | 30                    | NotPass   |
-            | 89115C       | 14         | MOB          | 31              | 90020C         | 30                    | NotPass   |
-            # 測試TreatmentNhiCode與89006C都在同一天
-            | 89115C       | 14         | MOB          | 30              | 90001C         | 30                    | NotPass   |
-            | 89115C       | 14         | MOB          | 30              | 90002C         | 30                    | NotPass   |
-            | 89115C       | 14         | MOB          | 30              | 90003C         | 30                    | NotPass   |
-            | 89115C       | 14         | MOB          | 30              | 90019C         | 30                    | NotPass   |
-            | 89115C       | 14         | MOB          | 30              | 90020C         | 30                    | NotPass   |
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | 89006CPastMedicalDays | PassOrNot |
+            # 測試TreatmentNhiCode為非指定代碼且同牙位
+            | 89115C       | 14         | MOBL         | 15              | 01271C         | 14           | 30                    | NotPass   |
+            # 測試TreatmentNhiCode為非指定代碼且不同牙位
+            | 89115C       | 14         | MOBL         | 15              | 01271C         | 15           | 30                    | Pass      |
+            # 測試89006C在超過30天前建立且同牙位
+            | 89115C       | 14         | MOBL         | 15              | 01271C         | 14           | 31                    | Pass      |
+            # 測試89006C在超過30天前建立且不同牙位
+            | 89115C       | 14         | MOBL         | 15              | 01271C         | 15           | 31                    | Pass      |
+            # 測試TreatmentNhiCode是產生在89006C之後，但在30天內且同牙位
+            | 89115C       | 14         | MOBL         | 29              | 90001C         | 14           | 30                    | Pass      |
+            | 89115C       | 14         | MOBL         | 29              | 90002C         | 14           | 30                    | Pass      |
+            | 89115C       | 14         | MOBL         | 29              | 90003C         | 14           | 30                    | Pass      |
+            | 89115C       | 14         | MOBL         | 29              | 90019C         | 14           | 30                    | Pass      |
+            | 89115C       | 14         | MOBL         | 29              | 90020C         | 14           | 30                    | Pass      |
+            # 測試TreatmentNhiCode是產生在89006C之後，但在30天內且不同牙位
+            | 89115C       | 14         | MOBL         | 29              | 90001C         | 15           | 30                    | Pass      |
+            | 89115C       | 14         | MOBL         | 29              | 90002C         | 15           | 30                    | Pass      |
+            | 89115C       | 14         | MOBL         | 29              | 90003C         | 15           | 30                    | Pass      |
+            | 89115C       | 14         | MOBL         | 29              | 90019C         | 15           | 30                    | Pass      |
+            | 89115C       | 14         | MOBL         | 29              | 90020C         | 15           | 30                    | Pass      |
+            # 測試TreatmentNhiCode是產生在89006C之前，但超過30天且同牙位
+            | 89115C       | 14         | MOBL         | 31              | 90001C         | 14           | 30                    | NotPass   |
+            | 89115C       | 14         | MOBL         | 31              | 90002C         | 14           | 30                    | NotPass   |
+            | 89115C       | 14         | MOBL         | 31              | 90003C         | 14           | 30                    | NotPass   |
+            | 89115C       | 14         | MOBL         | 31              | 90019C         | 14           | 30                    | NotPass   |
+            | 89115C       | 14         | MOBL         | 31              | 90020C         | 14           | 30                    | NotPass   |
+            # 測試TreatmentNhiCode是產生在89006C之前，但超過30天且不同牙位
+            | 89115C       | 14         | MOBL         | 31              | 90001C         | 15           | 30                    | Pass      |
+            | 89115C       | 14         | MOBL         | 31              | 90002C         | 15           | 30                    | Pass      |
+            | 89115C       | 14         | MOBL         | 31              | 90003C         | 15           | 30                    | Pass      |
+            | 89115C       | 14         | MOBL         | 31              | 90019C         | 15           | 30                    | Pass      |
+            | 89115C       | 14         | MOBL         | 31              | 90020C         | 15           | 30                    | Pass      |
+            # 測試TreatmentNhiCode與89006C都在同一天且同牙位
+            | 89115C       | 14         | MOBL         | 30              | 90001C         | 14           | 30                    | NotPass   |
+            | 89115C       | 14         | MOBL         | 30              | 90002C         | 14           | 30                    | NotPass   |
+            | 89115C       | 14         | MOBL         | 30              | 90003C         | 14           | 30                    | NotPass   |
+            | 89115C       | 14         | MOBL         | 30              | 90019C         | 14           | 30                    | NotPass   |
+            | 89115C       | 14         | MOBL         | 30              | 90020C         | 14           | 30                    | NotPass   |
+            # 測試TreatmentNhiCode與89006C都在同一天且不同牙位
+            | 89115C       | 14         | MOBL         | 30              | 90001C         | 15           | 30                    | Pass      |
+            | 89115C       | 14         | MOBL         | 30              | 90002C         | 15           | 30                    | Pass      |
+            | 89115C       | 14         | MOBL         | 30              | 90003C         | 15           | 30                    | Pass      |
+            | 89115C       | 14         | MOBL         | 30              | 90019C         | 15           | 30                    | Pass      |
+            | 89115C       | 14         | MOBL         | 30              | 90020C         | 15           | 30                    | Pass      |
 
-    Scenario Outline: 檢查治療的牙位是否為 BACK_TOOTH_EXCLUDE_WISDOM_TOOTH
+    Scenario Outline: 檢查治療的牙位是否為 BACK_TOOTH
         Given 建立醫師
         Given Wind 24 歲病人
         Given 建立預約
@@ -124,7 +168,7 @@ Feature: 89115C 特殊狀況之後牙雙鄰接面複合樹脂充填
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 檢查 <IssueTeeth> 牙位，依 BACK_TOOTH_EXCLUDE_WISDOM_TOOTH 判定是否為核可牙位，確認結果是否為 <PassOrNot>
+        Then 檢查 <IssueTeeth> 牙位，依 BACK_TOOTH 判定是否為核可牙位，確認結果是否為 <PassOrNot>
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             # 乳牙
@@ -156,7 +200,7 @@ Feature: 89115C 特殊狀況之後牙雙鄰接面複合樹脂充填
             | 89115C       | 15         | DL           | Pass      |
             | 89115C       | 16         | DL           | Pass      |
             | 89115C       | 17         | DL           | Pass      |
-            | 89115C       | 18         | DL           | NotPass   |
+            | 89115C       | 18         | DL           | Pass      |
             | 89115C       | 21         | DL           | NotPass   |
             | 89115C       | 22         | DL           | NotPass   |
             | 89115C       | 23         | DL           | NotPass   |
@@ -164,7 +208,7 @@ Feature: 89115C 特殊狀況之後牙雙鄰接面複合樹脂充填
             | 89115C       | 25         | DL           | Pass      |
             | 89115C       | 26         | DL           | Pass      |
             | 89115C       | 27         | DL           | Pass      |
-            | 89115C       | 28         | DL           | NotPass   |
+            | 89115C       | 28         | DL           | Pass      |
             | 89115C       | 31         | DL           | NotPass   |
             | 89115C       | 32         | DL           | NotPass   |
             | 89115C       | 33         | DL           | NotPass   |
@@ -172,7 +216,7 @@ Feature: 89115C 特殊狀況之後牙雙鄰接面複合樹脂充填
             | 89115C       | 35         | DL           | Pass      |
             | 89115C       | 36         | DL           | Pass      |
             | 89115C       | 37         | DL           | Pass      |
-            | 89115C       | 38         | DL           | NotPass   |
+            | 89115C       | 38         | DL           | Pass      |
             | 89115C       | 41         | DL           | NotPass   |
             | 89115C       | 42         | DL           | NotPass   |
             | 89115C       | 43         | DL           | NotPass   |
@@ -180,7 +224,7 @@ Feature: 89115C 特殊狀況之後牙雙鄰接面複合樹脂充填
             | 89115C       | 45         | DL           | Pass      |
             | 89115C       | 46         | DL           | Pass      |
             | 89115C       | 47         | DL           | Pass      |
-            | 89115C       | 48         | DL           | NotPass   |
+            | 89115C       | 48         | DL           | Pass      |
             # 無牙
             | 89115C       |            | DL           | NotPass   |
             #

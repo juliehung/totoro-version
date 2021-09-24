@@ -366,7 +366,7 @@ public class NhiRuleCheckScript92XXXC {
             nhiRuleCheckUtil.isNoCodeWithToothBeforeDate(
                 dto,
                 NhiRuleCheckSourceType.SYSTEM_RECORD,
-                Arrays.asList("92031C"),
+                Arrays.asList("92032C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_730_DAY),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_730_DAY),
                 String.valueOf(DateTimeUtil.NHI_730_DAY.getDays()),

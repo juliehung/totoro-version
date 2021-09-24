@@ -15,7 +15,7 @@ Feature: 89006C 覆髓
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 89006C       | 14         | MOB          | Pass      |
 
-    Scenario Outline: （HIS）180天內，同顆牙限申報1次89006C
+    Scenario Outline: （HIS）180天內，同牙位限申報1次89006C
         Given 建立醫師
         Given Wind 24 歲病人
         Given 在過去第 <PastTreatmentDays> 天，建立預約
@@ -30,23 +30,23 @@ Feature: 89006C 覆髓
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 在 <GapDay> 天中，不應該有同顆牙 <IssueTeeth> 的 <IssueNhiCode> 診療項目，確認結果是否為 <PassOrNot>
+        Then 病患的牙齒 <TreatmentTeeth> 在 <PastTreatmentDays> 天前，被申報 <TreatmentNhiCode> 健保代碼，而現在病患的牙齒 <IssueTeeth> 要被申報 <IssueNhiCode> 健保代碼，是否抵觸同顆牙齒在 <DayRange> 天內不得申報指定健保代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_3
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | GapDay | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | PassOrNot |
+            | IssueNhiCode | IssueTeeth | IssueSurface | DayRange | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | PassOrNot |
             # 同一個診療項目、同顆牙
-            | 89006C       | 11         | DL           | 180    | 0                 | 89006C           | 11             | NotPass   |
-            | 89006C       | 11         | DL           | 180    | 180               | 89006C           | 11             | NotPass   |
-            | 89006C       | 11         | DL           | 180    | 181               | 89006C           | 11             | Pass      |
+            | 89006C       | 11         | DL           | 180      | 0                 | 89006C           | 11             | NotPass   |
+            | 89006C       | 11         | DL           | 180      | 180               | 89006C           | 11             | NotPass   |
+            | 89006C       | 11         | DL           | 180      | 181               | 89006C           | 11             | Pass      |
             # 同一個診療項目、不同顆牙
-            | 89006C       | 11         | DL           | 180    | 0                 | 89006C           | 49             | Pass      |
-            | 89006C       | 11         | DL           | 180    | 180               | 89006C           | 49             | Pass      |
-            | 89006C       | 11         | DL           | 180    | 181               | 89006C           | 49             | Pass      |
+            | 89006C       | 11         | DL           | 180      | 0                 | 89006C           | 49             | Pass      |
+            | 89006C       | 11         | DL           | 180      | 180               | 89006C           | 49             | Pass      |
+            | 89006C       | 11         | DL           | 180      | 181               | 89006C           | 49             | Pass      |
             # 非同一個診療項目
-            | 89006C       | 11         | DL           | 180    | 0                 | 01271C           | 11             | Pass      |
-            | 89006C       | 11         | DL           | 180    | 180               | 01271C           | 11             | Pass      |
-            | 89006C       | 11         | DL           | 180    | 181               | 01271C           | 11             | Pass      |
+            | 89006C       | 11         | DL           | 180      | 0                 | 01271C           | 11             | Pass      |
+            | 89006C       | 11         | DL           | 180      | 180               | 01271C           | 11             | Pass      |
+            | 89006C       | 11         | DL           | 180      | 181               | 01271C           | 11             | Pass      |
 
-    Scenario Outline: （IC）180天內，同顆牙限申報1次89006C
+    Scenario Outline: （IC）180天內，同牙位限申報1次89006C
         Given 建立醫師
         Given Wind 24 歲病人
         Given 新增健保醫療:
@@ -58,21 +58,21 @@ Feature: 89006C 覆髓
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 在 <GapDay> 天中，不應該有同顆牙 <IssueTeeth> 的 <IssueNhiCode> 診療項目，確認結果是否為 <PassOrNot>
+        Then 病患的牙齒 <MedicalTeeth> 在 <PastMedicalDays> 天前，被申報 <MedicalNhiCode> 健保代碼，而現在病患的牙齒 <IssueTeeth> 要被申報 <IssueNhiCode> 健保代碼，是否抵觸同顆牙齒在 <DayRange> 天內不得申報指定健保代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_3
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | GapDay | PastMedicalDays | MedicalNhiCode | MedicalTeeth | PassOrNot |
+            | IssueNhiCode | IssueTeeth | IssueSurface | DayRange | PastMedicalDays | MedicalNhiCode | MedicalTeeth | PassOrNot |
             # 同一個診療項目、同顆牙
-            | 89006C       | 11         | DL           | 180    | 0               | 89006C         | 11           | NotPass   |
-            | 89006C       | 11         | DL           | 180    | 180             | 89006C         | 11           | NotPass   |
-            | 89006C       | 11         | DL           | 180    | 181             | 89006C         | 11           | Pass      |
+            | 89006C       | 11         | DL           | 180      | 0               | 89006C         | 11           | NotPass   |
+            | 89006C       | 11         | DL           | 180      | 180             | 89006C         | 11           | NotPass   |
+            | 89006C       | 11         | DL           | 180      | 181             | 89006C         | 11           | Pass      |
             # 同一個診療項目、不同顆牙
-            | 89006C       | 11         | DL           | 180    | 0               | 89006C         | 49           | Pass      |
-            | 89006C       | 11         | DL           | 180    | 180             | 89006C         | 49           | Pass      |
-            | 89006C       | 11         | DL           | 180    | 181             | 89006C         | 49           | Pass      |
+            | 89006C       | 11         | DL           | 180      | 0               | 89006C         | 49           | Pass      |
+            | 89006C       | 11         | DL           | 180      | 180             | 89006C         | 49           | Pass      |
+            | 89006C       | 11         | DL           | 180      | 181             | 89006C         | 49           | Pass      |
             # 非同一個診療項目
-            | 89006C       | 11         | DL           | 180    | 0               | 01271C         | 11           | Pass      |
-            | 89006C       | 11         | DL           | 180    | 180             | 01271C         | 11           | Pass      |
-            | 89006C       | 11         | DL           | 180    | 181             | 01271C         | 11           | Pass      |
+            | 89006C       | 11         | DL           | 180      | 0               | 01271C         | 11           | Pass      |
+            | 89006C       | 11         | DL           | 180      | 180             | 01271C         | 11           | Pass      |
+            | 89006C       | 11         | DL           | 180      | 181             | 01271C         | 11           | Pass      |
 
     Scenario Outline: 檢查治療的牙位是否為 PERMANENT_TOOTH
         Given 建立醫師
