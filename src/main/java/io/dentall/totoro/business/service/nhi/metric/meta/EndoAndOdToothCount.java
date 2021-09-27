@@ -77,9 +77,4 @@ public class EndoAndOdToothCount extends AbstractMetaCalculator<Long> {
             }).sum();
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.EndoAndOdToothCount;
-    }
-
 }

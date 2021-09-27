@@ -33,9 +33,4 @@ public class Point3 extends SingleSourceMetaCalculator<Long> {
             .sum();
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.Point3;
-    }
-
 }

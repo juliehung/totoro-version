@@ -47,9 +47,4 @@ public class Point3ByDaily extends SingleSourceMetaCalculator<Map<LocalDate, Lon
             });
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.Point3ByDaily;
-    }
-
 }

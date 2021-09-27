@@ -21,16 +21,13 @@ public class Point3ByClassifier extends SingleSourceMetaCalculator<Map<Long, Lon
 
     private final Function<NhiMetricRawVM, Long> classifier;
 
-    private final MetaType metaType;
-
-    public Point3ByClassifier(MetricConfig metricConfig, MetaType metaType, Source<?, ?> source, Function<NhiMetricRawVM, Long> classifier) {
-        this(metricConfig, null, metaType, source, classifier);
+    public Point3ByClassifier(MetricConfig metricConfig, Source<?, ?> source, Function<NhiMetricRawVM, Long> classifier) {
+        this(metricConfig, null, source, classifier);
     }
 
-    public Point3ByClassifier(MetricConfig metricConfig, MetaConfig metaConfig, MetaType metaType, Source<?, ?> source, Function<NhiMetricRawVM, Long> classifier) {
+    public Point3ByClassifier(MetricConfig metricConfig, MetaConfig metaConfig, Source<?, ?> source, Function<NhiMetricRawVM, Long> classifier) {
         super(metricConfig, metaConfig, source);
         this.classifier = classifier;
-        this.metaType = metaType;
     }
 
     @Override
@@ -60,11 +57,6 @@ public class Point3ByClassifier extends SingleSourceMetaCalculator<Map<Long, Lon
                     accMap.putAll(map);
                     return accMap;
                 });
-    }
-
-    @Override
-    public MetaType metaType() {
-        return metaType;
     }
 
 }

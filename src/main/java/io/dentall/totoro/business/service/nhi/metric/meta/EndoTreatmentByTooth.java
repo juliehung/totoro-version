@@ -32,8 +32,4 @@ public class EndoTreatmentByTooth extends EndoTreatment {
             .sum();
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.EndoTreatmentByTooth;
-    }
 }

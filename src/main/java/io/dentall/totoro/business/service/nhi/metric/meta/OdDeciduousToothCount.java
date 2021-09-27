@@ -31,8 +31,4 @@ public class OdDeciduousToothCount extends SingleSourceMetaCalculator<Long> {
             .count();
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.OdDeciduousToothCount;
-    }
 }

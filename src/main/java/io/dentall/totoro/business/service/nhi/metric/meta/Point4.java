@@ -41,8 +41,4 @@ public class Point4 extends SingleSourceMetaCalculator<Long> {
             .orElse(0L);
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.Point4;
-    }
 }

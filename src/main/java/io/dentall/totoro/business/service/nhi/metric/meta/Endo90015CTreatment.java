@@ -29,8 +29,4 @@ public class Endo90015CTreatment extends SingleSourceMetaCalculator<Long> {
             .count();
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.Endo90015CTreatment;
-    }
 }

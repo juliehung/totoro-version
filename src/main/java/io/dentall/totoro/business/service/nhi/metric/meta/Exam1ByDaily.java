@@ -26,9 +26,4 @@ public class Exam1ByDaily extends Exam<Map<LocalDate, Long>> {
         return doCalculateByDaily(metricConfig, CodesByExam1);
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.Exam1ByDaily;
-    }
-
 }

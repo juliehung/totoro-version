@@ -43,8 +43,4 @@ public class Pt1ByDaily extends SingleSourceMetaCalculator<Map<LocalDate, Long>>
             });
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.Pt1ByDaily;
-    }
 }

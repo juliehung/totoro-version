@@ -12,7 +12,6 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static io.dentall.totoro.business.service.nhi.metric.meta.MetaType.*;
 import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.toPercentage;
 import static java.math.BigDecimal.ZERO;
 import static java.util.Map.Entry.comparingByValue;
@@ -34,11 +33,11 @@ public class HighestPoint1Patient extends SingleSourceMetaCalculator<HighestPati
     @Override
     public HighestPatientDto doCalculate(MetricConfig metricConfig) {
         Function<NhiMetricRawVM, Long> classifier = NhiMetricRawVM::getPatientId;
-        Exam1ByClassifier exam1 = new Exam1ByClassifier(metricConfig, HighestExam1Patient, source(), classifier).apply();
-        Exam2ByClassifier exam2 = new Exam2ByClassifier(metricConfig, HighestExam2Patient, source(), classifier).apply();
-        Exam3ByClassifier exam3 = new Exam3ByClassifier(metricConfig, HighestExam3Patient, source(), classifier).apply();
-        Exam4ByClassifier exam4 = new Exam4ByClassifier(metricConfig, HighestExam4Patient, source(), classifier).apply();
-        Point3ByClassifier point3 = new Point3ByClassifier(metricConfig, HighestPoint3ByPatient, source(), classifier).apply();
+        Exam1ByClassifier exam1 = new Exam1ByClassifier(metricConfig, source(), classifier).apply();
+        Exam2ByClassifier exam2 = new Exam2ByClassifier(metricConfig, source(), classifier).apply();
+        Exam3ByClassifier exam3 = new Exam3ByClassifier(metricConfig, source(), classifier).apply();
+        Exam4ByClassifier exam4 = new Exam4ByClassifier(metricConfig, source(), classifier).apply();
+        Point3ByClassifier point3 = new Point3ByClassifier(metricConfig, source(), classifier).apply();
         Point1 point1 = new Point1(metricConfig, source()).apply();
 
         Map<Long, Long> map = new HashMap<>(exam1.getResult().size());
@@ -64,11 +63,6 @@ public class HighestPoint1Patient extends SingleSourceMetaCalculator<HighestPati
         }
 
         return new HighestPatientDto(entry.getKey(), value);
-    }
-
-    @Override
-    public MetaType metaType() {
-        return MetaType.HighestPoint1ByPatient;
     }
 
 }

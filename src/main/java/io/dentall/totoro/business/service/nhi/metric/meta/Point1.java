@@ -28,9 +28,4 @@ public class Point1 extends SingleSourceMetaCalculator<Long> {
         return point3.getResult() + exam1.getResult() + exam2.getResult() + exam3.getResult() + exam4.getResult();
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.Point1;
-    }
-
 }

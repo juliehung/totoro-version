@@ -31,8 +31,4 @@ public class OdPermanentToothCount extends SingleSourceMetaCalculator<Long> {
             .sum();
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.OdPermanentToothCount;
-    }
 }

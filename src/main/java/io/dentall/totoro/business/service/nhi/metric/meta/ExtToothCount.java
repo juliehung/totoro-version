@@ -25,8 +25,4 @@ public class ExtToothCount extends SingleSourceMetaCalculator<Long> {
         return (long) metricToothList.size();
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.ExtToothCount;
-    }
 }

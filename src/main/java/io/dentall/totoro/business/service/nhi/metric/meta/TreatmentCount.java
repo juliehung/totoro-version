@@ -31,11 +31,6 @@ public class TreatmentCount extends SingleSourceMetaCalculator<Long> {
     }
 
     @Override
-    public MetaType metaType() {
-        return MetaType.TreatmentCount;
-    }
-
-    @Override
     public List<?> getExtraKeyAttribute() {
         return this.codes;
     }

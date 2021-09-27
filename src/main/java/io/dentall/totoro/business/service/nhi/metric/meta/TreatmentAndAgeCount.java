@@ -39,11 +39,6 @@ public class TreatmentAndAgeCount extends SingleSourceMetaCalculator<Long> {
     }
 
     @Override
-    public MetaType metaType() {
-        return MetaType.TreatmentAndAgeCount;
-    }
-
-    @Override
     public List<?> getExtraKeyAttribute() {
         return asList(this.codes, this.bottomAge, this.upperAge);
     }

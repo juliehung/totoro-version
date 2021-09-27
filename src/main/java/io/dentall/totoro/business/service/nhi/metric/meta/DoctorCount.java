@@ -30,9 +30,4 @@ public class DoctorCount extends SingleSourceMetaCalculator<Long> {
             .size();
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.DoctorCount;
-    }
-
 }

@@ -35,8 +35,4 @@ public class Od5TreatmentCount extends SingleSourceMetaCalculator<Long> {
             .size();
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.Od5TreatmentCount;
-    }
 }

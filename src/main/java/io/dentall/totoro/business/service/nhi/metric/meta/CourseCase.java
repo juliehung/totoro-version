@@ -38,8 +38,4 @@ public class CourseCase extends SingleSourceMetaCalculator<Long> {
             .count();
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.CourseCase;
-    }
 }

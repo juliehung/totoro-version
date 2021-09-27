@@ -3,7 +3,6 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
-import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstants.CodesByExam2;
 import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstants.CodesByExam3;
 
 /**
@@ -22,11 +21,6 @@ public class Exam3Difference extends Exam<Long> {
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
         return doCalculateDifference(metricConfig, CodesByExam3);
-    }
-
-    @Override
-    public MetaType metaType() {
-        return MetaType.Exam3Difference;
     }
 
 }

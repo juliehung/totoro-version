@@ -36,9 +36,4 @@ public class Endo1Point extends SingleSourceMetaCalculator<Long> {
             .sum();
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.Endo1Point;
-    }
-
 }

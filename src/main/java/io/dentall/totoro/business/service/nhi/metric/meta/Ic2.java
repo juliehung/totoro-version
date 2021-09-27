@@ -35,8 +35,4 @@ public class Ic2 extends SingleSourceMetaCalculator<Long> {
             .keySet().size();
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.Ic2;
-    }
 }

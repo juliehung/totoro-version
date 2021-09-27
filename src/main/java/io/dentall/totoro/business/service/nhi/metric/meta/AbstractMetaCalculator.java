@@ -29,14 +29,12 @@ public abstract class AbstractMetaCalculator<T> implements MetaCalculator<T> {
     public Meta<T> calculate() {
         if (!metricConfig.isMetaExist(key())) {
             T result = doCalculate(metricConfig);
-            metricConfig.storeMeta(key(), new Meta<>(metaType(), result));
+            metricConfig.storeMeta(key(), new Meta<>(this.getClass().getSimpleName(), result));
         }
 
         this.meta = metricConfig.retrieveMeta(key());
         return this.meta;
     }
-
-    protected abstract MetaType metaType();
 
     public final T getResult() {
         return this.meta.value();

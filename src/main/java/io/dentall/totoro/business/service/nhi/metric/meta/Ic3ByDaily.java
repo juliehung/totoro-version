@@ -45,8 +45,4 @@ public class Ic3ByDaily extends SingleSourceMetaCalculator<Map<LocalDate, Long>>
             });
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.Ic3ByDaily;
-    }
 }

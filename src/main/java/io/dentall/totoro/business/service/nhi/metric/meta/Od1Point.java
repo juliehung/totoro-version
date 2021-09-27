@@ -38,8 +38,4 @@ public class Od1Point extends SingleSourceMetaCalculator<Long> {
             .sum();
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.Od1Point;
-    }
 }

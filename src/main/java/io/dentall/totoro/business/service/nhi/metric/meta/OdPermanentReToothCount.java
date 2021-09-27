@@ -76,9 +76,4 @@ public class OdPermanentReToothCount extends AbstractMetaCalculator<Long> {
             }).sum();
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.OdPermanentReToothCount;
-    }
-
 }

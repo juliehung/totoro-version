@@ -138,9 +138,4 @@ public class SpecialTreatment extends SingleSourceMetaCalculator<SpecialTreatmen
         analysis.getP6p7AndOther().calculatePercentageOfCaseCount(totalCaseNumber);
     }
 
-
-    @Override
-    public MetaType metaType() {
-        return MetaType.SpecialTreatment;
-    }
 }

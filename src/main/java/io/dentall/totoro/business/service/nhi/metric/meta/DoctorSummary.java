@@ -58,9 +58,4 @@ public class DoctorSummary extends AbstractMetaSummary<DoctorSummaryDto> {
                 });
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.DoctorSummary;
-    }
-
 }

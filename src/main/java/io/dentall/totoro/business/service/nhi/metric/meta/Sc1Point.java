@@ -35,9 +35,4 @@ public class Sc1Point extends SingleSourceMetaCalculator<Long> {
             .sum();
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.Sc1Point;
-    }
-
 }

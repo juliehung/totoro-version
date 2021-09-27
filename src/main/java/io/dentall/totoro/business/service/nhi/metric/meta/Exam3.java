@@ -23,9 +23,4 @@ public class Exam3 extends Exam<Long> {
         return doCalculateRegular(metricConfig, CodesByExam3);
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.Exam3;
-    }
-
 }

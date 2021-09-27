@@ -63,9 +63,4 @@ public class DisposalSummary extends AbstractMetaSummary<DisposalSummaryDto> {
             .collect(Collectors.toList());
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.DisposalSummary;
-    }
-
 }

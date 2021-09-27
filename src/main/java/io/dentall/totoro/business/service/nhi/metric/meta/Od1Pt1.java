@@ -29,8 +29,4 @@ public class Od1Pt1 extends SingleSourceMetaCalculator<Long> {
             .reduce(0L, calculatePt(), Long::sum);
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.Od1Pt1;
-    }
 }
