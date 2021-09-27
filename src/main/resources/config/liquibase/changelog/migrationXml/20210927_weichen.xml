@@ -12,7 +12,7 @@
                     constraint pk_nhi_ic_card_operation_record
                         primary key,
                 disposal_id bigint,
-                operation varchar,
+                eject_ic_card_record boolean,
                 nhi_date_time varchar,
                 nhi_response_code varchar,
                 nhi_response_message varchar,
