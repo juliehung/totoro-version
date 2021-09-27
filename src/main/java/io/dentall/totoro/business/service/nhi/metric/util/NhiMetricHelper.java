@@ -53,6 +53,15 @@ public class NhiMetricHelper {
         return point;
     }
 
+    public static Long calculatePurge(Stream<Optional<NhiMetricRawVM>> stream, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
+        return stream.filter(Optional::isPresent)
+            .map(Optional::get)
+            .filter(vm -> isNotBlank(vm.getExamPoint()))
+            .map(vm -> purgeExamPoint(vm.getExamCode(), parseLong(vm.getExamPoint())))
+            .reduce(Long::sum)
+            .orElse(0L);
+    }
+
     public static Long calculateExam(Stream<Optional<NhiMetricRawVM>> stream, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
         return stream.filter(Optional::isPresent)
             .map(Optional::get)
@@ -67,6 +76,11 @@ public class NhiMetricHelper {
             .filter(vm -> codes.contains(vm.getExamCode()))
             .collect(groupingBy(NhiMetricRawVM::getDisposalId, maxBy(comparing(NhiMetricRawVM::getDisposalId))))
             .values().stream();
+    }
+
+    public static Long calculatePurge(List<NhiMetricRawVM> source, List<String> codes, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
+        Stream<Optional<NhiMetricRawVM>> stream = groupByDisposal(source, codes);
+        return calculatePurge(stream, config, holidayMap);
     }
 
     public static Long calculateExamRegular(List<NhiMetricRawVM> source, List<String> codes, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {

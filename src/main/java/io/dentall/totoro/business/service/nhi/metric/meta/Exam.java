@@ -38,6 +38,11 @@ public abstract class Exam<T> extends SingleSourceMetaCalculator<T> {
         }
     }
 
+    protected Long doCalculatePurge(MetricConfig metricConfig, List<String> codes) {
+        List<NhiMetricRawVM> source = metricConfig.retrieveSource(source().key());
+        return calculatePurge(source, codes, getConfig(), metricConfig.getHolidayMap());
+    }
+
     protected Long doCalculateRegular(MetricConfig metricConfig, List<String> codes) {
         List<NhiMetricRawVM> source = metricConfig.retrieveSource(source().key());
         checkPoint6(metricConfig);

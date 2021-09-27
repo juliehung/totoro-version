@@ -43,7 +43,7 @@ import java.util.function.Consumer;
 import static com.fasterxml.jackson.databind.DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS;
 import static com.fasterxml.jackson.databind.node.JsonNodeFactory.withExactBigDecimals;
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.*;
@@ -73,12 +73,6 @@ public class MetricStepDefinition {
     @Autowired
     private NhiMetricServiceTest nhiMetricService;
 
-    private final String metaClassPackage = "io.dentall.totoro.business.service.nhi.metric.meta";
-
-    private final String formulaClassPackage = "io.dentall.totoro.business.service.nhi.metric.formula";
-
-    private final String sourceClassPackage = "io.dentall.totoro.business.service.nhi.metric.source";
-
     private final int defaultPatientAge = 24;
 
     @Before
@@ -91,8 +85,9 @@ public class MetricStepDefinition {
     }
 
     @ParameterType(value = ".+Source")
-    public Class<? extends Source<? extends NhiMetricRawVM, ?>> sourceDateRange(String range) throws ClassNotFoundException {
-        return (Class<? extends Source<? extends NhiMetricRawVM, ?>>) Class.forName(sourceClassPackage + "." + range);
+    public Class<?> sourceDateRange(String range) throws ClassNotFoundException {
+        String sourceClassPackage = "io.dentall.totoro.business.service.nhi.metric.source";
+        return Class.forName(sourceClassPackage + "." + range);
     }
 
     private static class AgeRage {
@@ -138,8 +133,8 @@ public class MetricStepDefinition {
     }
 
     private static class ReDateRange {
-        private int begin;
-        private int end;
+        private final int begin;
+        private final int end;
 
         public ReDateRange(int begin, int end) {
             this.begin = begin;
@@ -168,13 +163,15 @@ public class MetricStepDefinition {
     }
 
     @ParameterType(value = ".+")
-    public Class<? extends MetaCalculator<?>> metaType(String value) throws ClassNotFoundException {
-        return (Class<? extends MetaCalculator<?>>) Class.forName(metaClassPackage + "." + value);
+    public Class<?> metaType(String value) throws ClassNotFoundException {
+        String metaClassPackage = "io.dentall.totoro.business.service.nhi.metric.meta";
+        return Class.forName(metaClassPackage + "." + value);
     }
 
     @ParameterType(value = ".+Formula")
-    public Class<? extends Calculator<?>> formulaType(String value) throws ClassNotFoundException {
-        return (Class<? extends Calculator<?>>) Class.forName(formulaClassPackage + "." + value);
+    public Class<?> formulaType(String value) throws ClassNotFoundException {
+        String formulaClassPackage = "io.dentall.totoro.business.service.nhi.metric.formula";
+        return Class.forName(formulaClassPackage + "." + value);
     }
 
     @ParameterType(value = "\\{.+\\}")
@@ -187,7 +184,7 @@ public class MetricStepDefinition {
         return Long.parseLong(value);
     }
 
-    @ParameterType(value = "[\\d\\.]+")
+    @ParameterType(value = "-?[\\d\\.]+")
     public BigDecimal metricValue(String value) {
         return new BigDecimal(value);
     }
@@ -333,7 +330,7 @@ public class MetricStepDefinition {
         String treatment) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         MetaConfig metaConfig = metricTestInfoHolder.getMetaConfig();
         return metaType.getDeclaredConstructor(MetricConfig.class, MetaConfig.class, Source.class, List.class)
-            .newInstance(metricConfig, metaConfig, source, asList(treatment));
+            .newInstance(metricConfig, metaConfig, source, singletonList(treatment));
     }
 
     private Source<? extends NhiMetricRawVM, ?> toSourceInstance(
@@ -411,9 +408,14 @@ public class MetricStepDefinition {
     @Given("設定指標主體類型為病人 {word} {int} 歲")
     public void createPatientSubject(String patientName, int age) {
         createPatient(patientName, age);
-        Patient patient = metricTestInfoHolder.getPatients().stream().filter(p -> p.getName().equals(patientName))
-            .findFirst().get();
-        metricTestInfoHolder.setSubject(new PatientSubject(patient));
+        Optional<Patient> patientOptional =
+            metricTestInfoHolder.getPatients().stream().filter(p -> p.getName().equals(patientName)).findFirst();
+
+        if (patientOptional.isPresent()) {
+            metricTestInfoHolder.setSubject(new PatientSubject(patientOptional.get()));
+        } else {
+            throw new RuntimeException("Patient not found - " + patientName);
+        }
     }
 
     @Given("設定指標主體類型為病人 {word}")
