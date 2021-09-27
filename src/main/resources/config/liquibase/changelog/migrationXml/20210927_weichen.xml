@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20210927-weichen" author="WeiChen">
+        <sql>
+            create table nhi_ic_card_operation_record
+            (
+                id              bigint not null
+                    constraint pk_nhi_ic_card_operation_record
+                        primary key,
+                disposal_id bigint,
+                eject_ic_card_record boolean,
+                nhi_date_time varchar,
+                nhi_response_code varchar,
+                nhi_response_message varchar,
+                days varchar,
+                delivery_prescription_note varchar,
+                medical_order_category varchar,
+                medical_item_code varchar,
+                medical_part varchar,
+                total varchar,
+                usage varchar,
+                created_by varchar(50),
+                created_date timestamp,
+                last_modified_by varchar(50),
+                last_modified_date timestamp
+            );
+        </sql>
+        <createIndex tableName="nhi_ic_card_operation_record" indexName="idx_nhi_ic_card_operation_record">
+            <column name="id"/>
+        </createIndex>
+        <createSequence sequenceName="nhi_ic_card_operation_record_seq" incrementBy="1"/>
+    </changeSet>
+</databaseChangeLog>
