@@ -1,8 +1,8 @@
 {
   "totoroAdmin": "stg-2.6.2-hotfix-5",
   "totoroAdminModifiedTime": "2021-09-14T08:29+00:00",
-  "totoroWeb": "stg-1.11.4",
-  "totoroWebModifiedTime": "2021-09-28T06:54+00:00",
+  "totoroWeb": "stg-1.10.6",
+  "totoroWebModifiedTime": "2021-09-28T12:05+00:00",
   "deploy8085Time": "1900-01-01T00:00+00:00",
-  "webRunId": "1281437888"
+  "webRunId": "1282465324"
 }
