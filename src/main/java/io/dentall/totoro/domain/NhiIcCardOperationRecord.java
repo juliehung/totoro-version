@@ -1,5 +1,7 @@
 package io.dentall.totoro.domain;
 
+import io.dentall.totoro.domain.enumeration.NhiIcCardOperationItemType;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -56,6 +58,29 @@ public class NhiIcCardOperationRecord extends AbstractAuditingEntity implements 
 
     @Column(name = "usage")
     private String usage;
+
+    @Column(name = "item_type")
+    @Enumerated(EnumType.STRING)
+    private NhiIcCardOperationItemType itemType;
+
+    @Column(name = "item_id")
+    private Long itemId;
+
+    public NhiIcCardOperationItemType getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(NhiIcCardOperationItemType itemType) {
+        this.itemType = itemType;
+    }
+
+    public Long getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
+    }
 
     public boolean isEjectIcCardRecord() {
         return ejectIcCardRecord;
