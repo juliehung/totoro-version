@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.source;
 
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 
 import java.util.List;
 import java.util.function.Function;
@@ -18,7 +18,7 @@ public abstract class MetricSubject {
         return subjectType;
     }
 
-    public abstract Function<Stream<NhiMetricRawVM>, List<NhiMetricRawVM>> getFilterFunction();
+    public abstract Function<Stream<MetricTooth>, List<MetricTooth>> getFilterFunction();
 
     public abstract Long getId();
 

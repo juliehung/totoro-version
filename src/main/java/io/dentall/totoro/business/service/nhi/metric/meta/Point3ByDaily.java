@@ -1,8 +1,8 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -27,13 +27,13 @@ public class Point3ByDaily extends SingleSourceMetaCalculator<Map<LocalDate, Lon
 
     @Override
     public Map<LocalDate, Long> doCalculate(MetricConfig metricConfig) {
-        List<Map<LocalDate, List<NhiMetricRawVM>>> source = metricConfig.retrieveSource(source().key());
+        List<Map<LocalDate, List<MetricTooth>>> source = metricConfig.retrieveSource(source().key());
         MetaConfig config = getConfig();
 
         return source.get(0).entrySet().stream().reduce(new HashMap<>(),
             (map, entry) -> {
                 LocalDate date = entry.getKey();
-                List<NhiMetricRawVM> sourceByDate = entry.getValue();
+                List<MetricTooth> sourceByDate = entry.getValue();
                 Long points = sourceByDate.stream()
                     .filter(vm -> !isExaminationCodeAtSalary(vm.getTreatmentProcedureCode()))
                     .mapToLong(vm -> applyNewTreatmentPoint(vm, config, metricConfig.getHolidayMap()))

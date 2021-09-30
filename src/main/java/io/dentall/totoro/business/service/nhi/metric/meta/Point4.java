@@ -1,8 +1,8 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,15 +27,15 @@ public class Point4 extends SingleSourceMetaCalculator<Long> {
 
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
-        List<NhiMetricRawVM> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
+        List<MetricTooth> source = metricConfig.retrieveSource(source().key());
 
-        return nhiMetricRawVMList.stream()
+        return source.stream()
             .filter(vm -> isNotBlank(vm.getPartialBurden()))
-            .collect(groupingBy(NhiMetricRawVM::getDisposalId, maxBy(comparing(NhiMetricRawVM::getDisposalId))))
+            .collect(groupingBy(MetricTooth::getDisposalId, maxBy(comparing(MetricTooth::getDisposalId))))
             .values().stream()
             .filter(Optional::isPresent)
             .map(Optional::get)
-            .map(NhiMetricRawVM::getPartialBurden)
+            .map(MetricTooth::getPartialBurden)
             .map(Long::valueOf)
             .reduce(Long::sum)
             .orElse(0L);

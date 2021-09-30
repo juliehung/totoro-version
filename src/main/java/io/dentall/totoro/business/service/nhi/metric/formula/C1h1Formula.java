@@ -1,5 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Exam1;
 import io.dentall.totoro.business.service.nhi.metric.meta.Exam2;
 import io.dentall.totoro.business.service.nhi.metric.meta.Exam3;
@@ -7,7 +8,6 @@ import io.dentall.totoro.business.service.nhi.metric.meta.Exam4;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.MonthSelectedSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
@@ -17,7 +17,7 @@ import java.math.BigDecimal;
  */
 public class C1h1Formula extends AbstractFormula<BigDecimal> {
 
-    private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
+    private final Source<MetricTooth, MetricTooth> source;
 
     public C1h1Formula(MetricConfig metricConfig) {
         super(metricConfig);

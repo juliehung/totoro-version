@@ -1,12 +1,12 @@
 package io.dentall.totoro.business.service.nhi.metric.source;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Exclude;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
 import java.util.stream.Stream;
 
-public abstract class SubjectSource extends AbstractSource<NhiMetricRawVM, NhiMetricRawVM> {
+public abstract class SubjectSource extends AbstractSource<MetricTooth> {
 
     private final MetricConfig metricConfig;
 
@@ -19,7 +19,7 @@ public abstract class SubjectSource extends AbstractSource<NhiMetricRawVM, NhiMe
     }
 
     @Override
-    public List<NhiMetricRawVM> doFilter(Stream<NhiMetricRawVM> stream) {
+    public List<MetricTooth> doFilter(Stream<MetricTooth> stream) {
         return this.metricSubject.getFilterFunction().apply(stream);
     }
 

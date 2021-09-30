@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.source;
 
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.domain.User;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class DoctorSubject extends MetricSubject {
     }
 
     @Override
-    public Function<Stream<NhiMetricRawVM>, List<NhiMetricRawVM>> getFilterFunction() {
+    public Function<Stream<MetricTooth>, List<MetricTooth>> getFilterFunction() {
         return (source) -> source.filter(vm -> this.doctor.getId().equals(vm.getDoctorId())).collect(toList());
     }
 

@@ -1,12 +1,12 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Endo90015CTreatment;
 import io.dentall.totoro.business.service.nhi.metric.meta.EndoTreatment;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1ButPoint6Config;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.business.service.nhi.metric.source.ThreeMonthNearSource;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
@@ -19,7 +19,7 @@ import static java.math.BigDecimal.ZERO;
  */
 public class L21Formula extends AbstractFormula<BigDecimal> {
 
-    private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
+    private final Source<MetricTooth, MetricTooth> source;
 
     public L21Formula(MetricConfig metricConfig) {
         super(metricConfig);

@@ -24,9 +24,9 @@ public class Od1Pt2 extends SingleSourceMetaCalculator<Long> {
 
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
-        List<MetricTooth> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
+        List<MetricTooth> source = metricConfig.retrieveSource(source().key());
 
-        return nhiMetricRawVMList.stream()
+        return source.stream()
             .filter(vm -> !isPreventionCardNumber(vm.getCardNumber()))
             .reduce(0L, calculatePt(), Long::sum);
     }

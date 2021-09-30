@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.source;
 
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,7 +15,7 @@ import static java.util.stream.Collectors.groupingBy;
 /**
  * 去年 date-10 季(Q1,Q2,Q3,Q4)
  */
-public class QuarterByDailyOfLastYearSource extends AbstractSource<NhiMetricRawVM, Map<LocalDate, List<NhiMetricRawVM>>> {
+public class QuarterByDailyOfLastYearSource extends AbstractSource<Map<LocalDate, List<MetricTooth>>> {
 
     private final LocalDate begin;
 
@@ -28,8 +28,8 @@ public class QuarterByDailyOfLastYearSource extends AbstractSource<NhiMetricRawV
     }
 
     @Override
-    public List<Map<LocalDate, List<NhiMetricRawVM>>> doFilter(Stream<NhiMetricRawVM> source) {
-        Map<LocalDate, List<NhiMetricRawVM>> map = source.collect(groupingBy(NhiMetricRawVM::getDisposalDate));
+    public List<Map<LocalDate, List<MetricTooth>>> doFilter(Stream<MetricTooth> source) {
+        Map<LocalDate, List<MetricTooth>> map = source.collect(groupingBy(MetricTooth::getDisposalDate));
 
         // 補齊沒有資料的日期
         for (LocalDate date = begin; !date.isAfter(end); date = date.plusDays(1L)) {

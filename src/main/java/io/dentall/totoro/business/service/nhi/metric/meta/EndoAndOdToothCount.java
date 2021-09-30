@@ -53,7 +53,7 @@ public class EndoAndOdToothCount extends AbstractMetaCalculator<Long> {
                 // 該季中如果同顆牙有多次，則取最後一次
                 Map<String, Optional<MetricTooth>> lastToothDisposal = toothMap.values().stream()
                     .flatMap(Collection::stream)
-                    .collect(groupingBy(MetricTooth::getTreatmentProcedureTooth, maxBy(comparing(MetricTooth::getDisposalDate))));
+                    .collect(groupingBy(MetricTooth::getTooth, maxBy(comparing(MetricTooth::getDisposalDate))));
 
                 return lastToothDisposal.entrySet().stream()
                     .filter(toothDisposal -> toothDisposal.getValue().isPresent())

@@ -1,9 +1,9 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.dto.SummaryDto;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public abstract class AbstractMetaSummary<T> extends SingleSourceMetaCalculator<
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    protected void summaryByTreatment(SummaryDto summaryDto, List<NhiMetricRawVM> source) {
+    protected void summaryByTreatment(SummaryDto summaryDto, List<MetricTooth> source) {
         source.stream().reduce(summaryDto,
             (dto, vm) -> {
                 String code = vm.getTreatmentProcedureCode();
@@ -46,7 +46,7 @@ public abstract class AbstractMetaSummary<T> extends SingleSourceMetaCalculator<
             });
     }
 
-    protected void summaryByDisposal(SummaryDto summaryDto, NhiMetricRawVM vm) {
+    protected void summaryByDisposal(SummaryDto summaryDto, MetricTooth vm) {
         if (isNotBlank(vm.getExamPoint())) {
             long examPoint = parseLong(vm.getExamPoint());
             if (isInfectionExaminationCodeAtSalary(vm.getExamCode())) {

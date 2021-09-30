@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.groupingBy;
 
-public class ExtQuarterByPatientSource extends AbstractSource<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> {
+public class ExtQuarterByPatientSource extends AbstractSource<Map<Long, Map<String, List<MetricTooth>>>> {
 
     public ExtQuarterByPatientSource(MetricConfig metricConfig) {
         super(new ExtQuarterSource(metricConfig));
@@ -17,7 +17,7 @@ public class ExtQuarterByPatientSource extends AbstractSource<MetricTooth, Map<L
 
     @Override
     public List<Map<Long, Map<String, List<MetricTooth>>>> doFilter(Stream<MetricTooth> source) {
-        return singletonList(source.collect(groupingBy(MetricTooth::getPatientId, groupingBy(MetricTooth::getTreatmentProcedureTooth))));
+        return singletonList(source.collect(groupingBy(MetricTooth::getPatientId, groupingBy(MetricTooth::getTooth))));
     }
 
 }

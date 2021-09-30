@@ -5,7 +5,6 @@ import io.dentall.totoro.business.service.nhi.metric.meta.Od1ReToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1ToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
 import io.dentall.totoro.business.service.nhi.metric.source.*;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,7 +22,7 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.to
  */
 public class I19Formula extends AbstractFormula<BigDecimal> {
 
-    private final Source<NhiMetricRawVM, MetricTooth> odSource;
+    private final Source<MetricTooth, MetricTooth> odSource;
 
     private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odByPatientSource;
 

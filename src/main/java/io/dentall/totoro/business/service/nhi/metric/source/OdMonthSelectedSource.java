@@ -13,7 +13,7 @@ import static java.util.stream.Collectors.toList;
 /**
  * date-15 月(自選案件)
  */
-public class OdMonthSelectedSource extends OdSource<MetricTooth> {
+public class OdMonthSelectedSource extends OdSource {
 
     private final LocalDate begin;
 

@@ -4,7 +4,6 @@ import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.EndoAndOdToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.ExtToothCount;
 import io.dentall.totoro.business.service.nhi.metric.source.*;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,7 +20,7 @@ import static java.math.BigDecimal.ZERO;
  */
 public class K14Formula extends AbstractFormula<BigDecimal> {
 
-    private final Source<NhiMetricRawVM, MetricTooth> extQuarterSource;
+    private final Source<MetricTooth, MetricTooth> extQuarterSource;
 
     private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> extQuarterByPatientSource;
     private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> endoAndOdHalfYearByPatientSource;

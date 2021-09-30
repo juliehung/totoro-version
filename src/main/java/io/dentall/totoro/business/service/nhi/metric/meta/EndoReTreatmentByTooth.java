@@ -1,17 +1,17 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.service.nhi.util.ToothUtil;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.counting;
-import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.*;
 
 /**
  * Point-11 (90001C+90002C+90003C+90016C+ 90018C+90019C+ 90020C) tooth
@@ -24,10 +24,10 @@ public class EndoReTreatmentByTooth extends EndoTreatment {
 
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
-        List<NhiMetricRawVM> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
+        List<MetricTooth> source = metricConfig.retrieveSource(source().key());
 
         // 先取得每個病人的每個處置的牙齒
-        Map<String, List<String>> teethByPatientTreatment = nhiMetricRawVMList.stream()
+        Map<String, List<String>> teethByPatientTreatment = source.stream()
             .filter(vm -> codes.contains(vm.getTreatmentProcedureCode()))
             .collect(groupingBy(vm -> vm.getPatientId() + vm.getTreatmentProcedureCode()))
             .entrySet().stream()
@@ -37,11 +37,9 @@ public class EndoReTreatmentByTooth extends EndoTreatment {
                     list = ofNullable(list).orElse(new ArrayList<>());
 
                     List<String> teeth = entry.getValue().stream()
-                        .map(NhiMetricRawVM::getTreatmentProcedureTooth)
+                        .map(MetricTooth::getTooth)
                         .filter(StringUtils::isNotBlank)
-                        .map(ToothUtil::splitA74)
-                        .flatMap(Collection::stream)
-                        .collect(Collectors.toList());
+                        .collect(toList());
 
                     list.addAll(teeth);
                     return list;

@@ -11,7 +11,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-public class OdOneAndHalfYearNearSource extends OdSource<MetricTooth> {
+public class OdOneAndHalfYearNearSource extends OdSource {
 
     private final LocalDate begin;
 
@@ -25,7 +25,7 @@ public class OdOneAndHalfYearNearSource extends OdSource<MetricTooth> {
         return source
             .filter(dto -> begin.isBefore(dto.getDisposalDate()) || begin.isEqual(dto.getDisposalDate()))
             .filter(dto -> codes.contains(dto.getTreatmentProcedureCode()))
-            .filter(dto -> isNotBlank(dto.getTreatmentProcedureTooth()))
+            .filter(dto -> isNotBlank(dto.getTooth()))
             .collect(toList());
     }
 

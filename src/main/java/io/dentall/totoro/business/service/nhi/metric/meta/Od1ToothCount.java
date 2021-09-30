@@ -21,8 +21,8 @@ public class Od1ToothCount extends SingleSourceMetaCalculator<Long> {
 
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
-        List<MetricTooth> metricToothList = metricConfig.retrieveSource(source().key());
-        return (long) metricToothList.size();
+        List<MetricTooth> source = metricConfig.retrieveSource(source().key());
+        return (long) source.size();
     }
 
 }

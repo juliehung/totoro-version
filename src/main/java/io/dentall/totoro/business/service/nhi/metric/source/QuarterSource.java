@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.source;
 
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,7 +12,7 @@ import static java.util.stream.Collectors.toList;
 /**
  * date-10 當季(Q1,Q2,Q3,Q4)
  */
-public class QuarterSource extends AbstractSource<NhiMetricRawVM, NhiMetricRawVM> {
+public class QuarterSource extends AbstractSource<MetricTooth> {
 
     private final LocalDate begin;
 
@@ -25,7 +25,7 @@ public class QuarterSource extends AbstractSource<NhiMetricRawVM, NhiMetricRawVM
     }
 
     @Override
-    public List<NhiMetricRawVM> doFilter(Stream<NhiMetricRawVM> source) {
+    public List<MetricTooth> doFilter(Stream<MetricTooth> source) {
         return source
             .filter(vm ->
                 begin.isEqual(vm.getDisposalDate())

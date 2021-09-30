@@ -11,7 +11,7 @@ import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.groupingBy;
 
-public abstract class OdDeciduousSource extends AbstractSource<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> {
+public abstract class OdDeciduousSource extends AbstractSource<Map<Long, Map<String, List<MetricTooth>>>> {
 
     protected static final List<String> teeth = unmodifiableList(asList(
         "51", "52", "53", "54", "55",
@@ -27,8 +27,8 @@ public abstract class OdDeciduousSource extends AbstractSource<MetricTooth, Map<
     @Override
     public List<Map<Long, Map<String, List<MetricTooth>>>> doFilter(Stream<MetricTooth> source) {
         return singletonList(source
-            .filter(dto -> teeth.contains(dto.getTreatmentProcedureTooth()))
-            .collect(groupingBy(MetricTooth::getPatientId, groupingBy(MetricTooth::getTreatmentProcedureTooth))));
+            .filter(dto -> teeth.contains(dto.getTooth()))
+            .collect(groupingBy(MetricTooth::getPatientId, groupingBy(MetricTooth::getTooth))));
     }
 
 }

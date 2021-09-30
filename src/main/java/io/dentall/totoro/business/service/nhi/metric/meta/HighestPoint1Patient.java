@@ -1,9 +1,9 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.HighestPatientDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public class HighestPoint1Patient extends SingleSourceMetaCalculator<HighestPati
 
     @Override
     public HighestPatientDto doCalculate(MetricConfig metricConfig) {
-        Function<NhiMetricRawVM, Long> classifier = NhiMetricRawVM::getPatientId;
+        Function<MetricTooth, Long> classifier = MetricTooth::getPatientId;
         Exam1ByClassifier exam1 = new Exam1ByClassifier(metricConfig, source(), classifier).apply();
         Exam2ByClassifier exam2 = new Exam2ByClassifier(metricConfig, source(), classifier).apply();
         Exam3ByClassifier exam3 = new Exam3ByClassifier(metricConfig, source(), classifier).apply();

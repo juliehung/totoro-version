@@ -111,8 +111,8 @@ public class MetricDashboardService {
             doctorSummaryDtoList = new DoctorSummaryFormula(metricConfig).calculate();
         } else {
             HighestPatientDto highestPatientDto = new L10Formula(metricConfig).calculate();
-            List<NhiMetricRawVM> list = metricConfig.retrieveSource(new SourceKey(new MonthSelectedSource(metricConfig)));
-            list.stream().filter(vm -> highestPatientDto.getId().equals(vm.getPatientId())).map(NhiMetricRawVM::getPatientName).findAny().ifPresent(nameValue::setName);
+            List<MetricTooth> list = metricConfig.retrieveSource(new SourceKey(new MonthSelectedSource(metricConfig)));
+            list.stream().filter(vm -> highestPatientDto.getId().equals(vm.getPatientId())).map(MetricTooth::getPatientName).findAny().ifPresent(nameValue::setName);
             nameValue.setValue(highestPatientDto.getValue());
             disposalSummaryDtoList = new DisposalSummaryFormula(metricConfig).calculate();
         }

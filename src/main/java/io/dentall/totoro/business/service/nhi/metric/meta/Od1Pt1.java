@@ -23,10 +23,9 @@ public class Od1Pt1 extends SingleSourceMetaCalculator<Long> {
 
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
-        List<MetricTooth> metricToothList = metricConfig.retrieveSource(source().key());
+        List<MetricTooth> source = metricConfig.retrieveSource(source().key());
 
-        return metricToothList.stream()
-            .reduce(0L, calculatePt(), Long::sum);
+        return source.stream().reduce(0L, calculatePt(), Long::sum);
     }
 
 }

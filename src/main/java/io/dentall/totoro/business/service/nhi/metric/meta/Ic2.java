@@ -1,8 +1,8 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
 
@@ -26,11 +26,11 @@ public class Ic2 extends SingleSourceMetaCalculator<Long> {
 
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
-        List<NhiMetricRawVM> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
+        List<MetricTooth> source = metricConfig.retrieveSource(source().key());
 
-        return (long) nhiMetricRawVMList.stream()
+        return (long) source.stream()
             .filter(vm -> isNotBlank(vm.getCardNumber()))
-            .map(NhiMetricRawVM::getDisposalDate)
+            .map(MetricTooth::getDisposalDate)
             .collect(groupingBy(key -> key))
             .keySet().size();
     }

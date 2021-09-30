@@ -12,6 +12,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTreatment;
 import io.dentall.totoro.business.service.nhi.metric.meta.*;
 import io.dentall.totoro.business.service.nhi.metric.source.*;
@@ -42,6 +43,7 @@ import java.util.function.Consumer;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS;
 import static com.fasterxml.jackson.databind.node.JsonNodeFactory.withExactBigDecimals;
+import static io.dentall.totoro.business.service.nhi.util.ToothUtil.splitA74;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static java.util.Comparator.comparing;
@@ -202,8 +204,16 @@ public class MetricStepDefinition {
         return datalist.stream().map(data -> {
             MetricTreatment metricTreatment = MetricTestMapper.INSTANCE.mapToMetricTreatment(data);
             consumer.accept(metricTreatment);
-            return metricTreatment;
-        }).collect(toList());
+
+            List<String> teeth = splitA74(metricTreatment.getTreatmentProcedureTooth());
+            List<MetricTooth> metricToothList = new ArrayList<>(teeth.size());
+            teeth.forEach(tooth -> {
+                MetricTooth metricTooth = new MetricTooth(metricTreatment, tooth);
+                metricToothList.add(metricTooth);
+            });
+
+            return metricToothList;
+        }).flatMap(Collection::stream).collect(toList());
     }
 
     private Consumer<MetricTreatment> metricTreatmentConsumer() {
@@ -353,14 +363,22 @@ public class MetricStepDefinition {
     @Then("載入指定檔案資料集 {word}")
     public void loadDataSet(String filePath) {
         Consumer<MetricTreatment> consumer = metricTreatmentConsumer();
-        metricTestInfoHolder.setSource(
+        setupSource(
             nhiMetricService.loadDataSet("metric" + File.separator + filePath).stream()
                 .map(data -> {
                     MetricTreatment metricTreatment = MetricTestMapper.INSTANCE.mapToMetricTreatment(data);
                     createPatient(metricTreatment.getPatientName(), ofNullable(metricTreatment.getPatientBirth()).map(LocalDate::getYear).orElse(defaultPatientAge));
                     consumer.accept(metricTreatment);
-                    return metricTreatment;
-                }).collect(toList()));
+
+                    List<String> teeth = splitA74(metricTreatment.getTreatmentProcedureTooth());
+                    List<MetricTooth> metricToothList = new ArrayList<>(teeth.size());
+                    teeth.forEach(tooth -> {
+                        MetricTooth metricTooth = new MetricTooth(metricTreatment, tooth);
+                        metricToothList.add(metricTooth);
+                    });
+
+                    return metricToothList;
+                }).flatMap(Collection::stream).collect(toList()));
     }
 
     @Given("設定使用00121C點數計算")
