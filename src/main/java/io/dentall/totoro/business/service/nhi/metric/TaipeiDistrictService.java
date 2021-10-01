@@ -52,17 +52,12 @@ public class TaipeiDistrictService implements DistrictService {
         BigDecimal metricF1h1 = new F1h1Formula(metricConfig).calculate();
         BigDecimal metricF1h2 = new F1h2Formula(metricConfig).calculate();
         BigDecimal metricF1h3 = new F1h3Formula(metricConfig).calculate();
-        BigDecimal metricF2h4 = new F2h4Formula(metricConfig).calculate();
+        BigDecimal metricF1h5 = new F1h5Formula(metricConfig).calculate();
+        BigDecimal metricF1h6 = new F1h6Formula(metricConfig).calculate();
         BigDecimal metricF3h1 = new F3h1Formula(metricConfig).calculate();
         BigDecimal metricF3h2 = new F3h2Formula(metricConfig).calculate();
         BigDecimal metricF4h3 = new F4h3Formula(metricConfig).calculate();
         BigDecimal metricF5h3 = new F5h3Formula(metricConfig).calculate();
-        BigDecimal metricF5h4 = new F5h4Formula(metricConfig).calculate();
-        BigDecimal metricF5h5 = new F5h5Formula(metricConfig).calculate();
-        BigDecimal metricF5h6 = new F5h6Formula(metricConfig).calculate();
-        BigDecimal metricF5h7 = new F5h7Formula(metricConfig).calculate();
-        BigDecimal metricF5h8 = new F5h8Formula(metricConfig).calculate();
-        BigDecimal metricL1 = new L1Formula(metricConfig).calculate();
         BigDecimal metricI12 = new I12Formula(metricConfig).calculate();
 
         TaipeiDistrictDto taipeiDistrictDto = new TaipeiDistrictDto();
@@ -70,18 +65,12 @@ public class TaipeiDistrictService implements DistrictService {
         taipeiDistrictDto.setF1h1(metricF1h1);
         taipeiDistrictDto.setF1h2(metricF1h2);
         taipeiDistrictDto.setF1h3(metricF1h3);
-        taipeiDistrictDto.setF2h4(metricF2h4);
+        taipeiDistrictDto.setF1h5(metricF1h5);
+        taipeiDistrictDto.setF1h6(metricF1h6);
         taipeiDistrictDto.setF3h1(metricF3h1);
         taipeiDistrictDto.setF3h2(metricF3h2);
         taipeiDistrictDto.setF4h3(metricF4h3);
-        taipeiDistrictDto.setF4h3(metricF4h3);
         taipeiDistrictDto.setF5h3(metricF5h3);
-        taipeiDistrictDto.setF5h4(metricF5h4);
-        taipeiDistrictDto.setF5h5(metricF5h5);
-        taipeiDistrictDto.setF5h6(metricF5h6);
-        taipeiDistrictDto.setF5h7(metricF5h7);
-        taipeiDistrictDto.setF5h8(metricF5h8);
-        taipeiDistrictDto.setL1(metricL1);
         taipeiDistrictDto.setI12(metricI12);
 
         if (metricSubjectType == doctor) {

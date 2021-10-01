@@ -5,7 +5,7 @@ import io.dentall.totoro.business.service.nhi.metric.meta.Od1Point;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1ToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
-import io.dentall.totoro.business.service.nhi.metric.source.OdQuarterSource;
+import io.dentall.totoro.business.service.nhi.metric.source.OdMonthSelectedSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.math.BigDecimal;
@@ -15,7 +15,7 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.di
 import static java.math.BigDecimal.ZERO;
 
 /**
- * ＠date-10＠ 的 @OD-1@總點數/@OD-1@牙齒顆數
+ * ＠date-15＠ 的 @OD-1@總點數/@OD-1@牙齒顆數
  */
 public class F1h3Formula extends AbstractFormula<BigDecimal> {
 
@@ -23,7 +23,7 @@ public class F1h3Formula extends AbstractFormula<BigDecimal> {
 
     public F1h3Formula(MetricConfig metricConfig) {
         super(metricConfig);
-        this.source = new OdQuarterSource(metricConfig);
+        this.source = new OdMonthSelectedSource(metricConfig);
         this.source.setExclude(Tro1);
     }
 
