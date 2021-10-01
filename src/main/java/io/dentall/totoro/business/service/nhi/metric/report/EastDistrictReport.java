@@ -231,7 +231,7 @@ public class EastDistrictReport {
             csm.get(
                 ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
             ),
-            "OD 兩年重補率率＞5.80%"
+            "OD 兩年重補率＞5.80%"
         );
         ExcelUtil.createCellAndApplyStyle(
             sheet,

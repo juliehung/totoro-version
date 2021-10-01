@@ -40,7 +40,7 @@ public class NorthDistrictReport {
         // 根管相關
         row = sheet.createRow(rowCounter++);
         row.createCell(0).setCellValue("根管相關");
-        row.createCell(1).setCellValue("一年內根管為完成率(需<28.74)");
+        row.createCell(1).setCellValue("一年內根管未完成率(需<28.74)");
         // 補牙相關
         row = sheet.createRow(rowCounter++);
         row.createCell(0).setCellValue("補牙相關");
@@ -48,7 +48,7 @@ public class NorthDistrictReport {
         row = sheet.createRow(rowCounter++);
         row.createCell(1).setCellValue("乳牙一年半重補率(需≦10%)");
         row = sheet.createRow(rowCounter++);
-        row.createCell(1).setCellValue("89013C（複合體填充）3 個月申報醫令件數且申報病患年齡小於50之一另佔率(需<40%)");
+        row.createCell(1).setCellValue("89013C（複合體填充）3 個月申報醫令件數且申報病患年齡小於50之醫令佔率(需<40%)");
         row = sheet.createRow(rowCounter++);
         row.createCell(1).setCellValue("牙體復形(OD)合計申報點數佔牙科處置申報點數比率(需<65.38%)");
         // 牙周相關

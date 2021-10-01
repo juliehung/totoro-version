@@ -34,7 +34,7 @@ public class KaoPingDistrictReductionReport {
         // 醫療費用
         row = sheet.createRow(rowCounter++);
         row.createCell(0).setCellValue("醫療費用");
-        row.createCell(1).setCellValue("醫療費用點數\n(個別醫師需<51 萬)");
+        row.createCell(1).setCellValue("醫療費用點數\n(個別醫師需<52.5 萬)");
         row = sheet.createRow(rowCounter++);
         row.createCell(1).setCellValue("去年當季醫師平均醫療費用點數");
         row = sheet.createRow(rowCounter++);
