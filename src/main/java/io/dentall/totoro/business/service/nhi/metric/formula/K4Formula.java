@@ -3,10 +3,7 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1Point;
 import io.dentall.totoro.business.service.nhi.metric.meta.Point3;
-import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
-import io.dentall.totoro.business.service.nhi.metric.source.MonthSelectedSource;
-import io.dentall.totoro.business.service.nhi.metric.source.OdMonthSelectedSource;
-import io.dentall.totoro.business.service.nhi.metric.source.Source;
+import io.dentall.totoro.business.service.nhi.metric.source.*;
 
 import java.math.BigDecimal;
 
@@ -27,8 +24,8 @@ public class K4Formula extends AbstractFormula<BigDecimal> {
 
     public K4Formula(MetricConfig metricConfig) {
         super(metricConfig);
-        this.source = new MonthSelectedSource(metricConfig);
-        this.odSource = new OdMonthSelectedSource(metricConfig);
+        this.source = new QuarterSource(metricConfig);
+        this.odSource = new OdQuarterSource(metricConfig);
         this.source.setExclude(Tro6);
         this.odSource.setExclude(Tro6);
     }

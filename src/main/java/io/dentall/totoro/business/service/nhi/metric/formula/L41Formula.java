@@ -4,7 +4,7 @@ import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentReToothCount;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.OdPermanentQuarterByPatientSource;
-import io.dentall.totoro.business.service.nhi.metric.source.OdPermanentThreeYearNearByPatientSource;
+import io.dentall.totoro.business.service.nhi.metric.source.OdPermanentQuarterPlusThreeYearNearByPatientSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.math.BigDecimal;
@@ -26,7 +26,7 @@ public class L41Formula extends AbstractFormula<BigDecimal> {
     public L41Formula(MetricConfig metricConfig) {
         super(metricConfig);
         this.odQuarterSource = new OdPermanentQuarterByPatientSource(metricConfig);
-        this.odThreeYearNearSource = new OdPermanentThreeYearNearByPatientSource(metricConfig);
+        this.odThreeYearNearSource = new OdPermanentQuarterPlusThreeYearNearByPatientSource(metricConfig);
         this.odQuarterSource.setExclude(N89013C);
         this.odThreeYearNearSource.setExclude(N89013C);
     }

@@ -32,7 +32,7 @@ public class I19Formula extends AbstractFormula<BigDecimal> {
         super(metricConfig);
         this.odSource = new OdQuarterSource(metricConfig);
         this.odByPatientSource = new OdQuarterByPatientSource(metricConfig);
-        this.odPastByPatientSource = new OdThreeYearNearByPatientSource(metricConfig);
+        this.odPastByPatientSource = new OdQuarterPlusThreeYearNearByPatientSource(metricConfig);
         this.odSource.setExclude(Tro1);
         this.odByPatientSource.setExclude(Tro1);
         this.odPastByPatientSource.setExclude(Tro1);

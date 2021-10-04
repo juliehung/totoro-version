@@ -153,9 +153,9 @@ public class MetricStepDefinition {
     }
 
     private ReDateRange getOdReDateRange(Class<? extends Source<? extends NhiMetricRawVM, ?>> sourceType) {
-        if (OdOneYearNearByPatientSource.class.isAssignableFrom(sourceType) ||
-            OdDeciduousOneYearNearByPatientSource.class.isAssignableFrom(sourceType) ||
-            OdPermanentOneYearNearByPatientSource.class.isAssignableFrom(sourceType)) {
+        if (OdQuarterPlusOneYearNearByPatientSource.class.isAssignableFrom(sourceType) ||
+            OdDeciduousQuarterPlusOneYearNearByPatientSource.class.isAssignableFrom(sourceType) ||
+            OdPermanentQuarterPlusOneYearNearByPatientSource.class.isAssignableFrom(sourceType)) {
             return new ReDateRange(1, 365);
         } else if (EndoAndOdHalfYearNearByPatientSource.class.isAssignableFrom(sourceType)) {
             return new ReDateRange(1, 180);

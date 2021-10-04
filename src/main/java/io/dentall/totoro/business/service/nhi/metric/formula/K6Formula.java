@@ -31,7 +31,7 @@ public class K6Formula extends AbstractFormula<BigDecimal> {
         super(metricConfig);
         this.odSource = new OdQuarterSource(metricConfig);
         this.odByPatientSource = new OdQuarterByPatientSource(metricConfig);
-        this.odPastByPatientSource = new OdTwoYearNearByPatientSource(metricConfig);
+        this.odPastByPatientSource = new OdQuarterPlusTwoYearNearByPatientSource(metricConfig);
         this.odSource.setExclude(Tro6);
         this.odByPatientSource.setExclude(Tro6);
         this.odPastByPatientSource.setExclude(Tro6);

@@ -20,13 +20,13 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  * 所以要算其他OD其他非重補率指標，要使用獨立過濾好的Source，像OdQuarterSource是用QuarterSource過濾的
  * 而OdThreeYearNearSource是用SubjectSource過濾的，所以是三年加上季的資料
  */
-public class OdThreeYearNearSource extends OdSource {
+public class OdQuarterPlusThreeYearNearSource extends OdSource {
 
     private final LocalDate begin;
 
     private final LocalDate end;
 
-    public OdThreeYearNearSource(MetricConfig metricConfig) {
+    public OdQuarterPlusThreeYearNearSource(MetricConfig metricConfig) {
         super(metricConfig.getSubjectSource());
         this.begin = toLocalDate(metricConfig.getQuarterRange().getBegin()).minus(1095, DAYS);
         this.end = toLocalDate(metricConfig.getQuarterRange().getEnd());

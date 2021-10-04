@@ -11,13 +11,13 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-public class OdTwoYearNearSource extends OdSource {
+public class OdQuarterPlusOneYearNearSource extends OdSource {
 
     private final LocalDate begin;
 
-    public OdTwoYearNearSource(MetricConfig metricConfig) {
-        super(new OdThreeYearNearSource(metricConfig));
-        this.begin = toLocalDate(metricConfig.getQuarterRange().getBegin()).minus(730, DAYS);
+    public OdQuarterPlusOneYearNearSource(MetricConfig metricConfig) {
+        super(new OdQuarterPlusOneAndHalfYearNearSource(metricConfig));
+        this.begin = toLocalDate(metricConfig.getQuarterRange().getBegin()).minus(365, DAYS);
     }
 
     @Override

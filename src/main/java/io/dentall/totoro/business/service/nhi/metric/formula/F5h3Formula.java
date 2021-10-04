@@ -33,7 +33,7 @@ public class F5h3Formula extends AbstractFormula<BigDecimal> {
         super(metricConfig);
         this.odSource = new OdMonthSelectedSource(metricConfig);
         this.odByPatientSource = new OdMonthSelectedByPatientSource(metricConfig);
-        this.odPastByPatientSource = new OdOneYearNearByPatientSource(metricConfig);
+        this.odPastByPatientSource = new OdQuarterPlusOneYearNearByPatientSource(metricConfig);
         this.odSource.setExclude(Tro1);
         this.odByPatientSource.setExclude(Tro1);
         this.odPastByPatientSource.setExclude(Tro1);

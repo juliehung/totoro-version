@@ -3,10 +3,7 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentReToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentToothCount;
-import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
-import io.dentall.totoro.business.service.nhi.metric.source.OdPermanentQuarterByPatientSource;
-import io.dentall.totoro.business.service.nhi.metric.source.OdPermanentTwoYearNearByPatientSource;
-import io.dentall.totoro.business.service.nhi.metric.source.Source;
+import io.dentall.totoro.business.service.nhi.metric.source.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,18 +22,18 @@ public class L32Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odQuarterSource;
 
-    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odTwoYearNearSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odPastYearNearSource;
 
     public L32Formula(MetricConfig metricConfig) {
         super(metricConfig);
         this.odQuarterSource = new OdPermanentQuarterByPatientSource(metricConfig);
-        this.odTwoYearNearSource = new OdPermanentTwoYearNearByPatientSource(metricConfig);
+        this.odPastYearNearSource = new OdPermanentQuarterPlusOneAndHalfYearNearByPatientSource(metricConfig);
     }
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
         OdPermanentToothCount odPermanentToothCount = new OdPermanentToothCount(metricConfig, odQuarterSource).apply();
-        OdPermanentReToothCount odPermanentReToothCount = new OdPermanentReToothCount(metricConfig, odQuarterSource, odTwoYearNearSource, 1, 450).apply();
+        OdPermanentReToothCount odPermanentReToothCount = new OdPermanentReToothCount(metricConfig, odQuarterSource, odPastYearNearSource, 1, 450).apply();
         try {
             return toPercentage(odPermanentReToothCount.getResult(), odPermanentToothCount.getResult());
         } catch (ArithmeticException e) {

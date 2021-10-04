@@ -21,7 +21,7 @@ public class F1h5Formula extends AbstractFormula<BigDecimal> {
     public F1h5Formula(MetricConfig metricConfig) {
         super(metricConfig);
         this.odBaseSource = new OdPermanentMonthSelectedByPatientSource(metricConfig);
-        this.odTwoYearNearSource = new OdPermanentTwoYearNearByPatientSource(metricConfig);
+        this.odTwoYearNearSource = new OdPermanentQuarterPlusTwoYearNearByPatientSource(metricConfig);
     }
 
     @Override

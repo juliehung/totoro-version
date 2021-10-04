@@ -4,10 +4,7 @@ import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousReToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
-import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
-import io.dentall.totoro.business.service.nhi.metric.source.OdDeciduousQuarterByPatientSource;
-import io.dentall.totoro.business.service.nhi.metric.source.OdDeciduousTwoYearNearByPatientSource;
-import io.dentall.totoro.business.service.nhi.metric.source.Source;
+import io.dentall.totoro.business.service.nhi.metric.source.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -27,21 +24,21 @@ public class F5h8Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odQuarterSource;
 
-    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odTwoYearNearSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odPastYearNearSource;
 
     public F5h8Formula(MetricConfig metricConfig) {
         super(metricConfig);
         this.odQuarterSource = new OdDeciduousQuarterByPatientSource(metricConfig);
-        this.odTwoYearNearSource = new OdDeciduousTwoYearNearByPatientSource(metricConfig);
+        this.odPastYearNearSource = new OdDeciduousQuarterPlusOneAndHalfYearNearByPatientSource(metricConfig);
         this.odQuarterSource.setExclude(Tro1);
-        this.odTwoYearNearSource.setExclude(Tro1);
+        this.odPastYearNearSource.setExclude(Tro1);
     }
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
         Tro1Config config = new Tro1Config();
         OdDeciduousToothCount odDeciduousTreatment = new OdDeciduousToothCount(metricConfig, config, odQuarterSource).apply();
-        OdDeciduousReToothCount odDeciduousReTreatment = new OdDeciduousReToothCount(metricConfig, config, odQuarterSource, odTwoYearNearSource, 1, 450).apply();
+        OdDeciduousReToothCount odDeciduousReTreatment = new OdDeciduousReToothCount(metricConfig, config, odQuarterSource, odPastYearNearSource, 1, 450).apply();
         try {
             return toPercentage(odDeciduousReTreatment.getResult(), odDeciduousTreatment.getResult());
         } catch (ArithmeticException e) {

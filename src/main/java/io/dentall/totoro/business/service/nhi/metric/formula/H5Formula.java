@@ -27,8 +27,8 @@ public class H5Formula extends AbstractFormula<BigDecimal> {
 
     public H5Formula(MetricConfig metricConfig) {
         super(metricConfig);
-        this.odOneAndHalfYearByPatientSource = new OdDeciduousOneAndHalfYearNearByPatientSource(metricConfig);
-        this.odTwoYearByPatientSource = new OdPermanentOneYearNearByPatientSource(metricConfig);
+        this.odOneAndHalfYearByPatientSource = new OdDeciduousQuarterPlusOneAndHalfYearNearByPatientSource(metricConfig);
+        this.odTwoYearByPatientSource = new OdPermanentQuarterPlusTwoYearNearByPatientSource(metricConfig);
         this.odMonthSelectedByPatientSource = new OdMonthSelectedByPatientSource(metricConfig);
         this.odMonthSelectedSource = new OdMonthSelectedSource(metricConfig);
         this.odOneAndHalfYearByPatientSource.setExclude(Tro1);

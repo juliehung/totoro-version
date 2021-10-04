@@ -32,7 +32,7 @@ public class E1h14Formula extends AbstractFormula<BigDecimal> {
         super(metricConfig);
         this.odSource = new OdQuarterSource(metricConfig);
         this.odByPatientSource = new OdQuarterByPatientSource(metricConfig);
-        this.odPastByPatientSource = new OdOneYearNearByPatientSource(metricConfig);
+        this.odPastByPatientSource = new OdQuarterPlusOneYearNearByPatientSource(metricConfig);
         this.odSource.setExclude(Tro1);
         this.odByPatientSource.setExclude(Tro1);
         this.odPastByPatientSource.setExclude(Tro1);

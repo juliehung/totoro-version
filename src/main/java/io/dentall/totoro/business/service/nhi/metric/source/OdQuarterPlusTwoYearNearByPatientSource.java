@@ -9,10 +9,10 @@ import java.util.stream.Stream;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.groupingBy;
 
-public class OdTwoYearNearByPatientSource extends AbstractSource<Map<Long, Map<String, List<MetricTooth>>>> {
+public class OdQuarterPlusTwoYearNearByPatientSource extends AbstractSource<Map<Long, Map<String, List<MetricTooth>>>> {
 
-    public OdTwoYearNearByPatientSource(MetricConfig metricConfig) {
-        super(new OdTwoYearNearSource(metricConfig));
+    public OdQuarterPlusTwoYearNearByPatientSource(MetricConfig metricConfig) {
+        super(new OdQuarterPlusTwoYearNearSource(metricConfig));
     }
 
     @Override
