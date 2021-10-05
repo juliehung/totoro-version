@@ -5,11 +5,12 @@ import io.dentall.totoro.domain.NhiMedicalRecord;
 import io.dentall.totoro.repository.NhiMedicalRecordRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing NhiMedicalRecord.
@@ -24,6 +25,58 @@ public class NhiMedicalRecordService {
 
     public NhiMedicalRecordService(NhiMedicalRecordRepository nhiMedicalRecordRepository) {
         this.nhiMedicalRecordRepository = nhiMedicalRecordRepository;
+    }
+
+    public List<NhiMedicalRecord> ignoreCancelledRecord(List<NhiMedicalRecord> nhiMedicalRecords) {
+        List<NhiMedicalRecord> result = new ArrayList<>();
+        Pattern cancelNhiCategoryPattern = Pattern.compile("[a-eA-E]");
+        Map<String, List<NhiMedicalRecord>> nmrMap = nhiMedicalRecords.stream()
+            .collect(
+                Collectors.groupingBy(d ->
+                    d.getDate()
+                        .concat(d.getNhiCode())
+                        .concat(d.getPart())
+                        .concat(d.getUsage())
+                )
+            );
+
+        List<String> sortedKey = nmrMap.keySet().stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+        for (String key : sortedKey) {
+            try {
+                boolean isNotCancelled = true;
+                NhiMedicalRecord maxIdRecord = null;
+                for (NhiMedicalRecord nmr : nmrMap.get(key)) {
+                    if (cancelNhiCategoryPattern.matcher(nmr.getNhiCategory()).matches()) {
+                        isNotCancelled = false;
+                        break;
+                    }
+                    if (maxIdRecord != null) {
+                        if (maxIdRecord.getId() < nmr.getId()) {
+                            maxIdRecord = nmr;
+                        }
+                    } else {
+                        maxIdRecord = nmr;
+                    }
+                }
+
+                if (isNotCancelled) {
+                    result.add(maxIdRecord);
+                }
+            } catch (Exception e) {
+                log.error("NhiMedicalRecord ignore cancelled record throw exception during comparing.");
+                log.error(e.getMessage());
+            }
+        }
+
+        return result;
+    }
+
+    public List<NhiMedicalRecord> findByPatientId(Long pid) {
+        return nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdOrderByDateDesc(pid);
+    }
+
+    public List<NhiMedicalRecord> findByPatientIdAndNhiCodes(Long pid, List<String> nhiCodes) {
+        return nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(pid, nhiCodes);
     }
 
     /**

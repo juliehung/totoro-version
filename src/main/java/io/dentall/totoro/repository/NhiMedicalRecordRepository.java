@@ -16,6 +16,8 @@ import java.util.List;
 @Repository
 public interface NhiMedicalRecordRepository extends JpaRepository<NhiMedicalRecord, Long>, JpaSpecificationExecutor<NhiMedicalRecord> {
 
+    List<NhiMedicalRecord> findByNhiExtendPatient_Patient_IdOrderByDateDesc(Long id);
+
     List<NhiMedicalRecord> findByNhiExtendPatient_Patient_IdAndNhiCodeOrderByDateDesc(Long id, String code);
 
     List<NhiMedicalRecord> findByNhiExtendPatient_Patient_IdAndNhiCodeInOrderByDateDesc(Long id, List<String> codes);

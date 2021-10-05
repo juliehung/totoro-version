@@ -40,14 +40,18 @@ public class NhiMedicalRecordQueryService extends QueryService<NhiMedicalRecord>
 
     private final NhiTxRepository nhiTxRepository;
 
+    private final NhiMedicalRecordService nhiMedicalRecordService;
+
     public NhiMedicalRecordQueryService(
         NhiMedicalRecordRepository nhiMedicalRecordRepository,
         NhiMedicineRepository nhiMedicineRepository,
-        NhiTxRepository nhiTxRepository
+        NhiTxRepository nhiTxRepository,
+        NhiMedicalRecordService nhiMedicalRecordService
     ) {
         this.nhiMedicalRecordRepository = nhiMedicalRecordRepository;
         this.nhiMedicineRepository = nhiMedicineRepository;
         this.nhiTxRepository = nhiTxRepository;
+        this.nhiMedicalRecordService = nhiMedicalRecordService;
     }
 
     /**
@@ -134,7 +138,8 @@ public class NhiMedicalRecordQueryService extends QueryService<NhiMedicalRecord>
         final Specification<NhiMedicalRecord> specification = createSpecification(criteria);
         List<NhiMedicalRecordVM> entityList = new ArrayList<>();
         Page<NhiMedicalRecord> queryResult = nhiMedicalRecordRepository.findAll(specification, pageable);
-        queryResult.forEach(e -> {
+        List<NhiMedicalRecord> content = nhiMedicalRecordService.ignoreCancelledRecord(queryResult.getContent());
+        content.forEach(e -> {
             NhiMedicalRecordVM vm = new NhiMedicalRecordVM();
             vm.setNhiMedicalRecord(e);
             if (e.getNhiCategory() != null && e.getNhiCategory().equals(NhiMedicalRecordCategory.MEDICINE.getNumber())) {
@@ -159,7 +164,8 @@ public class NhiMedicalRecordQueryService extends QueryService<NhiMedicalRecord>
         final Specification<NhiMedicalRecord> specification = createSpecification(criteria);
         List<NhiMedicalRecordVM> entityList = new ArrayList<>();
         Sort sort = new Sort(Sort.Direction.DESC, "date");
-        nhiMedicalRecordRepository.findAll(specification, sort).forEach(e -> {
+        List<NhiMedicalRecord> nmrs = nhiMedicalRecordRepository.findAll(specification, sort);
+        nhiMedicalRecordService.ignoreCancelledRecord(nmrs).forEach(e -> {
             NhiMedicalRecordVM vm = new NhiMedicalRecordVM();
             vm.setNhiMedicalRecord(e);
             if (e.getNhiCategory() != null && e.getNhiCategory().equals(NhiMedicalRecordCategory.MEDICINE.getNumber())) {

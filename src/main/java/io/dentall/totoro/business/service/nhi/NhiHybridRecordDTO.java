@@ -20,6 +20,8 @@ public class NhiHybridRecordDTO {
 
     private String surface;
 
+    public NhiHybridRecordDTO() {}
+
     public NhiHybridRecordDTO(
         String recordSource,
         Long disposalId,

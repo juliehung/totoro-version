@@ -14,11 +14,13 @@ import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.enumeration.BackupFileCatalog;
 import io.dentall.totoro.domain.enumeration.BatchStatus;
 import io.dentall.totoro.repository.*;
+import io.dentall.totoro.service.NhiMedicalRecordService;
 import io.dentall.totoro.service.dto.table.DisposalTable;
 import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
 import io.dentall.totoro.service.dto.table.PatientTable;
 import io.dentall.totoro.service.mapper.DisposalMapper;
 import io.dentall.totoro.service.mapper.NhiExtendDisposalMapper;
+import io.dentall.totoro.service.mapper.NhiHybridRecordDTOMapper;
 import io.dentall.totoro.service.mapper.PatientMapper;
 import io.dentall.totoro.service.util.CsvUtil;
 import io.dentall.totoro.service.util.DateTimeUtil;
@@ -53,6 +55,8 @@ public class NhiRuleCheckUtil {
 
     private final NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository;
 
+    private final NhiMedicalRecordService nhiMedicalRecordService;
+
     private final PatientRepository patientRepository;
 
     private final NhiExtendDisposalMapper nhiExtendDisposalMapper;
@@ -65,7 +69,7 @@ public class NhiRuleCheckUtil {
         ApplicationContext applicationContext,
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
         NhiExtendTreatmentProcedureRepository nhiExtendTreatmentProcedureRepository,
-        PatientRepository patientRepository,
+        NhiMedicalRecordService nhiMedicalRecordService, PatientRepository patientRepository,
         NhiExtendDisposalMapper nhiExtendDisposalMapper,
         DisposalRepository disposalRepository,
         NhiMonthDeclarationRuleCheckReportRepository nhiMonthDeclarationRuleCheckReportRepository
@@ -73,6 +77,7 @@ public class NhiRuleCheckUtil {
         this.applicationContext = applicationContext;
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.nhiExtendTreatmentProcedureRepository = nhiExtendTreatmentProcedureRepository;
+        this.nhiMedicalRecordService = nhiMedicalRecordService;
         this.patientRepository = patientRepository;
         this.nhiExtendDisposalMapper = nhiExtendDisposalMapper;
         this.disposalRepository = disposalRepository;
@@ -754,23 +759,36 @@ public class NhiRuleCheckUtil {
         List<String> codes,
         List<Long> excludeDisposalIds
     ) {
-        return nhiExtendDisposalRepository.findNhiHybridRecord(
+        List<NhiHybridRecordDTO> result = new ArrayList<>();
+        HashSet<String> clientDisposalDate = new HashSet<>();
+
+        nhiExtendDisposalRepository.findNhiHybridRecord(
             patientId,
             codes,
             excludeDisposalIds
         ).stream()
-            .map(
-                nhr -> new NhiHybridRecordDTO(
-                    nhr.getRecordSource(),
-                    nhr.getDisposalId(),
-                    nhr.getDoctorId(),
-                    nhr.getRecordDateTime(),
-                    nhr.getCode(),
-                    nhr.getTooth(),
-                    nhr.getSurface()
-                )
-            )
-            .collect(Collectors.toList());
+            .forEach(d -> {
+                result.add(
+                    NhiHybridRecordDTOMapper.INSTANCE.transformFromNhiHybridRecord(
+                        d
+                    )
+                );
+                clientDisposalDate.add(d.getRecordDateTime());
+            });
+
+        nhiMedicalRecordService.ignoreCancelledRecord(
+            nhiMedicalRecordService.findByPatientIdAndNhiCodes(patientId, codes).stream()
+                .filter(d -> !clientDisposalDate.contains(d.getDate()))
+                .collect(Collectors.toList())
+        ).forEach(d -> {
+                result.add(
+                    NhiHybridRecordDTOMapper.INSTANCE.transformFromNhiMedicalRecord(
+                        d
+                    )
+                );
+            });
+
+        return result;
     }
 
     // 找該病患所有混合資料，並排除指定 disposal id
@@ -778,22 +796,35 @@ public class NhiRuleCheckUtil {
         Long patientId,
         List<Long> excludeDisposalIds
     ) {
-        return nhiExtendDisposalRepository.findNhiHybridRecord(
-            patientId,
-            excludeDisposalIds
-        ).stream()
-            .map(
-                nhr -> new NhiHybridRecordDTO(
-                    nhr.getRecordSource(),
-                    nhr.getDisposalId(),
-                    nhr.getDoctorId(),
-                    nhr.getRecordDateTime(),
-                    nhr.getCode(),
-                    nhr.getTooth(),
-                    nhr.getSurface()
+        List<NhiHybridRecordDTO> result = new ArrayList<>();
+        HashSet<String> clientDisposalDate = new HashSet<>();
+
+        nhiExtendDisposalRepository.findNhiHybridRecord(
+                patientId,
+                excludeDisposalIds
+            ).stream()
+            .forEach(d -> {
+                result.add(
+                    NhiHybridRecordDTOMapper.INSTANCE.transformFromNhiHybridRecord(
+                        d
+                    )
+                );
+                clientDisposalDate.add(d.getRecordDateTime());
+            });
+
+        nhiMedicalRecordService.ignoreCancelledRecord(
+            nhiMedicalRecordService.findByPatientId(patientId).stream()
+                .filter(d -> !clientDisposalDate.contains(d.getDate()))
+                .collect(Collectors.toList())
+        ).forEach(d -> {
+            result.add(
+                NhiHybridRecordDTOMapper.INSTANCE.transformFromNhiMedicalRecord(
+                    d
                 )
-            )
-            .collect(Collectors.toList());
+            );
+        });
+
+        return result;
     }
 
     /**
