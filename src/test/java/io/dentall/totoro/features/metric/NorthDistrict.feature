@@ -7,13 +7,13 @@ Feature: 北區指標
         Then 指定執行日期 <Date>，檢查指標 <Formula>，計算結果數值應為 <Value>
         Examples:
             | Date       | Formula      | Value   |
-            | 2021-05-01 | A10Formula   | 58840   |
-            | 2021-05-01 | A7Formula    | 1282.70 |
+            | 2021-05-01 | A10Formula   | 61240   |
+            | 2021-05-01 | A7Formula    | 1322.05 |
             | 2021-05-01 | A8Formula    | 38.10   |
             | 2021-05-01 | A14Formula   | 0.00    |
             | 2021-05-01 | A15h1Formula | 0       |
             | 2021-05-01 | A17h2Formula | 0       |
-            | 2021-05-01 | A9Formula    | 15.59   |
+            | 2021-05-01 | A9Formula    | 18.10   |
             | 2021-05-01 | A18h1Formula | 0       |
             | 2021-05-01 | A18h2Formula | 0       |
 

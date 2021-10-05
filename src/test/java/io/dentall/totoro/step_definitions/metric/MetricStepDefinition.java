@@ -663,11 +663,11 @@ public class MetricStepDefinition {
 
         Type[] actualTypeArguments = getTypeArguments(sourceType);
 
-        if (actualTypeArguments.length == 2 &&
-            actualTypeArguments[1] instanceof ParameterizedType &&
-            ((ParameterizedType) actualTypeArguments[1]).getRawType() == Map.class) {
+        if (actualTypeArguments.length == 1 &&
+            actualTypeArguments[0] instanceof ParameterizedType &&
+            ((ParameterizedType) actualTypeArguments[0]).getRawType() == Map.class) {
             List<Map<?, ?>> result = metricConfig.retrieveSource(sourceInstance.key());
-            assertThat(result.get(0).size()).isEqualTo(sourceCount);
+            assertThat (result.get(0).size()).isEqualTo(sourceCount);
         } else {
             List<NhiMetricRawVM> result = metricConfig.retrieveSource(sourceInstance.key());
             assertThat(result.size()).isEqualTo(sourceCount);

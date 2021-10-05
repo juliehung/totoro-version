@@ -7,9 +7,9 @@ Feature: 東區指標
         Then 指定執行日期 <Date>，檢查指標 <Formula>，計算結果數值應為 <Value>
         Examples:
             | Date       | Formula     | Value |
-            | 2021-05-01 | G6Formula   | 75295 |
+            | 2021-05-01 | G6Formula   | 77695 |
             | 2021-05-01 | G8h1Formula | 0.00  |
             | 2021-05-01 | G8h2Formula | 0.00  |
-            | 2021-05-01 | G8h3Formula | 15.59 |
+            | 2021-05-01 | G8h3Formula | 18.10 |
             | 2021-05-01 | G8h4Formula | 57.14 |
 

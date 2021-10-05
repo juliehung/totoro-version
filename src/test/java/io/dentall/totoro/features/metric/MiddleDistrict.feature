@@ -7,10 +7,10 @@ Feature: 中區指標
         Then 指定執行日期 <Date>，檢查指標 <Formula>，計算結果數值應為 <Value>
         Examples:
             | Date       | Formula   | Value  |
-            | 2021-05-01 | H1Formula | 58040  |
-            | 2021-05-01 | H2Formula | 951.48 |
+            | 2021-05-01 | H1Formula | 59240  |
+            | 2021-05-01 | H2Formula | 971.15 |
             | 2021-05-01 | H4Formula | 35.71  |
-            | 2021-05-01 | H3Formula | 18.04  |
+            | 2021-05-01 | H3Formula | 19.62  |
             | 2021-05-01 | H5Formula | 0.00   |
             | 2021-05-01 | H7Formula | 0.26   |
 
