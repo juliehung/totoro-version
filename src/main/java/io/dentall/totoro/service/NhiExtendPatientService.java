@@ -147,12 +147,14 @@ public class NhiExtendPatientService {
                     nhiExtendPatient.setLifetime(updateNhiExtendPatient.getLifetime());
                 }
 
-                nhiMedicalRecordService.updateNhiMedicalRecordWithoutDuplicated(
-                    nhiExtendPatient.getId(),
-                    new ArrayList<>(
-                        updateNhiExtendPatient.getNhiMedicalRecords()
-                    )
-                );
+                if (updateNhiExtendPatient.getNhiMedicalRecords() != null) {
+                    nhiMedicalRecordService.updateNhiMedicalRecordWithoutDuplicated(
+                        nhiExtendPatient.getId(),
+                        new ArrayList<>(
+                            updateNhiExtendPatient.getNhiMedicalRecords()
+                        )
+                    );
+                }
 
                 return nhiExtendPatient;
             })
