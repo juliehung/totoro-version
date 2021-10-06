@@ -7,11 +7,11 @@ import io.dentall.totoro.repository.PatientRepository;
 import io.dentall.totoro.service.util.ProblemUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Status;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,16 +28,16 @@ public class NhiExtendPatientService {
 
     private final PatientRepository patientRepository;
 
-    private final RelationshipService relationshipService;
+    private final NhiMedicalRecordService nhiMedicalRecordService;
 
     public NhiExtendPatientService(
         NhiExtendPatientRepository nhiExtendPatientRepository,
         PatientRepository patientRepository,
-        RelationshipService relationshipService
+        NhiMedicalRecordService nhiMedicalRecordService
     ) {
         this.nhiExtendPatientRepository = nhiExtendPatientRepository;
         this.patientRepository = patientRepository;
-        this.relationshipService = relationshipService;
+        this.nhiMedicalRecordService = nhiMedicalRecordService;
     }
 
     /**
@@ -143,11 +143,16 @@ public class NhiExtendPatientService {
                     nhiExtendPatient.setPerio(updateNhiExtendPatient.getPerio());
                 }
 
-                relationshipService.addRelationshipWithNhiMedicalRecords(nhiExtendPatient, updateNhiExtendPatient.getNhiMedicalRecords());
-
                 if (updateNhiExtendPatient.getLifetime() != null) {
                     nhiExtendPatient.setLifetime(updateNhiExtendPatient.getLifetime());
                 }
+
+                nhiMedicalRecordService.updateNhiMedicalRecordWithoutDuplicated(
+                    nhiExtendPatient.getId(),
+                    new ArrayList<>(
+                        updateNhiExtendPatient.getNhiMedicalRecords()
+                    )
+                );
 
                 return nhiExtendPatient;
             })

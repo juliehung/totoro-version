@@ -179,4 +179,36 @@ public class NhiMedicalRecordService {
             })
             .get();
     }
+
+
+    @Transactional(readOnly = true)
+    public void updateNhiMedicalRecordWithoutDuplicated(Long pid, List<NhiMedicalRecord> nmrs) {
+        List<NhiMedicalRecord> newNhiMedicalRecords = new ArrayList<>();
+        Set<String> existedIcRecordSet = new HashSet<>();
+        NhiExtendPatient nep = new NhiExtendPatient();
+        nep.setId(pid);
+
+        nhiMedicalRecordRepository.findByNhiExtendPatient_Patient_IdOrderByDateDesc(pid)
+            .forEach(d -> {
+                existedIcRecordSet.add(
+                    "".concat(d.getDate())
+                        .concat(d.getNhiCode())
+                        .concat(d.getPart())
+                );
+            });
+
+        nmrs.forEach(d -> {
+            String key = "".concat(d.getDate())
+                .concat(d.getNhiCode())
+                .concat(d.getPart());
+
+            if (!existedIcRecordSet.contains(key)) {
+                existedIcRecordSet.add(key);
+                d.setNhiExtendPatient(nep);
+                newNhiMedicalRecords.add(d);
+            }
+        });
+
+        nhiMedicalRecordRepository.saveAll(nmrs);
+    }
 }
