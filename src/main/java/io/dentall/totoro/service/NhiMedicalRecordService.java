@@ -211,6 +211,6 @@ public class NhiMedicalRecordService {
             }
         });
 
-        nhiMedicalRecordRepository.saveAll(nmrs);
+        nhiMedicalRecordRepository.saveAll(newNhiMedicalRecords);
     }
 }
