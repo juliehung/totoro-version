@@ -23,9 +23,4 @@ public class Exam1Difference extends Exam<Long> {
         return doCalculateDifference(metricConfig, CodesByExam1);
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.Exam1Difference;
-    }
-
 }

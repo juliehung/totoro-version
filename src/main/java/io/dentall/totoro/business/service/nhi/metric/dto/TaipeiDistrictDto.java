@@ -17,6 +17,11 @@ public class TaipeiDistrictDto  implements DistrictDto {
 
     private BigDecimal F1h3;
 
+    private BigDecimal F1h5;
+
+    private BigDecimal F1h6;
+
+    @Deprecated
     private BigDecimal F2h4;
 
     private BigDecimal F3h1;
@@ -27,17 +32,20 @@ public class TaipeiDistrictDto  implements DistrictDto {
 
     private BigDecimal F5h3;
 
+    @Deprecated
     private BigDecimal F5h4;
 
+    @Deprecated
     private BigDecimal F5h5;
 
+    @Deprecated
     private BigDecimal F5h6;
 
+    @Deprecated
     private BigDecimal F5h7;
 
+    @Deprecated
     private BigDecimal F5h8;
-
-    private BigDecimal l1;
 
     private BigDecimal i12;
 
@@ -81,10 +89,34 @@ public class TaipeiDistrictDto  implements DistrictDto {
         F1h3 = f1h3;
     }
 
+    public BigDecimal getF1h5() {
+        return F1h5;
+    }
+
+    public void setF1h5(BigDecimal f1h5) {
+        F1h5 = f1h5;
+    }
+
+    public BigDecimal getF1h6() {
+        return F1h6;
+    }
+
+    public void setF1h6(BigDecimal f1h6) {
+        F1h6 = f1h6;
+    }
+
+    /**
+     * TOTORO-6491 從台北指標中被刪除
+     */
+    @Deprecated
     public BigDecimal getF2h4() {
         return F2h4;
     }
 
+    /**
+     * TOTORO-6491 從台北指標中被刪除
+     */
+    @Deprecated
     public void setF2h4(BigDecimal f2h4) {
         F2h4 = f2h4;
     }
@@ -121,52 +153,84 @@ public class TaipeiDistrictDto  implements DistrictDto {
         F5h3 = f5h3;
     }
 
+    /**
+     * TOTORO-6491 從台北指標中被刪除
+     */
+    @Deprecated
     public BigDecimal getF5h4() {
         return F5h4;
     }
 
+    /**
+     * TOTORO-6491 從台北指標中被刪除
+     */
+    @Deprecated
     public void setF5h4(BigDecimal f5h4) {
         F5h4 = f5h4;
     }
 
+    /**
+     * TOTORO-6491 從台北指標中被刪除
+     */
+    @Deprecated
     public BigDecimal getF5h5() {
         return F5h5;
     }
 
+    /**
+     * TOTORO-6491 從台北指標中被刪除
+     */
+    @Deprecated
     public void setF5h5(BigDecimal f5h5) {
         F5h5 = f5h5;
     }
 
+    /**
+     * TOTORO-6491 從台北指標中被刪除
+     */
+    @Deprecated
     public BigDecimal getF5h6() {
         return F5h6;
     }
 
+    /**
+     * TOTORO-6491 從台北指標中被刪除
+     */
+    @Deprecated
     public void setF5h6(BigDecimal f5h6) {
         F5h6 = f5h6;
     }
 
+    /**
+     * TOTORO-6491 從台北指標中被刪除
+     */
+    @Deprecated
     public BigDecimal getF5h7() {
         return F5h7;
     }
 
+    /**
+     * TOTORO-6491 從台北指標中被刪除
+     */
+    @Deprecated
     public void setF5h7(BigDecimal f5h7) {
         F5h7 = f5h7;
     }
 
+    /**
+     * TOTORO-6491 從台北指標中被刪除
+     */
+    @Deprecated
     public BigDecimal getF5h8() {
         return F5h8;
     }
 
+    /**
+     * TOTORO-6491 從台北指標中被刪除
+     */
+    @Deprecated
     public void setF5h8(BigDecimal f5h8) {
         F5h8 = f5h8;
-    }
-
-    public BigDecimal getL1() {
-        return l1;
-    }
-
-    public void setL1(BigDecimal l1) {
-        this.l1 = l1;
     }
 
     public BigDecimal getI12() {

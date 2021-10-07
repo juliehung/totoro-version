@@ -2,7 +2,6 @@ package io.dentall.totoro.business.service.nhi.metric.source;
 
 import io.dentall.totoro.business.service.nhi.metric.meta.Meta;
 import io.dentall.totoro.domain.Holiday;
-import io.dentall.totoro.domain.User;
 import io.dentall.totoro.service.util.DateTimeUtil;
 
 import java.time.LocalDate;
@@ -11,9 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstants.CLINIC_ID;
-import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.clinic;
-import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.doctor;
 import static io.dentall.totoro.service.util.DateTimeUtil.convertLocalDateToBeginOfDayInstant;
 import static io.dentall.totoro.service.util.DateTimeUtil.getCurrentQuarterMonthsRangeInstant;
 import static java.util.Optional.ofNullable;
@@ -33,13 +29,13 @@ public class MetricConfig {
 
     private final DateTimeUtil.BeginEnd quarterRange;
 
-    private final User subject;
+    private final MetricSubject metricSubject;
 
     private final MetricSubjectType subjectType;
 
-    public MetricConfig(User subject, LocalDate baseDate, List<?> source) {
-        if (subject == null) {
-            throw new IllegalArgumentException("subject can not be null");
+    public MetricConfig(MetricSubject metricSubject, LocalDate baseDate, List<?> source) {
+        if (metricSubject == null) {
+            throw new IllegalArgumentException("metricSubject can not be null");
         }
         if (baseDate == null) {
             throw new IllegalArgumentException("baseDate can not be null");
@@ -47,16 +43,12 @@ public class MetricConfig {
         if (source == null) {
             throw new IllegalArgumentException("source can not be null");
         }
-        this.subject = subject;
+        this.metricSubject = metricSubject;
         this.baseDate = baseDate;
         this.quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
         this.cached.put(this.initialSource.key(), source);
-        this.subjectType = subject.getId().equals(CLINIC_ID) ? clinic : doctor;
-        if (this.subjectType == clinic) {
-            apply(new ClinicSource(this));
-        } else {
-            apply(new DoctorSource(this));
-        }
+        this.subjectType = metricSubject.getSubjectType();
+        apply(this.metricSubject.getSource(this));
     }
 
     public MetricConfig apply(Source<?, ?> source) {
@@ -76,16 +68,12 @@ public class MetricConfig {
         return initialSource;
     }
 
-    public User getSubject() {
-        return subject;
+    public MetricSubject getMetricSubject() {
+        return metricSubject;
     }
 
     public Source<?, ?> getSubjectSource() {
-        if (this.subjectType == clinic) {
-            return new ClinicSource(this);
-        } else {
-            return new DoctorSource(this);
-        }
+        return this.metricSubject.getSource(this);
     }
 
     public MetricSubjectType getSubjectType() {

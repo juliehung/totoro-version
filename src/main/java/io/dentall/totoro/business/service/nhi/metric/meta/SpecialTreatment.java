@@ -1,11 +1,11 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.NhiSpecialCode;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTreatment;
 import io.dentall.totoro.business.service.nhi.metric.dto.SpecialTreatmentAnalysisDto;
 import io.dentall.totoro.business.service.nhi.metric.dto.SpecialTreatmentItemDto;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +29,7 @@ public class SpecialTreatment extends SingleSourceMetaCalculator<SpecialTreatmen
 
     @Override
     public SpecialTreatmentAnalysisDto doCalculate(MetricConfig metricConfig) {
-        List<Map<NhiSpecialCode, List<NhiMetricRawVM>>> source = metricConfig.retrieveSource(source().key());
+        List<Map<NhiSpecialCode, List<MetricTreatment>>> source = metricConfig.retrieveSource(source().key());
         SpecialTreatmentItemDto summary = new SpecialTreatmentItemDto(0, 0);
 
         Map<NhiSpecialCode, SpecialTreatmentItemDto> itemMap =
@@ -55,7 +55,7 @@ public class SpecialTreatment extends SingleSourceMetaCalculator<SpecialTreatmen
         return analysis;
     }
 
-    private SpecialTreatmentItemDto summary(List<NhiMetricRawVM> list) {
+    private SpecialTreatmentItemDto summary(List<MetricTreatment> list) {
         return list.stream().reduce(new SpecialTreatmentItemDto(0, 0L),
             (item, vm) -> {
                 item.setPoints(item.getPoints() + ofNullable(vm.getTreatmentProcedureTotal()).orElse(0L));
@@ -138,9 +138,4 @@ public class SpecialTreatment extends SingleSourceMetaCalculator<SpecialTreatmen
         analysis.getP6p7AndOther().calculatePercentageOfCaseCount(totalCaseNumber);
     }
 
-
-    @Override
-    public MetaType metaType() {
-        return MetaType.SpecialTreatment;
-    }
 }

@@ -4,7 +4,6 @@ import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1ReToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1ToothCount;
 import io.dentall.totoro.business.service.nhi.metric.source.*;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -22,7 +21,7 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.to
  */
 public class K6Formula extends AbstractFormula<BigDecimal> {
 
-    private final Source<NhiMetricRawVM, MetricTooth> odSource;
+    private final Source<MetricTooth, MetricTooth> odSource;
 
     private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odByPatientSource;
 
@@ -32,7 +31,7 @@ public class K6Formula extends AbstractFormula<BigDecimal> {
         super(metricConfig);
         this.odSource = new OdQuarterSource(metricConfig);
         this.odByPatientSource = new OdQuarterByPatientSource(metricConfig);
-        this.odPastByPatientSource = new OdTwoYearNearByPatientSource(metricConfig);
+        this.odPastByPatientSource = new OdQuarterPlusTwoYearNearByPatientSource(metricConfig);
         this.odSource.setExclude(Tro6);
         this.odByPatientSource.setExclude(Tro6);
         this.odPastByPatientSource.setExclude(Tro6);

@@ -1,8 +1,8 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,18 +28,14 @@ public class CourseCase extends SingleSourceMetaCalculator<Long> {
 
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
-        List<NhiMetricRawVM> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
+        List<MetricTooth> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
 
         return nhiMetricRawVMList.stream()
             .filter(vm -> AA.getValue().equals(vm.getNhiCategory()) || AB.getValue().equals(vm.getNhiCategory()))
-            .collect(Collectors.groupingBy(NhiMetricRawVM::getDisposalId, maxBy(comparing(NhiMetricRawVM::getDisposalId))))
+            .collect(Collectors.groupingBy(MetricTooth::getDisposalId, maxBy(comparing(MetricTooth::getDisposalId))))
             .values().stream()
             .filter(Optional::isPresent)
             .count();
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.CourseCase;
-    }
 }

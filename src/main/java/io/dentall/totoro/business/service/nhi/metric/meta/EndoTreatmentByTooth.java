@@ -1,12 +1,10 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.service.nhi.util.ToothUtil;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -20,20 +18,14 @@ public class EndoTreatmentByTooth extends EndoTreatment {
 
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
-        List<NhiMetricRawVM> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
+        List<MetricTooth> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
 
         // 加總所有病人的所有處置的牙數數目
         return nhiMetricRawVMList.stream()
             .filter(vm -> codes.contains(vm.getTreatmentProcedureCode()))
-            .map(NhiMetricRawVM::getTreatmentProcedureTooth)
+            .map(MetricTooth::getTooth)
             .filter(StringUtils::isNotBlank)
-            .map(ToothUtil::splitA74)
-            .mapToLong(Collection::size)
-            .sum();
+            .count();
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.EndoTreatmentByTooth;
-    }
 }

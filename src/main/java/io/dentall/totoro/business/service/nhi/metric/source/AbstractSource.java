@@ -1,14 +1,14 @@
 package io.dentall.totoro.business.service.nhi.metric.source;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Exclude;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
 import java.util.stream.Stream;
 
 import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.applyExcludeByVM;
 
-public abstract class AbstractSource<S extends NhiMetricRawVM, R> implements Source<S, R> {
+public abstract class AbstractSource<R> implements Source<MetricTooth, R> {
 
     private Source<?, ?> inputSource;
 
@@ -22,11 +22,11 @@ public abstract class AbstractSource<S extends NhiMetricRawVM, R> implements Sou
         this.inputSource = inputSource;
     }
 
-    public abstract List<R> doFilter(Stream<S> stream);
+    public abstract List<R> doFilter(Stream<MetricTooth> stream);
 
     @Override
-    public List<R> filter(List<S> source) {
-        Stream<S> stream = source.stream().parallel().filter(applyExcludeByVM(getExclude()));
+    public List<R> filter(List<MetricTooth> source) {
+        Stream<MetricTooth> stream = source.stream().parallel().filter(applyExcludeByVM(getExclude()));
         return doFilter(stream);
     }
 

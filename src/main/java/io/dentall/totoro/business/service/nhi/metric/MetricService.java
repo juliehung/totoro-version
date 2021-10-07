@@ -4,9 +4,7 @@ import io.dentall.totoro.business.service.nhi.metric.dto.*;
 import io.dentall.totoro.business.service.nhi.metric.mapper.NhiMetricRawMapper;
 import io.dentall.totoro.business.service.nhi.metric.mapper.SpecialTreatmentMapper;
 import io.dentall.totoro.business.service.nhi.metric.mapper.TimeLineDataMapper;
-import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
-import io.dentall.totoro.business.service.nhi.metric.source.MetricConstants;
-import io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType;
+import io.dentall.totoro.business.service.nhi.metric.source.*;
 import io.dentall.totoro.business.service.nhi.metric.vm.*;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.Holiday;
@@ -31,6 +29,7 @@ import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstan
 import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.clinic;
 import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.doctor;
 import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.getHolidayMap;
+import static io.dentall.totoro.business.service.nhi.util.ToothUtil.splitA74;
 import static io.dentall.totoro.security.AuthoritiesConstants.ADMIN;
 import static io.dentall.totoro.security.AuthoritiesConstants.DOCTOR;
 import static io.dentall.totoro.service.util.DateTimeUtil.convertLocalDateToBeginOfDayInstant;
@@ -82,9 +81,9 @@ public class MetricService implements ApplicationContextAware {
         User user = userOptional.get();
         excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
         DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
-        List<User> subjects = findAllSubject(user);
+        List<MetricSubject> subjects = findAllSubject(user);
         Instant begin = quarterRange.getBegin().minus(1095, DAYS); // 季 + 三年(1095)
-        List<? extends NhiMetricRawVM> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
+        List<MetricTooth> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
         int baseYear = baseDate.getYear();
         Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2, baseYear - 3);
 
@@ -242,10 +241,10 @@ public class MetricService implements ApplicationContextAware {
 
         doctorIds = Optional.ofNullable(doctorIds).orElse(emptyList());
         excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
-        List<User> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
+        List<MetricSubject> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
         DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
         Instant begin = quarterRange.getBegin().minus(1095, DAYS); // 季 + 三年(1095)
-        List<? extends NhiMetricRawVM> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
+        List<MetricTooth> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
         int baseYear = baseDate.getYear();
         Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2, baseYear - 3);
 
@@ -270,10 +269,10 @@ public class MetricService implements ApplicationContextAware {
     }
 
     private List<Optional<? extends DistrictDto>> runMetricService(MetricConfig metricConfig, List<Class<? extends DistrictService>> metricServiceClass) {
-        List<NhiMetricRawVM> subSource = metricConfig.retrieveSource(metricConfig.getSubjectSource().key());
+        List<MetricTooth> subSource = metricConfig.retrieveSource(metricConfig.getSubjectSource().key());
         return metricServiceClass.parallelStream()
             .map(clz -> applicationContext.getBean(clz))
-            .map(service -> service.metric(metricConfig.getBaseDate(), metricConfig.getSubject(), subSource, metricConfig.getHolidayMap()))
+            .map(service -> service.metric(metricConfig.getBaseDate(), metricConfig.getMetricSubject(), subSource, metricConfig.getHolidayMap()))
             .filter(Optional::isPresent)
             .collect(toList());
     }
@@ -294,22 +293,34 @@ public class MetricService implements ApplicationContextAware {
         return districtMetricMap.getOrDefault(clz, new ArrayList<>()).stream().map(clz::cast).collect(toList());
     }
 
-    private List<? extends NhiMetricRawVM> fetchSource(Instant begin, Instant end, List<Long> excludeDisposalIds) {
+    private List<MetricTooth> fetchSource(Instant begin, Instant end, List<Long> excludeDisposalIds) {
         List<NhiMetricRawVM> source = nhiExtendDisposalRepository.findMetricRaw(
             begin,
             end,
             excludeDisposalIds
         );
-        return source.parallelStream().map(NhiMetricRawMapper.INSTANCE::mapToMetricTreatment).collect(toList());
+
+        return source.parallelStream()
+            .map(NhiMetricRawMapper.INSTANCE::mapToMetricTreatment)
+            .map(treatment -> {
+                List<String> teeth = splitA74(treatment.getTreatmentProcedureTooth());
+                List<MetricTooth> metricToothList = new ArrayList<>(teeth.size());
+                teeth.forEach(tooth -> {
+                    MetricTooth metricTooth = new MetricTooth(treatment, tooth);
+                    metricToothList.add(metricTooth);
+                });
+                return metricToothList;
+            }).flatMap(Collection::stream)
+            .collect(toList());
     }
 
-    private List<User> findSpecificSubject(User user, List<Long> subjectIds) {
-        List<User> userList = findAllSubject(user);
+    private List<MetricSubject> findSpecificSubject(User user, List<Long> subjectIds) {
+        List<MetricSubject> userList = findAllSubject(user);
         return subjectIds.size() == 0 ?
             userList : userList.stream().filter(s -> !s.getId().equals(CLINIC_ID)).filter(s -> subjectIds.contains(s.getId())).collect(toList());
     }
 
-    private List<User> findAllSubject(User user) {
+    private List<MetricSubject> findAllSubject(User user) {
         boolean isDoctor = user.getAuthorities().stream().anyMatch(authority -> DOCTOR.equals(authority.getName()));
         boolean isAdmin = user.getAuthorities().stream().anyMatch(authority -> ADMIN.equals(authority.getName()));
 
@@ -318,8 +329,9 @@ public class MetricService implements ApplicationContextAware {
         }
 
         List<User> usersActivated = userRepository.findAllByActivatedIsTrue();
-        List<User> doctors = usersActivated.stream()
+        List<MetricSubject> doctors = usersActivated.stream()
             .filter(userActivated -> userActivated.getAuthorities().stream().anyMatch(authority -> DOCTOR.equals(authority.getName())))
+            .map(DoctorSubject::new)
             .collect(toList());
 
         if (isDoctor) {

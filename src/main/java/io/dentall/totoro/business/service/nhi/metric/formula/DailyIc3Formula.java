@@ -1,10 +1,10 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Ic3ByDaily;
 import io.dentall.totoro.business.service.nhi.metric.source.DailyByMonthSelectedSource;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -22,7 +22,7 @@ import static java.util.stream.Collectors.toList;
  */
 public class DailyIc3Formula extends AbstractFormula<List<Entry<LocalDate, BigDecimal>>> {
 
-    private final Source<NhiMetricRawVM, Map<LocalDate, List<NhiMetricRawVM>>> source;
+    private final Source<MetricTooth, Map<LocalDate, List<MetricTooth>>> source;
 
     public DailyIc3Formula(MetricConfig metricConfig) {
         super(metricConfig);

@@ -2,10 +2,7 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.OdDeciduousReToothCount;
-import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
-import io.dentall.totoro.business.service.nhi.metric.source.OdDeciduousQuarterByPatientSource;
-import io.dentall.totoro.business.service.nhi.metric.source.OdDeciduousTwoYearNearByPatientSource;
-import io.dentall.totoro.business.service.nhi.metric.source.Source;
+import io.dentall.totoro.business.service.nhi.metric.source.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,20 +18,20 @@ public class L44Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odQuarterSource;
 
-    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odTwoYearNearSource;
+    private final Source<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> odPastYearNearSource;
 
     public L44Formula(MetricConfig metricConfig) {
         super(metricConfig);
         this.odQuarterSource = new OdDeciduousQuarterByPatientSource(metricConfig);
-        this.odTwoYearNearSource = new OdDeciduousTwoYearNearByPatientSource(metricConfig);
+        this.odPastYearNearSource = new OdDeciduousQuarterPlusOneAndHalfYearNearByPatientSource(metricConfig);
         this.odQuarterSource.setExclude(NhiCategory_SpecificCode_Group1);
-        this.odTwoYearNearSource.setExclude(NhiCategory_SpecificCode_Group1);
+        this.odPastYearNearSource.setExclude(NhiCategory_SpecificCode_Group1);
     }
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
         OdDeciduousReToothCount odDeciduousReToothCount =
-            new OdDeciduousReToothCount(metricConfig, odQuarterSource, odTwoYearNearSource, 1, 450).apply();
+            new OdDeciduousReToothCount(metricConfig, odQuarterSource, odPastYearNearSource, 1, 450).apply();
         return new BigDecimal(odDeciduousReToothCount.getResult());
     }
 }

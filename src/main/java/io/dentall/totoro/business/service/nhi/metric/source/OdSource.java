@@ -1,17 +1,27 @@
 package io.dentall.totoro.business.service.nhi.metric.source;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstants.CodesByOd;
+import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-public abstract class OdSource<S extends NhiMetricRawVM> extends AbstractSource<S, MetricTooth> {
+public abstract class OdSource extends AbstractSource<MetricTooth> {
 
     protected final List<String> codes = CodesByOd;
 
     public OdSource(Source<?, ?> inputSource) {
         super(inputSource);
+    }
+
+    @Override
+    public List<MetricTooth> doFilter(Stream<MetricTooth> source) {
+        return source
+            .filter(dto -> codes.contains(dto.getTreatmentProcedureCode()))
+            .filter(vm -> isNotBlank(vm.getTooth()))
+            .collect(toList());
     }
 }

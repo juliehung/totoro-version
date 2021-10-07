@@ -1,8 +1,10 @@
 package io.dentall.totoro.test.mapper;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTreatment;
+import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.Holiday;
 import io.dentall.totoro.dto.HolidayTestDTO;
+import io.dentall.totoro.dto.NhiMetricRawVMDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -40,6 +42,8 @@ public interface MetricTestMapper {
         @Mapping(source = "map", target = "doctorName", qualifiedByName = "DoctorName")
     })
     MetricTreatment mapToMetricTreatment(Map<String, String> map);
+
+    MetricTreatment mapToMetricTreatment(NhiMetricRawVM vm);
 
 
     @Named("PatientName")

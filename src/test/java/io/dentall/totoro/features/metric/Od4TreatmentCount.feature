@@ -14,7 +14,7 @@ Feature: OD4-TreatmentCount
         Then 指定執行日期 2020-05-01，來源資料使用 OdMonthSelectedSource，檢查 <Meta>，計算結果數值應為 <Value>
         Examples:
             | Meta              | Value |
-            | Od4TreatmentCount | 5     |
+            | Od4TreatmentCount | 10    |
             | Od5TreatmentCount | 0     |
             | Od6TreatmentCount | 0     |
 
@@ -37,6 +37,6 @@ Feature: OD4-TreatmentCount
         Then 指定執行日期 2020-05-01，來源資料使用 OdMonthSelectedSource，檢查 <Meta>，計算結果數值應為 <Value>
         Examples:
             | Meta              | Value |
-            | Od4TreatmentCount | 10    |
+            | Od4TreatmentCount | 20    |
             | Od5TreatmentCount | 0     |
             | Od6TreatmentCount | 0     |

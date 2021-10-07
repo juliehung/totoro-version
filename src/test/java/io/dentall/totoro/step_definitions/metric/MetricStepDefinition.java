@@ -12,6 +12,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTreatment;
 import io.dentall.totoro.business.service.nhi.metric.meta.*;
 import io.dentall.totoro.business.service.nhi.metric.source.*;
@@ -29,6 +30,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -37,12 +39,13 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS;
 import static com.fasterxml.jackson.databind.node.JsonNodeFactory.withExactBigDecimals;
-import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstants.CLINIC;
+import static io.dentall.totoro.business.service.nhi.util.ToothUtil.splitA74;
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.*;
@@ -72,11 +75,7 @@ public class MetricStepDefinition {
     @Autowired
     private NhiMetricServiceTest nhiMetricService;
 
-    private final String metaClassPackage = "io.dentall.totoro.business.service.nhi.metric.meta";
-
-    private final String formulaClassPackage = "io.dentall.totoro.business.service.nhi.metric.formula";
-
-    private final String sourceClassPackage = "io.dentall.totoro.business.service.nhi.metric.source";
+    private final int defaultPatientAge = 24;
 
     @Before
     public void setup() {
@@ -88,8 +87,9 @@ public class MetricStepDefinition {
     }
 
     @ParameterType(value = ".+Source")
-    public Class<? extends Source<? extends NhiMetricRawVM, ?>> sourceDateRange(String range) throws ClassNotFoundException {
-        return (Class<? extends Source<? extends NhiMetricRawVM, ?>>) Class.forName(sourceClassPackage + "." + range);
+    public Class<?> sourceDateRange(String range) throws ClassNotFoundException {
+        String sourceClassPackage = "io.dentall.totoro.business.service.nhi.metric.source";
+        return Class.forName(sourceClassPackage + "." + range);
     }
 
     private static class AgeRage {
@@ -135,8 +135,8 @@ public class MetricStepDefinition {
     }
 
     private static class ReDateRange {
-        private int begin;
-        private int end;
+        private final int begin;
+        private final int end;
 
         public ReDateRange(int begin, int end) {
             this.begin = begin;
@@ -153,9 +153,9 @@ public class MetricStepDefinition {
     }
 
     private ReDateRange getOdReDateRange(Class<? extends Source<? extends NhiMetricRawVM, ?>> sourceType) {
-        if (OdOneYearNearByPatientSource.class.isAssignableFrom(sourceType) ||
-            OdDeciduousOneYearNearByPatientSource.class.isAssignableFrom(sourceType) ||
-            OdPermanentOneYearNearByPatientSource.class.isAssignableFrom(sourceType)) {
+        if (OdQuarterPlusOneYearNearByPatientSource.class.isAssignableFrom(sourceType) ||
+            OdDeciduousQuarterPlusOneYearNearByPatientSource.class.isAssignableFrom(sourceType) ||
+            OdPermanentQuarterPlusOneYearNearByPatientSource.class.isAssignableFrom(sourceType)) {
             return new ReDateRange(1, 365);
         } else if (EndoAndOdHalfYearNearByPatientSource.class.isAssignableFrom(sourceType)) {
             return new ReDateRange(1, 180);
@@ -165,13 +165,15 @@ public class MetricStepDefinition {
     }
 
     @ParameterType(value = ".+")
-    public Class<? extends MetaCalculator<?>> metaType(String value) throws ClassNotFoundException {
-        return (Class<? extends MetaCalculator<?>>) Class.forName(metaClassPackage + "." + value);
+    public Class<?> metaType(String value) throws ClassNotFoundException {
+        String metaClassPackage = "io.dentall.totoro.business.service.nhi.metric.meta";
+        return Class.forName(metaClassPackage + "." + value);
     }
 
     @ParameterType(value = ".+Formula")
-    public Class<? extends Calculator<?>> formulaType(String value) throws ClassNotFoundException {
-        return (Class<? extends Calculator<?>>) Class.forName(formulaClassPackage + "." + value);
+    public Class<?> formulaType(String value) throws ClassNotFoundException {
+        String formulaClassPackage = "io.dentall.totoro.business.service.nhi.metric.formula";
+        return Class.forName(formulaClassPackage + "." + value);
     }
 
     @ParameterType(value = "\\{.+\\}")
@@ -184,7 +186,7 @@ public class MetricStepDefinition {
         return Long.parseLong(value);
     }
 
-    @ParameterType(value = "[\\d\\.]+")
+    @ParameterType(value = "-?[\\d\\.]+")
     public BigDecimal metricValue(String value) {
         return new BigDecimal(value);
     }
@@ -197,14 +199,31 @@ public class MetricStepDefinition {
     @DataTableType
     public List<? extends NhiMetricRawVM> convertToNhiMetricRawVM(DataTable dataTable) {
         List<Map<String, String>> datalist = dataTable.asMaps();
-        User subject = metricTestInfoHolder.getSubject();
+        Consumer<MetricTreatment> consumer = metricTreatmentConsumer();
+
+        return datalist.stream().map(data -> {
+            MetricTreatment metricTreatment = MetricTestMapper.INSTANCE.mapToMetricTreatment(data);
+            consumer.accept(metricTreatment);
+
+            List<String> teeth = splitA74(metricTreatment.getTreatmentProcedureTooth());
+            List<MetricTooth> metricToothList = new ArrayList<>(teeth.size());
+            teeth.forEach(tooth -> {
+                MetricTooth metricTooth = new MetricTooth(metricTreatment, tooth);
+                metricToothList.add(metricTooth);
+            });
+
+            return metricToothList;
+        }).flatMap(Collection::stream).collect(toList());
+    }
+
+    private Consumer<MetricTreatment> metricTreatmentConsumer() {
+        MetricSubject subject = metricTestInfoHolder.getSubject();
         List<User> doctors = metricTestInfoHolder.getDoctors();
         List<Patient> patients = metricTestInfoHolder.getPatients();
         Map<Long, Long> disposalIdMap = new HashMap<>();
         AtomicLong disposalIdIncremental = new AtomicLong(0L);
 
-        return datalist.stream().map(data -> {
-            MetricTreatment metricTreatment = MetricTestMapper.INSTANCE.mapToMetricTreatment(data);
+        return (metricTreatment) -> {
             Long disposalId = metricTreatment.getDisposalId();
 
             if (disposalId == null) {
@@ -218,8 +237,10 @@ public class MetricStepDefinition {
 
             if (metricTreatment.getDoctorName() == null) {
                 ofNullable(subject).ifPresent(s -> {
-                    metricTreatment.setDoctorId(subject.getId());
-                    metricTreatment.setDoctorName(subject.getFirstName());
+                    if (s.getClass().isAssignableFrom(DoctorSubject.class)) {
+                        metricTreatment.setDoctorId(subject.getId());
+                        metricTreatment.setDoctorName(subject.getName());
+                    }
                 });
             } else {
                 doctors.stream()
@@ -236,8 +257,7 @@ public class MetricStepDefinition {
                     metricTreatment.setPatientBirth(p.getBirth());
                 });
 
-            return metricTreatment;
-        }).collect(toList());
+        };
     }
 
     @DataTableType
@@ -320,7 +340,7 @@ public class MetricStepDefinition {
         String treatment) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         MetaConfig metaConfig = metricTestInfoHolder.getMetaConfig();
         return metaType.getDeclaredConstructor(MetricConfig.class, MetaConfig.class, Source.class, List.class)
-            .newInstance(metricConfig, metaConfig, source, asList(treatment));
+            .newInstance(metricConfig, metaConfig, source, singletonList(treatment));
     }
 
     private Source<? extends NhiMetricRawVM, ?> toSourceInstance(
@@ -333,11 +353,32 @@ public class MetricStepDefinition {
     }
 
     private MetricConfig getMetricConfig(LocalDate date) {
-        User subject = metricTestInfoHolder.getSubject();
+        MetricSubject subject = metricTestInfoHolder.getSubject();
         List<? extends NhiMetricRawVM> source = metricTestInfoHolder.getSource();
         Map<LocalDate, Optional<Holiday>> holidayMap =
             nhiMetricService.loadHolidayDataSet().stream().collect(groupingBy(Holiday::getDate, maxBy(comparing(Holiday::getDate))));
         return new MetricConfig(subject, date, source).applyHolidayMap(holidayMap);
+    }
+
+    @Then("載入指定檔案資料集 {word}")
+    public void loadDataSet(String filePath) {
+        Consumer<MetricTreatment> consumer = metricTreatmentConsumer();
+        setupSource(
+            nhiMetricService.loadDataSet("metric" + File.separator + filePath).stream()
+                .map(data -> {
+                    MetricTreatment metricTreatment = MetricTestMapper.INSTANCE.mapToMetricTreatment(data);
+                    createPatient(metricTreatment.getPatientName(), ofNullable(metricTreatment.getPatientBirth()).map(LocalDate::getYear).orElse(defaultPatientAge));
+                    consumer.accept(metricTreatment);
+
+                    List<String> teeth = splitA74(metricTreatment.getTreatmentProcedureTooth());
+                    List<MetricTooth> metricToothList = new ArrayList<>(teeth.size());
+                    teeth.forEach(tooth -> {
+                        MetricTooth metricTooth = new MetricTooth(metricTreatment, tooth);
+                        metricToothList.add(metricTooth);
+                    });
+
+                    return metricToothList;
+                }).flatMap(Collection::stream).collect(toList()));
     }
 
     @Given("設定使用00121C點數計算")
@@ -382,12 +423,30 @@ public class MetricStepDefinition {
         metricTestInfoHolder.setExclude(exclude);
     }
 
+    @Given("設定指標主體類型為病人 {word} {int} 歲")
+    public void createPatientSubject(String patientName, int age) {
+        createPatient(patientName, age);
+        Optional<Patient> patientOptional =
+            metricTestInfoHolder.getPatients().stream().filter(p -> p.getName().equals(patientName)).findFirst();
+
+        if (patientOptional.isPresent()) {
+            metricTestInfoHolder.setSubject(new PatientSubject(patientOptional.get()));
+        } else {
+            throw new RuntimeException("Patient not found - " + patientName);
+        }
+    }
+
+    @Given("設定指標主體類型為病人 {word}")
+    public void createPatientSubject(String patientName) {
+        createPatientSubject(patientName, defaultPatientAge);
+    }
+
     @Given("設定指標主體類型為醫師 {word}")
-    public void createSubject(String doctorName) {
+    public void createDoctorSubject(String doctorName) {
         User subject = new User();
         subject.setId(0L);
         subject.setFirstName(doctorName);
-        metricTestInfoHolder.setSubject(subject);
+        metricTestInfoHolder.setSubject(new DoctorSubject(subject));
     }
 
     @Given("設定指標主體類型為醫師 {word} id {word}")
@@ -395,7 +454,7 @@ public class MetricStepDefinition {
         User subject = new User();
         subject.setId(Long.parseLong(id));
         subject.setFirstName(doctorName);
-        metricTestInfoHolder.setSubject(subject);
+        metricTestInfoHolder.setSubject(new DoctorSubject(subject));
     }
 
     @Given("設定醫師 {word}")
@@ -408,12 +467,19 @@ public class MetricStepDefinition {
     }
 
     @Given("設定指標主體類型為診所")
-    public void createSubject() {
-        metricTestInfoHolder.setSubject(CLINIC);
+    public void createClinicSubject() {
+        metricTestInfoHolder.setSubject(new ClinicSubject());
     }
 
     @Given("設定病人 {word} {int} 歲")
     public void createPatient(String name, int age) {
+        Optional<Patient> existPatient =
+            metricTestInfoHolder.getPatients().stream().filter(p -> p.getName().equals(name)).findFirst();
+
+        if (existPatient.isPresent()) {
+            return;
+        }
+
         LocalDate birthDate = LocalDate.now().minus(age, ChronoUnit.YEARS);
         Patient patient = new Patient();
         patient.setId(metricTestInfoHolder.getPatients().size() + 100L);
@@ -597,11 +663,11 @@ public class MetricStepDefinition {
 
         Type[] actualTypeArguments = getTypeArguments(sourceType);
 
-        if (actualTypeArguments.length == 2 &&
-            actualTypeArguments[1] instanceof ParameterizedType &&
-            ((ParameterizedType) actualTypeArguments[1]).getRawType() == Map.class) {
+        if (actualTypeArguments.length == 1 &&
+            actualTypeArguments[0] instanceof ParameterizedType &&
+            ((ParameterizedType) actualTypeArguments[0]).getRawType() == Map.class) {
             List<Map<?, ?>> result = metricConfig.retrieveSource(sourceInstance.key());
-            assertThat(result.get(0).size()).isEqualTo(sourceCount);
+            assertThat (result.get(0).size()).isEqualTo(sourceCount);
         } else {
             List<NhiMetricRawVM> result = metricConfig.retrieveSource(sourceInstance.key());
             assertThat(result.size()).isEqualTo(sourceCount);
@@ -618,8 +684,4 @@ public class MetricStepDefinition {
         return parameterizedType.getActualTypeArguments();
     }
 
-    @Then("載入指定檔案資料集 {word}")
-    public void loadDataSet(String filePath) {
-        metricTestInfoHolder.setSource(nhiMetricService.loadDataSet(filePath));
-    }
 }

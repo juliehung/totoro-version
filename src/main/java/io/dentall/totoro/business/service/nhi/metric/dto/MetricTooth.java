@@ -6,257 +6,131 @@ import java.time.LocalDate;
 
 public class MetricTooth implements NhiMetricRawVM {
 
-    private Long patientId;
+    private final MetricTreatment treatment;
 
-    private String patientName;
+    private final String tooth;
 
-    private LocalDate patientBirth;
+    public MetricTooth(MetricTreatment treatment, String tooth) {
+        this.treatment = treatment;
+        this.tooth = tooth;
+    }
 
-    private Long disposalId;
+    public MetricTreatment getTreatment() {
+        return treatment;
+    }
 
-    private LocalDate disposalDate;
-
-    private String cardNumber;
-
-    private String cardReplenishment;
-
-    private String nhiCategory;
-
-    private String partialBurden;
-
-    private LocalDate cardReplenishmentDisposalDate;
-
-    private String examCode;
-
-    private String examPoint;
-
-    private String patientIdentity;
-
-    private String serialNumber;
-
-    private String treatmentProcedureCode;
-
-    private String treatmentProcedureTooth;
-
-    private String treatmentProcedureSurface;
-
-    private Long treatmentProcedureTotal;
-
-    private Long nhiOriginPoint;
-
-    private String treatmentProcedureSpecificCode;
-
-    private Long doctorId;
-
-    private String doctorName;
-
-    // 需要有方法可以辨別出，同一處置單不同診療(但同一個健保代碼)，所以利用該屬性，只要是同一診療，就會是一樣的seq
-    // 即使是相同的健保代碼，但不同診療就會不一樣的seq
-    private int treatmentSeq;
+    public String getTooth() {
+        return tooth;
+    }
 
     @Override
     public Long getPatientId() {
-        return patientId;
-    }
-
-    public void setPatientId(Long patientId) {
-        this.patientId = patientId;
+        return treatment.getPatientId();
     }
 
     @Override
     public String getPatientName() {
-        return patientName;
-    }
-
-    public void setPatientName(String patientName) {
-        this.patientName = patientName;
+        return treatment.getPatientName();
     }
 
     @Override
     public LocalDate getPatientBirth() {
-        return patientBirth;
-    }
-
-    public void setPatientBirth(LocalDate patientBirth) {
-        this.patientBirth = patientBirth;
+        return treatment.getPatientBirth();
     }
 
     @Override
     public Long getDisposalId() {
-        return disposalId;
-    }
-
-    public void setDisposalId(Long disposalId) {
-        this.disposalId = disposalId;
+        return treatment.getDisposalId();
     }
 
     @Override
     public LocalDate getDisposalDate() {
-        return disposalDate;
-    }
-
-    public void setDisposalDate(LocalDate disposalDate) {
-        this.disposalDate = disposalDate;
+        return treatment.getDisposalDate();
     }
 
     @Override
     public String getCardNumber() {
-        return cardNumber;
-    }
-
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
+        return treatment.getCardNumber();
     }
 
     @Override
     public String getCardReplenishment() {
-        return cardReplenishment;
-    }
-
-    public void setCardReplenishment(String cardReplenishment) {
-        this.cardReplenishment = cardReplenishment;
+        return treatment.getCardReplenishment();
     }
 
     @Override
     public String getNhiCategory() {
-        return nhiCategory;
-    }
-
-    public void setNhiCategory(String nhiCategory) {
-        this.nhiCategory = nhiCategory;
+        return treatment.getNhiCategory();
     }
 
     @Override
     public String getPartialBurden() {
-        return partialBurden;
-    }
-
-    public void setPartialBurden(String partialBurden) {
-        this.partialBurden = partialBurden;
+        return treatment.getPartialBurden();
     }
 
     @Override
     public LocalDate getCardReplenishmentDisposalDate() {
-        return cardReplenishmentDisposalDate;
-    }
-
-    public void setCardReplenishmentDisposalDate(LocalDate cardReplenishmentDisposalDate) {
-        this.cardReplenishmentDisposalDate = cardReplenishmentDisposalDate;
+        return treatment.getCardReplenishmentDisposalDate();
     }
 
     @Override
     public String getExamCode() {
-        return examCode;
-    }
-
-    public void setExamCode(String examCode) {
-        this.examCode = examCode;
+        return treatment.getExamCode();
     }
 
     @Override
     public String getExamPoint() {
-        return examPoint;
-    }
-
-    public void setExamPoint(String examPoint) {
-        this.examPoint = examPoint;
+        return treatment.getExamPoint();
     }
 
     @Override
     public String getPatientIdentity() {
-        return patientIdentity;
-    }
-
-    public void setPatientIdentity(String patientIdentity) {
-        this.patientIdentity = patientIdentity;
+        return treatment.getPatientIdentity();
     }
 
     @Override
     public String getSerialNumber() {
-        return serialNumber;
-    }
-
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
+        return treatment.getSerialNumber();
     }
 
     @Override
     public String getTreatmentProcedureCode() {
-        return treatmentProcedureCode;
-    }
-
-    public void setTreatmentProcedureCode(String treatmentProcedureCode) {
-        this.treatmentProcedureCode = treatmentProcedureCode;
+        return treatment.getTreatmentProcedureCode();
     }
 
     @Override
     public String getTreatmentProcedureTooth() {
-        return treatmentProcedureTooth;
-    }
-
-    public void setTreatmentProcedureTooth(String treatmentProcedureTooth) {
-        this.treatmentProcedureTooth = treatmentProcedureTooth;
+        return treatment.getTreatmentProcedureTooth();
     }
 
     @Override
     public String getTreatmentProcedureSurface() {
-        return treatmentProcedureSurface;
-    }
-
-    public void setTreatmentProcedureSurface(String treatmentProcedureSurface) {
-        this.treatmentProcedureSurface = treatmentProcedureSurface;
+        return treatment.getTreatmentProcedureSurface();
     }
 
     @Override
     public Long getTreatmentProcedureTotal() {
-        return treatmentProcedureTotal;
-    }
-
-    public void setTreatmentProcedureTotal(Long treatmentProcedureTotal) {
-        this.treatmentProcedureTotal = treatmentProcedureTotal;
+        return treatment.getTreatmentProcedureTotal();
     }
 
     @Override
     public Long getNhiOriginPoint() {
-        return nhiOriginPoint;
-    }
-
-    public void setNhiOriginPoint(Long nhiOriginPoint) {
-        this.nhiOriginPoint = nhiOriginPoint;
+        return treatment.getNhiOriginPoint();
     }
 
     @Override
     public String getTreatmentProcedureSpecificCode() {
-        return treatmentProcedureSpecificCode;
-    }
-
-    public void setTreatmentProcedureSpecificCode(String treatmentProcedureSpecificCode) {
-        this.treatmentProcedureSpecificCode = treatmentProcedureSpecificCode;
+        return treatment.getTreatmentProcedureSpecificCode();
     }
 
     @Override
     public Long getDoctorId() {
-        return doctorId;
-    }
-
-    public void setDoctorId(Long doctorId) {
-        this.doctorId = doctorId;
+        return treatment.getDoctorId();
     }
 
     @Override
     public String getDoctorName() {
-        return doctorName;
+        return treatment.getDoctorName();
     }
 
-    public void setDoctorName(String doctorName) {
-        this.doctorName = doctorName;
-    }
-
-    public int getTreatmentSeq() {
-        return treatmentSeq;
-    }
-
-    public void setTreatmentSeq(int treatmentSeq) {
-        this.treatmentSeq = treatmentSeq;
-    }
 }

@@ -9,15 +9,15 @@ import java.util.stream.Stream;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.groupingBy;
 
-public class OdThreeYearNearByPatientSource extends AbstractSource<MetricTooth, Map<Long, Map<String, List<MetricTooth>>>> {
+public class OdQuarterPlusThreeYearNearByPatientSource extends AbstractSource<Map<Long, Map<String, List<MetricTooth>>>> {
 
-    public OdThreeYearNearByPatientSource(MetricConfig metricConfig) {
-        super(new OdThreeYearNearSource(metricConfig));
+    public OdQuarterPlusThreeYearNearByPatientSource(MetricConfig metricConfig) {
+        super(new OdQuarterPlusThreeYearNearSource(metricConfig));
     }
 
     @Override
     public List<Map<Long, Map<String, List<MetricTooth>>>> doFilter(Stream<MetricTooth> source) {
-        return singletonList(source.collect(groupingBy(MetricTooth::getPatientId, groupingBy(MetricTooth::getTreatmentProcedureTooth))));
+        return singletonList(source.collect(groupingBy(MetricTooth::getPatientId, groupingBy(MetricTooth::getTooth))));
     }
 
 }

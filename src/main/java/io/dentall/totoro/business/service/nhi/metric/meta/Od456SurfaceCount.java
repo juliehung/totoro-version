@@ -27,8 +27,4 @@ public class Od456SurfaceCount extends SingleSourceMetaCalculator<Long> {
         return od4TreatmentCount.getResult() + 2 * od5TreatmentCount.getResult() + 3 * od6TreatmentCount.getResult();
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.Od456SurfaceCount;
-    }
 }

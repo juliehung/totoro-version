@@ -1,9 +1,9 @@
 package io.dentall.totoro.business.service.nhi.metric.util;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Exclude;
 import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConstants;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.Holiday;
 import io.dentall.totoro.service.HolidayService;
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +28,7 @@ public class NhiMetricHelper {
     private NhiMetricHelper() {
     }
 
-    public static Long applyNewExamPoint(NhiMetricRawVM vm, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
+    public static Long applyNewExamPoint(MetricTooth vm, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
         long point = ofNullable(vm.getExamPoint()).filter(StringUtils::isNotBlank).map(Long::parseLong).orElse(0L);
 
         if (point == 0L) {
@@ -53,7 +53,16 @@ public class NhiMetricHelper {
         return point;
     }
 
-    public static Long calculateExam(Stream<Optional<NhiMetricRawVM>> stream, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
+    public static Long calculatePurge(Stream<Optional<MetricTooth>> stream, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
+        return stream.filter(Optional::isPresent)
+            .map(Optional::get)
+            .filter(vm -> isNotBlank(vm.getExamPoint()))
+            .map(vm -> purgeExamPoint(vm.getExamCode(), parseLong(vm.getExamPoint())))
+            .reduce(Long::sum)
+            .orElse(0L);
+    }
+
+    public static Long calculateExam(Stream<Optional<MetricTooth>> stream, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
         return stream.filter(Optional::isPresent)
             .map(Optional::get)
             .map(vm -> applyNewExamPoint(vm, config, holidayMap))
@@ -61,20 +70,25 @@ public class NhiMetricHelper {
             .orElse(0L);
     }
 
-    private static Stream<Optional<NhiMetricRawVM>> groupByDisposal(List<NhiMetricRawVM> source, List<String> codes) {
+    private static Stream<Optional<MetricTooth>> groupByDisposal(List<MetricTooth> source, List<String> codes) {
         return source.stream()
             .filter(vm -> isNotBlank(vm.getExamPoint()))
             .filter(vm -> codes.contains(vm.getExamCode()))
-            .collect(groupingBy(NhiMetricRawVM::getDisposalId, maxBy(comparing(NhiMetricRawVM::getDisposalId))))
+            .collect(groupingBy(MetricTooth::getDisposalId, maxBy(comparing(MetricTooth::getDisposalId))))
             .values().stream();
     }
 
-    public static Long calculateExamRegular(List<NhiMetricRawVM> source, List<String> codes, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
-        Stream<Optional<NhiMetricRawVM>> stream = groupByDisposal(source, codes);
+    public static Long calculatePurge(List<MetricTooth> source, List<String> codes, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
+        Stream<Optional<MetricTooth>> stream = groupByDisposal(source, codes);
+        return calculatePurge(stream, config, holidayMap);
+    }
+
+    public static Long calculateExamRegular(List<MetricTooth> source, List<String> codes, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
+        Stream<Optional<MetricTooth>> stream = groupByDisposal(source, codes);
         return calculateExam(stream, config, holidayMap);
     }
 
-    public static Long calculateExamDifference(List<NhiMetricRawVM> source, List<String> codes) {
+    public static Long calculateExamDifference(List<MetricTooth> source, List<String> codes) {
         return groupByDisposal(source, codes)
             .filter(Optional::isPresent)
             .map(Optional::get)
@@ -84,23 +98,23 @@ public class NhiMetricHelper {
     }
 
     public static Map<Long, Long> calculateExamByClassifier(
-        List<NhiMetricRawVM> source,
+        List<MetricTooth> source,
         List<String> codes,
-        Function<NhiMetricRawVM, Long> classifier,
+        Function<MetricTooth, Long> classifier,
         MetaConfig config,
         Map<LocalDate, Optional<Holiday>> holidayMap) {
         return source.stream()
             .filter(vm -> isNotBlank(vm.getExamPoint()))
             .filter(vm -> codes.contains(vm.getExamCode()))
-            .collect(groupingBy(classifier, groupingBy(NhiMetricRawVM::getDisposalId, maxBy(comparing(NhiMetricRawVM::getDisposalId)))))
+            .collect(groupingBy(classifier, groupingBy(MetricTooth::getDisposalId, maxBy(comparing(MetricTooth::getDisposalId)))))
             .entrySet().stream()
             .reduce(new HashMap<>(),
                 (map, entry) -> {
                     long keyId = entry.getKey();
 
                     map.compute(keyId, (key, point) -> {
-                        Map<Long, Optional<NhiMetricRawVM>> subMap = entry.getValue();
-                        Stream<Optional<NhiMetricRawVM>> stream = subMap.values().stream();
+                        Map<Long, Optional<MetricTooth>> subMap = entry.getValue();
+                        Stream<Optional<MetricTooth>> stream = subMap.values().stream();
                         Long examPoint = calculateExam(stream, config, holidayMap);
                         return ofNullable(point).orElse(0L) + examPoint;
                     });
@@ -138,7 +152,7 @@ public class NhiMetricHelper {
         return examPoint;
     }
 
-    public static Long applyNewTreatmentPoint(NhiMetricRawVM vm, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
+    public static Long applyNewTreatmentPoint(MetricTooth vm, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
         Long point = vm.getTreatmentProcedureTotal();
 
         if (config.isUseOriginPoint()) {
@@ -161,7 +175,7 @@ public class NhiMetricHelper {
         return ofNullable(holidayMap).map(map -> map.get(date)).map(Optional::isPresent).orElse(false);
     }
 
-    public static Predicate<NhiMetricRawVM> applyExcludeByVM(Exclude exclude) {
+    public static Predicate<MetricTooth> applyExcludeByVM(Exclude exclude) {
         return vm -> ofNullable(exclude).map(exclude1 -> exclude1.test(vm)).orElse(true);
     }
 
@@ -191,7 +205,7 @@ public class NhiMetricHelper {
         }
     }
 
-    public static BiFunction<Long, NhiMetricRawVM, Long> calculatePt() {
+    public static BiFunction<Long, MetricTooth, Long> calculatePt() {
         Set<String> existPatientCardNumber = new HashSet<>();
         Set<Long> existDisposal = new HashSet<>();
         return (count, vm) -> calculatePtCount(vm.getDisposalId(), vm.getDisposalDate(), vm.getPatientId(), vm.getCardNumber(), count, existPatientCardNumber, existDisposal);
@@ -229,7 +243,7 @@ public class NhiMetricHelper {
         return count + 1L;
     }
 
-    public static Predicate<NhiMetricRawVM> applyLegalAge(int bottom, int upper) {
+    public static Predicate<MetricTooth> applyLegalAge(int bottom, int upper) {
         return vm -> {
             int ages = Period.between(vm.getPatientBirth(), vm.getDisposalDate()).getYears();
             return ages >= bottom && ages <= upper;

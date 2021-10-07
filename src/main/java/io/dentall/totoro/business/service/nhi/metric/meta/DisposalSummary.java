@@ -1,9 +1,9 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.DisposalSummaryDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,15 +26,15 @@ public class DisposalSummary extends AbstractMetaSummary<DisposalSummaryDto> {
 
     @Override
     public List<DisposalSummaryDto> doCalculate(MetricConfig metricConfig) {
-        List<NhiMetricRawVM> source = metricConfig.retrieveSource(source().key());
-        Map<Long, List<NhiMetricRawVM>> sourceByDisposal = source.stream().collect(groupingBy(NhiMetricRawVM::getDisposalId));
+        List<MetricTooth> source = metricConfig.retrieveSource(source().key());
+        Map<Long, List<MetricTooth>> sourceByDisposal = source.stream().collect(groupingBy(MetricTooth::getDisposalId));
 
         return sourceByDisposal.entrySet().stream()
             .reduce(new ArrayList<DisposalSummaryDto>(),
                 (list, entry) -> {
-                    List<NhiMetricRawVM> subSource = entry.getValue();
-                    Map<Long, Optional<NhiMetricRawVM>> disposalList =
-                        subSource.stream().collect(groupingBy(NhiMetricRawVM::getDisposalId, maxBy(comparing(NhiMetricRawVM::getDisposalId))));
+                    List<MetricTooth> subSource = entry.getValue();
+                    Map<Long, Optional<MetricTooth>> disposalList =
+                        subSource.stream().collect(groupingBy(MetricTooth::getDisposalId, maxBy(comparing(MetricTooth::getDisposalId))));
 
                     DisposalSummaryDto result = new DisposalSummaryDto();
                     summaryByTreatment(result, subSource);
@@ -61,11 +61,6 @@ public class DisposalSummary extends AbstractMetaSummary<DisposalSummaryDto> {
             .stream()
             .sorted(comparing(dto -> dto.getDisposalDate().toString() + dto.getPatientId()))
             .collect(Collectors.toList());
-    }
-
-    @Override
-    public MetaType metaType() {
-        return MetaType.DisposalSummary;
     }
 
 }

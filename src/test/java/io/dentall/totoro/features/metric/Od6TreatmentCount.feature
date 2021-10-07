@@ -16,7 +16,7 @@ Feature: OD6-TreatmentCount
             | Meta              | Value |
             | Od4TreatmentCount | 0     |
             | Od5TreatmentCount | 0     |
-            | Od6TreatmentCount | 5     |
+            | Od6TreatmentCount | 10    |
 
     Scenario Outline: 計算OD6-TreatmentCount 多人
         Given 設定指標主體類型為醫師 Stan
@@ -39,4 +39,4 @@ Feature: OD6-TreatmentCount
             | Meta              | Value |
             | Od4TreatmentCount | 0     |
             | Od5TreatmentCount | 0     |
-            | Od6TreatmentCount | 10    |
+            | Od6TreatmentCount | 20    |

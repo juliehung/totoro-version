@@ -1,9 +1,9 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.DoctorSummaryDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,15 +25,15 @@ public class DoctorSummary extends AbstractMetaSummary<DoctorSummaryDto> {
 
     @Override
     public List<DoctorSummaryDto> doCalculate(MetricConfig metricConfig) {
-        List<NhiMetricRawVM> source = metricConfig.retrieveSource(source().key());
-        Map<Long, List<NhiMetricRawVM>> sourceByDoctor = source.stream().collect(groupingBy(NhiMetricRawVM::getDoctorId));
+        List<MetricTooth> source = metricConfig.retrieveSource(source().key());
+        Map<Long, List<MetricTooth>> sourceByDoctor = source.stream().collect(groupingBy(MetricTooth::getDoctorId));
 
         return sourceByDoctor.entrySet().stream()
             .reduce(new ArrayList<>(),
                 (list, entry) -> {
-                    List<NhiMetricRawVM> subSource = entry.getValue();
-                    Map<Long, Optional<NhiMetricRawVM>> disposalList =
-                        subSource.stream().collect(groupingBy(NhiMetricRawVM::getDisposalId, maxBy(comparing(NhiMetricRawVM::getDisposalId))));
+                    List<MetricTooth> subSource = entry.getValue();
+                    Map<Long, Optional<MetricTooth>> disposalList =
+                        subSource.stream().collect(groupingBy(MetricTooth::getDisposalId, maxBy(comparing(MetricTooth::getDisposalId))));
 
                     DoctorSummaryDto result = new DoctorSummaryDto();
                     summaryByTreatment(result, subSource);
@@ -56,11 +56,6 @@ public class DoctorSummary extends AbstractMetaSummary<DoctorSummaryDto> {
                     list1.addAll(list2);
                     return list1;
                 });
-    }
-
-    @Override
-    public MetaType metaType() {
-        return MetaType.DoctorSummary;
     }
 
 }

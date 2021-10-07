@@ -6,7 +6,7 @@ import io.dentall.totoro.business.service.nhi.metric.meta.OdPermanentToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.OdPermanentQuarterByPatientSource;
-import io.dentall.totoro.business.service.nhi.metric.source.OdPermanentTwoYearNearByPatientSource;
+import io.dentall.totoro.business.service.nhi.metric.source.OdPermanentQuarterPlusTwoYearNearByPatientSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.math.BigDecimal;
@@ -32,7 +32,7 @@ public class F2h4Formula extends AbstractFormula<BigDecimal> {
     public F2h4Formula(MetricConfig metricConfig) {
         super(metricConfig);
         this.odQuarterSource = new OdPermanentQuarterByPatientSource(metricConfig);
-        this.odTwoYearNearSource = new OdPermanentTwoYearNearByPatientSource(metricConfig);
+        this.odTwoYearNearSource = new OdPermanentQuarterPlusTwoYearNearByPatientSource(metricConfig);
         this.odQuarterSource.setExclude(Tro1);
         this.odTwoYearNearSource.setExclude(Tro1);
     }

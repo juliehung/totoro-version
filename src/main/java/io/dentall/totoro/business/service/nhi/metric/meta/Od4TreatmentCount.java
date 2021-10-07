@@ -8,7 +8,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
-import static java.util.stream.Collectors.groupingBy;
 
 /**
  * @ OD-4@醫令數
@@ -27,16 +26,10 @@ public class Od4TreatmentCount extends SingleSourceMetaCalculator<Long> {
 
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
-        List<MetricTooth> metricToothList = metricConfig.retrieveSource(source().key());
-        return (long) metricToothList.stream()
+        List<MetricTooth> source = metricConfig.retrieveSource(source().key());
+        return source.stream()
             .filter(dto -> codes.contains(dto.getTreatmentProcedureCode()))
-            // 因為資料是從Treatment層級，依牙齒切成多筆，所以需要先依 disposalId + code + treatmentSeq 做 group
-            .collect(groupingBy(dto -> dto.getDisposalId() + dto.getTreatmentProcedureCode() + dto.getTreatmentSeq()))
-            .size();
+            .count();
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.Od4TreatmentCount;
-    }
 }

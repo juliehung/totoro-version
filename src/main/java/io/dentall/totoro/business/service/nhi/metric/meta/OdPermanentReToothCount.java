@@ -53,7 +53,7 @@ public class OdPermanentReToothCount extends AbstractMetaCalculator<Long> {
                 // 該季中如果同顆牙有多次，則取最後一次
                 Map<String, Optional<MetricTooth>> odMap = odToothMap.values().stream()
                     .flatMap(Collection::stream)
-                    .collect(groupingBy(MetricTooth::getTreatmentProcedureTooth, maxBy(comparing(MetricTooth::getDisposalDate))));
+                    .collect(groupingBy(MetricTooth::getTooth, maxBy(comparing(MetricTooth::getDisposalDate))));
 
                 return odMap.entrySet().stream()
                     .filter(entryOd -> entryOd.getValue().isPresent())
@@ -74,11 +74,6 @@ public class OdPermanentReToothCount extends AbstractMetaCalculator<Long> {
                         return found;
                     }).count();
             }).sum();
-    }
-
-    @Override
-    public MetaType metaType() {
-        return MetaType.OdPermanentReToothCount;
     }
 
 }

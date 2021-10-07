@@ -27,12 +27,8 @@ public class OdDeciduousToothCount extends SingleSourceMetaCalculator<Long> {
         return source.get(0).values().stream()
             .map(Map::values)
             .flatMap(Collection::stream)
-            .flatMap(Collection::stream)
-            .count();
+            .mapToLong(Collection::size)
+            .sum();
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.OdDeciduousToothCount;
-    }
 }

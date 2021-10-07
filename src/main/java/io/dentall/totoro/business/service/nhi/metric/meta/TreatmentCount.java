@@ -1,8 +1,8 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.List;
 
@@ -24,15 +24,10 @@ public class TreatmentCount extends SingleSourceMetaCalculator<Long> {
 
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
-        List<NhiMetricRawVM> source = metricConfig.retrieveSource(source().key());
+        List<MetricTooth> source = metricConfig.retrieveSource(source().key());
         return source.stream()
             .filter(vm -> codes.contains(vm.getTreatmentProcedureCode()))
             .count();
-    }
-
-    @Override
-    public MetaType metaType() {
-        return MetaType.TreatmentCount;
     }
 
     @Override

@@ -1,14 +1,13 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.DoctorCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Point1ByDaily;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro2AndTro3Config;
-import io.dentall.totoro.business.service.nhi.metric.meta.Tro3Config;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.QuarterByDailyOfLastYearSource;
 import io.dentall.totoro.business.service.nhi.metric.source.QuarterOfLastYearSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -24,8 +23,8 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.di
  */
 public class J1h2Formula extends AbstractFormula<BigDecimal> {
 
-    private final Source<NhiMetricRawVM, NhiMetricRawVM> quarterSource;
-    private final Source<NhiMetricRawVM, Map<LocalDate, List<NhiMetricRawVM>>> quarterByDailySource;
+    private final Source<MetricTooth, MetricTooth> quarterSource;
+    private final Source<MetricTooth, Map<LocalDate, List<MetricTooth>>> quarterByDailySource;
 
     public J1h2Formula(MetricConfig metricConfig) {
         super(metricConfig);

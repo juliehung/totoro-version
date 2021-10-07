@@ -1,7 +1,5 @@
 package io.dentall.totoro.business.service.nhi.metric.source;
 
-import io.dentall.totoro.domain.User;
-
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -52,11 +50,6 @@ public class MetricConstants {
 
     public static final long CLINIC_ID = Long.MIN_VALUE;
 
-    public static final User CLINIC;
+    public static final MetricSubject CLINIC = new ClinicSubject();
 
-    static {
-        User clinic = new User();
-        clinic.setId(CLINIC_ID);
-        CLINIC = clinic;
-    }
 }

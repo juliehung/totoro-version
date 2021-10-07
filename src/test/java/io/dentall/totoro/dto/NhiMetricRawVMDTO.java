@@ -5,6 +5,7 @@ import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 
@@ -69,7 +70,7 @@ public class NhiMetricRawVMDTO implements NhiMetricRawVM {
 
     @Override
     public LocalDate getPatientBirth() {
-        return LocalDate.parse(this.patientBirth, dateTimeFormatter);
+        return Optional.ofNullable(this.patientBirth).map(birth -> LocalDate.parse(birth, dateTimeFormatter)).orElse(null);
     }
 
     @Override
@@ -163,6 +164,11 @@ public class NhiMetricRawVMDTO implements NhiMetricRawVM {
     }
 
     @Override
+    public String getDoctorName() {
+        return this.doctorName;
+    }
+
+    @Override
     public String toString() {
         return "{"
             .concat(patientId == null ? "" : " \"patientId\": \"" + patientId + "\"")
@@ -190,8 +196,4 @@ public class NhiMetricRawVMDTO implements NhiMetricRawVM {
             .concat("}");
     }
 
-    @Override
-    public String getDoctorName() {
-        return this.doctorName;
-    }
 }

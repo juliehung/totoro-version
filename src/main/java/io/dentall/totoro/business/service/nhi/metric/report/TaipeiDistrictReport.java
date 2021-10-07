@@ -26,7 +26,7 @@ public class TaipeiDistrictReport {
 
         Sheet sheet = wb.createSheet(SHEET_NAME);
         Row row = null;
-        int rowCounter  = 0;
+        int rowCounter = 0;
         // Header
         row = sheet.createRow(rowCounter++);
         row.createCell(0).setCellValue("類型");
@@ -50,21 +50,13 @@ public class TaipeiDistrictReport {
         row.createCell(0).setCellValue("補牙相關");
         row.createCell(1).setCellValue("當季OD耗用值");
         row = sheet.createRow(rowCounter++);
-        row.createCell(1).setCellValue("恆牙兩年自家重補率");
+        row.createCell(1).setCellValue("恆牙二年重補顆數");
+        row = sheet.createRow(rowCounter++);
+        row.createCell(1).setCellValue("乳牙一年半重補顆數");
         row = sheet.createRow(rowCounter++);
         row.createCell(1).setCellValue("平均每位病人填補顆數");
         row = sheet.createRow(rowCounter++);
-        row.createCell(1).setCellValue("三年自家重補率");
-        row = sheet.createRow(rowCounter++);
-        row.createCell(1).setCellValue("每季平均填補面數");
-        row = sheet.createRow(rowCounter++);
-        row.createCell(1).setCellValue("平均每位 OD 患者填補顆數");
-        row = sheet.createRow(rowCounter++);
-        row.createCell(1).setCellValue("OD 點數比率");
-        row = sheet.createRow(rowCounter++);
-        row.createCell(1).setCellValue("三年恆牙自家重補率");
-        row = sheet.createRow(rowCounter++);
-        row.createCell(1).setCellValue("乳牙一年半自家重補率");
+        row.createCell(1).setCellValue("一年重補率");
         // 備註
         row = sheet.createRow(rowCounter++);
         row.createCell(0).setCellValue("※其餘牽涉他院資料無法計算之指標，請參照健保署最新公告");
@@ -84,7 +76,7 @@ public class TaipeiDistrictReport {
                 ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.USER), "全院所");
             }
 
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getL1().doubleValue());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getF1h1().doubleValue());
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getF1h2().doubleValue());
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getF3h1().doubleValue());
 
@@ -96,14 +88,10 @@ public class TaipeiDistrictReport {
 
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getI12().doubleValue() / 100);
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getF1h3().doubleValue());
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getF2h4().doubleValue() / 100);
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getF1h5().doubleValue());
+            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getF1h6().doubleValue());
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getF3h2().doubleValue());
             ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getF5h3().doubleValue() / 100);
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getF5h4().doubleValue());
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getF5h5().doubleValue());
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getF5h6().doubleValue() / 100);
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getF5h7().doubleValue() / 100);
-            ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getF5h8().doubleValue() / 100);
         }
 
         // Styles
@@ -122,7 +110,7 @@ public class TaipeiDistrictReport {
             for (int j = fromCol; j <= toCol; j++) {
                 try {
                     ExcelUtil.applyStyle(sheet, i, j, cellStyle);
-                } catch(Exception e) {
+                } catch (Exception e) {
                     // ignore exception
                 }
             }

@@ -70,10 +70,10 @@ public class NhiMetricResource {
     @Timed
     public ResponseEntity<Map<String, List<MetricLVM>>> getDashboardMetric(
         @RequestParam LocalDate begin,
-        @RequestParam(required = false) List<Long> excludeDisposalId) {
-        log.debug("REST request to dashboard : begin={}, excludeDisposalId={}", begin, excludeDisposalId);
+        @RequestParam(required = false) List<Long> excludeDisposalIds) {
+        log.debug("REST request to dashboard : begin={}, excludeDisposalId={}", begin, excludeDisposalIds);
 
-        List<MetricLVM> vm = metricService.getDashboardMetric(begin, excludeDisposalId);
+        List<MetricLVM> vm = metricService.getDashboardMetric(begin, excludeDisposalIds);
         Map<String, List<MetricLVM>> map = new HashMap<>();
         map.put("metrics", vm);
 

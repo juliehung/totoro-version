@@ -1,8 +1,8 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -25,14 +25,14 @@ public class Point4ByDaily extends SingleSourceMetaCalculator<Map<LocalDate, Lon
 
     @Override
     public Map<LocalDate, Long> doCalculate(MetricConfig metricConfig) {
-        List<Map<LocalDate, List<NhiMetricRawVM>>> source = metricConfig.retrieveSource(source().key());
+        List<Map<LocalDate, List<MetricTooth>>> source = metricConfig.retrieveSource(source().key());
 
         return source.get(0).entrySet().stream().reduce(new HashMap<>(),
             (map, entry) -> {
                 LocalDate date = entry.getKey();
-                List<NhiMetricRawVM> sourceByDate = entry.getValue();
+                List<MetricTooth> sourceByDate = entry.getValue();
                 Long points = sourceByDate.stream()
-                    .map(NhiMetricRawVM::getPartialBurden)
+                    .map(MetricTooth::getPartialBurden)
                     .filter(Objects::nonNull)
                     .map(Long::valueOf)
                     .reduce(Long::sum)
@@ -46,8 +46,4 @@ public class Point4ByDaily extends SingleSourceMetaCalculator<Map<LocalDate, Lon
             });
     }
 
-    @Override
-    public MetaType metaType() {
-        return MetaType.Point4ByDaily;
-    }
 }

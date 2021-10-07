@@ -15,7 +15,7 @@ Feature: OD5-TreatmentCount
         Examples:
             | Meta              | Value |
             | Od4TreatmentCount | 0     |
-            | Od5TreatmentCount | 5     |
+            | Od5TreatmentCount | 10    |
             | Od6TreatmentCount | 0     |
 
     Scenario Outline: 計算OD5-TreatmentCount 多人
@@ -38,6 +38,6 @@ Feature: OD5-TreatmentCount
         Examples:
             | Meta              | Value |
             | Od4TreatmentCount | 0     |
-            | Od5TreatmentCount | 10    |
+            | Od5TreatmentCount | 20    |
             | Od6TreatmentCount | 0     |
 

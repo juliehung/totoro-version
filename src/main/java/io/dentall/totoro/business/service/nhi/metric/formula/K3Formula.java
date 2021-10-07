@@ -6,7 +6,6 @@ import io.dentall.totoro.business.service.nhi.metric.meta.Od1Pt1;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.OdQuarterSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
@@ -21,7 +20,7 @@ import static java.math.BigDecimal.ZERO;
  */
 public class K3Formula extends AbstractFormula<BigDecimal> {
 
-    private final Source<NhiMetricRawVM, MetricTooth> source;
+    private final Source<MetricTooth, MetricTooth> source;
 
     public K3Formula(MetricConfig metricConfig) {
         super(metricConfig);

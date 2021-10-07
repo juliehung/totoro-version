@@ -8,7 +8,6 @@ import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.MonthSelectedSource;
 import io.dentall.totoro.business.service.nhi.metric.source.OdMonthSelectedSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.math.BigDecimal;
 
@@ -22,7 +21,7 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NumericUtils.to
  */
 public class H3Formula extends AbstractFormula<BigDecimal> {
 
-    private final Source<NhiMetricRawVM, NhiMetricRawVM> source;
+    private final Source<MetricTooth, MetricTooth> source;
 
     private final Source<MetricTooth, MetricTooth> odSource;
 

@@ -1,8 +1,8 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,23 +19,20 @@ import static java.util.stream.Collectors.groupingBy;
  */
 public class Point3ByClassifier extends SingleSourceMetaCalculator<Map<Long, Long>> {
 
-    private final Function<NhiMetricRawVM, Long> classifier;
+    private final Function<MetricTooth, Long> classifier;
 
-    private final MetaType metaType;
-
-    public Point3ByClassifier(MetricConfig metricConfig, MetaType metaType, Source<?, ?> source, Function<NhiMetricRawVM, Long> classifier) {
-        this(metricConfig, null, metaType, source, classifier);
+    public Point3ByClassifier(MetricConfig metricConfig, Source<?, ?> source, Function<MetricTooth, Long> classifier) {
+        this(metricConfig, null, source, classifier);
     }
 
-    public Point3ByClassifier(MetricConfig metricConfig, MetaConfig metaConfig, MetaType metaType, Source<?, ?> source, Function<NhiMetricRawVM, Long> classifier) {
+    public Point3ByClassifier(MetricConfig metricConfig, MetaConfig metaConfig, Source<?, ?> source, Function<MetricTooth, Long> classifier) {
         super(metricConfig, metaConfig, source);
         this.classifier = classifier;
-        this.metaType = metaType;
     }
 
     @Override
     public Map<Long, Long> doCalculate(MetricConfig metricConfig) {
-        List<NhiMetricRawVM> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
+        List<MetricTooth> nhiMetricRawVMList = metricConfig.retrieveSource(source().key());
         MetaConfig config = getConfig();
 
         return nhiMetricRawVMList.stream()
@@ -60,11 +57,6 @@ public class Point3ByClassifier extends SingleSourceMetaCalculator<Map<Long, Lon
                     accMap.putAll(map);
                     return accMap;
                 });
-    }
-
-    @Override
-    public MetaType metaType() {
-        return metaType;
     }
 
 }
