@@ -589,8 +589,7 @@ public class NhiRuleCheckUtil {
                 CsvUtil.convertCsvStringToInputStream(csvRecords),
                 "text/csv"
             );
-            fileUrl = imageGcsBusinessService.getUrlForDownload()
-                .concat(imageGcsBusinessService.getClinicName())
+            fileUrl = imageGcsBusinessService.getClinicName()
                 .concat("/")
                 .concat(BackupFileCatalog.MONTH_DECLARE_RULE_CHECK_REPORT.getRemotePath())
                 .concat("/")

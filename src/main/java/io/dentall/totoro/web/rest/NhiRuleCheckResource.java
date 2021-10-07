@@ -131,9 +131,13 @@ public class NhiRuleCheckResource {
                 partialACDateTimeString.substring(4, 6)
             );
 
+        ImageGcsBusinessService imageGcsBusinessService = applicationContext.getBean(ImageGcsBusinessService.class);
         return nhiRuleCheckUtil.getMonthDeclarationRuleCheckReport(partialACDateTimeString).stream()
             .map(d -> NhiRuleCheckMapper.INSTANCE.convertToNhiMonthDeclarationRuleCheckReport(d))
-            .collect(Collectors.toList());
+            .map(d -> {
+                d.setComment(imageGcsBusinessService.getUrlForDownload() + d.getComment());
+                return d;
+            }).collect(Collectors.toList());
     }
 
     @Profile("img-gcs")
