@@ -118,7 +118,7 @@ public class ImageGcsBusinessService extends ImageBusinessService {
     }
 
     public String getUrlForDownload() {
-        return this.READ_GCS_BASE_URL;
+        return this.GCS_BASE_URL;
     }
 
     public String getClinicName() {
