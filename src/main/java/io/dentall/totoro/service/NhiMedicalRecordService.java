@@ -192,6 +192,7 @@ public class NhiMedicalRecordService {
             .forEach(d -> {
                 existedIcRecordSet.add(
                     "".concat(d.getDate())
+                        .concat(d.getNhiCategory())
                         .concat(d.getNhiCode())
                         .concat(d.getPart())
                 );
@@ -199,6 +200,7 @@ public class NhiMedicalRecordService {
 
         nmrs.forEach(d -> {
             String key = "".concat(d.getDate())
+                .concat(d.getNhiCategory())
                 .concat(d.getNhiCode())
                 .concat(d.getPart());
 
