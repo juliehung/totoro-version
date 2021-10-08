@@ -368,7 +368,7 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
     @Query("select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where " + dateBetween + "order by patientId, a18")
     Page<NhiExtendDisposal> findByDateBetween(@Param("start") LocalDate start, @Param("end") LocalDate end, Pageable pageable);
 
-    @Query("select new io.dentall.totoro.repository.dao.MonthDisposalDAO(disposal.id, nhiExtendDisposal.id, " +
+    @Query("select new io.dentall.totoro.repository.dao.MonthDisposalDAO(disposal.id, disposal.dateTime, nhiExtendDisposal.id, " +
         "nhiExtendDisposal.a11, nhiExtendDisposal.a12, nhiExtendDisposal.a13, " +
         "nhiExtendDisposal.a14, nhiExtendDisposal.a15, nhiExtendDisposal.a16, " +
         "nhiExtendDisposal.a17, nhiExtendDisposal.a18, nhiExtendDisposal.a19, " +

@@ -6,12 +6,15 @@ import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.time.Instant;
 import java.time.LocalDate;
 
 public class MonthDisposalDAO {
 
     @JsonIgnore
     private final Long disposalId;
+
+    private final Instant disposalDateTime;
 
     @JsonProperty(value = "id")
     private final Long nhiExtendDisposalId;
@@ -86,12 +89,13 @@ public class MonthDisposalDAO {
     private final Boolean vipPatient;
 
     public MonthDisposalDAO(
-        Long disposalId, Long nhiExtendDisposalId, String a11, String a12, String a13, String a14, String a15, String a16, String a17, String a18, String a19,
+        Long disposalId, Instant disposalDateTime, Long nhiExtendDisposalId, String a11, String a12, String a13, String a14, String a15, String a16, String a17, String a18, String a19,
         String a22, String a23, String a25, String a26, String a27, String a31, String a32, String a41, String a42, String a43, String a44, String a54, LocalDate date,
         NhiExtendDisposalUploadStatus uploadStatus, String examinationCode, Integer examinationPoint, String patientIdentity, String serialNumber, Long patientId, String category,
         LocalDate replenishmentDate, Boolean checkedMonthDeclaration, Boolean checkedAuditing, String patientName, Boolean vipPatient
     ) {
         this.disposalId = disposalId;
+        this.disposalDateTime = disposalDateTime;
         this.nhiExtendDisposalId = nhiExtendDisposalId;
         this.a11 = a11;
         this.a12 = a12;
@@ -127,6 +131,10 @@ public class MonthDisposalDAO {
         this.checkedAuditing = checkedAuditing;
         this.patientName = patientName;
         this.vipPatient = vipPatient;
+    }
+
+    public Instant getDisposalDateTime() {
+        return disposalDateTime;
     }
 
     public String getPatientName() {
