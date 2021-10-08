@@ -390,8 +390,8 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
         "   Patient as patient " +
         "where 1 = 1 " +
         "and nhiExtendDisposal.patientId = patient.id " +
-        "and " + dateBetween)
-    List<MonthDisposalDAO> findDisposalIdAndNhiExtendDisposalPrimByDateBetween(@Param("start") LocalDate start, @Param("end") LocalDate end);
+        "and disposal.dateTime between :start and :end")
+    List<MonthDisposalDAO> findDisposalIdAndNhiExtendDisposalPrimByDateBetween(@Param("start") Instant start, @Param("end") Instant end);
 
     @Query("select count(nhiExtendDisposal) from NhiExtendDisposal nhiExtendDisposal where " + dateBetween)
     long countByDateBetween(@Param("start") LocalDate start, @Param("end") LocalDate end);

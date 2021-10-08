@@ -1,5 +1,6 @@
 package io.dentall.totoro.service;
 
+import io.dentall.totoro.config.TimeConfig;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
 import io.dentall.totoro.repository.*;
@@ -19,7 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -349,10 +352,13 @@ public class NhiExtendDisposalService {
 
     @Transactional(readOnly = true)
     public List<MonthDisposalVM> findByYearMonthForLazyNhiExtDis(YearMonth ym, Boolean toleranceA18) {
-        Stream<MonthDisposalDAO> stream = nhiExtendDisposalRepository.findDisposalIdAndNhiExtendDisposalPrimByDateBetween(ym.atDay(1), ym.atEndOfMonth()).stream()
-                .filter(dao -> dao != null &&
-                    dao.getDate() != null
-                );
+        Stream<MonthDisposalDAO> stream = nhiExtendDisposalRepository.findDisposalIdAndNhiExtendDisposalPrimByDateBetween(
+            ym.atDay(1).atStartOfDay(ZoneId.of("Asia/Taipei")).toInstant(),
+            ym.atEndOfMonth().atTime(LocalTime.MAX).toInstant(TimeConfig.ZONE_OFF_SET)
+        ).stream()
+            .filter(dao -> dao != null &&
+                dao.getDate() != null
+            );
 
         if (!Optional.ofNullable(toleranceA18).orElse(false)) {
             stream = stream.filter(monthDisposalDAO -> StringUtils.isNotBlank(monthDisposalDAO.getA18()));
