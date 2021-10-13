@@ -121,3 +121,7 @@ queue:
 
 gcs:
     timeout: 5000
+
+gcp:
+    bucket-name: totoro-admin-dev
+    gcs-base-url: https://storage.googleapis.com

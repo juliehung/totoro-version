@@ -674,4 +674,11 @@ public class DisposalService {
 
         return new PageImpl<>(rvm, p.getPageable(), p.getTotalElements());
     }
+
+    public LocalDate getFistDisposalDate() {
+        Optional<Disposal> optional = disposalRepository.findFirstByOrderByDateTime();
+        return optional
+            .map(disposal -> disposal.getDateTime().atOffset(TimeConfig.ZONE_OFF_SET).toLocalDate())
+            .orElseGet(() -> Instant.now().atOffset(TimeConfig.ZONE_OFF_SET).toLocalDate());
+    }
 }
