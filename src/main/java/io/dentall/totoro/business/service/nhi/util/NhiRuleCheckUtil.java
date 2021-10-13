@@ -1968,7 +1968,10 @@ public class NhiRuleCheckUtil {
 
         // 其他處置
         List<NhiHybridRecordDTO> sourceData = dto.getSourceData() != null && dto.getSourceData().size() > 0
-            ? dto.getSourceData()
+            ? dto.getSourceData().stream()
+                .filter(d -> codes.contains(d.getCode()))
+                .filter(d -> !dto.getExcludeDisposalIds().contains(d.getDisposalId()))
+                .collect(Collectors.toList())
             : this.findNhiHypeRecordsDTO(
                 dto.getPatient().getId(),
                 codes,

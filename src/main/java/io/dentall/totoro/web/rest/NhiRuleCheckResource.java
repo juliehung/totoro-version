@@ -150,17 +150,6 @@ public class NhiRuleCheckResource {
         @RequestBody NhiRuleCheckReportBody nhiRuleCheckReportBody
     ) {
         String partialACDateTimeString = String.valueOf(partialACDateTime);
-        if (partialACDateTimeString.length() == 6) {
-            partialACDateTime = partialACDateTime - 191100;
-        } else if (partialACDateTimeString.length() == 8) {
-            partialACDateTime = partialACDateTime - 19110000;
-        } else {
-            throw new BadRequestAlertException(
-                "year month must be 6 or 8 digits",
-                "VALIDATION",
-                "as title"
-            );
-        }
         partialACDateTimeString = partialACDateTimeString.substring(0, 4)
             .concat("-")
             .concat(
@@ -178,7 +167,7 @@ public class NhiRuleCheckResource {
         NhiMonthDeclarationRuleCheckReport report =
             nhiRuleCheckUtil.createMonthDeclarationRuleCheckReportStatus(partialACDateTimeString);
 
-        DateTimeUtil.BeginEnd be = DateTimeUtil.convertYearMonth(partialACDateTime);
+        DateTimeUtil.BeginEnd be = DateTimeUtil.convertYearMonth(partialACDateTimeString);
         List<Long> zeroIdList = new ArrayList<>();
         zeroIdList.add(0L);
         List<Long> finalExcludeDisposals = nhiRuleCheckReportBody == null ||

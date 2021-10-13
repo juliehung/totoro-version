@@ -351,14 +351,14 @@ public final class DateTimeUtil {
         return Instant.now().minus(pastDays, ChronoUnit.DAYS);
     }
 
-    public static BeginEnd convertYearMonth(Integer yearMonth) {
+    public static BeginEnd convertYearMonth(String yearMonth) {
         BeginEnd be = new BeginEnd();
         Instant begin = null;
         Instant end = null;
 
         try {
-            YearMonth ym = YearMonth.parse(String.valueOf(yearMonth));
-            begin = ym.atDay(1).atStartOfDay().toInstant(ZoneOffset.UTC);
+            YearMonth ym = YearMonth.parse(yearMonth);
+            begin = ym.atDay(1).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET);
             end = ym.atEndOfMonth().atTime(OffsetTime.MAX).toInstant();
         } catch(Exception e) {
             begin = Instant.now();
