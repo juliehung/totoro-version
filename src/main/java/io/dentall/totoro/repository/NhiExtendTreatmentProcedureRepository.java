@@ -96,13 +96,16 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
             "left join treatment_procedure tp on d.id = tp.disposal_id " +
             "left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
             "left join nhi_procedure np on np.id = tp.nhi_procedure_id " +
-            "where tp.nhi_procedure_id is not null and trim(ned.a18) <> '' and a19 = '1' and a17 like :yearMonthQueryClause and d.id is not null and netp.treatment_procedure_id is not null and d.id not in (:excludeDisposals) " +
-            "or tp.nhi_procedure_id is not null and trim(ned.a18) <> '' and a19 = '2' and a54 like :yearMonthQueryClause and d.id is not null and netp.treatment_procedure_id is not null and d.id not in (:excludeDisposals)" +
+            "where d.dateTime between :begin and :end " +
+            "and d.id is not null " +
+            "and netp.treatment_procedure_id is not null " +
+            "and d.id not in (:excludeDisposals) " +
             "order by d.date_time, doctorId, patientId" +
             ";"
     )
     List<NhiRuleCheckMonthDeclarationTxDTO> findNhiMonthDeclarationTx(
-        @Param(value = "yearMonthQueryClause") String yearMonthQueryClause,
+        @Param(value = "begin") Instant begin,
+        @Param(value = "end") Instant end,
         @Param(value = "excludeDisposals") List<Long> excludeDisposals
     );
 

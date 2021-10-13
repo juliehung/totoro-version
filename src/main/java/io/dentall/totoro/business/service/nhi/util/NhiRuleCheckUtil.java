@@ -415,7 +415,8 @@ public class NhiRuleCheckUtil {
     }
 
     public synchronized String generateMonthDeclarationRuleCheckReport(
-        Integer partialACDateTime,
+        Instant begin,
+        Instant end,
         List<Long> excludeDisposals,
         ImageGcsBusinessService imageGcsBusinessService
     ) {
@@ -440,7 +441,8 @@ public class NhiRuleCheckUtil {
 
         // Csv records
         Map<Long, List<NhiRuleCheckMonthDeclarationTx>> disposalTx = nhiExtendTreatmentProcedureRepository.findNhiMonthDeclarationTx(
-            String.valueOf(partialACDateTime).concat("%"),
+            begin,
+            end,
             excludeDisposals != null &&
                 excludeDisposals.size() > 0
                 ? excludeDisposals

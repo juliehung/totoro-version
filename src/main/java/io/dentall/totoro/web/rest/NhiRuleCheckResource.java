@@ -11,6 +11,7 @@ import io.dentall.totoro.business.vm.nhi.NhiRuleCheckReportBody;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.domain.NhiMonthDeclarationRuleCheckReport;
 import io.dentall.totoro.domain.enumeration.BatchStatus;
+import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -177,7 +178,7 @@ public class NhiRuleCheckResource {
         NhiMonthDeclarationRuleCheckReport report =
             nhiRuleCheckUtil.createMonthDeclarationRuleCheckReportStatus(partialACDateTimeString);
 
-        Integer finalPartialACDateTime = partialACDateTime;
+        DateTimeUtil.BeginEnd be = DateTimeUtil.convertYearMonth(partialACDateTime);
         List<Long> zeroIdList = new ArrayList<>();
         zeroIdList.add(0L);
         List<Long> finalExcludeDisposals = nhiRuleCheckReportBody == null ||
@@ -189,7 +190,8 @@ public class NhiRuleCheckResource {
             try {
                 ImageGcsBusinessService imageGcsBusinessService = applicationContext.getBean(ImageGcsBusinessService.class);
                 String gcpUrl = nhiRuleCheckUtil.generateMonthDeclarationRuleCheckReport(
-                    finalPartialACDateTime,
+                    be.getBegin(),
+                    be.getEnd(),
                     finalExcludeDisposals,
                     imageGcsBusinessService
                 );

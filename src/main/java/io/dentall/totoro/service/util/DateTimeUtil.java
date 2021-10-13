@@ -7,10 +7,6 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 public final class DateTimeUtil {
@@ -353,5 +349,25 @@ public final class DateTimeUtil {
 
     public static Instant pastInstant(int pastDays) {
         return Instant.now().minus(pastDays, ChronoUnit.DAYS);
+    }
+
+    public static BeginEnd convertYearMonth(Integer yearMonth) {
+        BeginEnd be = new BeginEnd();
+        Instant begin = null;
+        Instant end = null;
+
+        try {
+            YearMonth ym = YearMonth.parse(String.valueOf(yearMonth));
+            begin = ym.atDay(1).atStartOfDay().toInstant(ZoneOffset.UTC);
+            end = ym.atEndOfMonth().atTime(OffsetTime.MAX).toInstant();
+        } catch(Exception e) {
+            begin = Instant.now();
+            end = Instant.now();
+        }
+
+        be.setBegin(begin);
+        be.setEnd(end);
+
+        return be;
     }
 }
