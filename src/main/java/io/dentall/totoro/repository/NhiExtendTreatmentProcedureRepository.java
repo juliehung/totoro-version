@@ -97,6 +97,7 @@ public interface NhiExtendTreatmentProcedureRepository extends JpaRepository<Nhi
             "left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
             "left join nhi_procedure np on np.id = tp.nhi_procedure_id " +
             "where d.date_time between :begin and :end " +
+            "and trim(ned.a18) <> '' " +
             "and ned.id is not null " +
             "and netp.treatment_procedure_id is not null " +
             "and d.id not in (:excludeDisposals) " +

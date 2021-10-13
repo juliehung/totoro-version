@@ -19,10 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.YearMonth;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -353,8 +350,8 @@ public class NhiExtendDisposalService {
     @Transactional(readOnly = true)
     public List<MonthDisposalVM> findByYearMonthForLazyNhiExtDis(YearMonth ym, Boolean toleranceA18) {
         Stream<MonthDisposalDAO> stream = nhiExtendDisposalRepository.findDisposalIdAndNhiExtendDisposalPrimByDateBetween(
-            ym.atDay(1).atStartOfDay(ZoneId.of("Asia/Taipei")).toInstant(),
-            ym.atEndOfMonth().atTime(LocalTime.MAX).toInstant(TimeConfig.ZONE_OFF_SET)
+            ym.atDay(1).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET),
+            ym.atEndOfMonth().atTime(OffsetTime.MAX).toInstant()
         ).stream()
             .filter(dao -> dao != null &&
                 dao.getDate() != null
