@@ -370,6 +370,10 @@ Metrics
 - 若要輸出至 log 可以調整 application-prod.yaml 的 jhipster.metrics.logs.enabled = true
 
 
+Cucumber
+---
+- Use glue `io.dentall.totoro.step_definitions` and `-Dspring.profiles.active=embedded-postgres` as vm option. Then you are good to go runing cucumber.
+
 [JHipster Homepage and latest documentation]: https://www.jhipster.tech
 [JHipster 5.4.0 archive]: https://www.jhipster.tech/documentation-archive/v5.4.0
 
