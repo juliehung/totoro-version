@@ -1,6 +1,7 @@
 package io.dentall.totoro.service.util;
 
 import io.dentall.totoro.config.TimeConfig;
+import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 
 import javax.validation.constraints.NotNull;
 import java.time.*;
@@ -34,7 +35,7 @@ public final class DateTimeUtil {
 
     public static enum QuarterMonth {
         SEASON_1(0, 1, 2, 3),
-        SEASON_2(1, 4, 5,6),
+        SEASON_2(1, 4, 5, 6),
         SEASON_3(2, 7, 8, 9),
         SEASON_4(3, 10, 11, 12),
         ;
@@ -69,7 +70,7 @@ public final class DateTimeUtil {
         public Integer getLastMonth() {
             return lastMonth;
         }
-    };
+    }
 
     public static final Period NHI_0_DAY = Period.ofDays(0);
 
@@ -360,7 +361,7 @@ public final class DateTimeUtil {
             YearMonth ym = YearMonth.parse(yearMonth);
             begin = ym.atDay(1).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET);
             end = ym.atEndOfMonth().atTime(OffsetTime.MAX).toInstant();
-        } catch(Exception e) {
+        } catch (Exception e) {
             begin = Instant.now();
             end = Instant.now();
         }
@@ -369,5 +370,63 @@ public final class DateTimeUtil {
         be.setEnd(end);
 
         return be;
+    }
+
+    public static LocalDate beginOfMonth(LocalDate date) {
+        return Instant.now()
+            .atOffset(TimeConfig.ZONE_OFF_SET)
+            .with(LocalTime.MIN)
+            .withYear(date.getYear())
+            .withMonth(date.getMonthValue())
+            .withDayOfMonth(1)
+            .toLocalDate();
+    }
+
+    public static LocalDate endOfMonth(LocalDate date) {
+        return Instant.now()
+            .atOffset(TimeConfig.ZONE_OFF_SET)
+            .with(LocalTime.MAX)
+            .withYear(date.getYear())
+            .withMonth(date.getMonthValue())
+            .withDayOfMonth(date.lengthOfMonth())
+            .toLocalDate();
+    }
+
+    public static LocalDate toLocalDate(Instant instant) {
+        return instant.atOffset(TimeConfig.ZONE_OFF_SET).toLocalDate();
+    }
+
+    public static boolean isSameMonth(LocalDate date) {
+        return LocalDate.now().getYear() == date.getYear() && LocalDate.now().getMonth() == date.getMonth();
+    }
+
+    public static String transformIntYyyymmToFormatedStringYyyymm(Integer yyyymm) {
+        String partialACDateTimeString = String.valueOf(yyyymm);
+
+        if (partialACDateTimeString.length() == 6) {
+            yyyymm = yyyymm - 191100;
+        } else {
+            throw new BadRequestAlertException(
+                "year month must be 6 digits",
+                "VALIDATION",
+                "as title"
+            );
+        }
+
+        partialACDateTimeString = partialACDateTimeString.substring(0, 4)
+            .concat("-")
+            .concat(
+                partialACDateTimeString.substring(4, 6)
+            );
+
+        return partialACDateTimeString;
+    }
+
+    public static String transformLocalDateToFormatedStringYyyymm(LocalDate date) {
+        return date.format(
+            DateTimeFormatter.ofPattern(
+                "yyyy-MM"
+            )
+        );
     }
 }

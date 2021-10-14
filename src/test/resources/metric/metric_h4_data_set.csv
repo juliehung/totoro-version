@@ -1,0 +1,10 @@
+disposalId, disposalDate,examCode,examPoint,treatmentProcedureCode,treatmentProcedureTotal,nhiOriginPoint,treatmentProcedureTooth,treatmentProcedureSurface,treatmentProcedureSpecificCode,cardNumber,nhiCategory,patientName,partialBurden
+1,2021-09-10,00121C,230,90001C,0,1210,14,M,,1,,Amy,
+2,2021-07-12,00121C,230,90002C,0,2410,15,M,,1,,Ben,
+3,2021-08-08,00121C,230,90003C,0,3610,1422,M,,1,,Amy,
+4,2021-09-11,00121C,230,90003C,0,3610,22,M,,1,,Cindy,
+5,2021-09-26,00121C,230,90003C,0,3610,31,M,,1,,Dabbie,
+6,2021-09-09,00121C,230,90015C,0,600,2715,M,,1,,Amy,
+7,2021-09-11,00121C,230,90015C,0,600,43,M,,1,,Ben,
+8,2021-05-10,00121C,230,90015C,0,600,2412,M,,1,,Ben,
+9,2021-04-09,00121C,230,90015C,0,600,27,M,,1,,Amy,

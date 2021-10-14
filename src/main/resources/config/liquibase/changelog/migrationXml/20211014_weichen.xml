@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20211014-weichen" author="WeiChen">
+        <sql>
+            UPDATE hospital
+            SET hospital_id = concat('0', hospital_id)
+            WHERE length(hospital_id) = 9;
+            UPDATE hospital
+            SET hospital_id = '350102E007'
+            WHERE id = 4161;
+            UPDATE hospital
+            SET hospital_id = '350102E212'
+            WHERE id = 4162;
+            UPDATE hospital
+            SET hospital_id = '350102E025'
+            WHERE id = 4163;
+            UPDATE hospital
+            SET hospital_id = '350102E034'
+            WHERE id = 4164;
+            UPDATE hospital
+            SET hospital_id = '350102E070'
+            WHERE id = 4165;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

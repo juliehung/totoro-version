@@ -133,6 +133,9 @@ logging:
 # ===================================================================
 
 # application:
+nhi:
+    metric:
+        maxLock: 5
 
 calendar:
     secret:
