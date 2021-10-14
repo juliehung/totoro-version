@@ -578,7 +578,7 @@ public class NhiRuleCheckScript89XXXC {
                 null,
                 null,
                 null,
-                NhiRuleCheckFormat.D1_1
+                NhiRuleCheckFormat.D1_3
             ),
             vm
         );
