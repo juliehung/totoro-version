@@ -108,26 +108,26 @@ Feature: 89011C 玻璃離子體充填
             | 89011C       | 51         | MOB          | 365      | 365             | 89014C         | 51           | NotPass   |
             | 89011C       | 51         | MOB          | 365      | 365             | 89015C         | 51           | NotPass   |
 
-    Scenario Outline: （HIS）未曾申報過 90007C 代碼
+    Scenario Outline: （HIS）同牙位未曾申報過 90007C 代碼
         Given 建立醫師
         Given Wind 24 歲病人
         Given 在過去第 <PastTreatmentDays> 天，建立預約
         Given 在過去第 <PastTreatmentDays> 天，建立掛號
         Given 在過去第 <PastTreatmentDays> 天，產生診療計畫
         And 新增診療代碼:
-            | PastDays            | A72 | A73                | A74 | A75 | A76 | A77 | A78 | A79 |
-            | <PastTreatmentDays> | 3   | <TreatmentNhiCode> | 54  | MOB | 0   | 1.0 | 03  |     |
+            | PastDays            | A72 | A73                | A74              | A75 | A76 | A77 | A78 | A79 |
+            | <PastTreatmentDays> | 3   | <TreatmentNhiCode> | <TreatmentTeeth> | MOB | 0   | 1.0 | 03  |     |
         Given 建立預約
         Given 建立掛號
         Given 產生診療計畫
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 任意時間點未曾申報過指定代碼 <TreatmentNhiCode>，確認結果是否為 <PassOrNot>
+        Then 任意時間點牙位 <IssueTeeth> 未曾申報過指定代碼 <TreatmentNhiCode>，確認結果是否為 <PassOrNot>
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | PassOrNot |
-            | 89011C       | 54         | DL           | 30                | 90007C           | NotPass   |
-            | 89011C       | 54         | DL           | 30                | 01271C           | Pass      |
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | PassOrNot |
+            | 89011C       | 51         | DL           | 30                | 90007C           | 51             | NotPass   |
+            | 89011C       | 51         | DL           | 30                | 90007C           | 52             | Pass      |
 
     Scenario Outline: （IC）未曾申報過 90007C 代碼
         Given 建立醫師

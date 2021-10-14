@@ -53,21 +53,11 @@ import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@CucumberContextConfiguration
-@ContextConfiguration(classes = {NhiMetricServiceTest.class, MetricTestInfoHolder.class, TimeConfig.class}, initializers = MetricStepDefinition.Initializer.class)
 public class MetricStepDefinition {
 
     private final ObjectMapper objectMapper = new ObjectMapper()
         .setNodeFactory(withExactBigDecimals(true))
         .enable(USE_BIG_DECIMAL_FOR_FLOATS);
-
-    static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            TestPropertyValues.of(
-                "zoneOffset=+08:00"
-            ).applyTo(configurableApplicationContext.getEnvironment());
-        }
-    }
 
     @Autowired
     private MetricTestInfoHolder metricTestInfoHolder;

@@ -15,21 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
-@CucumberContextConfiguration
-@SpringBootTest(classes = TotoroApp.class)
-//@TestPropertySource(locations = "classpath:/config/application.yml")
-@ContextConfiguration(initializers = AbstractStepDefinition.Initializer.class)
 public abstract class AbstractStepDefinition {
-
-    static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            TestPropertyValues.of(
-                "spring.datasource.url=jdbc:postgresql://localhost:5432/totoro",
-                "spring.datasource.username=totoro",
-                "spring.datasource.password=totoro"
-            ).applyTo(configurableApplicationContext.getEnvironment());
-        }
-    }
 
     @Autowired
     protected ObjectMapper objectMapper;
