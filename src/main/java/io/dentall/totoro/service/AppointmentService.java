@@ -311,8 +311,6 @@ public class AppointmentService {
         return dtoList.stream()
                 .map(appointmentDTO -> {
                     MonthAppointmentVM monthAppointmentVM = new MonthAppointmentVM(appointmentDTO);
-                    // TODO: 要從 domain 來根治 avatar 會從 db 被查詢，到時有要重新規劃在一同調整，暫時回傳簡單位元來減低延遲
-                    monthAppointmentVM.getDoctor().setAvatar("".getBytes(StandardCharsets.UTF_8));
                     monthAppointmentVM.setTags(handlePatientTag(tags, appointmentDTO));
                     return monthAppointmentVM;
                 })
