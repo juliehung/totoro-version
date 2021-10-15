@@ -4,11 +4,12 @@ import io.dentall.totoro.config.TimeConfig;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.NhiExtendDisposalUploadStatus;
 import io.dentall.totoro.repository.*;
-import io.dentall.totoro.repository.dao.MonthDisposalDAO;
+import io.dentall.totoro.service.dto.MonthDisposalDTO;
 import io.dentall.totoro.service.dto.table.*;
 import io.dentall.totoro.service.mapper.*;
 import io.dentall.totoro.service.util.StreamUtil;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
+import io.dentall.totoro.web.rest.vm.MonthDisposalCollectorVM;
 import io.dentall.totoro.web.rest.vm.MonthDisposalVM;
 import io.dentall.totoro.web.rest.vm.NhiExtendDisposalVM;
 import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
@@ -348,25 +349,31 @@ public class NhiExtendDisposalService {
     }
 
     @Transactional(readOnly = true)
-    public List<MonthDisposalVM> findByYearMonthForLazyNhiExtDis(YearMonth ym, Boolean toleranceA18) {
-        Stream<MonthDisposalDAO> stream = nhiExtendDisposalRepository.findDisposalIdAndNhiExtendDisposalPrimByDateBetween(
+    public List<MonthDisposalCollectorVM> findByYearMonthForLazyNhiExtDis(YearMonth ym, Boolean toleranceA18) {
+        return nhiExtendDisposalRepository.findDisposalIdAndNhiExtendDisposalPrimByDateBetween(
             ym.atDay(1).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET),
             ym.atEndOfMonth().atTime(OffsetTime.MAX).toInstant()
         ).stream()
-            .filter(dao -> dao != null &&
-                dao.getDate() != null
-            );
-
-        if (!Optional.ofNullable(toleranceA18).orElse(false)) {
-            stream = stream.filter(monthDisposalDAO -> StringUtils.isNotBlank(monthDisposalDAO.getA18()));
-        }
-
-        return stream.collect(Collectors.groupingBy(MonthDisposalDAO::getDisposalId))
+            .filter(d -> d != null &&
+                d.getDisposalDateTime() != null
+            )
+            .filter(d -> {
+                if (!Optional.ofNullable(toleranceA18).orElse(false)) {
+                    return StringUtils.isNotBlank(d.getA18());
+                } else {
+                    return true;
+                }
+            })
+            .collect(Collectors.groupingBy(MonthDisposalDTO::getDisposalId))
             .entrySet()
             .stream()
-            .map(e -> {
-                return new MonthDisposalVM(e.getKey(), e.getValue());
-            })
+            .map(d -> new MonthDisposalCollectorVM(
+                    d.getKey(),
+                    d.getValue().stream()
+                        .map(MonthDisposalVMMapper.INSTANCE::convertMonthDisposalDTO)
+                        .collect(Collectors.toList())
+                )
+            )
             .collect(Collectors.toList());
     }
 

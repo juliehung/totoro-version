@@ -9,6 +9,7 @@ import io.dentall.totoro.service.DisposalService;
 import io.dentall.totoro.service.NhiExtendDisposalService;
 import io.dentall.totoro.service.dto.NhiExtendDisposalCriteriaV2;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
+import io.dentall.totoro.web.rest.vm.MonthDisposalCollectorVM;
 import io.dentall.totoro.web.rest.vm.MonthDisposalVM;
 import io.dentall.totoro.web.rest.vm.NhiExtendDisposalVM;
 import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
@@ -106,7 +107,7 @@ public class NhiExtendDisposalResourceV2 {
 
     @GetMapping("/nhi-extend-disposals/yearmonth/{yyyymm}")
     @Timed
-    public ResponseEntity<List<MonthDisposalVM>> getAllByYYYYMM(
+    public ResponseEntity<List<MonthDisposalCollectorVM>> getAllByYYYYMM(
             @PathVariable Integer yyyymm,
             @RequestParam(required = false, name = "toleranceA18") Boolean toleranceA18 // 原始程式邏輯會用isNotBlank(A18)來過慮資料，如果不想過濾A18，請設定true
             ) {
