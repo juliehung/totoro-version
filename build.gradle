@@ -364,6 +364,7 @@ dependencies {
 
     // POI
     implementation group: 'org.apache.poi', name: 'poi', version: '5.0.0'
+    testCompile group: 'org.apache.poi', name: 'poi', version: '5.0.0'
 }
 
 task cucumber_nhi_rule() {
@@ -388,8 +389,8 @@ task cucumber_metric() {
         javaexec {
             main = "io.cucumber.core.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', 'html:build/reports/cucumber/cucumber-metric.html', '--plugin', 'de.monochromata.cucumber.report.PrettyReports:build/reports/cucumber/cucumber-metric', '--glue', 'io.dentall.totoro.step_definitions.metric', 'src/test/java/io/dentall/totoro/features/metric']
-            environment = ['cucumber.filter.tags': "${cucumberTags}"]
+            args = ['--plugin', 'html:build/reports/cucumber/cucumber-metric.html', '--plugin', 'de.monochromata.cucumber.report.PrettyReports:build/reports/cucumber/cucumber-metric', '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features/metric']
+            environment = ['spring.profiles.active': 'test,no-swagger,embedded-postgres', 'cucumber.filter.tags': "${cucumberTags}"]
         }
     }
 }
