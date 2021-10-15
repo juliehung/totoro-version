@@ -359,7 +359,7 @@ public final class DateTimeUtil {
         try {
             YearMonth ym = YearMonth.parse(yearMonth);
             begin = ym.atDay(1).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET);
-            end = ym.atEndOfMonth().atTime(OffsetTime.MAX).toInstant();
+            end = ym.atEndOfMonth().atTime(LocalTime.MAX).toInstant(TimeConfig.ZONE_OFF_SET);
         } catch(Exception e) {
             begin = Instant.now();
             end = Instant.now();

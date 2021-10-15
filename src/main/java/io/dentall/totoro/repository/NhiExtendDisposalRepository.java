@@ -311,6 +311,9 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
     )
     List<NhiExtendDisposal> findByDate(@Param("date") LocalDate date);
 
+    @Query("select ned from NhiExtendDisposal ned where trim(ned.a18) <> '' and ned.disposal.dateTime between :begin and :end ")
+    List<NhiExtendDisposal> findByDateBetween(@Param("begin") Instant begin, @Param("end") Instant end);
+
     @Query("select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where " + dateBetween)
     List<NhiExtendDisposal> findByDateBetween(@Param("start") LocalDate start, @Param("end") LocalDate end);
 

@@ -229,7 +229,10 @@ public class NhiExtendDisposalService {
         YearMonth ym = YearMonth.of(yyyymm / 100, yyyymm % 100);
 
         return nhiExtendDisposalRepository
-            .findByDateBetween(ym.atDay(1), ym.atEndOfMonth())
+            .findByDateBetween(
+                ym.atDay(1).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET),
+                ym.atEndOfMonth().atTime(LocalTime.MAX).toInstant(TimeConfig.ZONE_OFF_SET)
+            )
             .stream()
             .map(NhiExtendDisposalVM::new)
             .collect(Collectors.toList());
@@ -352,7 +355,7 @@ public class NhiExtendDisposalService {
     public List<MonthDisposalCollectorVM> findByYearMonthForLazyNhiExtDis(YearMonth ym, Boolean toleranceA18) {
         return nhiExtendDisposalRepository.findDisposalIdAndNhiExtendDisposalPrimByDateBetween(
             ym.atDay(1).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET),
-            ym.atEndOfMonth().atTime(OffsetTime.MAX).toInstant()
+            ym.atEndOfMonth().atTime(LocalTime.MAX).toInstant(TimeConfig.ZONE_OFF_SET)
         ).stream()
             .filter(d -> d != null &&
                 d.getDisposalDateTime() != null
