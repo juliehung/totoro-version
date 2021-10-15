@@ -408,7 +408,8 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
         "left join appointment a on a.registration_id = d.registration_id " +
         "left join patient p on p.id = a.patient_id " +
         "left join treatment_procedure tp on tp.id = ned.depended_treatment_procedure_id " +
-        "where d.date_time between :start and :end "
+        "where d.date_time between :start and :end " +
+        "and trim(ned.a18) <> '' "
     )
     List<MonthDisposalDTO> findDisposalIdAndNhiExtendDisposalPrimByDateBetween(@Param("start") Instant start, @Param("end") Instant end);
 

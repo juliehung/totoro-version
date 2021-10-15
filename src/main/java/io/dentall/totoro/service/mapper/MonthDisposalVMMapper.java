@@ -1,6 +1,5 @@
 package io.dentall.totoro.service.mapper;
 
-import io.dentall.totoro.business.service.nhi.metric.mapper.TimeLineDataMapper;
 import io.dentall.totoro.service.dto.MonthDisposalDTO;
 import io.dentall.totoro.web.rest.vm.MonthDisposalVM;
 import org.mapstruct.Mapper;
