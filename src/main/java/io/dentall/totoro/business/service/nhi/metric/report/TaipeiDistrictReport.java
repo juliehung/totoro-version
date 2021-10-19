@@ -36,7 +36,7 @@ public class TaipeiDistrictReport {
         row.createCell(0).setCellValue("醫療費用");
         row.createCell(1).setCellValue("合計點數");
         row = sheet.createRow(rowCounter++);
-        row.createCell(1).setCellValue("當季就醫病患平均耗用值");
+        row.createCell(1).setCellValue("當月就醫病患平均耗用值");
         row = sheet.createRow(rowCounter++);
         row.createCell(1).setCellValue("申報點數");
         row = sheet.createRow(rowCounter++);
@@ -48,7 +48,7 @@ public class TaipeiDistrictReport {
         // 補牙相關
         row = sheet.createRow(rowCounter++);
         row.createCell(0).setCellValue("補牙相關");
-        row.createCell(1).setCellValue("當季OD耗用值");
+        row.createCell(1).setCellValue("當月OD耗用值");
         row = sheet.createRow(rowCounter++);
         row.createCell(1).setCellValue("恆牙二年重補顆數");
         row = sheet.createRow(rowCounter++);
