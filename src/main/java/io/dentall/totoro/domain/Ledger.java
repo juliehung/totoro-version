@@ -31,7 +31,7 @@ public class Ledger implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @NotNull
+    @Deprecated
     @Column(name = "amount", nullable = false)
     private Double amount;
 
@@ -39,7 +39,7 @@ public class Ledger implements Serializable {
     @Column(name = "charge", nullable = false)
     private Double charge;
 
-    @NotNull
+    @Deprecated
     @Column(name = "arrears", nullable = false)
     private Double arrears;
 
@@ -47,24 +47,29 @@ public class Ledger implements Serializable {
     @Column(name = "note", length = 5100)
     private String note;
 
+    @Deprecated
     @Column(name = "doctor")
     private String doctor;
 
     @Column(name = "gid")
     private Long gid;
 
+    @Deprecated
     @Column(name = "display_name")
     private String displayName;
 
+    @Deprecated
     @Column(name = "project_code")
     private String projectCode;
 
+    @Deprecated
     @Column(name = "jhi_type")
     private String type;
 
     @Column(name = "jhi_date")
     private Instant date;
 
+    @Deprecated
     @Column(name = "patient_id")
     private Long patientId;
 
@@ -90,6 +95,7 @@ public class Ledger implements Serializable {
     @Column(name = "last_modified_by")
     private String lastModifiedBy;
 
+    @Deprecated
     @ManyToOne
     private TreatmentPlan treatmentPlan;
 
