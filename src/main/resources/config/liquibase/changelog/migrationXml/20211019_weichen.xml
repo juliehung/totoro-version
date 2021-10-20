@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20211019-weichen" author="WeiChen">
+        <sql>
+            update ledger as l
+            set gid = cast(e.ngid as bigint)
+            from (
+                select concat(gid, unnest(dpid)) as ngid, gid, unnest(dpid) upid
+                from (
+                  select gid, array_agg(distinct (dup)) dpid
+                  from (
+                    select a.gid as gid, array[a.patient_id] as dup
+                    from ledger a
+                    left join ledger b on a.gid = b.gid
+                    where a.patient_id != b.patient_id
+                  ) as c
+                  group by gid
+                ) as d
+            ) as e
+            where l.gid = e.gid and l.patient_id = e.upid
+        </sql>
+        <sql>
+            insert into ledger_group
+            (id, amount, patient_id, doctor_id, jhi_date, project_code, display_name, jhi_type, created_date, created_by, last_modified_date, last_modified_by)
+                (
+                    select l.gid, l.amount, l.patient_id, cast(l.doctor as bigint), l.jhi_date, l.project_code, l.display_name, l.jhi_type, jhi_date, 'system', jhi_date, 'system'
+                    from ledger l
+                             right join (
+                        select gid, patient_id, min(id) lheadid
+                        from ledger
+                        group by gid, patient_id
+                    ) as lhead on l.id = lhead.lheadid
+                )
+        </sql>
+        <sql>
+            alter table ledger alter amount drop not null;
+            alter table ledger alter arrears drop not null;
+        </sql>
+    </changeSet>
+</databaseChangeLog>
