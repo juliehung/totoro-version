@@ -63,7 +63,7 @@ public class EastDistrictReport {
             csm.get(
                 ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
             ),
-            "師申報點數"
+            "醫師申報點數"
         );
         ExcelUtil.createCellAndApplyStyle(
             sheet,
