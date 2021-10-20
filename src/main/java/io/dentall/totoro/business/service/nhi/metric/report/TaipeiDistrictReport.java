@@ -129,7 +129,7 @@ public class TaipeiDistrictReport {
         Sheet sheet
     ) {
         sheet.addMergedRegion(new CellRangeAddress(1, 4, 0, 0));
-        sheet.addMergedRegion(new CellRangeAddress(6, 14, 0, 0));
+        sheet.addMergedRegion(new CellRangeAddress(6, 10, 0, 0));
     }
 
     private void applySheetTemplate(
