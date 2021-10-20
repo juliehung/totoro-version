@@ -14,7 +14,6 @@ public class MetricTreatment implements NhiMetricRawVM {
 
     Long disposalId;
 
-    // jhi_date
     LocalDate disposalDate;
 
     // A18
@@ -29,7 +28,6 @@ public class MetricTreatment implements NhiMetricRawVM {
     // A32
     String partialBurden;
 
-    // replenishment date
     LocalDate cardReplenishmentDisposalDate;
 
     String examCode;

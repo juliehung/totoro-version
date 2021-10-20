@@ -21,7 +21,7 @@ public abstract class OdPermanentByPatientSource extends AbstractSource<Map<Long
         "99"
     ));
 
-    public OdPermanentByPatientSource(Source<?, ?> inputSource) {
+    public OdPermanentByPatientSource(Source<MetricTooth, ?> inputSource) {
         super(inputSource);
     }
 

@@ -1,41 +1,32 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricDisposal;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
-import java.util.Optional;
-
-import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.maxBy;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * 部分負擔點數
  */
 public class Point4 extends SingleSourceMetaCalculator<Long> {
 
-    public Point4(MetricConfig metricConfig, Source<?, ?> source) {
+    public Point4(MetricConfig metricConfig, Source<MetricDisposal, MetricDisposal> source) {
         this(metricConfig, null, source);
     }
 
-    public Point4(MetricConfig metricConfig, MetaConfig config, Source<?, ?> source) {
+    public Point4(MetricConfig metricConfig, MetaConfig config, Source<MetricDisposal, MetricDisposal> source) {
         super(metricConfig, config, source);
     }
 
     @Override
     public Long doCalculate(MetricConfig metricConfig) {
-        List<MetricTooth> source = metricConfig.retrieveSource(source().key());
+        List<MetricDisposal> source = metricConfig.retrieveSource(source().key());
 
         return source.stream()
-            .filter(vm -> isNotBlank(vm.getPartialBurden()))
-            .collect(groupingBy(MetricTooth::getDisposalId, maxBy(comparing(MetricTooth::getDisposalId))))
-            .values().stream()
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .map(MetricTooth::getPartialBurden)
+            .map(MetricDisposal::getPartialBurden)
+            .filter(StringUtils::isNotBlank)
             .map(Long::valueOf)
             .reduce(Long::sum)
             .orElse(0L);

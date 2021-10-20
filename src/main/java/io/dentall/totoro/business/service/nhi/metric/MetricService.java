@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstants.CLINIC_ID;
 import static io.dentall.totoro.business.service.nhi.metric.source.MetricSubjectType.clinic;
@@ -37,6 +38,7 @@ import static io.dentall.totoro.service.util.DateTimeUtil.getCurrentQuarterMonth
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
@@ -83,7 +85,7 @@ public class MetricService implements ApplicationContextAware {
         DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
         List<MetricSubject> subjects = findAllSubject(user);
         Instant begin = quarterRange.getBegin().minus(1095, DAYS); // 季 + 三年(1095)
-        List<MetricTooth> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
+        List<MetricDisposal> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
         int baseYear = baseDate.getYear();
         Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2, baseYear - 3);
 
@@ -239,12 +241,12 @@ public class MetricService implements ApplicationContextAware {
             return new CompositeDistrictDto();
         }
 
-        doctorIds = Optional.ofNullable(doctorIds).orElse(emptyList());
+        doctorIds = ofNullable(doctorIds).orElse(emptyList());
         excludeDisposalIds = ofNullable(excludeDisposalIds).filter(list -> list.size() > 0).orElse(singletonList(0L));
         List<MetricSubject> subjects = doctorIds.size() == 0 ? findAllSubject(user) : findSpecificSubject(user, doctorIds);
         DateTimeUtil.BeginEnd quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
         Instant begin = quarterRange.getBegin().minus(1095, DAYS); // 季 + 三年(1095)
-        List<MetricTooth> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
+        List<MetricDisposal> source = fetchSource(begin, quarterRange.getEnd(), excludeDisposalIds);
         int baseYear = baseDate.getYear();
         Map<LocalDate, Optional<Holiday>> holidayMap = getHolidayMap(holidayService, baseYear, baseYear - 1, baseYear - 2, baseYear - 3);
 
@@ -269,7 +271,7 @@ public class MetricService implements ApplicationContextAware {
     }
 
     private List<Optional<? extends DistrictDto>> runMetricService(MetricConfig metricConfig, List<Class<? extends DistrictService>> metricServiceClass) {
-        List<MetricTooth> subSource = metricConfig.retrieveSource(metricConfig.getSubjectSource().key());
+        List<MetricDisposal> subSource = metricConfig.retrieveSource(metricConfig.getSubjectSource().key());
         return metricServiceClass.parallelStream()
             .map(clz -> applicationContext.getBean(clz))
             .map(service -> service.metric(metricConfig.getBaseDate(), metricConfig.getMetricSubject(), subSource, metricConfig.getHolidayMap()))
@@ -293,25 +295,37 @@ public class MetricService implements ApplicationContextAware {
         return districtMetricMap.getOrDefault(clz, new ArrayList<>()).stream().map(clz::cast).collect(toList());
     }
 
-    private List<MetricTooth> fetchSource(Instant begin, Instant end, List<Long> excludeDisposalIds) {
+    private List<MetricDisposal> fetchSource(Instant begin, Instant end, List<Long> excludeDisposalIds) {
         List<NhiMetricRawVM> source = nhiExtendDisposalRepository.findMetricRaw(
             begin,
             end,
             excludeDisposalIds
         );
 
-        return source.parallelStream()
+        Collection<MetricDisposal> disposals = source.stream().parallel()
             .map(NhiMetricRawMapper.INSTANCE::mapToMetricTreatment)
-            .map(treatment -> {
-                List<String> teeth = splitA74(treatment.getTreatmentProcedureTooth());
-                List<MetricTooth> metricToothList = new ArrayList<>(teeth.size());
-                teeth.forEach(tooth -> {
-                    MetricTooth metricTooth = new MetricTooth(treatment, tooth);
-                    metricToothList.add(metricTooth);
-                });
-                return metricToothList;
-            }).flatMap(Collection::stream)
-            .collect(toList());
+            .reduce(new ConcurrentHashMap<Long, MetricDisposal>(source.size() / 2), (map, treatment) -> {
+                    MetricDisposal disposal = ofNullable(map.get(treatment.getDisposalId())).orElse(NhiMetricRawMapper.INSTANCE.mapToMetricDisposal(treatment));
+                    if (nonNull(treatment.getTreatmentProcedureCode())) {
+                        List<String> teeth = splitA74(treatment.getTreatmentProcedureTooth());
+                        teeth.forEach(tooth -> disposal.addTooth(new MetricTooth(treatment, tooth)));
+                    }
+                    map.putIfAbsent(disposal.getDisposalId(), disposal);
+                    return map;
+                },
+                (map1, map2) -> {
+                    map1.putAll(map2);
+                    return map1;
+                })
+            .values();
+
+        disposals.stream().parallel().forEach(disposal -> {
+            if (disposal.getToothList().size() == 0) {
+                disposal.setToothList(emptyList());
+            }
+        });
+
+        return new ArrayList<>(disposals);
     }
 
     private List<MetricSubject> findSpecificSubject(User user, List<Long> subjectIds) {

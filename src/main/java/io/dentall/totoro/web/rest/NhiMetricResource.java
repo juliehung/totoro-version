@@ -3,7 +3,7 @@ package io.dentall.totoro.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.business.service.ImageGcsBusinessService;
 import io.dentall.totoro.business.service.nhi.metric.*;
-import io.dentall.totoro.business.service.nhi.metric.dto.*;
+import io.dentall.totoro.business.service.nhi.metric.dto.CompositeDistrictDto;
 import io.dentall.totoro.business.service.nhi.metric.vm.MetricLVM;
 import io.dentall.totoro.business.vm.nhi.NhiMetricReportBodyVM;
 import io.dentall.totoro.business.vm.nhi.NhiMetricReportQueryStringVM;
@@ -31,6 +31,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
+
+import static java.util.Arrays.asList;
 
 @RestController
 @RequestMapping("/api/nhi/metric")
@@ -78,6 +80,19 @@ public class NhiMetricResource {
         map.put("metrics", vm);
 
         return ResponseEntity.ok().body(map);
+    }
+
+    @GetMapping("/composite-metric")
+    @Timed
+    public ResponseEntity<CompositeDistrictDto> getCompositeMetric(
+        @RequestParam LocalDate begin,
+        @RequestParam(required = false) List<Long> excludeDisposalIds) {
+        log.debug("REST request to getCompositeMetric : begin={}, excludeDisposalId={}", begin, excludeDisposalIds);
+
+        Optional<User> currentUser = userService.getUserWithAuthorities();
+        CompositeDistrictDto vm = metricService.getCompositeDistrictMetric(begin, excludeDisposalIds, new ArrayList<>(), asList(SouthDistrictService.class), currentUser.get());
+
+        return ResponseEntity.ok().body(vm);
     }
 
     @PostMapping("/report")

@@ -1,38 +1,50 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricDisposal;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 import io.dentall.totoro.domain.Holiday;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.isHoliday;
 
 /**
  * 診療費
  */
-public class Point1ByDaily extends SingleSourceMetaCalculator<Map<LocalDate, Long>> {
+public class Point1ByDaily extends AbstractMetaCalculator<Map<LocalDate, Long>> {
 
-    public Point1ByDaily(MetricConfig metricConfig, Source<?, ?> source) {
-        this(metricConfig, null, source);
+    private final Source<MetricTooth, Map<LocalDate, List<MetricTooth>>> source;
+
+    private final Source<MetricDisposal, Map<LocalDate, List<MetricDisposal>>> disposalSource;
+
+    public Point1ByDaily(
+        MetricConfig metricConfig,
+        Source<MetricTooth, Map<LocalDate, List<MetricTooth>>> source,
+        Source<MetricDisposal, Map<LocalDate, List<MetricDisposal>>> disposalSource) {
+        this(metricConfig, null, source, disposalSource);
     }
 
-    public Point1ByDaily(MetricConfig metricConfig, MetaConfig metaConfig, Source<?, ?> source) {
-        super(metricConfig, metaConfig, source);
+    public Point1ByDaily(
+        MetricConfig metricConfig,
+        MetaConfig metaConfig,
+        Source<MetricTooth, Map<LocalDate, List<MetricTooth>>> source,
+        Source<MetricDisposal, Map<LocalDate, List<MetricDisposal>>> disposalSource) {
+        super(metricConfig, metaConfig, new Source[]{source, disposalSource});
+        this.source = source;
+        this.disposalSource = disposalSource;
     }
 
     @Override
     public Map<LocalDate, Long> doCalculate(MetricConfig metricConfig) {
         MetaConfig config = getConfig();
-        Exam1ByDaily exam1 = new Exam1ByDaily(metricConfig, config, source()).apply();
-        Exam2ByDaily exam2 = new Exam2ByDaily(metricConfig, config, source()).apply();
-        Exam3ByDaily exam3 = new Exam3ByDaily(metricConfig, config, source()).apply();
-        Exam4ByDaily exam4 = new Exam4ByDaily(metricConfig, config, source()).apply();
-        Point3ByDaily point3 = new Point3ByDaily(metricConfig, config, source()).apply();
+        Exam1ByDaily exam1 = new Exam1ByDaily(metricConfig, config, disposalSource).apply();
+        Exam2ByDaily exam2 = new Exam2ByDaily(metricConfig, config, disposalSource).apply();
+        Exam3ByDaily exam3 = new Exam3ByDaily(metricConfig, config, disposalSource).apply();
+        Exam4ByDaily exam4 = new Exam4ByDaily(metricConfig, config, disposalSource).apply();
+        Point3ByDaily point3 = new Point3ByDaily(metricConfig, config, source).apply();
 
         Map<LocalDate, Long> exam1Map = exam1.getResult();
         Map<LocalDate, Long> exam2Map = exam2.getResult();

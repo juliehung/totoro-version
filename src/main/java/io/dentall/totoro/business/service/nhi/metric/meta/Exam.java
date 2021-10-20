@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricDisposal;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
@@ -39,33 +39,33 @@ public abstract class Exam<T> extends SingleSourceMetaCalculator<T> {
     }
 
     protected Long doCalculatePurge(MetricConfig metricConfig, List<String> codes) {
-        List<MetricTooth> source = metricConfig.retrieveSource(source().key());
+        List<MetricDisposal> source = metricConfig.retrieveSource(source().key());
         return calculatePurge(source, codes, getConfig(), metricConfig.getHolidayMap());
     }
 
     protected Long doCalculateRegular(MetricConfig metricConfig, List<String> codes) {
-        List<MetricTooth> source = metricConfig.retrieveSource(source().key());
+        List<MetricDisposal> source = metricConfig.retrieveSource(source().key());
         checkPoint6(metricConfig);
         return calculateExamRegular(source, codes, getConfig(), metricConfig.getHolidayMap());
     }
 
     protected Long doCalculateDifference(MetricConfig metricConfig, List<String> codes) {
-        List<MetricTooth> source = metricConfig.retrieveSource(source().key());
+        List<MetricDisposal> source = metricConfig.retrieveSource(source().key());
         return calculateExamDifference(source, codes);
     }
 
-    protected Map<Long, Long> doCalculateByClassifier(MetricConfig metricConfig, List<String> codes, Function<MetricTooth, Long> classifier) {
-        List<MetricTooth> source = metricConfig.retrieveSource(source().key());
+    protected Map<Long, Long> doCalculateByClassifier(MetricConfig metricConfig, List<String> codes, Function<MetricDisposal, Long> classifier) {
+        List<MetricDisposal> source = metricConfig.retrieveSource(source().key());
         checkPoint6(metricConfig);
         return calculateExamByClassifier(source, codes, classifier, getConfig(), metricConfig.getHolidayMap());
     }
 
     protected Map<LocalDate, Long> doCalculateByDaily(MetricConfig metricConfig, List<String> codes) {
-        List<Map<LocalDate, List<MetricTooth>>> source = metricConfig.retrieveSource(source().key());
+        List<Map<LocalDate, List<MetricDisposal>>> source = metricConfig.retrieveSource(source().key());
         return source.get(0).entrySet().stream().reduce(new HashMap<>(),
             (map, entry) -> {
                 LocalDate date = entry.getKey();
-                List<MetricTooth> sourceByDate = entry.getValue();
+                List<MetricDisposal> sourceByDate = entry.getValue();
                 Long points = calculateExamRegular(sourceByDate, codes, getConfig(), metricConfig.getHolidayMap());
                 map.put(date, points);
                 return map;

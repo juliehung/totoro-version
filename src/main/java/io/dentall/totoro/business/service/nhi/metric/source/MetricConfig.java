@@ -1,18 +1,18 @@
 package io.dentall.totoro.business.service.nhi.metric.source;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricDisposal;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Meta;
 import io.dentall.totoro.domain.Holiday;
 import io.dentall.totoro.service.util.DateTimeUtil;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static io.dentall.totoro.service.util.DateTimeUtil.convertLocalDateToBeginOfDayInstant;
 import static io.dentall.totoro.service.util.DateTimeUtil.getCurrentQuarterMonthsRangeInstant;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 
 
 public class MetricConfig {
@@ -23,7 +23,9 @@ public class MetricConfig {
 
     private final Map<LocalDate, Optional<Holiday>> holidayMap = new HashMap<>(500);
 
-    private final Source<?, ?> initialSource = new InitialSource();
+    private final Source<MetricTooth, ?> toothSource = new ToothSource();
+
+    private final Source<MetricDisposal, ?> disposalSource = new DisposalSource();
 
     private final LocalDate baseDate;
 
@@ -33,7 +35,7 @@ public class MetricConfig {
 
     private final MetricSubjectType subjectType;
 
-    public MetricConfig(MetricSubject metricSubject, LocalDate baseDate, List<?> source) {
+    public MetricConfig(MetricSubject metricSubject, LocalDate baseDate, List<MetricDisposal> source) {
         if (metricSubject == null) {
             throw new IllegalArgumentException("metricSubject can not be null");
         }
@@ -46,9 +48,15 @@ public class MetricConfig {
         this.metricSubject = metricSubject;
         this.baseDate = baseDate;
         this.quarterRange = getCurrentQuarterMonthsRangeInstant(convertLocalDateToBeginOfDayInstant(baseDate));
-        this.cached.put(this.initialSource.key(), source);
+        this.cached.put(this.disposalSource.key(), source);
+        this.cached.put(this.toothSource.key(), mapTo(source));
         this.subjectType = metricSubject.getSubjectType();
         apply(this.metricSubject.getSource(this));
+        apply(this.metricSubject.getDisposalSource(this));
+    }
+
+    private List<MetricTooth> mapTo(List<MetricDisposal> source) {
+        return source.stream().parallel().map(MetricDisposal::getToothList).flatMap(Collection::stream).collect(toList());
     }
 
     public MetricConfig apply(Source<?, ?> source) {
@@ -64,16 +72,24 @@ public class MetricConfig {
         return this;
     }
 
-    public Source<?, ?> getInitialSource() {
-        return initialSource;
+    public Source<MetricTooth, ?> getToothSource() {
+        return toothSource;
+    }
+
+    public Source<MetricDisposal, ?> getDisposalSource() {
+        return disposalSource;
     }
 
     public MetricSubject getMetricSubject() {
         return metricSubject;
     }
 
-    public Source<?, ?> getSubjectSource() {
+    public Source<MetricTooth, ?> getSubjectSource() {
         return this.metricSubject.getSource(this);
+    }
+
+    public Source<MetricDisposal, ?> getSubjectDisposalSource() {
+        return this.metricSubject.getDisposalSource(this);
     }
 
     public MetricSubjectType getSubjectType() {

@@ -1,27 +1,43 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricDisposal;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Point2ByDaily extends SingleSourceMetaCalculator<Map<LocalDate, Long>> {
+public class Point2ByDaily extends AbstractMetaCalculator<Map<LocalDate, Long>> {
 
-    public Point2ByDaily(MetricConfig metricConfig, Source<?, ?> source) {
-        this(metricConfig, null, source);
+    private final Source<MetricTooth, Map<LocalDate, List<MetricTooth>>> source;
+
+    private final Source<MetricDisposal, Map<LocalDate, List<MetricDisposal>>> disposalSource;
+
+    public Point2ByDaily(
+        MetricConfig metricConfig,
+        Source<MetricTooth, Map<LocalDate, List<MetricTooth>>> source,
+        Source<MetricDisposal, Map<LocalDate, List<MetricDisposal>>> disposalSource) {
+        this(metricConfig, null, source, disposalSource);
     }
 
-    public Point2ByDaily(MetricConfig metricConfig, MetaConfig metaConfig, Source<?, ?> source) {
-        super(metricConfig, metaConfig, source);
+    public Point2ByDaily(
+        MetricConfig metricConfig,
+        MetaConfig metaConfig,
+        Source<MetricTooth, Map<LocalDate, List<MetricTooth>>> source,
+        Source<MetricDisposal, Map<LocalDate, List<MetricDisposal>>> disposalSource) {
+        super(metricConfig, metaConfig, new Source[]{source, disposalSource});
+        this.source = source;
+        this.disposalSource = disposalSource;
     }
 
     @Override
     public Map<LocalDate, Long> doCalculate(MetricConfig metricConfig) {
-        Point1ByDaily point1 = new Point1ByDaily(metricConfig, source()).apply();
-        Point4ByDaily point4 = new Point4ByDaily(metricConfig, source()).apply();
+        Point1ByDaily point1 = new Point1ByDaily(metricConfig, source, disposalSource).apply();
+        Point4ByDaily point4 = new Point4ByDaily(metricConfig, disposalSource).apply();
         Map<LocalDate, Long> point1Map = point1.getResult();
         Map<LocalDate, Long> point4Map = point4.getResult();
 

@@ -1,6 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
-import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricDisposal;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
@@ -14,13 +14,13 @@ import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstan
  */
 public class Exam2ByClassifier extends Exam<Map<Long, Long>> {
 
-    private final Function<MetricTooth, Long> classifier;
+    private final Function<MetricDisposal, Long> classifier;
 
-    public Exam2ByClassifier(MetricConfig metricConfig, Source<?, ?> source, Function<MetricTooth, Long> classifier) {
+    public Exam2ByClassifier(MetricConfig metricConfig, Source<?, ?> source, Function<MetricDisposal, Long> classifier) {
         this(metricConfig, null, source, classifier);
     }
 
-    public Exam2ByClassifier(MetricConfig metricConfig, MetaConfig config, Source<?, ?> source, Function<MetricTooth, Long> classifier) {
+    public Exam2ByClassifier(MetricConfig metricConfig, MetaConfig config, Source<?, ?> source, Function<MetricDisposal, Long> classifier) {
         super(metricConfig, config, source);
         this.classifier = classifier;
     }

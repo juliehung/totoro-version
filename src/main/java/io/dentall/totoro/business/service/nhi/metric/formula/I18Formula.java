@@ -17,6 +17,7 @@ import static java.math.BigDecimal.ZERO;
 
 /**
  * (季)O.D.點數佔總點數之百分比
+ *
  * @ date-10@ (@OD-1@/@Point-3@)*100%
  */
 public class I18Formula extends AbstractFormula<BigDecimal> {

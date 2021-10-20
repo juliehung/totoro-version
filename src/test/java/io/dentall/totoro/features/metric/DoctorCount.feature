@@ -12,5 +12,5 @@ Feature: 醫師人數
             |            | 2020-05-13   | 00315C   | 635       | 89110C | 1000  | 1000        | 11    | MOD     | OTHER        | 001        |             | Kevin      | Jerry       | 50            |                 |              |
             |            | 2020-05-13   | 00316C   | 635       | 89111C | 400   | 400         | 11    | MOD     | OTHER        | 001        |             | Stan       | Jerry       | 50            |                 |              |
             |            | 2020-05-13   | 00317C   | 635       | 89112C | 1050  | 1050        | 11    | MOD     | OTHER        | 001        |             | Sam        | Jerry       | 50            |                 |              |
-        Then 指定執行日期 2020-05-01，來源資料使用 MonthSelectedSource，檢查 DoctorCount，計算結果數值應為 3
+        Then 指定執行日期 2020-05-01，來源資料使用 MonthSelectedDisposalSource，檢查 DoctorCount，計算結果數值應為 3
 

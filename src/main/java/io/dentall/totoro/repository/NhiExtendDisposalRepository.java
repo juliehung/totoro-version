@@ -1,8 +1,8 @@
 package io.dentall.totoro.repository;
 
 import io.dentall.totoro.business.repository.RemappingDomainToTableDtoRepository;
-import io.dentall.totoro.business.vm.nhi.NhiMetricBaseVM;
 import io.dentall.totoro.business.service.nhi.NhiHybridRecord;
+import io.dentall.totoro.business.vm.nhi.NhiMetricBaseVM;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.NhiExtendDisposal;
 import io.dentall.totoro.repository.dao.MonthDisposalDAO;
@@ -776,11 +776,9 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
             "left join jhi_user ju on eu.user_id = ju.id " +
             "where ned.a19 = '1' and ned.jhi_date between :begin and :end " +
             "   and d.id not in :excludeDisposalIds " +
-            "   and tp.nhi_procedure_id is not null " +
             "   and trim(ned.a18) <> '' " +
             "or ned.a19 = '2' and ned.replenishment_date between :begin and :end " +
             "   and d.id not in :excludeDisposalIds " +
-            "   and tp.nhi_procedure_id is not null " +
             "   and trim(ned.a18) <> '' "
     )
     @Transactional(readOnly = true)

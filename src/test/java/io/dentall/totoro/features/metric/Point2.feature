@@ -9,7 +9,7 @@ Feature: 申請點數
             |            | 2020-05-13   | 00315C   | 635       | 89110C | 1000  | 1000        | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
             |            | 2020-05-13   | 00316C   | 635       | 89111C | 400   | 400         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
             |            | 2020-05-13   | 00317C   | 635       | 89112C | 1050  | 1050        | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
-        Then 指定執行日期 2020-05-01，來源資料使用 MonthSelectedSource，檢查 Point2，計算結果數值應為 4205
+        Then 指定執行日期 2020-05-01，來源資料使用 MonthSelectedSource／MonthSelectedDisposalSource，檢查 Point2，計算結果數值應為 4205
 
     Scenario: 計算Point2ByDaily點數
         Given 設定指標主體類型為醫師 Stan
@@ -22,7 +22,7 @@ Feature: 申請點數
             |            | 2020-05-02   | 00316C   | 100       | 89111C | 400   | 400         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
             |            | 2020-05-03   | 00317C   | 100       | 89112C | 1050  | 1050        | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
             |            | 2020-05-03   | 00317C   | 100       | 89112C | 1050  | 1050        | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
-        Then 指定執行日期 2020-05-01，來源資料使用 DailyByMonthSelectedSource，檢查 Point2ByDaily，每日數值
+        Then 指定執行日期 2020-05-01，來源資料使用 DailyByMonthSelectedSource／DailyByMonthSelectedDisposalSource，檢查 Point2ByDaily，每日數值
             | Date       | Value |
             | 2020-05-01 | 2100  |
             | 2020-05-02 | 900   |
