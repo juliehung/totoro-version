@@ -3002,4 +3002,20 @@ public class NhiRuleCheckUtil {
 
         return result;
     }
+
+    public NhiRuleCheckResultDTO appendCodeNotExistDanger(
+        String code
+    ) {
+        NhiRuleCheckResultDTO result = new NhiRuleCheckResultDTO();
+        result.validated(true)
+            .nhiRuleCheckInfoType(NhiRuleCheckInfoType.DANGER)
+            .message(
+                String.format(
+                    "%s: 代碼不存在",
+                    code
+                )
+            );
+
+        return result;
+    }
 }

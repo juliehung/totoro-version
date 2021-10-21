@@ -14,6 +14,7 @@ import io.dentall.totoro.business.vm.nhi.NhiRuleCheckBody;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckTxSnapshot;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
+import io.dentall.totoro.repository.NhiProcedureRepository;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.step_definitions.holders.*;
 import io.dentall.totoro.test.TestUtils;
@@ -81,12 +82,16 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
     @Autowired
     private ApplicationContext applicationContext;
 
+    @Autowired
+    private NhiProcedureRepository nhiProcedureRepository;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         final NhiRuleCheckResource resource = new NhiRuleCheckResource(
             nhiRuleCheckUtil,
-            applicationContext
+            applicationContext,
+            nhiProcedureRepository
         );
         this.mvc = MockMvcBuilders.standaloneSetup(resource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
