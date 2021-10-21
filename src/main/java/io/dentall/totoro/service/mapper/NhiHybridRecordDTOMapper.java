@@ -13,8 +13,8 @@ public interface NhiHybridRecordDTOMapper {
     NhiHybridRecordDTOMapper INSTANCE = Mappers.getMapper( NhiHybridRecordDTOMapper.class );
 
     @Mapping(constant = "IC", target = "recordSource")
-    @Mapping(constant = "0", target = "disposalId")
-    @Mapping(constant = "0", target = "doctorId")
+    @Mapping(constant = "0L", target = "disposalId")
+    @Mapping(constant = "0L", target = "doctorId")
     @Mapping(target = "recordDateTime", expression = "java( io.dentall.totoro.service.util.DateTimeUtil.transformROCDateToLocalDate(nmr.getDate()) )")
     @Mapping(source = "nhiCode", target = "code")
     @Mapping(source = "part", target = "tooth")
