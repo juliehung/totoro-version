@@ -187,7 +187,7 @@ public class EastDistrictReport {
         rowCounter++;
 
         // 專業醫療服務品質項目-資料
-        EastDistrictDto content1 = contents.get(0);
+        EastDistrictDto content1 = contents.stream().filter(dto -> "clinic".equals(dto.getType().name())).findAny().get();
 
         sheet.createRow(rowCounter);
         Double data1 = content1.getG8h1().doubleValue() / 100;

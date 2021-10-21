@@ -271,7 +271,7 @@ public class MetricService implements ApplicationContextAware {
     }
 
     private List<Optional<? extends DistrictDto>> runMetricService(MetricConfig metricConfig, List<Class<? extends DistrictService>> metricServiceClass) {
-        List<MetricDisposal> subSource = metricConfig.retrieveSource(metricConfig.getSubjectSource().key());
+        List<MetricDisposal> subSource = metricConfig.retrieveSource(metricConfig.getSubjectDisposalSource().key());
         return metricServiceClass.parallelStream()
             .map(clz -> applicationContext.getBean(clz))
             .map(service -> service.metric(metricConfig.getBaseDate(), metricConfig.getMetricSubject(), subSource, metricConfig.getHolidayMap()))
