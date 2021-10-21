@@ -182,46 +182,10 @@ public class LedgerResourceIntTest {
 
     @Test
     @Transactional
-    public void checkAmountIsRequired() throws Exception {
-        int databaseSizeBeforeTest = ledgerRepository.findAll().size();
-        // set the field null
-        ledger.setAmount(null);
-
-        // Create the Ledger, which fails.
-
-        restLedgerMockMvc.perform(post("/api/ledgers")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(ledger)))
-            .andExpect(status().isBadRequest());
-
-        List<Ledger> ledgerList = ledgerRepository.findAll();
-        assertThat(ledgerList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void checkChargeIsRequired() throws Exception {
         int databaseSizeBeforeTest = ledgerRepository.findAll().size();
         // set the field null
         ledger.setCharge(null);
-
-        // Create the Ledger, which fails.
-
-        restLedgerMockMvc.perform(post("/api/ledgers")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(ledger)))
-            .andExpect(status().isBadRequest());
-
-        List<Ledger> ledgerList = ledgerRepository.findAll();
-        assertThat(ledgerList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkArrearsIsRequired() throws Exception {
-        int databaseSizeBeforeTest = ledgerRepository.findAll().size();
-        // set the field null
-        ledger.setArrears(null);
 
         // Create the Ledger, which fails.
 
