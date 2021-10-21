@@ -1,56 +1,42 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.DisposalSummaryDto;
-import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricDisposal;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.maxBy;
 
 /**
  *
  */
 public class DisposalSummary extends AbstractMetaSummary<DisposalSummaryDto> {
 
-    public DisposalSummary(MetricConfig metricConfig, Source<?, ?> source) {
-        super(metricConfig, source);
+    private final Source<MetricDisposal, MetricDisposal> disposalSource;
+
+    public DisposalSummary(MetricConfig metricConfig, Source<MetricDisposal, MetricDisposal> disposalSource) {
+        super(metricConfig, null, new Source[]{disposalSource});
+        this.disposalSource = disposalSource;
     }
 
     @Override
     public List<DisposalSummaryDto> doCalculate(MetricConfig metricConfig) {
-        List<MetricTooth> source = metricConfig.retrieveSource(source().key());
-        Map<Long, List<MetricTooth>> sourceByDisposal = source.stream().collect(groupingBy(MetricTooth::getDisposalId));
+        List<MetricDisposal> source = metricConfig.retrieveSource(disposalSource.key());
 
-        return sourceByDisposal.entrySet().stream()
+        return source.stream()
             .reduce(new ArrayList<DisposalSummaryDto>(),
-                (list, entry) -> {
-                    List<MetricTooth> subSource = entry.getValue();
-                    Map<Long, Optional<MetricTooth>> disposalList =
-                        subSource.stream().collect(groupingBy(MetricTooth::getDisposalId, maxBy(comparing(MetricTooth::getDisposalId))));
-
+                (list, disposal) -> {
                     DisposalSummaryDto result = new DisposalSummaryDto();
-                    summaryByTreatment(result, subSource);
-
-                    disposalList.values().stream()
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .forEach(vm -> {
-                                result.setDisposalId(vm.getDisposalId());
-                                result.setDisposalDate(vm.getDisposalDate());
-                                result.setPatientId(vm.getPatientId());
-                                result.setPatientName(vm.getPatientName());
-                                summaryByDisposal(result, vm);
-                            }
-                        );
-
+                    result.setDisposalId(disposal.getDisposalId());
+                    result.setDisposalDate(disposal.getDisposalDate());
+                    result.setPatientId(disposal.getPatientId());
+                    result.setPatientName(disposal.getPatientName());
+                    summaryByTreatment(result, disposal.getToothList());
+                    summaryByDisposal(result, disposal);
                     list.add(result);
                     return list;
                 },

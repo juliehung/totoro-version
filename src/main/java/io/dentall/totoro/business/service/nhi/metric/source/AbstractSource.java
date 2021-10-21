@@ -14,11 +14,11 @@ public abstract class AbstractSource<R> implements Source<MetricTooth, R> {
 
     private Exclude exclude;
 
-    public AbstractSource(Source<?, ?> inputSource) {
+    public AbstractSource(Source<MetricTooth, ?> inputSource) {
         this.inputSource = inputSource;
     }
 
-    protected void changeInputSource(Source<?, ?> inputSource) {
+    protected void changeInputSource(Source<MetricTooth, ?> inputSource) {
         this.inputSource = inputSource;
     }
 

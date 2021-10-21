@@ -1,9 +1,11 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.HighestDoctorDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricDisposal;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.HighestPoint1Doctor;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
+import io.dentall.totoro.business.service.nhi.metric.source.MonthSelectedDisposalSource;
 import io.dentall.totoro.business.service.nhi.metric.source.MonthSelectedSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
@@ -14,14 +16,17 @@ public class L9Formula extends AbstractFormula<HighestDoctorDto> {
 
     private final Source<MetricTooth, MetricTooth> source;
 
+    private final Source<MetricDisposal, MetricDisposal> disposalSource;
+
     public L9Formula(MetricConfig metricConfig) {
         super(metricConfig);
         this.source = new MonthSelectedSource(metricConfig);
+        this.disposalSource = new MonthSelectedDisposalSource(metricConfig);
     }
 
     @Override
     public HighestDoctorDto doCalculate(MetricConfig metricConfig) {
-        HighestPoint1Doctor highestPoint1Doctor = new HighestPoint1Doctor(metricConfig, source).apply();
+        HighestPoint1Doctor highestPoint1Doctor = new HighestPoint1Doctor(metricConfig, source, disposalSource).apply();
         return highestPoint1Doctor.getResult();
     }
 }

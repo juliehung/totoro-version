@@ -4,7 +4,10 @@ import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1ToothCount;
 import io.dentall.totoro.business.service.nhi.metric.meta.Pt1;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
-import io.dentall.totoro.business.service.nhi.metric.source.*;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
+import io.dentall.totoro.business.service.nhi.metric.source.OdQuarterSource;
+import io.dentall.totoro.business.service.nhi.metric.source.QuarterSource;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.math.BigDecimal;
 

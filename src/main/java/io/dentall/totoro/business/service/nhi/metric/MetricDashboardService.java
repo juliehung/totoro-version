@@ -5,7 +5,6 @@ import io.dentall.totoro.business.service.nhi.metric.formula.*;
 import io.dentall.totoro.business.service.nhi.metric.source.*;
 import io.dentall.totoro.business.service.nhi.metric.vm.DoctorData;
 import io.dentall.totoro.business.service.nhi.metric.vm.NameValue;
-import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.Holiday;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +25,7 @@ import static java.util.stream.Collectors.toList;
 public class MetricDashboardService {
 
     public List<DashboardDto> metric(
-        final LocalDate baseDate, List<MetricSubject> subjects, List<? extends NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
+        final LocalDate baseDate, List<MetricSubject> subjects, List<MetricDisposal> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
         return subjects.parallelStream()
             .map(subject -> buildMetric(baseDate, subjects, subject, source, holidayMap))
             .filter(Objects::nonNull)
@@ -34,7 +33,7 @@ public class MetricDashboardService {
     }
 
     private DashboardDto buildMetric(
-        LocalDate baseDate, List<MetricSubject> allSubject, MetricSubject subject, List<? extends NhiMetricRawVM> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
+        LocalDate baseDate, List<MetricSubject> allSubject, MetricSubject subject, List<MetricDisposal> source, Map<LocalDate, Optional<Holiday>> holidayMap) {
         MetricConfig metricConfig = new MetricConfig(subject, baseDate, source).applyHolidayMap(holidayMap);
 
         if (!metricConfig.isSourceExist(metricConfig.getSubjectSource().key()) || metricConfig.retrieveSource(metricConfig.getSubjectSource().key()).size() == 0) {

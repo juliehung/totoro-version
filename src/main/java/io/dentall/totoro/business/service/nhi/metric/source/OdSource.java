@@ -13,7 +13,7 @@ public abstract class OdSource extends AbstractSource<MetricTooth> {
 
     protected final List<String> codes = CodesByOd;
 
-    public OdSource(Source<?, ?> inputSource) {
+    public OdSource(Source<MetricTooth, ?> inputSource) {
         super(inputSource);
     }
 

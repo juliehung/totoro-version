@@ -20,7 +20,7 @@ public abstract class OdDeciduousByPatientSource extends AbstractSource<Map<Long
         "81", "82", "83", "84", "85"
     ));
 
-    public OdDeciduousByPatientSource(Source<?, ?> inputSource) {
+    public OdDeciduousByPatientSource(Source<MetricTooth, ?> inputSource) {
         super(inputSource);
     }
 

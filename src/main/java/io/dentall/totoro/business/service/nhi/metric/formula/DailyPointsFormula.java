@@ -1,7 +1,9 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricDisposal;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Point2ByDaily;
+import io.dentall.totoro.business.service.nhi.metric.source.DailyByMonthSelectedDisposalSource;
 import io.dentall.totoro.business.service.nhi.metric.source.DailyByMonthSelectedSource;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
@@ -24,14 +26,17 @@ public class DailyPointsFormula extends AbstractFormula<List<Entry<LocalDate, Bi
 
     private final Source<MetricTooth, Map<LocalDate, List<MetricTooth>>> source;
 
+    private final Source<MetricDisposal, Map<LocalDate, List<MetricDisposal>>> disposalSource;
+
     public DailyPointsFormula(MetricConfig metricConfig) {
         super(metricConfig);
         this.source = new DailyByMonthSelectedSource(metricConfig);
+        this.disposalSource = new DailyByMonthSelectedDisposalSource(metricConfig);
     }
 
     @Override
     public List<Entry<LocalDate, BigDecimal>> doCalculate(MetricConfig metricConfig) {
-        Point2ByDaily point2 = new Point2ByDaily(metricConfig, source).apply();
+        Point2ByDaily point2 = new Point2ByDaily(metricConfig, source, disposalSource).apply();
         Map<LocalDate, BigDecimal> result = point2.getResult().entrySet().stream().reduce(new HashMap<>(),
             (map, entry) -> {
                 map.put(entry.getKey(), new BigDecimal(entry.getValue()));

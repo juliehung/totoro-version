@@ -1,6 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.HighestPatientDto;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricDisposal;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
@@ -20,25 +21,38 @@ import static java.util.Optional.ofNullable;
 /**
  * 診療費 病患點數(最高者)
  */
-public class HighestPoint1Patient extends SingleSourceMetaCalculator<HighestPatientDto> {
+public class HighestPoint1Patient extends AbstractMetaCalculator<HighestPatientDto> {
 
-    public HighestPoint1Patient(MetricConfig metricConfig, Source<?, ?> source) {
-        this(metricConfig, null, source);
+    private final Source<MetricTooth, MetricTooth> source;
+
+    private final Source<MetricDisposal, MetricDisposal> disposalSource;
+
+    public HighestPoint1Patient(
+        MetricConfig metricConfig,
+        Source<MetricTooth, MetricTooth> source,
+        Source<MetricDisposal, MetricDisposal> disposalSource) {
+        this(metricConfig, null, source, disposalSource);
     }
 
-    public HighestPoint1Patient(MetricConfig metricConfig, MetaConfig metaConfig, Source<?, ?> source) {
-        super(metricConfig, metaConfig, source);
+    public HighestPoint1Patient(
+        MetricConfig metricConfig,
+        MetaConfig metaConfig,
+        Source<MetricTooth, MetricTooth> source,
+        Source<MetricDisposal, MetricDisposal> disposalSource) {
+        super(metricConfig, metaConfig, new Source[]{source, disposalSource});
+        this.source = source;
+        this.disposalSource = disposalSource;
     }
 
     @Override
     public HighestPatientDto doCalculate(MetricConfig metricConfig) {
-        Function<MetricTooth, Long> classifier = MetricTooth::getPatientId;
-        Exam1ByClassifier exam1 = new Exam1ByClassifier(metricConfig, source(), classifier).apply();
-        Exam2ByClassifier exam2 = new Exam2ByClassifier(metricConfig, source(), classifier).apply();
-        Exam3ByClassifier exam3 = new Exam3ByClassifier(metricConfig, source(), classifier).apply();
-        Exam4ByClassifier exam4 = new Exam4ByClassifier(metricConfig, source(), classifier).apply();
-        Point3ByClassifier point3 = new Point3ByClassifier(metricConfig, source(), classifier).apply();
-        Point1 point1 = new Point1(metricConfig, source()).apply();
+        Function<MetricDisposal, Long> classifier = MetricDisposal::getPatientId;
+        Exam1ByClassifier exam1 = new Exam1ByClassifier(metricConfig, disposalSource, classifier).apply();
+        Exam2ByClassifier exam2 = new Exam2ByClassifier(metricConfig, disposalSource, classifier).apply();
+        Exam3ByClassifier exam3 = new Exam3ByClassifier(metricConfig, disposalSource, classifier).apply();
+        Exam4ByClassifier exam4 = new Exam4ByClassifier(metricConfig, disposalSource, classifier).apply();
+        Point3ByClassifier point3 = new Point3ByClassifier(metricConfig, source, MetricTooth::getPatientId).apply();
+        Point1 point1 = new Point1(metricConfig, source, disposalSource).apply();
 
         Map<Long, Long> map = new HashMap<>(exam1.getResult().size());
         exam1.getResult().forEach((keyId, point) -> map.compute(keyId, (key, value) -> ofNullable(value).orElse(0L) + point));

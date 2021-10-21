@@ -1,5 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricDisposal;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.dto.SummaryDto;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
@@ -12,10 +13,10 @@ import static io.dentall.totoro.business.service.nhi.util.NhiProcedureUtil.*;
 import static java.lang.Long.parseLong;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-public abstract class AbstractMetaSummary<T> extends SingleSourceMetaCalculator<List<T>> {
+public abstract class AbstractMetaSummary<T> extends AbstractMetaCalculator<List<T>> {
 
-    public AbstractMetaSummary(MetricConfig metricConfig, Source<?, ?> source) {
-        super(metricConfig, source);
+    public AbstractMetaSummary(MetricConfig metricConfig, MetaConfig metaConfig, Source<?, ?>[] sources) {
+        super(metricConfig, metaConfig, sources);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -46,7 +47,7 @@ public abstract class AbstractMetaSummary<T> extends SingleSourceMetaCalculator<
             });
     }
 
-    protected void summaryByDisposal(SummaryDto summaryDto, MetricTooth vm) {
+    protected void summaryByDisposal(SummaryDto summaryDto, MetricDisposal vm) {
         if (isNotBlank(vm.getExamPoint())) {
             long examPoint = parseLong(vm.getExamPoint());
             if (isInfectionExaminationCodeAtSalary(vm.getExamCode())) {

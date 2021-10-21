@@ -10,7 +10,7 @@ public abstract class ExtSource extends AbstractSource<MetricTooth> {
 
     protected final List<String> codes = CodesByExt;
 
-    public ExtSource(Source<?, ?> inputSource) {
+    public ExtSource(Source<MetricTooth, ?> inputSource) {
         super(inputSource);
     }
 }

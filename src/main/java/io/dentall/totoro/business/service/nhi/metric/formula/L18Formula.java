@@ -1,8 +1,10 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricDisposal;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Point1;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
+import io.dentall.totoro.business.service.nhi.metric.source.QuarterDisposalSource;
 import io.dentall.totoro.business.service.nhi.metric.source.QuarterSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
@@ -18,14 +20,17 @@ public class L18Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<MetricTooth, MetricTooth> source;
 
+    private final Source<MetricDisposal, MetricDisposal> disposalSource;
+
     public L18Formula(MetricConfig metricConfig) {
         super(metricConfig);
         this.source = new QuarterSource(metricConfig);
+        this.disposalSource = new QuarterDisposalSource(metricConfig);
     }
 
     @Override
     public BigDecimal doCalculate(MetricConfig metricConfig) {
-        Point1 point1 = new Point1(metricConfig, source).apply();
+        Point1 point1 = new Point1(metricConfig, source, disposalSource).apply();
         try {
             return divide(point1.getResult(), 3L);
         } catch (ArithmeticException e) {

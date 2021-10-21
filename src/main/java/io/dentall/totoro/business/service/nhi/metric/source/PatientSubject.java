@@ -1,13 +1,11 @@
 package io.dentall.totoro.business.service.nhi.metric.source;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricDisposal;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.domain.Patient;
 
-import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.toList;
 
 public class PatientSubject extends MetricSubject {
 
@@ -19,8 +17,13 @@ public class PatientSubject extends MetricSubject {
     }
 
     @Override
-    public Function<Stream<MetricTooth>, List<MetricTooth>> getFilterFunction() {
-        return source -> source.filter(vm -> vm.getPatientId().equals(this.patient.getId())).collect(toList());
+    public Function<Stream<MetricTooth>, Stream<MetricTooth>> getFilterFunction() {
+        return source -> source.filter(vm -> vm.getPatientId().equals(this.patient.getId()));
+    }
+
+    @Override
+    public Function<Stream<MetricDisposal>, Stream<MetricDisposal>> getDisposalFilterFunction() {
+        return source -> source.filter(vm -> vm.getPatientId().equals(this.patient.getId()));
     }
 
     @Override
@@ -34,7 +37,12 @@ public class PatientSubject extends MetricSubject {
     }
 
     @Override
-    public Source<?, ?> getSource(MetricConfig metricConfig) {
+    public Source<MetricTooth, MetricTooth> getSource(MetricConfig metricConfig) {
         return new PatientSource(metricConfig);
+    }
+
+    @Override
+    public Source<MetricDisposal, MetricDisposal> getDisposalSource(MetricConfig metricConfig) {
+        return new PatientDisposalSource(metricConfig);
     }
 }

@@ -1,5 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.util;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricDisposal;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Exclude;
 import io.dentall.totoro.business.service.nhi.metric.meta.MetaConfig;
@@ -28,7 +29,7 @@ public class NhiMetricHelper {
     private NhiMetricHelper() {
     }
 
-    public static Long applyNewExamPoint(MetricTooth vm, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
+    public static Long applyNewExamPoint(MetricDisposal vm, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
         long point = ofNullable(vm.getExamPoint()).filter(StringUtils::isNotBlank).map(Long::parseLong).orElse(0L);
 
         if (point == 0L) {
@@ -53,68 +54,62 @@ public class NhiMetricHelper {
         return point;
     }
 
-    public static Long calculatePurge(Stream<Optional<MetricTooth>> stream, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
-        return stream.filter(Optional::isPresent)
-            .map(Optional::get)
+    public static Long calculatePurge(Stream<MetricDisposal> stream, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
+        return stream
             .filter(vm -> isNotBlank(vm.getExamPoint()))
             .map(vm -> purgeExamPoint(vm.getExamCode(), parseLong(vm.getExamPoint())))
             .reduce(Long::sum)
             .orElse(0L);
     }
 
-    public static Long calculateExam(Stream<Optional<MetricTooth>> stream, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
-        return stream.filter(Optional::isPresent)
-            .map(Optional::get)
+    public static Long calculateExam(Stream<MetricDisposal> stream, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
+        return stream
             .map(vm -> applyNewExamPoint(vm, config, holidayMap))
             .reduce(Long::sum)
             .orElse(0L);
     }
 
-    private static Stream<Optional<MetricTooth>> groupByDisposal(List<MetricTooth> source, List<String> codes) {
+    private static Stream<MetricDisposal> checkExamValue(List<MetricDisposal> source, List<String> codes) {
         return source.stream()
             .filter(vm -> isNotBlank(vm.getExamPoint()))
-            .filter(vm -> codes.contains(vm.getExamCode()))
-            .collect(groupingBy(MetricTooth::getDisposalId, maxBy(comparing(MetricTooth::getDisposalId))))
-            .values().stream();
+            .filter(vm -> codes.contains(vm.getExamCode()));
     }
 
-    public static Long calculatePurge(List<MetricTooth> source, List<String> codes, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
-        Stream<Optional<MetricTooth>> stream = groupByDisposal(source, codes);
+    public static Long calculatePurge(List<MetricDisposal> source, List<String> codes, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
+        Stream<MetricDisposal> stream = checkExamValue(source, codes);
         return calculatePurge(stream, config, holidayMap);
     }
 
-    public static Long calculateExamRegular(List<MetricTooth> source, List<String> codes, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
-        Stream<Optional<MetricTooth>> stream = groupByDisposal(source, codes);
+    public static Long calculateExamRegular(List<MetricDisposal> source, List<String> codes, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
+        Stream<MetricDisposal> stream = checkExamValue(source, codes);
         return calculateExam(stream, config, holidayMap);
     }
 
-    public static Long calculateExamDifference(List<MetricTooth> source, List<String> codes) {
-        return groupByDisposal(source, codes)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
+    public static Long calculateExamDifference(List<MetricDisposal> source, List<String> codes) {
+        return checkExamValue(source, codes)
             .map(vm -> parseLong(vm.getExamPoint()) - 230L)
             .reduce(Long::sum)
             .orElse(0L);
     }
 
     public static Map<Long, Long> calculateExamByClassifier(
-        List<MetricTooth> source,
+        List<MetricDisposal> source,
         List<String> codes,
-        Function<MetricTooth, Long> classifier,
+        Function<MetricDisposal, Long> classifier,
         MetaConfig config,
         Map<LocalDate, Optional<Holiday>> holidayMap) {
         return source.stream()
             .filter(vm -> isNotBlank(vm.getExamPoint()))
             .filter(vm -> codes.contains(vm.getExamCode()))
-            .collect(groupingBy(classifier, groupingBy(MetricTooth::getDisposalId, maxBy(comparing(MetricTooth::getDisposalId)))))
+            .collect(groupingBy(classifier))
             .entrySet().stream()
             .reduce(new HashMap<>(),
                 (map, entry) -> {
                     long keyId = entry.getKey();
 
                     map.compute(keyId, (key, point) -> {
-                        Map<Long, Optional<MetricTooth>> subMap = entry.getValue();
-                        Stream<Optional<MetricTooth>> stream = subMap.values().stream();
+                        List<MetricDisposal> subMap = entry.getValue();
+                        Stream<MetricDisposal> stream = subMap.stream();
                         Long examPoint = calculateExam(stream, config, holidayMap);
                         return ofNullable(point).orElse(0L) + examPoint;
                     });

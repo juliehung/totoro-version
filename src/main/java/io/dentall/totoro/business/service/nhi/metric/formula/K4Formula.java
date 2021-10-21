@@ -3,7 +3,10 @@ package io.dentall.totoro.business.service.nhi.metric.formula;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Od1Point;
 import io.dentall.totoro.business.service.nhi.metric.meta.Point3;
-import io.dentall.totoro.business.service.nhi.metric.source.*;
+import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
+import io.dentall.totoro.business.service.nhi.metric.source.OdQuarterSource;
+import io.dentall.totoro.business.service.nhi.metric.source.QuarterSource;
+import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.math.BigDecimal;
 

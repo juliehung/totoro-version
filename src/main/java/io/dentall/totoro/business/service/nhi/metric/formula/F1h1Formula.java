@@ -1,9 +1,11 @@
 package io.dentall.totoro.business.service.nhi.metric.formula;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricDisposal;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Point1;
 import io.dentall.totoro.business.service.nhi.metric.meta.Tro1Config;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
+import io.dentall.totoro.business.service.nhi.metric.source.MonthSelectedDisposalSource;
 import io.dentall.totoro.business.service.nhi.metric.source.MonthSelectedSource;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
@@ -18,16 +20,20 @@ public class F1h1Formula extends AbstractFormula<BigDecimal> {
 
     private final Source<MetricTooth, MetricTooth> source;
 
+    private final Source<MetricDisposal, MetricDisposal> disposalSource;
+
     public F1h1Formula(MetricConfig metricConfig) {
         super(metricConfig);
         this.source = new MonthSelectedSource(metricConfig);
         this.source.setExclude(Tro1);
+        this.disposalSource = new MonthSelectedDisposalSource(metricConfig);
+        this.disposalSource.setExclude(Tro1);
     }
 
     @Override
     protected BigDecimal doCalculate(MetricConfig metricConfig) {
         Tro1Config tro1Config = new Tro1Config();
-        Point1 point1 = new Point1(metricConfig, tro1Config, source).apply();
+        Point1 point1 = new Point1(metricConfig, tro1Config, source, disposalSource).apply();
         return new BigDecimal(point1.getResult());
     }
 

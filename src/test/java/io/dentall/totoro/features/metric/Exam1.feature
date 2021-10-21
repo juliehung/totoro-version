@@ -21,7 +21,7 @@ Feature: 一般牙科門診診察費(不含Xray)
             |            | 2020-05-13   | 00302C   | 320       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
             |            | 2020-05-13   | 00303C   | 320       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
             |            | 2020-05-13   | 00304C   | 200       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
-        Then 指定執行日期 2020-05-01，來源資料使用 OdMonthSelectedSource，檢查 <Meta>，計算結果數值應為 <Value>
+        Then 指定執行日期 2020-05-01，來源資料使用 MonthSelectedDisposalSource，檢查 <Meta>，計算結果數值應為 <Value>
         Examples:
             | Meta  | Value |
             | Exam1 | 4340  |
@@ -50,7 +50,7 @@ Feature: 一般牙科門診診察費(不含Xray)
             |            | 2020-05-13   | 00303C   | 320       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
             |            | 2020-05-13   | 00304C   | 200       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
         And 設定使用00121C點數計算
-        Then 指定執行日期 2020-05-01，來源資料使用 OdMonthSelectedSource，檢查 <Meta>，計算結果數值應為 <Value>
+        Then 指定執行日期 2020-05-01，來源資料使用 MonthSelectedDisposalSource，檢查 <Meta>，計算結果數值應為 <Value>
         Examples:
             | Meta  | Value |
             | Exam1 | 3450  |
@@ -79,7 +79,7 @@ Feature: 一般牙科門診診察費(不含Xray)
             |            | 2020-05-13   | 00303C   | 320       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
             |            | 2020-05-13   | 00304C   | 200       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
         And 設定排除山地離島診察費差額
-        Then 指定執行日期 2020-05-01，來源資料使用 OdMonthSelectedSource，檢查 <Meta>，計算結果數值應為 <Value>
+        Then 指定執行日期 2020-05-01，來源資料使用 MonthSelectedDisposalSource，檢查 <Meta>，計算結果數值應為 <Value>
         Examples:
             | Meta  | Value |
             # 230 + 230 + 120 + 120 + (260 - 30) + (260 - 30) + 520 + 320 + 320 + 350 + 350 + 420 + 320 + 320 + 200
@@ -109,7 +109,7 @@ Feature: 一般牙科門診診察費(不含Xray)
             |            | 2020-05-01   | 00303C   | 320       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
             |            | 2020-05-01   | 00304C   | 200       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
         And 排除國定假日點數
-        Then 指定執行日期 2020-05-01，來源資料使用 OdMonthSelectedSource，檢查 <Meta>，計算結果數值應為 <Value>
+        Then 指定執行日期 2020-05-01，來源資料使用 MonthSelectedDisposalSource，檢查 <Meta>，計算結果數值應為 <Value>
         Examples:
             | Meta  | Value |
             | Exam1 | 0     |
@@ -139,7 +139,7 @@ Feature: 一般牙科門診診察費(不含Xray)
             |            | 2020-05-13   | 00303C   | 320       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Danny       | 50            |                 |              |
             |            | 2020-05-15   | 00304C   | 200       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
             |            | 2020-05-15   | 00304C   | 200       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Danny       | 50            |                 |              |
-        Then 指定執行日期 2020-05-01，來源資料使用 DailyByMonthSelectedSource，檢查 Exam1ByDaily，每日數值
+        Then 指定執行日期 2020-05-01，來源資料使用 DailyByMonthSelectedDisposalSource，檢查 Exam1ByDaily，每日數值
             | Date       | Value |
             | 2020-05-01 | 460   |
             | 2020-05-03 | 240   |
@@ -173,7 +173,7 @@ Feature: 一般牙科門診診察費(不含Xray)
             | 15         | 2020-05-15   | 00304C   | 200       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
             | 16         | 2020-05-15   | 00304C   | 200       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Danny       | 50            |                 |              |
         And 設定使用00121C點數計算
-        Then 指定執行日期 2020-05-01，來源資料使用 DailyByMonthSelectedSource，檢查 Exam1ByDaily，每日數值
+        Then 指定執行日期 2020-05-01，來源資料使用 DailyByMonthSelectedDisposalSource，檢查 Exam1ByDaily，每日數值
             | Date       | Value |
             | 2020-05-01 | 460   |
             | 2020-05-03 | 460   |
@@ -207,7 +207,7 @@ Feature: 一般牙科門診診察費(不含Xray)
             |            | 2020-05-15   | 00304C   | 200       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
             |            | 2020-05-15   | 00304C   | 200       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Danny       | 50            |                 |              |
         And 設定排除山地離島診察費差額
-        Then 指定執行日期 2020-05-01，來源資料使用 DailyByMonthSelectedSource，檢查 Exam1ByDaily，每日數值
+        Then 指定執行日期 2020-05-01，來源資料使用 DailyByMonthSelectedDisposalSource，檢查 Exam1ByDaily，每日數值
             | Date       | Value |
             | 2020-05-01 | 460   |
             | 2020-05-03 | 240   |
@@ -242,7 +242,7 @@ Feature: 一般牙科門診診察費(不含Xray)
             |            | 2020-05-15   | 00304C   | 200       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Jerry       | 50            |                 |              |
             |            | 2020-05-15   | 00304C   | 200       | 89001C | 450   | 450         | 11    | MOD     | OTHER        | 001        |             | Danny       | 50            |                 |              |
         And 排除國定假日點數
-        Then 指定執行日期 2020-05-01，來源資料使用 DailyByMonthSelectedSource，檢查 Exam1ByDaily，每日數值
+        Then 指定執行日期 2020-05-01，來源資料使用 DailyByMonthSelectedDisposalSource，檢查 Exam1ByDaily，每日數值
             | Date       | Value |
             | 2020-05-01 | 0     |
             | 2020-05-03 | 0     |

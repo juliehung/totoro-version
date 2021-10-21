@@ -1,5 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricDisposal;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
@@ -13,11 +14,11 @@ import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstan
  */
 public class Exam1ByDaily extends Exam<Map<LocalDate, Long>> {
 
-    public Exam1ByDaily(MetricConfig metricConfig, Source<?, ?> source) {
+    public Exam1ByDaily(MetricConfig metricConfig, Source<MetricDisposal, ?> source) {
         this(metricConfig, null, source);
     }
 
-    public Exam1ByDaily(MetricConfig metricConfig, MetaConfig config, Source<?, ?> source) {
+    public Exam1ByDaily(MetricConfig metricConfig, MetaConfig config, Source<MetricDisposal, ?> source) {
         super(metricConfig, config, source);
     }
 
