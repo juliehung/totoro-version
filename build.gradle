@@ -307,6 +307,7 @@ dependencies {
 
     // mapstrcut, 第一項須為 compile 否則 cucumber 會產生異常
     compile "org.mapstruct:mapstruct:${mapstruct_version}"
+    implementation "org.mapstruct:mapstruct:${mapstruct_version}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
     testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
 
