@@ -622,7 +622,7 @@ public class PatientService extends QueryService<Patient> {
                             nhiRuleCheckUtil.specialMonthDurationCalculation(dto, DateTimeUtil.NUMBERS_OF_MONTH_6),
                             String.valueOf(DateTimeUtil.NUMBERS_OF_MONTH_6),
                             1,
-                            NhiRuleCheckFormat.D4_1
+                            NhiRuleCheckFormat.D4_1_3
                         ),
                         vm
                     );
@@ -653,7 +653,7 @@ public class PatientService extends QueryService<Patient> {
                             nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_180_DAY),
                             String.valueOf(DateTimeUtil.NHI_180_DAY.getDays()),
                             1,
-                            NhiRuleCheckFormat.D4_1
+                            NhiRuleCheckFormat.D4_1_2
                         ),
                         vm
                     );
@@ -682,7 +682,7 @@ public class PatientService extends QueryService<Patient> {
                             nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
                             String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
                             1,
-                            NhiRuleCheckFormat.D1_2
+                            NhiRuleCheckFormat.D1_2_4
                         ),
                         vm
                     );

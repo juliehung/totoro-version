@@ -2670,6 +2670,18 @@ public class NhiRuleCheckUtil {
                         targetCode
                     );
                     break;
+                case D1_2_4:
+                    m = String.format(
+                        NhiRuleCheckFormat.D1_2_4.getFormat(),
+                        targetCode,
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.plusDays(Long.parseLong(limitValueString))),
+                        matchCode,
+                        sourceType.getValue(),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate),
+                        limitValueString,
+                        targetCode
+                    );
+                    break;
                 case D1_3:
                     m = String.format(
                         NhiRuleCheckFormat.D1_3.getFormat(),
@@ -2707,6 +2719,27 @@ public class NhiRuleCheckUtil {
                     m = String.format(
                         NhiRuleCheckFormat.D4_1.getFormat(),
                         targetCode,
+                        sourceType.getValue(),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate)
+                    );
+                    break;
+                case D4_1_2:
+                    m = String.format(
+                        NhiRuleCheckFormat.D4_1_2.getFormat(),
+                        targetCode,
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate.plusDays(Long.parseLong(limitValueString))),
+                        sourceType.getValue(),
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate)
+                    );
+                    break;
+                case D4_1_3:
+                    m = String.format(
+                        NhiRuleCheckFormat.D4_1_3.getFormat(),
+                        targetCode,
+                        DateTimeUtil.transformLocalDateToRocDateForDisplay(
+                            matchDate.plusMonths(Long.parseLong(limitValueString))
+                                .withDayOfMonth(1)
+                        ),
                         sourceType.getValue(),
                         DateTimeUtil.transformLocalDateToRocDateForDisplay(matchDate)
                     );
