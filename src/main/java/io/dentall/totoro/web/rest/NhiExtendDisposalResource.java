@@ -192,7 +192,6 @@ public class NhiExtendDisposalResource {
         }
     }
 
-    @Deprecated
     @GetMapping("/nhi-extend-disposals/page")
     @Timed
     public ResponseEntity<List<NhiExtendDisposalVM>> getAllNhiExtendDisposals(
