@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class EastDistrictReport {
@@ -27,7 +28,7 @@ public class EastDistrictReport {
 
         Sheet sheet = wb.createSheet(SHEET_NAME);
         Row row = null;
-        int rowCounter  = 0;
+        int rowCounter = 0;
         int endOfApplyPointSection = 1 + contents.size() + 1;
         int endOfMedicalServiceSection = endOfApplyPointSection + 6;
 
@@ -85,7 +86,8 @@ public class EastDistrictReport {
             }
 
             sheet.createRow(rowCounter);
-            double g6 = contents.get(i).getG6().divide(new BigDecimal(10000), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            double g6 = contents.get(i).getG6().doubleValue();
+            double g6DivideBy10000 = contents.get(i).getG6().divide(new BigDecimal(10000), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
             ExcelUtil.createCellAndApplyStyle(
                 sheet,
                 rowCounter,
@@ -102,7 +104,7 @@ public class EastDistrictReport {
                 csm.get(
                     ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
                 ),
-                String.valueOf(g6).concat("萬")
+                String.valueOf(g6DivideBy10000).concat("萬")
             );
             int point = 0;
             if (g6 >= 600000) {
@@ -146,196 +148,199 @@ public class EastDistrictReport {
         );
         rowCounter++;
 
-        // 專業醫療服務品質項目-標題
-        sheet.createRow(rowCounter);
-        ExcelUtil.createCellAndApplyStyle(
-            sheet,
-            rowCounter,
-            0,
-            csm.get(
-                ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
-            ),
-            "專業醫療服務品質項目"
-        );
-        ExcelUtil.createCellAndApplyStyle(
-            sheet,
-            rowCounter,
-            1,
-            csm.get(
-                ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
-            ),
-            "指標名稱"
-        );
-        ExcelUtil.createCellAndApplyStyle(
-            sheet,
-            rowCounter,
-            2,
-            csm.get(
-                ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
-            ),
-            "全院所"
-        );
-        ExcelUtil.createCellAndApplyStyle(
-            sheet,
-            rowCounter,
-            3,
-            csm.get(
-                ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
-            ),
-            "標記分數"
-        );
-        rowCounter++;
-
         // 專業醫療服務品質項目-資料
-        EastDistrictDto content1 = contents.stream().filter(dto -> "clinic".equals(dto.getType().name())).findAny().get();
+        Optional<EastDistrictDto> contentOptional = contents.stream().filter(dto -> "clinic".equals(dto.getType().name())).findAny();
 
-        sheet.createRow(rowCounter);
-        Double data1 = content1.getG8h1().doubleValue() / 100;
-        ExcelUtil.createCellAndApplyStyle(
-            sheet,
-            rowCounter,
-            1,
-            csm.get(
-                ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
-            ),
-            "OD 一年重補率＞3.13%"
-        );
-        ExcelUtil.createCellAndApplyStyle(
-            sheet,
-            rowCounter,
-            2,
-            csm.get(
-                ExcelUtil.SupportedCellStyle.AROUND_BORDER_CONTENT_PERCENTAGE_NUMBER
-            ),
-            data1
-        );
-        ExcelUtil.createCellAndApplyStyle(
-            sheet,
-            rowCounter,
-            3,
-            csm.get(
-                ExcelUtil.SupportedCellStyle.AROUND_BORDER_CONTENT_REAL_NUMBER
-            ),
-            data1 > 3.13
-                ? 1
-                : 0
-        );
-        rowCounter++;
+        if (contentOptional.isPresent()) {
+            // 專業醫療服務品質項目-標題
+            sheet.createRow(rowCounter);
+            ExcelUtil.createCellAndApplyStyle(
+                sheet,
+                rowCounter,
+                0,
+                csm.get(
+                    ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
+                ),
+                "專業醫療服務品質項目"
+            );
+            ExcelUtil.createCellAndApplyStyle(
+                sheet,
+                rowCounter,
+                1,
+                csm.get(
+                    ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
+                ),
+                "指標名稱"
+            );
+            ExcelUtil.createCellAndApplyStyle(
+                sheet,
+                rowCounter,
+                2,
+                csm.get(
+                    ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
+                ),
+                "全院所"
+            );
+            ExcelUtil.createCellAndApplyStyle(
+                sheet,
+                rowCounter,
+                3,
+                csm.get(
+                    ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
+                ),
+                "標記分數"
+            );
+            rowCounter++;
 
-        sheet.createRow(rowCounter);
-        Double data2 = content1.getG8h2().doubleValue();
-        ExcelUtil.createCellAndApplyStyle(
-            sheet,
-            rowCounter,
-            1,
-            csm.get(
-                ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
-            ),
-            "OD 兩年重補率＞5.80%"
-        );
-        ExcelUtil.createCellAndApplyStyle(
-            sheet,
-            rowCounter,
-            2,
-            csm.get(
-                ExcelUtil.SupportedCellStyle.AROUND_BORDER_CONTENT_PERCENTAGE_NUMBER
-            ),
-            data2 / 100
-        );
-        ExcelUtil.createCellAndApplyStyle(
-            sheet,
-            rowCounter,
-            3,
-            csm.get(
-                ExcelUtil.SupportedCellStyle.AROUND_BORDER_CONTENT_REAL_NUMBER
-            ),
-            data2 > 5.80
-                ? 1
-                : 0
-        );
-        rowCounter++;
+            EastDistrictDto content1 = contentOptional.get();
+            sheet.createRow(rowCounter);
+            Double data1 = content1.getG8h1().doubleValue() / 100;
+            ExcelUtil.createCellAndApplyStyle(
+                sheet,
+                rowCounter,
+                1,
+                csm.get(
+                    ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
+                ),
+                "OD 一年重補率＞3.13%"
+            );
+            ExcelUtil.createCellAndApplyStyle(
+                sheet,
+                rowCounter,
+                2,
+                csm.get(
+                    ExcelUtil.SupportedCellStyle.AROUND_BORDER_CONTENT_PERCENTAGE_NUMBER
+                ),
+                data1
+            );
+            ExcelUtil.createCellAndApplyStyle(
+                sheet,
+                rowCounter,
+                3,
+                csm.get(
+                    ExcelUtil.SupportedCellStyle.AROUND_BORDER_CONTENT_REAL_NUMBER
+                ),
+                data1 > 3.13
+                    ? 1
+                    : 0
+            );
+            rowCounter++;
 
-        sheet.createRow(rowCounter);
-        Double data3 = content1.getG8h3().doubleValue();
-        ExcelUtil.createCellAndApplyStyle(
-            sheet,
-            rowCounter,
-            1,
-            csm.get(
-                ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
-            ),
-            "OD申報點數佔率＞64.38%"
-        );
-        ExcelUtil.createCellAndApplyStyle(
-            sheet,
-            rowCounter,
-            2,
-            csm.get(
-                ExcelUtil.SupportedCellStyle.AROUND_BORDER_CONTENT_PERCENTAGE_NUMBER
-            ),
-            data3 / 100
-        );
-        ExcelUtil.createCellAndApplyStyle(
-            sheet,
-            rowCounter,
-            3,
-            csm.get(
-                ExcelUtil.SupportedCellStyle.AROUND_BORDER_CONTENT_REAL_NUMBER
-            ),
-            data3 > 64.38
-                ? 1
-                : 0
-        );
-        rowCounter++;
+            sheet.createRow(rowCounter);
+            Double data2 = content1.getG8h2().doubleValue();
+            ExcelUtil.createCellAndApplyStyle(
+                sheet,
+                rowCounter,
+                1,
+                csm.get(
+                    ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
+                ),
+                "OD 兩年重補率＞5.80%"
+            );
+            ExcelUtil.createCellAndApplyStyle(
+                sheet,
+                rowCounter,
+                2,
+                csm.get(
+                    ExcelUtil.SupportedCellStyle.AROUND_BORDER_CONTENT_PERCENTAGE_NUMBER
+                ),
+                data2 / 100
+            );
+            ExcelUtil.createCellAndApplyStyle(
+                sheet,
+                rowCounter,
+                3,
+                csm.get(
+                    ExcelUtil.SupportedCellStyle.AROUND_BORDER_CONTENT_REAL_NUMBER
+                ),
+                data2 > 5.80
+                    ? 1
+                    : 0
+            );
+            rowCounter++;
 
-        sheet.createRow(rowCounter);
-        Double data4 = content1.getG8h4().doubleValue();
-        ExcelUtil.createCellAndApplyStyle(
-            sheet,
-            rowCounter,
-            1,
-            csm.get(
-                ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
-            ),
-           "根管治療未完成率＞13.78%"
-        );
-        ExcelUtil.createCellAndApplyStyle(
-            sheet,
-            rowCounter,
-            2,
-            csm.get(
-                ExcelUtil.SupportedCellStyle.AROUND_BORDER_CONTENT_PERCENTAGE_NUMBER
-            ),
-            data4 / 100
-        );
-        ExcelUtil.createCellAndApplyStyle(
-            sheet,
-            rowCounter,
-            3,
-            csm.get(
-                ExcelUtil.SupportedCellStyle.AROUND_BORDER_CONTENT_REAL_NUMBER
-            ),
-            data4 > 13.78
-                ? 1
-                : 0
-        );
-        rowCounter++;
+            sheet.createRow(rowCounter);
+            Double data3 = content1.getG8h3().doubleValue();
+            ExcelUtil.createCellAndApplyStyle(
+                sheet,
+                rowCounter,
+                1,
+                csm.get(
+                    ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
+                ),
+                "OD申報點數佔率＞64.38%"
+            );
+            ExcelUtil.createCellAndApplyStyle(
+                sheet,
+                rowCounter,
+                2,
+                csm.get(
+                    ExcelUtil.SupportedCellStyle.AROUND_BORDER_CONTENT_PERCENTAGE_NUMBER
+                ),
+                data3 / 100
+            );
+            ExcelUtil.createCellAndApplyStyle(
+                sheet,
+                rowCounter,
+                3,
+                csm.get(
+                    ExcelUtil.SupportedCellStyle.AROUND_BORDER_CONTENT_REAL_NUMBER
+                ),
+                data3 > 64.38
+                    ? 1
+                    : 0
+            );
+            rowCounter++;
 
-        // 專業醫療服務品質項目-備註
-        row = sheet.createRow(rowCounter);
-        row.setHeightInPoints((short) 25);
-        row.createCell(2).setCellStyle(csm.get(ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE));
-        row.createCell(3).setCellStyle(csm.get(ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE));
-        ExcelUtil.createCellAndApplyStyle(
-            sheet,
-            rowCounter,
-            1,
-            csm.get(
-                ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
-            ),
-            "註：\n大於每項品質指標值者各標記 1 分"
-        );
-        rowCounter++;
+            sheet.createRow(rowCounter);
+            Double data4 = content1.getG8h4().doubleValue();
+            ExcelUtil.createCellAndApplyStyle(
+                sheet,
+                rowCounter,
+                1,
+                csm.get(
+                    ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
+                ),
+                "根管治療未完成率＞13.78%"
+            );
+            ExcelUtil.createCellAndApplyStyle(
+                sheet,
+                rowCounter,
+                2,
+                csm.get(
+                    ExcelUtil.SupportedCellStyle.AROUND_BORDER_CONTENT_PERCENTAGE_NUMBER
+                ),
+                data4 / 100
+            );
+            ExcelUtil.createCellAndApplyStyle(
+                sheet,
+                rowCounter,
+                3,
+                csm.get(
+                    ExcelUtil.SupportedCellStyle.AROUND_BORDER_CONTENT_REAL_NUMBER
+                ),
+                data4 > 13.78
+                    ? 1
+                    : 0
+            );
+            rowCounter++;
+
+            // 專業醫療服務品質項目-備註
+            row = sheet.createRow(rowCounter);
+            row.setHeightInPoints((short) 25);
+            row.createCell(2).setCellStyle(csm.get(ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE));
+            row.createCell(3).setCellStyle(csm.get(ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE));
+            ExcelUtil.createCellAndApplyStyle(
+                sheet,
+                rowCounter,
+                1,
+                csm.get(
+                    ExcelUtil.SupportedCellStyle.AROUND_BORDER_TITLE
+                ),
+                "註：\n大於每項品質指標值者各標記 1 分"
+            );
+            rowCounter++;
+        }
 
         // 備註
         row = sheet.createRow(rowCounter++);
@@ -353,15 +358,20 @@ public class EastDistrictReport {
         RegionUtil.setBorderLeft(BorderStyle.THIN, applyPointRegion, sheet);
         sheet.addMergedRegion(applyPointRegion);
 
-        CellRangeAddress medicalServiceRegion = new CellRangeAddress(endOfApplyPointSection + 1, endOfMedicalServiceSection, 0, 0);
-        RegionUtil.setBorderTop(BorderStyle.THIN, medicalServiceRegion, sheet);
-        RegionUtil.setBorderRight(BorderStyle.THIN, medicalServiceRegion, sheet);
-        RegionUtil.setBorderBottom(BorderStyle.THIN, medicalServiceRegion, sheet);
-        RegionUtil.setBorderLeft(BorderStyle.THIN, medicalServiceRegion, sheet);
-        sheet.addMergedRegion(medicalServiceRegion);
+        if (contentOptional.isPresent()) {
+            CellRangeAddress medicalServiceRegion = new CellRangeAddress(endOfApplyPointSection + 1, endOfMedicalServiceSection, 0, 0);
+            RegionUtil.setBorderTop(BorderStyle.THIN, medicalServiceRegion, sheet);
+            RegionUtil.setBorderRight(BorderStyle.THIN, medicalServiceRegion, sheet);
+            RegionUtil.setBorderBottom(BorderStyle.THIN, medicalServiceRegion, sheet);
+            RegionUtil.setBorderLeft(BorderStyle.THIN, medicalServiceRegion, sheet);
+            sheet.addMergedRegion(medicalServiceRegion);
+        }
 
         sheet.addMergedRegion(new CellRangeAddress(endOfApplyPointSection, endOfApplyPointSection, 1, 3));
-        sheet.addMergedRegion(new CellRangeAddress(endOfMedicalServiceSection, endOfMedicalServiceSection, 1, 3));
+        
+        if (contentOptional.isPresent()) {
+            sheet.addMergedRegion(new CellRangeAddress(endOfMedicalServiceSection, endOfMedicalServiceSection, 1, 3));
+        }
 
         applyWidth(sheet);
     }
