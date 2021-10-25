@@ -103,7 +103,7 @@ public class TaipeiDistrictReport {
 
     private void applyTitleStyle(Sheet sheet, CellStyle cellStyle) {
         int fromRow = 0;
-        int toRow = 14;
+        int toRow = 10;
         int fromCol = 0;
         int toCol = 1;
         for (int i = fromRow; i <= toRow; i++) {
@@ -154,7 +154,7 @@ public class TaipeiDistrictReport {
             BorderExtent.BOTTOM
         );
         pt.drawBorders(
-            new CellRangeAddress(14, 14, 0, 1 + numberOfDoctor),
+            new CellRangeAddress(10, 10, 0, 1 + numberOfDoctor),
             BorderStyle.THICK,
             BorderExtent.BOTTOM
         );
