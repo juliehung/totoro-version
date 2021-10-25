@@ -247,13 +247,11 @@ public class NhiExtendDisposalService {
         YearMonth ym = YearMonth.of(yyyymm / 100, yyyymm % 100);
 
         return nhiExtendDisposalRepository
-            .findNhiExtendDisposalByDateBetweenAndReplenishmentDateIsNullOrReplenishmentDateBetweenAndA19Equals(
-                ym.atDay(1),
-                ym.atEndOfMonth(),
-                ym.atDay(1),
-                ym.atEndOfMonth(),
-                "2",
-                pageable)
+            .findByDateBetween(
+                ym.atDay(1).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET),
+                ym.atEndOfMonth().atTime(LocalTime.MAX).toInstant(TimeConfig.ZONE_OFF_SET),
+                pageable
+            )
             .map(nhiExtendDisposalTable -> {
                 NhiExtendDisposalVM vm = new NhiExtendDisposalVM();
                 Set<NhiExtendTreatmentProcedure> nhiExtendTreatmentProcedures = new HashSet<>();
@@ -314,6 +312,7 @@ public class NhiExtendDisposalService {
 
                 // Assembel througth disposal
                 Disposal d = new Disposal().treatmentProcedures(treatmentProcedures);
+                d.setId(disposalId);
 
                 // Assemble treatment drug
                 Set<NhiExtendTreatmentDrugTable> nhiExtendTreatmentDrugTableSet =

@@ -284,13 +284,8 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
         LocalDate rend,
         String a19);
 
-    Page<NhiExtendDisposalTable> findNhiExtendDisposalByDateBetweenAndReplenishmentDateIsNullOrReplenishmentDateBetweenAndA19Equals(
-        LocalDate start,
-        LocalDate end,
-        LocalDate rstart,
-        LocalDate rend,
-        String a19,
-        Pageable pageable);
+    @Query("select ned, ned.disposal.id as disposal_Id from NhiExtendDisposal ned where trim(ned.a18) <> '' and ned.disposal.dateTime between :begin and :end ")
+    Page<NhiExtendDisposalTable> findByDateBetween(@Param("begin") Instant begin, @Param("end") Instant end, Pageable pageable);
 
     Set<NhiExtendDisposalTable> findNhiExtendDisposalByDate(LocalDate date);
 
