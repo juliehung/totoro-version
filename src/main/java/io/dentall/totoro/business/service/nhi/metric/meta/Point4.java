@@ -7,6 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
+import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper.isHoliday;
+
 /**
  * 部分負擔點數
  */
@@ -25,7 +27,13 @@ public class Point4 extends SingleSourceMetaCalculator<Long> {
         List<MetricDisposal> source = metricConfig.retrieveSource(source().key());
 
         return source.stream()
-            .map(MetricDisposal::getPartialBurden)
+            .map(disposal -> {
+                if (getConfig().isExcludeHolidayPoint() && isHoliday(disposal.getDisposalDate(), metricConfig.getHolidayMap())) {
+                    return "0";
+                } else {
+                    return disposal.getPartialBurden();
+                }
+            })
             .filter(StringUtils::isNotBlank)
             .map(Long::valueOf)
             .reduce(Long::sum)
