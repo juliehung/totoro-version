@@ -40,6 +40,11 @@ public class MqttPubSub {
         publish("totoro/registration", message, 0, true);
     }
 
+    @JmsListener(destination = "${queue.disposal}")
+    public void receiveDisposal(Map<String, Object> message) {
+        publish("totoro/disposal", message, 0, true);
+    }
+
     @JmsListener(destination = "${queue.message}")
     public void receiveMessage(Map<String, Object> message) {
         publish("totoro/message", message, 0, true);

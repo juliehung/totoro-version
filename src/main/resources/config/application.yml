@@ -157,6 +157,7 @@ queue:
     appointment: totoro.appointmentQueue
     patient: totoro.patientQueue
     registration: totoro.registrationQueue
+    disposal: totoro.disposalQueue
     message: totoro.messageQueue
 
 gcp:

@@ -24,6 +24,9 @@ public class MessageSender {
     @Value("${queue.registration}")
     private String registrationQueue;
 
+    @Value("${queue.disposal}")
+    private String disposalQueue;
+
     @Value("${queue.message}")
     private String messageQueue;
 
@@ -44,6 +47,11 @@ public class MessageSender {
     public void sendRegistration(Map<String, Object> message) {
         log.debug("send registration[{}] to queue[{}]", message, registrationQueue);
         jmsTemplate.convertAndSend(registrationQueue, message);
+    }
+
+    public void sendDisposal(Map<String, Object> message) {
+        log.debug("send disposal[{}] to queue[{}]", message, disposalQueue);
+        jmsTemplate.convertAndSend(disposalQueue, message);
     }
 
     public void sendMessage(Map<String, Object> message) {

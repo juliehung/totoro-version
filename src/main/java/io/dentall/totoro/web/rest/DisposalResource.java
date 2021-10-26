@@ -3,8 +3,10 @@ package io.dentall.totoro.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.PlainDisposalType;
+import io.dentall.totoro.message.MessageSender;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
 import io.dentall.totoro.repository.UserRepository;
+import io.dentall.totoro.service.BroadcastService;
 import io.dentall.totoro.service.DisposalQueryService;
 import io.dentall.totoro.service.DisposalService;
 import io.dentall.totoro.service.NhiService;
@@ -25,6 +27,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.util.MapUtils;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -54,18 +57,22 @@ public class DisposalResource {
 
     private final UserRepository userRepository;
 
+    private final BroadcastService broadcastService;
+
     public DisposalResource(
         DisposalService disposalService,
         DisposalQueryService disposalQueryService,
         NhiService nhiService,
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
-        UserRepository userRepository
+        UserRepository userRepository,
+        BroadcastService broadcastService
     ) {
         this.disposalService = disposalService;
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.disposalQueryService = disposalQueryService;
         this.nhiService = nhiService;
         this.userRepository = userRepository;
+        this.broadcastService = broadcastService;
     }
 
     /**
@@ -112,6 +119,9 @@ public class DisposalResource {
             throw new BadRequestAlertException("Disposal and nhi extend disposal must be one-to-one relationship.", ENTITY_NAME, "relationconflict");
         }
         Disposal result = disposalService.update(disposal);
+        if (broadcastService != null) {
+            broadcastService.broadcastDomainId(result.getId(), Disposal.class);
+        }
         log.debug("REST request to update Disposal result : {}", result);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, disposal.getId().toString()))
