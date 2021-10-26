@@ -247,7 +247,7 @@ public class NhiExtendDisposalService {
         YearMonth ym = YearMonth.of(yyyymm / 100, yyyymm % 100);
 
         return nhiExtendDisposalRepository
-            .findByDateBetween(
+            .findNhiMonthContentByDateBetween(
                 ym.atDay(1).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET),
                 ym.atEndOfMonth().atTime(LocalTime.MAX).toInstant(TimeConfig.ZONE_OFF_SET),
                 pageable
