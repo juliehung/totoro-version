@@ -90,7 +90,20 @@ public class NhiMetricResource {
         log.debug("REST request to getCompositeMetric : begin={}, excludeDisposalId={}", begin, excludeDisposalIds);
 
         Optional<User> currentUser = userService.getUserWithAuthorities();
-        CompositeDistrictDto vm = metricService.getCompositeDistrictMetric(begin, excludeDisposalIds, new ArrayList<>(), asList(SouthDistrictService.class), currentUser.get());
+        CompositeDistrictDto vm = metricService.getCompositeDistrictMetric(
+            begin,
+            excludeDisposalIds,
+            new ArrayList<>(),
+            asList(
+                TaipeiDistrictService.class,
+                NorthDistrictService.class,
+                MiddleDistrictService.class,
+                SouthDistrictService.class,
+                KaoPingDistrictReductionService.class,
+                KaoPingDistrictRegularService.class,
+                EastDistrictService.class
+            ),
+            currentUser.get());
 
         return ResponseEntity.ok().body(vm);
     }

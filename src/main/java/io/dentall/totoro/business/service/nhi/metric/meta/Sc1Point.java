@@ -1,5 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
+import io.dentall.totoro.business.service.nhi.code.NhiCodeHashSet;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
@@ -14,7 +15,7 @@ import static io.dentall.totoro.business.service.nhi.metric.util.NhiMetricHelper
  */
 public class Sc1Point extends SingleSourceMetaCalculator<Long> {
 
-    private static final List<String> codes = CodesBySc1;
+    private static final NhiCodeHashSet codes = CodesBySc1;
 
     public Sc1Point(MetricConfig metricConfig, Source<?, ?> source) {
         this(metricConfig, null, source);

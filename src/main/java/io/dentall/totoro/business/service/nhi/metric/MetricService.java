@@ -1,5 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric;
 
+import io.dentall.totoro.business.service.nhi.code.NhiCodeHashSet;
 import io.dentall.totoro.business.service.nhi.metric.dto.*;
 import io.dentall.totoro.business.service.nhi.metric.mapper.NhiMetricRawMapper;
 import io.dentall.totoro.business.service.nhi.metric.mapper.SpecialTreatmentMapper;
@@ -302,13 +303,19 @@ public class MetricService implements ApplicationContextAware {
             excludeDisposalIds
         );
 
+        NhiCodeHashSet calculateByTooth = MetricConstants.calculateByTooth;
+
         Collection<MetricDisposal> disposals = source.stream().parallel()
             .map(NhiMetricRawMapper.INSTANCE::mapToMetricTreatment)
             .reduce(new ConcurrentHashMap<Long, MetricDisposal>(source.size() / 2), (map, treatment) -> {
                     MetricDisposal disposal = ofNullable(map.get(treatment.getDisposalId())).orElse(NhiMetricRawMapper.INSTANCE.mapToMetricDisposal(treatment));
                     if (nonNull(treatment.getTreatmentProcedureCode())) {
-                        List<String> teeth = splitA74(treatment.getTreatmentProcedureTooth());
-                        teeth.forEach(tooth -> disposal.addTooth(new MetricTooth(treatment, tooth)));
+                        if (calculateByTooth.contains(treatment.getTreatmentProcedureCode())) {
+                            List<String> teeth = splitA74(treatment.getTreatmentProcedureTooth());
+                            teeth.forEach(tooth -> disposal.addTooth(new MetricTooth(treatment, tooth)));
+                        } else {
+                            disposal.addTooth(new MetricTooth(treatment, ""));
+                        }
                     }
                     map.putIfAbsent(disposal.getDisposalId(), disposal);
                     return map;
