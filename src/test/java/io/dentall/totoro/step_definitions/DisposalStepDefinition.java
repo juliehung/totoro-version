@@ -130,7 +130,7 @@ public class DisposalStepDefinition extends AbstractStepDefinition {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final DisposalResource resource1 = new DisposalResource(disposalService, disposalQueryService, nhiService, nhiExtendDisposalRepository, userRepository);
+        final DisposalResource resource1 = new DisposalResource(disposalService, disposalQueryService, nhiService, nhiExtendDisposalRepository, userRepository, null);
         final NhiExtendDisposalResource resource2 = new NhiExtendDisposalResource(nhiExtendDisposalService, disposalService);
         final TreatmentProcedureResource resource3 = new TreatmentProcedureResource(treatmentProcedureService, treatmentProcedureQueryService);
         final NhiMedicalRecordResource resource4 = new NhiMedicalRecordResource(nhiMedicalRecordService, nhiMedicalRecordQueryService, nhiTxRepository, nhiMedicineRepository, nhiExtendDisposalRepository);
