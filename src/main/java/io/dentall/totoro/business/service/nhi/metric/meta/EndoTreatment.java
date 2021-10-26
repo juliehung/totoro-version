@@ -1,5 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
+import io.dentall.totoro.business.service.nhi.code.NhiCodeHashSet;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
@@ -13,7 +14,7 @@ import static io.dentall.totoro.business.service.nhi.metric.source.MetricConstan
  */
 public class EndoTreatment extends SingleSourceMetaCalculator<Long> {
 
-    public static final List<String> codes = CodesByEndo1;
+    public static final NhiCodeHashSet codes = CodesByEndo1;
 
     public EndoTreatment(MetricConfig metricConfig, Source<?, ?> source) {
         this(metricConfig, null, source);

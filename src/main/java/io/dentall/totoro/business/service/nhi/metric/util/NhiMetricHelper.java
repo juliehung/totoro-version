@@ -1,5 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.util;
 
+import io.dentall.totoro.business.service.nhi.code.NhiCodeHashSet;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricDisposal;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
 import io.dentall.totoro.business.service.nhi.metric.meta.Exclude;
@@ -69,23 +70,23 @@ public class NhiMetricHelper {
             .orElse(0L);
     }
 
-    private static Stream<MetricDisposal> checkExamValue(List<MetricDisposal> source, List<String> codes) {
+    private static Stream<MetricDisposal> checkExamValue(List<MetricDisposal> source, NhiCodeHashSet codes) {
         return source.stream()
             .filter(vm -> isNotBlank(vm.getExamPoint()))
             .filter(vm -> codes.contains(vm.getExamCode()));
     }
 
-    public static Long calculatePurge(List<MetricDisposal> source, List<String> codes, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
+    public static Long calculatePurge(List<MetricDisposal> source, NhiCodeHashSet codes, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
         Stream<MetricDisposal> stream = checkExamValue(source, codes);
         return calculatePurge(stream, config, holidayMap);
     }
 
-    public static Long calculateExamRegular(List<MetricDisposal> source, List<String> codes, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
+    public static Long calculateExamRegular(List<MetricDisposal> source, NhiCodeHashSet codes, MetaConfig config, Map<LocalDate, Optional<Holiday>> holidayMap) {
         Stream<MetricDisposal> stream = checkExamValue(source, codes);
         return calculateExam(stream, config, holidayMap);
     }
 
-    public static Long calculateExamDifference(List<MetricDisposal> source, List<String> codes) {
+    public static Long calculateExamDifference(List<MetricDisposal> source, NhiCodeHashSet codes) {
         return checkExamValue(source, codes)
             .map(vm -> parseLong(vm.getExamPoint()) - 230L)
             .reduce(Long::sum)
@@ -94,7 +95,7 @@ public class NhiMetricHelper {
 
     public static Map<Long, Long> calculateExamByClassifier(
         List<MetricDisposal> source,
-        List<String> codes,
+        NhiCodeHashSet codes,
         Function<MetricDisposal, Long> classifier,
         MetaConfig config,
         Map<LocalDate, Optional<Holiday>> holidayMap) {

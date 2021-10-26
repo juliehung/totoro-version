@@ -1,5 +1,6 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
+import io.dentall.totoro.business.service.nhi.code.NhiCodeHashSet;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricDisposal;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
@@ -38,29 +39,29 @@ public abstract class Exam<T> extends SingleSourceMetaCalculator<T> {
         }
     }
 
-    protected Long doCalculatePurge(MetricConfig metricConfig, List<String> codes) {
+    protected Long doCalculatePurge(MetricConfig metricConfig, NhiCodeHashSet codes) {
         List<MetricDisposal> source = metricConfig.retrieveSource(source().key());
         return calculatePurge(source, codes, getConfig(), metricConfig.getHolidayMap());
     }
 
-    protected Long doCalculateRegular(MetricConfig metricConfig, List<String> codes) {
+    protected Long doCalculateRegular(MetricConfig metricConfig, NhiCodeHashSet codes) {
         List<MetricDisposal> source = metricConfig.retrieveSource(source().key());
         checkPoint6(metricConfig);
         return calculateExamRegular(source, codes, getConfig(), metricConfig.getHolidayMap());
     }
 
-    protected Long doCalculateDifference(MetricConfig metricConfig, List<String> codes) {
+    protected Long doCalculateDifference(MetricConfig metricConfig, NhiCodeHashSet codes) {
         List<MetricDisposal> source = metricConfig.retrieveSource(source().key());
         return calculateExamDifference(source, codes);
     }
 
-    protected Map<Long, Long> doCalculateByClassifier(MetricConfig metricConfig, List<String> codes, Function<MetricDisposal, Long> classifier) {
+    protected Map<Long, Long> doCalculateByClassifier(MetricConfig metricConfig, NhiCodeHashSet codes, Function<MetricDisposal, Long> classifier) {
         List<MetricDisposal> source = metricConfig.retrieveSource(source().key());
         checkPoint6(metricConfig);
         return calculateExamByClassifier(source, codes, classifier, getConfig(), metricConfig.getHolidayMap());
     }
 
-    protected Map<LocalDate, Long> doCalculateByDaily(MetricConfig metricConfig, List<String> codes) {
+    protected Map<LocalDate, Long> doCalculateByDaily(MetricConfig metricConfig, NhiCodeHashSet codes) {
         List<Map<LocalDate, List<MetricDisposal>>> source = metricConfig.retrieveSource(source().key());
         return source.get(0).entrySet().stream().reduce(new HashMap<>(),
             (map, entry) -> {
