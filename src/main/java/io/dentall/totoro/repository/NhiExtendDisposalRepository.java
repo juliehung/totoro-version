@@ -5,11 +5,7 @@ import io.dentall.totoro.business.service.nhi.NhiHybridRecord;
 import io.dentall.totoro.business.vm.nhi.NhiMetricBaseVM;
 import io.dentall.totoro.business.vm.nhi.NhiMetricRawVM;
 import io.dentall.totoro.domain.NhiExtendDisposal;
-import io.dentall.totoro.repository.dao.MonthDisposalDAO;
-import io.dentall.totoro.service.dto.CalculateBaseData;
-import io.dentall.totoro.service.dto.NhiExtendTreatmentProcedureDTO;
-import io.dentall.totoro.service.dto.NhiIndexEndoDTO;
-import io.dentall.totoro.service.dto.StatisticSpDTO;
+import io.dentall.totoro.service.dto.*;
 import io.dentall.totoro.service.dto.table.NhiExtendDisposalTable;
 import io.dentall.totoro.web.rest.vm.*;
 import org.springframework.data.domain.Page;
@@ -290,13 +286,48 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
         LocalDate rend,
         String a19);
 
-    Page<NhiExtendDisposalTable> findNhiExtendDisposalByDateBetweenAndReplenishmentDateIsNullOrReplenishmentDateBetweenAndA19Equals(
-        LocalDate start,
-        LocalDate end,
-        LocalDate rstart,
-        LocalDate rend,
-        String a19,
-        Pageable pageable);
+    @Query("select " +
+        "ned.id as id, " +
+        "ned.a11 as a11, " +
+        "ned.a12 as a12, " +
+        "ned.a13 as a13, " +
+        "ned.a14 as a14, " +
+        "ned.a15 as a15, " +
+        "ned.a16 as a16, " +
+        "ned.a17 as a17, " +
+        "ned.a18 as a18, " +
+        "ned.a19 as a19, " +
+        "ned.a22 as a22, " +
+        "ned.a23 as a23, " +
+        "ned.a25 as a25, " +
+        "ned.a26 as a26, " +
+        "ned.a27 as a27, " +
+        "ned.a31 as a31, " +
+        "ned.a32 as a32, " +
+        "ned.a41 as a41, " +
+        "ned.a42 as a42, " +
+        "ned.a43 as a43, " +
+        "ned.a44 as a44, " +
+        "ned.a54 as a54, " +
+        "ned.date as date, " +
+        "ned.uploadStatus as uploadStatus, " +
+        "ned.examinationCode as examinationCode, " +
+        "ned.examinationPoint as examinationPoint, " +
+        "ned.patientIdentity as patientIdentity, " +
+        "ned.patientId as patientId, " +
+        "ned.category as category, " +
+        "ned.replenishmentDate as replenishmentDate, " +
+        "ned.checkedMonthDeclaration as checkedMonthDeclaration, " +
+        "ned.checkedAuditing as checkedAuditing, " +
+        "ned.serialNumber as serialNumber, " +
+        "ned.referralHospitalCode as referralHospitalCode, " +
+        "ned.dependedTreatmentProcedureId as dependedTreatmentProcedureId, " +
+        "ned.disposal.id as disposal_Id " +
+        " from NhiExtendDisposal ned " +
+        " where trim(ned.a18) <> '' " +
+        " and ned.disposal.dateTime between :begin and :end " +
+        " order by ned.disposal.dateTime, ned.disposal.id")
+    Page<NhiExtendDisposalTable> findNhiMonthContentByDateBetween(@Param("begin") Instant begin, @Param("end") Instant end, Pageable pageable);
 
     Set<NhiExtendDisposalTable> findNhiExtendDisposalByDate(LocalDate date);
 
@@ -316,6 +347,9 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
         "select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where nhiExtendDisposal.date = :date"
     )
     List<NhiExtendDisposal> findByDate(@Param("date") LocalDate date);
+
+    @Query("select ned from NhiExtendDisposal ned where trim(ned.a18) <> '' and ned.disposal.dateTime between :begin and :end ")
+    List<NhiExtendDisposal> findByDateBetween(@Param("begin") Instant begin, @Param("end") Instant end);
 
     @Query("select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where " + dateBetween)
     List<NhiExtendDisposal> findByDateBetween(@Param("start") LocalDate start, @Param("end") LocalDate end);
@@ -370,30 +404,53 @@ public interface NhiExtendDisposalRepository extends RemappingDomainToTableDtoRe
     @Query("select nhiExtendDisposal from NhiExtendDisposal nhiExtendDisposal where " + dateBetween + "order by patientId, a18")
     Page<NhiExtendDisposal> findByDateBetween(@Param("start") LocalDate start, @Param("end") LocalDate end, Pageable pageable);
 
-    @Query("select new io.dentall.totoro.repository.dao.MonthDisposalDAO(disposal.id, disposal.dateTime, nhiExtendDisposal.id, " +
-        "nhiExtendDisposal.a11, nhiExtendDisposal.a12, nhiExtendDisposal.a13, " +
-        "nhiExtendDisposal.a14, nhiExtendDisposal.a15, nhiExtendDisposal.a16, " +
-        "nhiExtendDisposal.a17, nhiExtendDisposal.a18, nhiExtendDisposal.a19, " +
-        "nhiExtendDisposal.a22, nhiExtendDisposal.a23, nhiExtendDisposal.a25, " +
-        "nhiExtendDisposal.a26, nhiExtendDisposal.a27, nhiExtendDisposal.a31, " +
-        "nhiExtendDisposal.a32, nhiExtendDisposal.a41, nhiExtendDisposal.a42, " +
-        "nhiExtendDisposal.a43, nhiExtendDisposal.a44, nhiExtendDisposal.a54, " +
-        "nhiExtendDisposal.date, nhiExtendDisposal.uploadStatus, " +
-        "nhiExtendDisposal.examinationCode, nhiExtendDisposal.examinationPoint, " +
-        "nhiExtendDisposal.patientIdentity, nhiExtendDisposal.serialNumber, " +
-        "nhiExtendDisposal.patientId, nhiExtendDisposal.category, " +
-        "nhiExtendDisposal.replenishmentDate, " +
-        "nhiExtendDisposal.checkedMonthDeclaration, " +
-        "nhiExtendDisposal.checkedAuditing," +
-        "patient.name, " +
-        "patient.vipPatient ) " +
-        "from " +
-        "   NhiExtendDisposal as nhiExtendDisposal left outer join nhiExtendDisposal.disposal as disposal," +
-        "   Patient as patient " +
-        "where 1 = 1 " +
-        "and nhiExtendDisposal.patientId = patient.id " +
-        "and disposal.dateTime between :start and :end")
-    List<MonthDisposalDAO> findDisposalIdAndNhiExtendDisposalPrimByDateBetween(@Param("start") Instant start, @Param("end") Instant end);
+    @Query(
+        nativeQuery = true,
+        value = "select d.id as disposalId, " +
+            "d.date_time as disposalDateTime, " +
+            "ned.id as nhiExtendDisposalId, " +
+            "ned.a11 as a11, " +
+            "ned.a12 as a12, " +
+            "ned.a13 as a13, " +
+            "ned.a14 as a14, " +
+            "ned.a15 as a15, " +
+            "ned.a16 as a16, " +
+            "ned.a17 as a17, " +
+            "ned.a18 as a18, " +
+            "ned.a19 as a19, " +
+            "ned.a22 as a22, " +
+            "ned.a23 as a23, " +
+            "ned.a25 as a25, " +
+            "ned.a26 as a26, " +
+            "ned.a27 as a27, " +
+            "ned.a31 as a31, " +
+            "ned.a32 as a32, " +
+            "ned.a41 as a41, " +
+            "ned.a42 as a42, " +
+            "ned.a43 as a43, " +
+            "ned.a44 as a44, " +
+            "ned.a54 as a54, " +
+            "ned.upload_status as uploadStatus, " +
+            "ned.examination_code as examinationCode, " +
+            "ned.examination_point as examinationPoint, " +
+            "ned.patient_identity as patientIdentity, " +
+            "ned.serial_number as serialNumber, " +
+            "ned.category as category, " +
+            "ned.replenishment_date as replenishmentDate, " +
+            "ned.checked_month_declaration as checkedMonthDeclaration, " +
+            "ned.checked_auditing as checkedAuditing, " +
+            "p.id as patientId, " +
+            "p.name as patientName, " +
+            "p.vip_patient as vipPatient, " +
+            "tp.disposal_id as dependedDisposalId " +
+        "from disposal d " +
+        "left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+        "left join appointment a on a.registration_id = d.registration_id " +
+        "left join patient p on p.id = a.patient_id " +
+        "left join treatment_procedure tp on tp.id = ned.depended_treatment_procedure_id " +
+        "where d.date_time between :start and :end "
+    )
+    List<MonthDisposalDTO> findDisposalIdAndNhiExtendDisposalPrimByDateBetween(@Param("start") Instant start, @Param("end") Instant end);
 
     @Query("select count(nhiExtendDisposal) from NhiExtendDisposal nhiExtendDisposal where " + dateBetween)
     long countByDateBetween(@Param("start") LocalDate start, @Param("end") LocalDate end);

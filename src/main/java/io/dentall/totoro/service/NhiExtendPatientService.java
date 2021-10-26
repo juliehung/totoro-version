@@ -4,6 +4,7 @@ import io.dentall.totoro.domain.NhiExtendPatient;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.repository.NhiExtendPatientRepository;
 import io.dentall.totoro.repository.PatientRepository;
+import io.dentall.totoro.security.SecurityUtils;
 import io.dentall.totoro.service.util.ProblemUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Status;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -155,6 +157,8 @@ public class NhiExtendPatientService {
                         )
                     );
                 }
+
+                nhiExtendPatient.setLastModifiedDate(Instant.now());
 
                 return nhiExtendPatient;
             })

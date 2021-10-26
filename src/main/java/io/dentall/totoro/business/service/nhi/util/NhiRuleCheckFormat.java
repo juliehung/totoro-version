@@ -18,6 +18,10 @@ public enum NhiRuleCheckFormat {
     // 91004C:  91015C(來源-110/01/01) 1 年內不得申報 91004C。
     D1_2_3("%s:  %s(%s-%s) %s 年內不得申報 %s", NhiRuleCheckInfoType.DANGER),
 
+    // For duration with days
+    // 91004C: 建議 110/10/20 後再進行申報，91015C(來源-110/01/01) 90 天內不得申報 91004C。
+    D1_2_4("%s: 建議 %s 後再進行申報，%s(%s-%s) %s 天內不得申報 %s", NhiRuleCheckInfoType.DANGER),
+
     // 90012C:  37 已申報 92013C(來源-110/01/01)
     D1_3("%s:  %s 已申報 %s(%s-%s)", NhiRuleCheckInfoType.DANGER),
 
@@ -41,6 +45,14 @@ public enum NhiRuleCheckFormat {
 
     // 81: 已於 來源-110/01/01 申報。
     D4_1("%s: 已於 %s-%s 申報", NhiRuleCheckInfoType.DANGER),
+
+    // For duration with days
+    // 81: 建議 110/10/20 後再進行申報，已於 系統-110/10/20 申報。
+    D4_1_2("%s: 建議 %s 後再進行申報，已於 %s-%s 申報", NhiRuleCheckInfoType.DANGER),
+
+    // For duration with months
+    // 81: 建議 110/10/20 後再進行申報，已於 系統-110/10/20 申報。
+    D4_1_3("%s: 建議 %s 後再進行申報，已於 %s-%s 申報", NhiRuleCheckInfoType.DANGER),
 
     // 91001C: 已於 來源-110/01/05 申報第一象限。
     D4_2("%s: 已於 %s-%s 申報%s", NhiRuleCheckInfoType.DANGER),
