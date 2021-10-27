@@ -339,6 +339,14 @@ public class NhiExtendDisposalService {
                     }
                 }
 
+                // Find depended tp's disposal
+                if (nhiExtendDisposalTable.getDependedTreatmentProcedureId() != null) {
+                    Optional<TreatmentProcedureTable> dtp = treatmentProcedureRepository.findById(nhiExtendDisposalTable.getDependedTreatmentProcedureId(), TreatmentProcedureTable.class);
+                    if (dtp.isPresent()) {
+                        vm.setDependedDisposalId(dtp.get().getDisposal_Id());
+                    }
+                }
+
                 // Fit frontend export monthly xml format
                 NhiExtendDisposal nhiExtendDisposal = nhiExtendDisposalMapper.nhiExtendDisposalTableToNhiExtendDisposal(nhiExtendDisposalTable);
                 nhiExtendDisposal.setNhiExtendTreatmentProcedures(nhiExtendTreatmentProcedures);
