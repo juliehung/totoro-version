@@ -108,9 +108,8 @@ public class NhiExtendDisposalResourceV2 {
     @GetMapping("/nhi-extend-disposals/yearmonth/{yyyymm}")
     @Timed
     public ResponseEntity<List<MonthDisposalCollectorVM>> getAllByYYYYMM(
-            @PathVariable Integer yyyymm,
-            @RequestParam(required = false, name = "toleranceA18") Boolean toleranceA18 // 原始程式邏輯會用isNotBlank(A18)來過慮資料，如果不想過濾A18，請設定true
-            ) {
+            @PathVariable Integer yyyymm
+    ) {
         log.debug("REST request to get all nhi ext dis all in year month");
 
         YearMonth ym;
@@ -119,7 +118,10 @@ public class NhiExtendDisposalResourceV2 {
         } catch (DateTimeException e) {
             throw new BadRequestAlertException("Can not parse yyyymm", ENTITY_NAME, "invalidate");
         }
-        return ResponseEntity.ok().body(nhiExtendDisposalService.findByYearMonthForLazyNhiExtDis(ym, toleranceA18));
+
+        // 2021-??-?? 原始程式邏輯會用isNotBlank(A18)來過慮資料，如果不想過濾A18，請設定true
+        // 2021-10-28 根據討論，需移除 a18 過濾，此後會將過濾 a18 邏輯移除, ref https://app.clickup.com/t/1q3ud09
+        return ResponseEntity.ok().body(nhiExtendDisposalService.findByYearMonthForLazyNhiExtDis(ym));
     }
 
     /**

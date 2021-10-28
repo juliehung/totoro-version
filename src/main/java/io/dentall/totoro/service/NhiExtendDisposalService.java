@@ -351,7 +351,7 @@ public class NhiExtendDisposalService {
     }
 
     @Transactional(readOnly = true)
-    public List<MonthDisposalCollectorVM> findByYearMonthForLazyNhiExtDis(YearMonth ym, Boolean toleranceA18) {
+    public List<MonthDisposalCollectorVM> findByYearMonthForLazyNhiExtDis(YearMonth ym) {
         return nhiExtendDisposalRepository.findDisposalIdAndNhiExtendDisposalPrimByDateBetween(
             ym.atDay(1).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET),
             ym.atEndOfMonth().atTime(LocalTime.MAX).toInstant(TimeConfig.ZONE_OFF_SET)
@@ -359,13 +359,6 @@ public class NhiExtendDisposalService {
             .filter(d -> d != null &&
                 d.getDisposalDateTime() != null
             )
-            .filter(d -> {
-                if (!Optional.ofNullable(toleranceA18).orElse(false)) {
-                    return StringUtils.isNotBlank(d.getA18());
-                } else {
-                    return true;
-                }
-            })
             .collect(Collectors.groupingBy(MonthDisposalDTO::getDisposalId))
             .entrySet()
             .stream()
