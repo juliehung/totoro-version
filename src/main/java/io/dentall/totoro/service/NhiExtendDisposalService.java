@@ -357,7 +357,8 @@ public class NhiExtendDisposalService {
             ym.atEndOfMonth().atTime(LocalTime.MAX).toInstant(TimeConfig.ZONE_OFF_SET)
         ).stream()
             .filter(d -> d != null &&
-                d.getDisposalDateTime() != null
+                d.getDisposalDateTime() != null &&
+                StringUtils.isNotBlank(d.getA18())
             )
             .collect(Collectors.groupingBy(MonthDisposalDTO::getDisposalId))
             .entrySet()
