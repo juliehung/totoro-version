@@ -206,12 +206,7 @@ public class NhiMetricResource {
                             .format(Instant.now())
                     )
                     .concat(".xls");
-                String fileUrl = imageGcsBusinessService.getUrlForDownload()
-                    .concat(imageGcsBusinessService.getClinicName())
-                    .concat("/")
-                    .concat(BackupFileCatalog.NHI_METRIC_REPORT.getRemotePath())
-                    .concat("/")
-                    .concat(fileName);
+
                 imageGcsBusinessService.uploadFile(
                     gcsPath,
                     fileName,
@@ -221,7 +216,7 @@ public class NhiMetricResource {
 
                 if (r != null) {
                     r.setStatus(BatchStatus.DONE);
-                    r.getComment().setUrl(fileUrl);
+                    r.getComment().setUrl(gcsPath.concat(fileName));
                     nhiMetricReportRepository.save(r);
                     nhiMetricReportRepository.flush();
                 }
@@ -243,12 +238,23 @@ public class NhiMetricResource {
     @GetMapping("/report")
     @Timed
     public ResponseEntity<List<NhiMetricReport>> getNhiMetricReports(NhiMetricReportQueryStringVM queryStringVM) {
+        ImageGcsBusinessService imageGcsBusinessService = applicationContext.getBean(ImageGcsBusinessService.class);
+
         List<NhiMetricReport> result = nhiMetricReportRepository.findByYearMonthAndCreatedByOrderByCreatedDateDesc(
             DateTimeUtil.transformIntYyyymmToFormatedStringYyyymm(
                 queryStringVM.getYyyymm()
             ),
             queryStringVM.getCreatedBy()
         );
+
+        result.forEach(d -> {
+            if (d.getComment() != null &&
+                d.getComment().getUrl() != null
+            ) {
+                String newUrl = d.getComment().getUrl();
+                d.getComment().setUrl(imageGcsBusinessService.getUrlForDownload().concat(newUrl));
+            }
+        });
 
         return ResponseEntity.ok(result);
     }
