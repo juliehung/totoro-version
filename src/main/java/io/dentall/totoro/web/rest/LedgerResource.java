@@ -121,6 +121,7 @@ public class LedgerResource {
      * @param id the id of the ledger to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the ledger, or with status 404 (Not Found)
      */
+    @Deprecated
     @GetMapping("/ledgers/{id}")
     @Timed
     public ResponseEntity<Ledger> getLedger(@PathVariable Long id) {
