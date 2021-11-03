@@ -4,7 +4,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <changeSet id="20211027-weichen" author="WeiChen">
+    <changeSet id="20211102-weichen-2" author="WeiChen">
         <sql>
             alter table treatment_procedure add column proxied_inspection_hospital_code varchar(20);
         </sql>
