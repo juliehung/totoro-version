@@ -36,12 +36,6 @@ public class LedgerGroupResource {
         return ledgerGroupRepository.save(ledgerGroup);
     }
 
-    @GetMapping("/ledger-groups")
-    @Timed
-    public List<LedgerGroup> getLedgerGroup(@RequestParam(value = "patientId") Long patientId) {
-        return ledgerGroupRepository.findByPatientId(patientId);
-    }
-
     @PatchMapping("/ledger-groups")
     @Timed
     @Transactional

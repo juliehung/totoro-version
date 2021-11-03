@@ -1,13 +1,19 @@
 package io.dentall.totoro.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.criteria.JoinType;
 
+import io.dentall.totoro.repository.LedgerGroupRepository;
+import io.dentall.totoro.service.mapper.LedgerGroupMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,8 +39,14 @@ public class LedgerQueryService extends QueryService<Ledger> {
 
     private final LedgerRepository ledgerRepository;
 
-    public LedgerQueryService(LedgerRepository ledgerRepository) {
+    private final LedgerGroupRepository ledgerGroupRepository;
+
+    public LedgerQueryService(
+        LedgerRepository ledgerRepository,
+        LedgerGroupRepository ledgerGroupRepository
+    ) {
         this.ledgerRepository = ledgerRepository;
+        this.ledgerGroupRepository = ledgerGroupRepository;
     }
 
     /**
@@ -59,7 +71,29 @@ public class LedgerQueryService extends QueryService<Ledger> {
     public Page<Ledger> findByCriteria(LedgerCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Ledger> specification = createSpecification(criteria);
-        return ledgerRepository.findAll(specification, page);
+        page.getSortOr(new Sort(Sort.Direction.DESC, "date"));
+
+        Page<Ledger> ledgers = ledgerRepository.findAll(specification, page);
+        Map<Long, LedgerGroup> ledgerGroups = ledgers.getContent().stream()
+            .map(Ledger::getGid)
+            .distinct()
+            .map(d -> {
+                Optional<LedgerGroup> lgo = ledgerGroupRepository.findById(d);
+                if (lgo.isPresent()) {
+                    return lgo.get();
+                } else {
+                    return new LedgerGroup();
+                }
+            })
+            .collect(
+                Collectors.toMap(
+                    LedgerGroup::getId,
+                    (v) -> v,
+                    (a, b)  -> a.getId() > b.getId() ? a : b
+                )
+            );
+        ledgers.getContent().forEach(d -> LedgerGroupMapper.INSTANCE.copyLedgerGroupToLedgerVM(ledgerGroups.get(d.getGid()), d));
+        return ledgers;
     }
 
     /**
