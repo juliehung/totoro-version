@@ -65,6 +65,10 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     @Column(name = "nhi_icd_10_cm")
     private String nhiIcd10Cm;
 
+    // 代檢醫事機構代碼
+    @Column(name = "proxied_inspection_hospital_code")
+    private String proxiedInspectionHospitalCode;
+
     @ManyToOne
     @JsonIgnoreProperties("")
     private NhiProcedure nhiProcedure;
@@ -116,6 +120,14 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     public TreatmentProcedure status(TreatmentProcedureStatus status) {
         this.status = status;
         return this;
+    }
+
+    public String getProxiedInspectionHospitalCode() {
+        return proxiedInspectionHospitalCode;
+    }
+
+    public void setProxiedInspectionHospitalCode(String proxiedInspectionHospitalCode) {
+        this.proxiedInspectionHospitalCode = proxiedInspectionHospitalCode;
     }
 
     public void setStatus(TreatmentProcedureStatus status) {

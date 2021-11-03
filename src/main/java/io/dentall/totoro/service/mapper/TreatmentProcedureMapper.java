@@ -76,6 +76,7 @@ public class TreatmentProcedureMapper {
         treatmentProcedure.setCreatedBy(treatmentProcedureTable.getCreatedBy());
         treatmentProcedure.setLastModifiedDate(treatmentProcedureTable.getLastModifiedDate());
         treatmentProcedure.setLastModifiedBy(treatmentProcedureTable.getLastModifiedBy());
+        treatmentProcedure.setProxiedInspectionHospitalCode(treatmentProcedureTable.getProxiedInspectionHospitalCode());
 
         if (treatmentProcedureTable.getNhiProcedure_Id() != null) {
             NhiProcedure nhiProcedure = new NhiProcedure();
