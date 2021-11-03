@@ -15,6 +15,7 @@ public interface TreatmentProcedureTable extends AuditingElement {
     String getNhiCategory();
     String getNhiDescription();
     String getNhiIcd10Cm();
+    String getProxiedInspectionHospitalCode();
 
     // Relationship
     Long getNhiExtendTreatmentProcedure_Id();
