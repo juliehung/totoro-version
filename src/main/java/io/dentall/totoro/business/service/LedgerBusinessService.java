@@ -114,24 +114,6 @@ public class LedgerBusinessService {
                 Status.BAD_REQUEST
             );
         }
-
-        if (l.getGid() != null) {
-            Optional<Ledger> res = ledgerRepository.findById(l.getGid());
-            if (!res.isPresent()) {
-                throw new ProblemUtil(
-                    "Not a validate gid(group need insert head first.)",
-                    Status.BAD_REQUEST
-                );
-            }
-
-            if (res.get().getGid() != null) {
-                throw new ProblemUtil(
-                    "Not a validate gid(gid indicated record must be head, meanwhile" +
-                        "gid indicated record's gid must be null)",
-                    Status.BAD_REQUEST
-                );
-            }
-        }
     }
 
     // Wrappers

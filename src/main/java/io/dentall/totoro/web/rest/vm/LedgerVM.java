@@ -6,7 +6,7 @@ import io.dentall.totoro.domain.Patient;
 
 public class LedgerVM {
     @JsonUnwrapped
-    Ledger ledger;
+    LedgerUnwrapGroupVM ledger;
 
     Patient patient;
 
@@ -14,15 +14,11 @@ public class LedgerVM {
 
     }
 
-    public LedgerVM(Ledger ledger) {
-        this.ledger = ledger;
-    }
-
-    public Ledger getLedger() {
+    public LedgerUnwrapGroupVM getLedger() {
         return ledger;
     }
 
-    public void setLedger(Ledger ledger) {
+    public void setLedger(LedgerUnwrapGroupVM ledger) {
         this.ledger = ledger;
     }
 
