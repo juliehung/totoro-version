@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20211104-weichen" author="WeiChen">
+        <sql>
+            create table ledger_receipt (
+                id bigint,
+                signed boolean,
+                type varchar(20),
+                range_type varchar(20),
+                range_begin timestamp,
+                range_end timestamp,
+                stamp_tax boolean,
+                time timestamp,
+                constraint ledger_ledger_receipt_pkey
+                    primary key (id)
+            );
+            create index on ledger_receipt (id);
+        </sql>
+        <sql>
+            create table ledger_ledger_receipt (
+                lid bigint not null
+                    constraint fk_ledger_ledger_receipt_ledger_id
+                        references ledger,
+                lrid bigint not null
+                    constraint fk_ledger_ledger_receipt_ledger_receipt_id
+                        references ledger_receipt,
+                constraint ledger_ledger_receipt_pkey
+                    primary key (lid, lrid)
+            );
+            create index on ledger_receipt (lid, lrid);
+        </sql>
+        <sql>
+            create table ledger_receipt_printed_record (
+                lrid bigint
+                    constraint fk_ledger_receipt_printed_record_lrid
+                        references ledger,
+                print_time timestamp,
+                constraint ledger_receipt_printed_record_pkey
+                    primary key (lrid, print_time)
+            );
+            create index on ledger_receipt (id);
+        </sql>
+    </changeSet>
+</databaseChangeLog>
