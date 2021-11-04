@@ -67,6 +67,7 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     private String nhiIcd10Cm;
 
     // 醫令調劑
+    @Enumerated(EnumType.STRING)
     @Column(name = "jhi_mode")
     private PrescriptionMode mode;
 
