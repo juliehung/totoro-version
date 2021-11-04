@@ -113,12 +113,4 @@ public class LedgerUnwrapGroupUpdateVM {
     public void setLastModifiedBy(String lastModifiedBy) {
         this.lastModifiedBy = lastModifiedBy;
     }
-
-    public Long getGid() {
-        return gid;
-    }
-
-    public void setGid(Long gid) {
-        this.gid = gid;
-    }
 }
