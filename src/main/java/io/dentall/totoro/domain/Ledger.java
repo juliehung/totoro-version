@@ -1,5 +1,6 @@
 package io.dentall.totoro.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -51,9 +52,6 @@ public class Ledger implements Serializable {
     @Column(name = "doctor")
     private String doctor;
 
-    @Column(name = "gid")
-    private Long gid;
-
     @Deprecated
     @Column(name = "display_name")
     private String displayName;
@@ -98,6 +96,11 @@ public class Ledger implements Serializable {
     @Deprecated
     @ManyToOne
     private TreatmentPlan treatmentPlan;
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "gid")
+    private LedgerGroup ledgerGroup;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
@@ -242,16 +245,16 @@ public class Ledger implements Serializable {
     }
 
     public Long getGid() {
-        return gid;
+        return ledgerGroup.getId();
     }
 
     public Ledger gid(Long gid) {
-        this.gid = gid;
+        ledgerGroup.setId(gid);
         return this;
     }
 
     public void setGid(Long gid) {
-        this.gid = gid;
+        ledgerGroup.setId(gid);
     }
 
     public String getDisplayName() {

@@ -132,9 +132,6 @@ public class LedgerQueryService extends QueryService<Ledger> {
             if (criteria.getDoctor() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDoctor(), Ledger_.doctor));
             }
-            if (criteria.getGid() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getGid(), Ledger_.gid));
-            }
             if (criteria.getProjectCode() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getProjectCode(), Ledger_.projectCode));
             }
@@ -142,13 +139,15 @@ public class LedgerQueryService extends QueryService<Ledger> {
                 specification = specification.and(buildStringSpecification(criteria.getDisplayName(), Ledger_.displayName));
             }
             if (criteria.getType() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getType(), Ledger_.type));
+                specification = specification.and(buildSpecification(criteria.getType(),
+                    root -> root.join(Ledger_.ledgerGroup, JoinType.LEFT).get(LedgerGroup_.type)));
             }
             if (criteria.getDate() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getDate(), Ledger_.date));
             }
             if (criteria.getPatientId() != null) {
-                specification = specification.and(buildSpecification(criteria.getPatientId(), Ledger_.patientId));
+                specification = specification.and(buildSpecification(criteria.getPatientId(),
+                    root -> root.join(Ledger_.ledgerGroup, JoinType.LEFT).get(LedgerGroup_.patientId)));
             }
             if (criteria.getCreatedDate() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getCreatedDate(), Ledger_.createdDate));
