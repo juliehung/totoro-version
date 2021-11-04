@@ -326,6 +326,10 @@ public class TreatmentProcedureService {
                     treatmentProcedure.setProxiedInspectionHospitalCode(updateTreatmentProcedure.getProxiedInspectionHospitalCode());
                 }
 
+                if (updateTreatmentProcedure.getMode() != null) {
+                    treatmentProcedure.setMode(updateTreatmentProcedure.getMode());
+                }
+
                 return treatmentProcedure;
             })
             .get();
