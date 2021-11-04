@@ -3,6 +3,7 @@ package io.dentall.totoro.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.dentall.totoro.domain.enumeration.PrescriptionMode;
 import io.dentall.totoro.domain.enumeration.TreatmentProcedureStatus;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -65,6 +66,10 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     @Column(name = "nhi_icd_10_cm")
     private String nhiIcd10Cm;
 
+    // 醫令調劑
+    @Column(name = "jhi_mode")
+    private PrescriptionMode mode;
+
     // 代檢醫事機構代碼
     @Column(name = "proxied_inspection_hospital_code")
     private String proxiedInspectionHospitalCode;
@@ -104,6 +109,14 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     @Column(name = "created_date", nullable = false)
     @JsonIgnore
     private Instant createdDate;
+
+    public PrescriptionMode getMode() {
+        return mode;
+    }
+
+    public void setMode(PrescriptionMode mode) {
+        this.mode = mode;
+    }
 
     public Long getId() {
         return id;
