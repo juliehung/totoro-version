@@ -244,19 +244,6 @@ public class Ledger implements Serializable {
         this.doctor = doctor;
     }
 
-    public Long getGid() {
-        return ledgerGroup.getId();
-    }
-
-    public Ledger gid(Long gid) {
-        ledgerGroup.setId(gid);
-        return this;
-    }
-
-    public void setGid(Long gid) {
-        ledgerGroup.setId(gid);
-    }
-
     public String getDisplayName() {
         return displayName;
     }
@@ -351,6 +338,14 @@ public class Ledger implements Serializable {
         return Objects.equals(getId(), ledger.getId());
     }
 
+    public LedgerGroup getLedgerGroup() {
+        return ledgerGroup;
+    }
+
+    public void setLedgerGroup(LedgerGroup ledgerGroup) {
+        this.ledgerGroup = ledgerGroup;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(getId());
@@ -365,7 +360,6 @@ public class Ledger implements Serializable {
             ", arrears=" + getArrears() +
             ", note='" + getNote() + "'" +
             ", doctor='" + getDoctor() + "'" +
-            ", gid=" + getGid() +
             ", displayName='" + getDisplayName() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +

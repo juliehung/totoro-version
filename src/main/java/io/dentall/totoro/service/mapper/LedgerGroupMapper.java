@@ -2,6 +2,7 @@ package io.dentall.totoro.service.mapper;
 
 import io.dentall.totoro.domain.Ledger;
 import io.dentall.totoro.domain.LedgerGroup;
+import io.dentall.totoro.web.rest.vm.LedgerUnwrapGroupVM;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -15,10 +16,9 @@ public interface LedgerGroupMapper {
         LedgerGroup patch
     );
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "date", ignore = true)
-    void copyLedgerGroupToLedgerVM(
-        LedgerGroup ledgerGroup,
-        @MappingTarget Ledger ledger
-    );
+    @Mapping(target = "gid", source = "ledgerGroup.id")
+    LedgerUnwrapGroupVM convertLedgerToLedgerUnwrapGroupVM(Ledger l);
+
+
+    Ledger convertLedgerUnwrapGroupVMToLedger(LedgerUnwrapGroupVM vm);
 }

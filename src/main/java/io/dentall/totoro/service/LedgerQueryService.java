@@ -9,6 +9,7 @@ import javax.persistence.criteria.JoinType;
 
 import io.dentall.totoro.repository.LedgerGroupRepository;
 import io.dentall.totoro.service.mapper.LedgerGroupMapper;
+import io.dentall.totoro.web.rest.util.PaginationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -74,25 +75,6 @@ public class LedgerQueryService extends QueryService<Ledger> {
         page.getSortOr(new Sort(Sort.Direction.DESC, "date"));
 
         Page<Ledger> ledgers = ledgerRepository.findAll(specification, page);
-        Map<Long, LedgerGroup> ledgerGroups = ledgers.getContent().stream()
-            .map(Ledger::getGid)
-            .distinct()
-            .map(d -> {
-                Optional<LedgerGroup> lgo = ledgerGroupRepository.findById(d);
-                if (lgo.isPresent()) {
-                    return lgo.get();
-                } else {
-                    return new LedgerGroup();
-                }
-            })
-            .collect(
-                Collectors.toMap(
-                    LedgerGroup::getId,
-                    (v) -> v,
-                    (a, b)  -> a.getId() > b.getId() ? a : b
-                )
-            );
-        ledgers.getContent().forEach(d -> LedgerGroupMapper.INSTANCE.copyLedgerGroupToLedgerVM(ledgerGroups.get(d.getGid()), d));
         return ledgers;
     }
 
