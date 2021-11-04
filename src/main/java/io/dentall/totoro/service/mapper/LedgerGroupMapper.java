@@ -15,10 +15,8 @@ public interface LedgerGroupMapper {
         LedgerGroup patch
     );
 
-    @Mapping(target = "amount", source = "amount")
-    @Mapping(target = "displayName", source = "displayName")
-    @Mapping(target = "projectCode", source = "projectCode")
-    @Mapping(target = "type", source = "type")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "date", ignore = true)
     void copyLedgerGroupToLedgerVM(
         LedgerGroup ledgerGroup,
         @MappingTarget Ledger ledger
