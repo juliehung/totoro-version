@@ -6,6 +6,16 @@ import java.time.Instant;
 public class LedgerUnwrapGroupVM {
     private Long id;
 
+    private String type;
+
+    private Long patientId;
+
+    private Double amount;
+
+    private String projectCode;
+
+    private String displayName;
+
     @NotNull
     private Double charge;
 
@@ -126,5 +136,45 @@ public class LedgerUnwrapGroupVM {
 
     public void setGid(Long gid) {
         this.gid = gid;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public String getProjectCode() {
+        return projectCode;
+    }
+
+    public void setProjectCode(String projectCode) {
+        this.projectCode = projectCode;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public Long getPatientId() {
+        return patientId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setPatientId(Long patientId) {
+        this.patientId = patientId;
     }
 }

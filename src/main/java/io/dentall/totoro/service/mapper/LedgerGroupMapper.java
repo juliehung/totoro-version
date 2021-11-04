@@ -17,8 +17,12 @@ public interface LedgerGroupMapper {
     );
 
     @Mapping(target = "gid", source = "ledgerGroup.id")
+    @Mapping(target = "type", source = "ledgerGroup.type")
+    @Mapping(target = "projectCode", source = "ledgerGroup.projectCode")
+    @Mapping(target = "displayName", source = "ledgerGroup.displayName")
+    @Mapping(target = "patientId", source = "ledgerGroup.patientId")
+    @Mapping(target = "amount", source = "ledgerGroup.amount")
     LedgerUnwrapGroupVM convertLedgerToLedgerUnwrapGroupVM(Ledger l);
-
 
     Ledger convertLedgerUnwrapGroupVMToLedger(LedgerUnwrapGroupVM vm);
 }
