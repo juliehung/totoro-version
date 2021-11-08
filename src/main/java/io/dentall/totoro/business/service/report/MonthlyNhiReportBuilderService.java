@@ -43,7 +43,7 @@ public class MonthlyNhiReportBuilderService implements ReportBuilderService {
         return report;
     }
 
-    private ReportDataProvider<MonthlyNhiReportSetting, List<SubjectMonthlyNhiVo>> getDataProvider() {
+    public ReportDataProvider<MonthlyNhiReportSetting, List<SubjectMonthlyNhiVo>> getDataProvider() {
         return (setting) -> {
             Set<Long> includeNhiProcedureIds = ofNullable(setting.getIncludeNhiProcedureIds()).orElse(emptySet());
             Set<Long> includeDoctorIds = ofNullable(setting.getIncludeDoctorIds()).orElse(emptySet());

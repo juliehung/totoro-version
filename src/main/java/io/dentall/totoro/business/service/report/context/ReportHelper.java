@@ -131,7 +131,7 @@ public class ReportHelper {
     public static int calculatePtCount(
         Long disposalId,
         LocalDate date,
-        long patientId,
+        Long patientId,
         String cardNumber,
         int count,
         Set<String> existPatientCardNumber,

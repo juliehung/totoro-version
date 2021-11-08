@@ -43,7 +43,7 @@ public class MonthlyDrugReportBuilderService implements ReportBuilderService {
         return report;
     }
 
-    private ReportDataProvider<MonthlyDrugReportSetting, List<SubjectMonthlyDrugVo>> getDataProvider() {
+    public ReportDataProvider<MonthlyDrugReportSetting, List<SubjectMonthlyDrugVo>> getDataProvider() {
         return (setting) -> {
             Set<Long> includeDrugIds = ofNullable(setting.getIncludeDrugIds()).orElse(emptySet());
             Set<Long> includeDoctorIds = ofNullable(setting.getIncludeDoctorIds()).orElse(emptySet());

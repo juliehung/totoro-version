@@ -49,7 +49,7 @@ public class PeriodontalReportBuilderService implements ReportBuilderService {
         return report;
     }
 
-    private ReportDataProvider<PeriodontalReportSetting, List<PeriodontalVo>> getDataProvider() {
+    public ReportDataProvider<PeriodontalReportSetting, List<PeriodontalVo>> getDataProvider() {
         return (setting) -> {
             Set<Long> includeDoctorIds = ofNullable(setting.getIncludeDoctorIds()).orElse(emptySet());
             Instant todayBeginTime = LocalDate.now().atStartOfDay(TimeConfig.ZONE_OFF_SET).toInstant();
@@ -73,16 +73,16 @@ public class PeriodontalReportBuilderService implements ReportBuilderService {
             return group.values()
                 .stream()
                 .parallel()
-                .map(patientIds -> reportDataRepository.findNhiPatientAndCode(patientIds, codes))
+                .map(patientIds -> reportDataRepository.findNhiVoPatientAndCode(patientIds, codes))
                 .flatMap(Collection::stream)
                 .collect(groupingByConcurrent(NhiDto::getPatientId))
                 .values()
                 .stream()
-                .map(dtoList -> {
-                    LocalDate p4001Date = dtoList.stream().filter(dto -> "91021C".equals(dto.getProcedureCode())).findAny().map(NhiDto::getDisposalDate).orElse(null);
-                    LocalDate p4002Date = dtoList.stream().filter(dto -> "91022C".equals(dto.getProcedureCode())).findAny().map(NhiDto::getDisposalDate).orElse(null);
-                    LocalDate p4003Date = dtoList.stream().filter(dto -> "91023C".equals(dto.getProcedureCode())).findAny().map(NhiDto::getDisposalDate).orElse(null);
-                    PeriodontalVo vo = ReportMapper.INSTANCE.mapToPeriodontalVo(dtoList.get(0));
+                .map(nhiVoList -> {
+                    LocalDate p4001Date = nhiVoList.stream().filter(dto -> "91021C".equals(dto.getProcedureCode())).findAny().map(NhiDto::getDisposalDate).orElse(null);
+                    LocalDate p4002Date = nhiVoList.stream().filter(dto -> "91022C".equals(dto.getProcedureCode())).findAny().map(NhiDto::getDisposalDate).orElse(null);
+                    LocalDate p4003Date = nhiVoList.stream().filter(dto -> "91023C".equals(dto.getProcedureCode())).findAny().map(NhiDto::getDisposalDate).orElse(null);
+                    PeriodontalVo vo = ReportMapper.INSTANCE.mapToPeriodontalVo(nhiVoList.get(0));
                     vo.setP4001Date(p4001Date);
                     vo.setP4002Date(p4002Date);
                     vo.setP4003Date(p4003Date);

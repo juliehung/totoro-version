@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
+import java.util.Optional;
 
 import static io.dentall.totoro.domain.enumeration.BatchStatus.DONE;
 import static io.dentall.totoro.domain.enumeration.BatchStatus.FAILURE;
@@ -29,12 +30,12 @@ public class ReportAspect {
 
     private static final Logger log = LoggerFactory.getLogger(ReportAspect.class);
 
-    private final ImageGcsBusinessService imageGcsBusinessService;
+    private final Optional<ImageGcsBusinessService> imageGcsBusinessServiceOptional;
 
     private final ReportRecordRepository reportRecordRepository;
 
-    public ReportAspect(ImageGcsBusinessService imageGcsBusinessService, ReportRecordRepository reportRecordRepository) {
-        this.imageGcsBusinessService = imageGcsBusinessService;
+    public ReportAspect(Optional<ImageGcsBusinessService> imageGcsBusinessServiceOptional, ReportRecordRepository reportRecordRepository) {
+        this.imageGcsBusinessServiceOptional = imageGcsBusinessServiceOptional;
         this.reportRecordRepository = reportRecordRepository;
     }
 
@@ -48,11 +49,10 @@ public class ReportAspect {
 
     @Pointcut("@annotation(reportRunningCheck)")
     public void runningCheckPointcut(ReportRunningCheck reportRunningCheck) {
-        ReportCategory category = reportRunningCheck.category();
     }
 
     @Around("restPackagePointcut() && restControllerPointcut() && runningCheckPointcut(reportRunningCheck)")
-    public Object logAround(ProceedingJoinPoint joinPoint, ReportRunningCheck reportRunningCheck) throws Throwable {
+    public Object runningCheck(ProceedingJoinPoint joinPoint, ReportRunningCheck reportRunningCheck) throws Throwable {
         ReportCategory category = reportRunningCheck.category();
         int upLimit = reportRunningCheck.concurrentUpLimit();
         int lockCount = reportRecordRepository.countByCategoryAndStatus(category, BatchStatus.LOCK);
@@ -60,7 +60,7 @@ public class ReportAspect {
         if (upLimit > 0 && lockCount < upLimit) {
             return joinPoint.proceed();
         } else {
-            return ResponseEntity.badRequest().body(String.format("%s concurrent export amount is %s, maximum limit is %s", category, lockCount, upLimit));
+            return ResponseEntity.badRequest().body(String.format("%s current export amount is %s, maximum export limit is %s", category, lockCount, upLimit));
         }
     }
 
@@ -69,7 +69,11 @@ public class ReportAspect {
     }
 
     @Around("ReportPointcut(reportRunner, service, bookSetting, outputStream)")
-    public Object handle(ProceedingJoinPoint joinPoint, ReportRunner reportRunner, ReportService service, BookSetting bookSetting, ByteArrayOutputStream outputStream) throws Throwable {
+    public Object handle(ProceedingJoinPoint joinPoint,
+                         ReportRunner reportRunner,
+                         ReportService service,
+                         BookSetting bookSetting,
+                         ByteArrayOutputStream outputStream) throws Throwable {
         service.completeSetting(bookSetting);
         ReportRecord reportRecord = newReportRecord(reportRunner, service, bookSetting);
         String fileName = reportRecord.getFileName();
@@ -96,7 +100,9 @@ public class ReportAspect {
     }
 
     private ReportRecord newReportRecord(ReportRunner reportRunner, ReportService service, BookSetting bookSetting) {
-        String filePath = imageGcsBusinessService.getClinicName().concat("/").concat(reportRunner.backupFileCatalog().getRemotePath()).concat("/");
+        String filePath = imageGcsBusinessServiceOptional
+            .map(s -> s.getClinicName().concat("/").concat(reportRunner.backupFileCatalog().getRemotePath()).concat("/"))
+            .orElse("");
         String fileName = service.getBookFileName(bookSetting);
         Map<String, String> attrs = service.getReportAttribute(bookSetting);
         ReportRecord reportRecord = new ReportRecord();
@@ -134,12 +140,12 @@ public class ReportAspect {
     }
 
     private void uploadFile(ReportRunner reportRunner, ReportRecord reportRecord, ByteArrayOutputStream outputStream) {
-        imageGcsBusinessService.uploadFile(
+        imageGcsBusinessServiceOptional.ifPresent(s -> s.uploadFile(
             reportRecord.getFilePath(),
             reportRecord.getFileName(),
             outputStream.toByteArray(),
             reportRunner.backupFileCatalog().getFileExtension()
-        );
+        ));
     }
 
 }

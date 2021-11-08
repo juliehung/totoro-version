@@ -47,7 +47,7 @@ public class DailyNhiReportBuilderService implements ReportBuilderService {
         return report;
     }
 
-    private ReportDataProvider<DailyNhiReportSetting, List<NhiVo>> getDataProvider() {
+    public ReportDataProvider<DailyNhiReportSetting, List<NhiVo>> getDataProvider() {
         return (setting) -> {
             Set<Long> includeNhiProcedureIds = ofNullable(setting.getIncludeNhiProcedureIds()).orElse(emptySet());
             Set<Long> includeDoctorIds = ofNullable(setting.getIncludeDoctorIds()).orElse(emptySet());

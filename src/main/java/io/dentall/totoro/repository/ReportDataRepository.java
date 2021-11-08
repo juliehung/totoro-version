@@ -503,7 +503,7 @@ public interface ReportDataRepository extends JpaRepository<ReportRecord, Long> 
             .map(ReportMapper.INSTANCE::mapToDrugVo).filter(vo -> nonNull(vo.getDisposalDate())).collect(toList());
     }
 
-    default List<TeethCleaningVo> findNhiVoDisposalIds(List<Long> disposalIds) {
+    default List<TeethCleaningVo> findTeethCleaningVoDisposalIds(List<Long> disposalIds) {
         return findNhiDisposalIds(disposalIds).stream().parallel()
             .map(ReportMapper.INSTANCE::mapToTeethCleaningVo).filter(vo -> nonNull(vo.getDisposalDate())).collect(toList());
     }
@@ -511,5 +511,10 @@ public interface ReportDataRepository extends JpaRepository<ReportRecord, Long> 
     default List<FluoridationVo> findFluoridationVoDisposalIds(List<Long> disposalIds) {
         return findNhiDisposalIds(disposalIds).stream().parallel()
             .map(ReportMapper.INSTANCE::mapToFluoridationVo).filter(vo -> nonNull(vo.getDisposalDate())).collect(toList());
+    }
+
+    default List<NhiVo> findNhiVoPatientAndCode(List<Long> patientIds, List<String> codes) {
+        return findNhiPatientAndCode(patientIds, codes).stream().parallel()
+            .map(ReportMapper.INSTANCE::mapToNhiVo).filter(vo -> nonNull(vo.getDisposalDate())).collect(toList());
     }
 }

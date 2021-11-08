@@ -9,7 +9,10 @@ import io.dentall.totoro.service.dto.table.ToothTable;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -36,11 +39,11 @@ public class ReportBuilderHelper {
             .stream().collect(groupingBy(DrugVo::getPatientId));
     }
 
-    public static <T extends DisposalDto> Predicate<T> hasFollowupDisposalInGapMonths(
+    public static <T extends DisposalDto> Predicate<T> hasNoFollowupDisposalInGapMonths(
         LocalDate beginDate, LocalDate endDate, List<Long> patientIds, int gapMonths, ReportDataRepository reportDataRepository) {
         Map<Long, List<DisposalVo>> history =
             patientIds.isEmpty() ? emptyMap() :
-                reportDataRepository.findDisposalVoBetweenAndPatient(beginDate, endDate, new ArrayList<>(patientIds))
+                reportDataRepository.findDisposalVoBetweenAndPatient(beginDate, endDate, patientIds)
                     .stream().collect(groupingBy(DisposalVo::getPatientId));
         return (obj) -> {
             // 歷史記錄裡有拔牙日期之後的gapMonths個月內有其他看診記錄的要被排除掉，留下gapMonths月內都沒有回診的

@@ -49,7 +49,7 @@ public class FluoridationReportBuilderService implements ReportBuilderService {
         return report;
     }
 
-    private ReportDataProvider<FluoridationReportSetting, List<FluoridationVo>> getDataProvider() {
+    public ReportDataProvider<FluoridationReportSetting, List<FluoridationVo>> getDataProvider() {
         return (setting) -> {
             Set<Long> includeDoctorIds = ofNullable(setting.getIncludeDoctorIds()).orElse(emptySet());
             Instant todayBeginTime = LocalDate.now().atStartOfDay(TimeConfig.ZONE_OFF_SET).toInstant();
@@ -62,7 +62,7 @@ public class FluoridationReportBuilderService implements ReportBuilderService {
                 .filter(vo -> includeDoctorIds.isEmpty() || includeDoctorIds.contains(vo.getDoctorId()))
                 .filter(vo -> {
                     Period age = vo.getPatientAge();
-                    if (age.getYears() > 5 || (age.getYears() == 5 && age.getMonths() > 11)) {
+                    if (age.getYears() > 5) {
                         return false;
                     }
 

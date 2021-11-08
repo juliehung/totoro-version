@@ -48,13 +48,14 @@ public class TeethCleaningReportBuilderService implements ReportBuilderService {
         return report;
     }
 
-    private ReportDataProvider<TeethCleaningReportSetting, List<TeethCleaningVo>> getDataProvider() {
+    public ReportDataProvider<TeethCleaningReportSetting, List<TeethCleaningVo>> getDataProvider() {
         return (setting) -> {
             Set<Long> includeDoctorIds = ofNullable(setting.getIncludeDoctorIds()).orElse(emptySet());
             Instant todayBeginTime = LocalDate.now().atStartOfDay(TimeConfig.ZONE_OFF_SET).toInstant();
             Map<Long, List<FutureAppointmentVo>> futureAppointmentMap = new HashMap<>(50);
 
-            // 查出每個病人最近的 91004C
+            // 查出每個病人最近的 91004C，但disposalDate加上181天後的日期至少要在追蹤日期結束之前才行
+            // 代表病人是在追蹤日期內可以來洗牙並且上次洗牙日期距今已超過180天
             List<NhiVo> available = reportDataRepository.findAllPatientLatestNhiVo(singletonList("91004C"))
                 .stream()
                 .parallel()
@@ -75,7 +76,7 @@ public class TeethCleaningReportBuilderService implements ReportBuilderService {
             return group.values()
                 .stream()
                 .parallel()
-                .map(reportDataRepository::findNhiVoDisposalIds)
+                .map(reportDataRepository::findTeethCleaningVoDisposalIds)
                 .flatMap(Collection::stream)
                 .filter(vo -> "91004C".equals(vo.getProcedureCode()))
                 .peek(futureAppointmentList(futureAppointmentMap, todayBeginTime, appointmentRepository))

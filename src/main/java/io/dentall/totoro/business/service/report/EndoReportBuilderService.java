@@ -49,15 +49,16 @@ public class EndoReportBuilderService implements ReportBuilderService {
         return report;
     }
 
-    private ReportDataProvider<EndoReportSetting, List<EndoVo>> getDataProvider() {
+    public ReportDataProvider<EndoReportSetting, List<EndoVo>> getDataProvider() {
         return (setting) -> {
             int gapMonths = setting.getFollowupGapMonths();
 
             // 選定時間區間內有根管的病人，其區間內最後一次的根管治療
             Map<Long, Optional<NhiVo>> candidateList = getCandidateList(setting);
-            List<Long> patientIds = new ArrayList<>(candidateList.keySet());
             // 取得gapMonths月內未回診的病人
             List<NhiVo> availableList = getAvailableList(setting, candidateList);
+            // 三個月內未回診的病人id
+            List<Long> patientIds = availableList.stream().map(NhiVo::getPatientId).distinct().collect(toList());
 
             LocalDate firstAvailableSubsequentDate = setting.getBeginDate().plusMonths(gapMonths).plusDays(1L);
             // 查找根管後gapMonths月的健保處置資料
@@ -99,7 +100,7 @@ public class EndoReportBuilderService implements ReportBuilderService {
             .stream()
             .filter(Optional::isPresent)
             .map(Optional::get)
-            .filter(hasFollowupDisposalInGapMonths(
+            .filter(hasNoFollowupDisposalInGapMonths(
                 setting.getBeginDate(),
                 setting.getEndDate().plusMonths(gapMonths),
                 new ArrayList<>(candidateList.keySet()),

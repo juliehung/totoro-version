@@ -53,7 +53,7 @@ public class OdReportBuilderService implements ReportBuilderService {
         return report;
     }
 
-    private ReportDataProvider<OdReportSetting, List<NhiVo>> getDataProvider() {
+    public ReportDataProvider<OdReportSetting, List<NhiVo>> getDataProvider() {
         return (setting) -> {
             Set<Long> includeDoctorIds = ofNullable(setting.getIncludeDoctorIds()).orElse(emptySet());
             Instant todayBeginTime = LocalDate.now().atStartOfDay(TimeConfig.ZONE_OFF_SET).toInstant();

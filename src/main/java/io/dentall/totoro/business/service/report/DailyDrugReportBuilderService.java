@@ -47,7 +47,7 @@ public class DailyDrugReportBuilderService implements ReportBuilderService {
         return report;
     }
 
-    private ReportDataProvider<DailyDrugReportSetting, List<DrugVo>> getDataProvider() {
+    public ReportDataProvider<DailyDrugReportSetting, List<DrugVo>> getDataProvider() {
         return (setting) -> {
             Set<Long> includeDrugIds = ofNullable(setting.getIncludeDrugIds()).orElse(emptySet());
             Set<Long> includeDoctorIds = ofNullable(setting.getIncludeDoctorIds()).orElse(emptySet());

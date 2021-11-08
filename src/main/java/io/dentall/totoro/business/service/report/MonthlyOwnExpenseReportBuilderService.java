@@ -48,7 +48,7 @@ public class MonthlyOwnExpenseReportBuilderService implements ReportBuilderServi
         return report;
     }
 
-    private ReportDataProvider<MonthlyOwnExpenseReportSetting, List<SubjectMonthlyOwnExpenseVo>> getDataProvider() {
+    public ReportDataProvider<MonthlyOwnExpenseReportSetting, List<SubjectMonthlyOwnExpenseVo>> getDataProvider() {
         return (setting) -> {
             Set<Long> includeOwnExpenseIds = ofNullable(setting.getIncludeOwnExpenseIds()).orElse(emptySet());
             Set<Long> includeDoctorIds = ofNullable(setting.getIncludeDoctorIds()).orElse(emptySet());

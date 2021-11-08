@@ -6,17 +6,17 @@ import io.dentall.totoro.repository.ReportRecordRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.Profile;
+
+import java.util.Optional;
 
 
 @Configuration
 @EnableAspectJAutoProxy
 public class AopConfiguration {
 
-    @Profile("img-gcs")
     @Bean
-    public ReportAspect uploadAspect(ImageGcsBusinessService imageGcsBusinessService, ReportRecordRepository reportRecordRepository) {
-        return new ReportAspect(imageGcsBusinessService, reportRecordRepository);
+    public ReportAspect uploadAspect(Optional<ImageGcsBusinessService> imageGcsBusinessServiceOptional, ReportRecordRepository reportRecordRepository) {
+        return new ReportAspect(imageGcsBusinessServiceOptional, reportRecordRepository);
     }
 
 }

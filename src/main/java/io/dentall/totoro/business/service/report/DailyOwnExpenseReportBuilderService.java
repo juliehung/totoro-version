@@ -52,7 +52,7 @@ public class DailyOwnExpenseReportBuilderService implements ReportBuilderService
         return report;
     }
 
-    private ReportDataProvider<DailyOwnExpenseReportSetting, List<OwnExpenseVo>> getDataProvider() {
+    public ReportDataProvider<DailyOwnExpenseReportSetting, List<OwnExpenseVo>> getDataProvider() {
         return (setting) -> {
             Set<Long> includeOwnExpenseIds = ofNullable(setting.getIncludeOwnExpenseIds()).orElse(emptySet());
             Set<Long> includeDoctorIds = ofNullable(setting.getIncludeDoctorIds()).orElse(emptySet());

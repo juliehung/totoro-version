@@ -41,9 +41,17 @@ public interface ReportMapper {
     @Mapping(target = "patientAge", source = "dto", qualifiedByName = "toPatientAge")
     PeriodontalVo mapToPeriodontalVo(NhiDto dto);
 
-    ExtractTeethVo mapToExtractTeethVo(NhiVo dto);
+    ExtractTeethVo mapToExtractTeethVo(NhiVo vo);
 
-    EndoVo mapToEndoVo(NhiVo dto);
+    TeethCleaningVo mapToTeethCleaningVo(NhiVo vo);
+
+    FluoridationVo mapToFluoridationVo(NhiVo vo);
+
+    EndoVo mapToEndoVo(NhiVo vo);
+
+    DisposalVo mapToDisposalVo(NhiVo vo);
+
+    NhiVo mapToNhiVo(OwnExpenseVo vo);
 
     @Mapping(target = "expectedArrivalTime", source = "expectedArrivalTime", qualifiedByName = "toTaipeiTime")
     FutureAppointmentVo mapToFutureAppointmentVo(AppointmentTable table);
