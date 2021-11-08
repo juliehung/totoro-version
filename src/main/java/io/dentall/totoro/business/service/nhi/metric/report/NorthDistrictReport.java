@@ -26,7 +26,7 @@ public class NorthDistrictReport {
 
         Sheet sheet = wb.createSheet(SHEET_NAME);
         Row row = null;
-        int rowCounter  = 0;
+        int rowCounter = 0;
         // Header
         row = sheet.createRow(rowCounter++);
         row.createCell(0).setCellValue("類型");
@@ -48,7 +48,7 @@ public class NorthDistrictReport {
         row = sheet.createRow(rowCounter++);
         row.createCell(1).setCellValue("乳牙一年半重補率(需≦10%)");
         row = sheet.createRow(rowCounter++);
-        row.createCell(1).setCellValue("89013C（複合體填充）3 個月申報醫令件數且申報病患年齡小於50之醫令佔率(需<40%)");
+        row.createCell(1).setCellValue("89013C件數(需<50)");
         row = sheet.createRow(rowCounter++);
         row.createCell(1).setCellValue("牙體復形(OD)合計申報點數佔牙科處置申報點數比率(需<65.38%)");
         // 牙周相關
@@ -96,10 +96,10 @@ public class NorthDistrictReport {
                 ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getA15h1().doubleValue() / 100);
             }
 
-            if (content.getA17h2().doubleValue() >= 40) {
-                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_PERCENTAGE_NUMBER), content.getA17h2().doubleValue() / 100);
+            if (content.getA17h1().doubleValue() >= 50) {
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.RED_REAL_NUMBER), content.getA17h1().doubleValue());
             } else {
-                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.PERCENTAGE_NUMBER), content.getA17h2().doubleValue() / 100);
+                ExcelUtil.createCellAndApplyStyle(sheet, rowIdx++, colIdx, csm.get(ExcelUtil.SupportedCellStyle.REAL_NUMBER), content.getA17h1().doubleValue());
             }
 
             if (content.getA9().doubleValue() >= 64.38) {
@@ -128,7 +128,7 @@ public class NorthDistrictReport {
             for (int j = fromCol; j <= toCol; j++) {
                 try {
                     ExcelUtil.applyStyle(sheet, i, j, cellStyle);
-                } catch(Exception e) {
+                } catch (Exception e) {
                     // ignore exception
                 }
             }
