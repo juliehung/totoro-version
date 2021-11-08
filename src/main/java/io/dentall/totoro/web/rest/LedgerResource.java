@@ -3,8 +3,10 @@ package io.dentall.totoro.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.domain.Ledger;
 import io.dentall.totoro.domain.LedgerGroup;
+import io.dentall.totoro.domain.LedgerReceipt;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.repository.LedgerGroupRepository;
+import io.dentall.totoro.repository.LedgerReceiptRepository;
 import io.dentall.totoro.service.LedgerQueryService;
 import io.dentall.totoro.service.LedgerService;
 import io.dentall.totoro.service.PatientService;
@@ -13,6 +15,7 @@ import io.dentall.totoro.service.mapper.LedgerGroupMapper;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
+import io.dentall.totoro.web.rest.vm.LedgerGroupVM;
 import io.dentall.totoro.web.rest.vm.LedgerUnwrapGroupUpdateVM;
 import io.dentall.totoro.web.rest.vm.LedgerUnwrapGroupVM;
 import io.dentall.totoro.web.rest.vm.LedgerVM;
@@ -51,16 +54,20 @@ public class LedgerResource {
 
     private final PatientService patientService;
 
+    private final LedgerReceiptRepository ledgerReceiptRepository;
+
     public LedgerResource(
         LedgerService ledgerService,
         LedgerQueryService ledgerQueryService,
         LedgerGroupRepository ledgerGroupRepository,
-        PatientService patientService
+        PatientService patientService,
+        LedgerReceiptRepository ledgerReceiptRepository
     ) {
         this.ledgerService = ledgerService;
         this.ledgerQueryService = ledgerQueryService;
         this.ledgerGroupRepository = ledgerGroupRepository;
         this.patientService = patientService;
+        this.ledgerReceiptRepository = ledgerReceiptRepository;
     }
 
     /**
@@ -179,5 +186,15 @@ public class LedgerResource {
         log.debug("REST request to delete Ledger : {}", id);
         ledgerService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
+
+    @PostMapping("/ledgers/receipts")
+    @Timed
+    public LedgerGroupVM createLedgerV2(@RequestBody LedgerReceipt ledgerReceipt) {
+
+        log.info("Hello: {}", ledgerReceipt);
+        ledgerReceiptRepository.save(ledgerReceipt);
+
+        return new LedgerGroupVM();
     }
 }

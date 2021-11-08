@@ -2,12 +2,17 @@ package io.dentall.totoro.domain;
 
 import io.dentall.totoro.domain.enumeration.LedgerReceiptRangeType;
 import io.dentall.totoro.domain.enumeration.LedgerReceiptType;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
-@Entity(name = "ledger_receipt")
+@Entity
+@Table(name = "ledger_receipt")
+@EntityListeners(AuditingEntityListener.class)
 public class LedgerReceipt extends AbstractAuditingEntity implements Serializable {
 
     @Id
@@ -26,7 +31,7 @@ public class LedgerReceipt extends AbstractAuditingEntity implements Serializabl
     @Enumerated(EnumType.STRING)
     private LedgerReceiptType type;
 
-    @Column(name = "type")
+    @Column(name = "range_type")
     @Enumerated(EnumType.STRING)
     private LedgerReceiptRangeType rangeType;
 
@@ -44,6 +49,45 @@ public class LedgerReceipt extends AbstractAuditingEntity implements Serializabl
 
     @Column(name = "time")
     private Instant time;
+
+    @ManyToMany
+    @JoinTable(
+        name="ledger_ledger_receipt",
+        joinColumns= @JoinColumn(
+            name = "ledger_receipt_id",
+            referencedColumnName="id"
+        ),
+        inverseJoinColumns= @JoinColumn(
+            name = "ledger_id",
+            referencedColumnName = "id"
+        )
+    )
+    private List<Ledger> ledgers = new ArrayList<>();
+
+    @OneToMany(
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    @JoinColumn(
+        name = "ledger_receipt_id"
+    )
+    private List<LedgerReceiptPrintedRecord> ledgerReceiptPrintedRecords = new ArrayList<>();
+
+    public List<Ledger> getLedgers() {
+        return ledgers;
+    }
+
+    public void setLedgers(List<Ledger> ledgers) {
+        this.ledgers = ledgers;
+    }
+
+    public List<LedgerReceiptPrintedRecord> getLedgerReceiptPrintedRecords() {
+        return ledgerReceiptPrintedRecords;
+    }
+
+    public void setLedgerReceiptPrintedRecords(List<LedgerReceiptPrintedRecord> ledgerReceiptPrintedRecords) {
+        this.ledgerReceiptPrintedRecords = ledgerReceiptPrintedRecords;
+    }
 
     public Long getId() {
         return id;

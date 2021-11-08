@@ -59,4 +59,5 @@
     <include file="config/liquibase/changelog/migrationXml/20211027_weichen.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/migrationXml/20211102_weichen_2.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/migrationXml/20211104_weichen_2.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/migrationXml/20211104_weichen.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

@@ -1,28 +1,48 @@
 package io.dentall.totoro.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
 
-@Entity(name = "ledger_receipt_printed_record")
-@IdClass( LedgerReceiptPrintedRecordCompositeId.class )
+@Entity
+@Table(name = "ledger_receipt_printed_record")
+@EntityListeners(AuditingEntityListener.class)
 public class LedgerReceiptPrintedRecord extends AbstractAuditingEntity implements Serializable {
 
     @Id
-    private Long ledgerReceiptId;
+    @SequenceGenerator(
+        name = "ledgerReceiptPrintedRecordSeq",
+        sequenceName = "ledger_receipt_printed_record_seq",
+        allocationSize = 1
+    )
+    @GeneratedValue(
+        strategy = GenerationType.SEQUENCE,
+        generator = "ledgerReceiptPrintedRecordSeq"
+    )
+    private Long id;
 
-    @Id
+    @Column(name = "time")
     private Instant time;
 
-    public Long getLedgerReceiptId() {
-        return ledgerReceiptId;
+    @ManyToOne
+    private LedgerReceipt ledgerReceipt;
+
+    public LedgerReceipt getLedgerReceipt() {
+        return ledgerReceipt;
     }
 
-    public void setLedgerReceiptId(Long ledgerReceiptId) {
-        this.ledgerReceiptId = ledgerReceiptId;
+    public void setLedgerReceipt(LedgerReceipt ledgerReceipt) {
+        this.ledgerReceipt = ledgerReceipt;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Instant getTime() {

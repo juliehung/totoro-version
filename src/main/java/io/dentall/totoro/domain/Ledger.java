@@ -15,6 +15,8 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -102,7 +104,18 @@ public class Ledger implements Serializable {
     @JoinColumn(name = "gid")
     private LedgerGroup ledgerGroup;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    @ManyToMany(
+        mappedBy = "ledgers"
+    )
+    private List<LedgerReceipt> ledgerReceipts = new ArrayList<>();
+
+    public List<LedgerReceipt> getLedgerReceipts() {
+        return ledgerReceipts;
+    }
+
+    public void setLedgerReceipts(List<LedgerReceipt> ledgerReceipts) {
+        this.ledgerReceipts = ledgerReceipts;
+    }
 
     public Ledger includeStampTax(Boolean includeStampTax) {
         this.includeStampTax = includeStampTax;
