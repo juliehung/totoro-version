@@ -142,6 +142,7 @@ public class LedgerResource {
                 return ledgerVM;
             })
             .collect(Collectors.toList());
+
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/ledgers");
         return ResponseEntity.ok().headers(headers).body(result);
     }

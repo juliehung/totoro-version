@@ -75,6 +75,11 @@ public class LedgerQueryService extends QueryService<Ledger> {
         page.getSortOr(new Sort(Sort.Direction.DESC, "date"));
 
         Page<Ledger> ledgers = ledgerRepository.findAll(specification, page);
+        for (Ledger ledger : ledgers) {
+            for (LedgerReceipt ledgerReceipt : ledger.getLedgerReceipts()) {
+                ledgerReceipt.getLedgerReceiptPrintedRecords();
+            }
+        }
         return ledgers;
     }
 

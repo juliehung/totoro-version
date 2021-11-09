@@ -65,6 +65,7 @@ public class LedgerReceipt extends AbstractAuditingEntity implements Serializabl
     private List<Ledger> ledgers = new ArrayList<>();
 
     @OneToMany(
+        fetch = FetchType.EAGER,
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
