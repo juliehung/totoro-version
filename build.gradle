@@ -371,15 +371,29 @@ dependencies {
     testCompile group: 'org.apache.poi', name: 'poi', version: '5.0.0'
 }
 
-task cucumber_nhi_rule() {
-    def cucumberTags = project.getProperties().get("cucumber.filter.tags", "@nhi")
+task cucumber_nhi_rule_1() {
+    def cucumberTags = project.getProperties().get("cucumber.filter.tags", "@nhi-90-series or @nhi-91-series or @nhi-92-series")
     dependsOn assemble, testClasses
     doLast {
         assert cucumberTags.length() > 0
         javaexec {
             main = "io.cucumber.core.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', 'html:build/reports/cucumber/cucumber.html', '--plugin', 'de.monochromata.cucumber.report.PrettyReports:build/reports/cucumber', '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features']
+            args = ['--plugin', 'html:build/reports/cucumber1/cucumber.html', '--plugin', 'de.monochromata.cucumber.report.PrettyReports:build/reports/cucumber1', '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features']
+            environment = ['spring.profiles.active': 'test,no-swagger,embedded-postgres,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml', 'cucumber.filter.tags': "${cucumberTags}"]
+        }
+    }
+}
+
+task cucumber_nhi_rule_2() {
+    def cucumberTags = project.getProperties().get("cucumber.filter.tags", "@nhi and (not @nhi-90-series and not @nhi-91-series and not @nhi-92-series)")
+    dependsOn assemble, testClasses
+    doLast {
+        assert cucumberTags.length() > 0
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'html:build/reports/cucumber2/cucumber.html', '--plugin', 'de.monochromata.cucumber.report.PrettyReports:build/reports/cucumber2', '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features']
             environment = ['spring.profiles.active': 'test,no-swagger,embedded-postgres,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml', 'cucumber.filter.tags': "${cucumberTags}"]
         }
     }
