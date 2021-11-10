@@ -148,10 +148,6 @@ public class LedgerQueryService extends QueryService<Ledger> {
             if (criteria.getLastModifiedBy() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getLastModifiedBy(), Ledger_.lastModifiedBy));
             }
-            if (criteria.getTreatmentPlanId() != null) {
-                specification = specification.and(buildSpecification(criteria.getTreatmentPlanId(),
-                    root -> root.join(Ledger_.treatmentPlan, JoinType.LEFT).get(TreatmentPlan_.id)));
-            }
         }
         return specification;
     }

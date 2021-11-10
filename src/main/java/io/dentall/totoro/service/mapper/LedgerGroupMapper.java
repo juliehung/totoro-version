@@ -2,6 +2,11 @@ package io.dentall.totoro.service.mapper;
 
 import io.dentall.totoro.domain.Ledger;
 import io.dentall.totoro.domain.LedgerGroup;
+import io.dentall.totoro.domain.LedgerReceipt;
+import io.dentall.totoro.domain.LedgerReceiptPrintedRecord;
+import io.dentall.totoro.web.rest.vm.LedgerReceiptPrintedRecordCreateVM;
+import io.dentall.totoro.web.rest.vm.LedgerReceiptPrintedRecordVM;
+import io.dentall.totoro.web.rest.vm.LedgerReceiptVM;
 import io.dentall.totoro.web.rest.vm.LedgerUnwrapGroupVM;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
@@ -25,4 +30,10 @@ public interface LedgerGroupMapper {
     LedgerUnwrapGroupVM convertLedgerToLedgerUnwrapGroupVM(Ledger l);
 
     Ledger convertLedgerUnwrapGroupVMToLedger(LedgerUnwrapGroupVM vm);
+
+    LedgerReceiptVM convertLedgerReceiptFromDomainToVM(LedgerReceipt domain);
+
+    LedgerReceiptPrintedRecord convertLedgerReceiptPrintedRecordFromCreateVMToDomain(LedgerReceiptPrintedRecordCreateVM vm);
+
+    LedgerReceiptPrintedRecordVM convertLedgerReceiptPrintedRecordFromDomainToVM(LedgerReceiptPrintedRecord domain);
 }

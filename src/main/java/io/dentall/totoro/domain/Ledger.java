@@ -95,10 +95,6 @@ public class Ledger implements Serializable {
     @Column(name = "last_modified_by")
     private String lastModifiedBy;
 
-    @Deprecated
-    @ManyToOne
-    private TreatmentPlan treatmentPlan;
-
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "gid")
@@ -321,20 +317,6 @@ public class Ledger implements Serializable {
     public void setLastModifiedBy(String lastModifiedBy) {
         this.lastModifiedBy = lastModifiedBy;
     }
-
-    public TreatmentPlan getTreatmentPlan() {
-        return treatmentPlan;
-    }
-
-    public Ledger treatmentPlan(TreatmentPlan treatmentPlan) {
-        this.treatmentPlan = treatmentPlan;
-        return this;
-    }
-
-    public void setTreatmentPlan(TreatmentPlan treatmentPlan) {
-        this.treatmentPlan = treatmentPlan;
-    }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {

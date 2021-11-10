@@ -3,8 +3,9 @@ package io.dentall.totoro.web.rest.vm;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
-public class LedgerReceiptPrintedRecordVM {
+public class LedgerReceiptPrintedRecordCreateVM {
 
+    @NotNull
     private Instant time;
 
     private String filePath;
@@ -34,5 +35,4 @@ public class LedgerReceiptPrintedRecordVM {
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
-
 }

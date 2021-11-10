@@ -1,5 +1,6 @@
 package io.dentall.totoro.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.dentall.totoro.domain.enumeration.LedgerReceiptRangeType;
 import io.dentall.totoro.domain.enumeration.LedgerReceiptType;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -15,6 +16,7 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 public class LedgerReceipt extends AbstractAuditingEntity implements Serializable {
 
+    @JsonIgnore
     @Id
     @SequenceGenerator(
         name = "ledgerReceiptSeq",

@@ -16,16 +16,6 @@ public class LedgerUnwrapGroupUpdateVM {
 
     private Boolean includeStampTax;
 
-    private Instant printTime;
-
-    private Instant createdDate;
-
-    private String createdBy;
-
-    private Instant lastModifiedDate;
-
-    private String lastModifiedBy;
-
     public Long getId() {
         return id;
     }
@@ -74,43 +64,4 @@ public class LedgerUnwrapGroupUpdateVM {
         this.includeStampTax = includeStampTax;
     }
 
-    public Instant getPrintTime() {
-        return printTime;
-    }
-
-    public void setPrintTime(Instant printTime) {
-        this.printTime = printTime;
-    }
-
-    public Instant getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
 }

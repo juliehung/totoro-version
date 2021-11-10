@@ -1,6 +1,7 @@
 package io.dentall.totoro.repository;
 
 import io.dentall.totoro.domain.LedgerReceipt;
+import io.dentall.totoro.domain.LedgerReceiptPrintedRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +11,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface LedgerReceiptRepository extends JpaRepository<LedgerReceipt, Long> {
+public interface LedgerReceiptPrintedRecordRepository extends JpaRepository<LedgerReceiptPrintedRecord, Long> {
 
 }

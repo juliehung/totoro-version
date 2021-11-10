@@ -1,11 +1,9 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import io.dentall.totoro.domain.Ledger;
-import io.dentall.totoro.domain.LedgerGroup;
-import io.dentall.totoro.domain.LedgerReceipt;
-import io.dentall.totoro.domain.Patient;
+import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.LedgerGroupRepository;
+import io.dentall.totoro.repository.LedgerReceiptPrintedRecordRepository;
 import io.dentall.totoro.repository.LedgerReceiptRepository;
 import io.dentall.totoro.service.LedgerQueryService;
 import io.dentall.totoro.service.LedgerService;
@@ -15,11 +13,7 @@ import io.dentall.totoro.service.mapper.LedgerGroupMapper;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
-import io.dentall.totoro.web.rest.vm.LedgerGroupVM;
-import io.dentall.totoro.web.rest.vm.LedgerUnwrapGroupUpdateVM;
-import io.dentall.totoro.web.rest.vm.LedgerUnwrapGroupVM;
-import io.dentall.totoro.web.rest.vm.LedgerVM;
-import io.github.jhipster.web.util.ResponseUtil;
+import io.dentall.totoro.web.rest.vm.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -32,7 +26,6 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -56,18 +49,22 @@ public class LedgerResource {
 
     private final LedgerReceiptRepository ledgerReceiptRepository;
 
+    private final LedgerReceiptPrintedRecordRepository ledgerReceiptPrintedRecordRepository;
+
     public LedgerResource(
         LedgerService ledgerService,
         LedgerQueryService ledgerQueryService,
         LedgerGroupRepository ledgerGroupRepository,
         PatientService patientService,
-        LedgerReceiptRepository ledgerReceiptRepository
+        LedgerReceiptRepository ledgerReceiptRepository,
+        LedgerReceiptPrintedRecordRepository ledgerReceiptPrintedRecordRepository
     ) {
         this.ledgerService = ledgerService;
         this.ledgerQueryService = ledgerQueryService;
         this.ledgerGroupRepository = ledgerGroupRepository;
         this.patientService = patientService;
         this.ledgerReceiptRepository = ledgerReceiptRepository;
+        this.ledgerReceiptPrintedRecordRepository = ledgerReceiptPrintedRecordRepository;
     }
 
     /**
@@ -148,34 +145,6 @@ public class LedgerResource {
     }
 
     /**
-    * GET  /ledgers/count : count all the ledgers.
-    *
-    * @param criteria the criterias which the requested entities should match
-    * @return the ResponseEntity with status 200 (OK) and the count in body
-    */
-    @GetMapping("/ledgers/count")
-    @Timed
-    public ResponseEntity<Long> countLedgers(LedgerCriteria criteria) {
-        log.debug("REST request to count Ledgers by criteria: {}", criteria);
-        return ResponseEntity.ok().body(ledgerQueryService.countByCriteria(criteria));
-    }
-
-    /**
-     * GET  /ledgers/:id : get the "id" ledger.
-     *
-     * @param id the id of the ledger to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the ledger, or with status 404 (Not Found)
-     */
-    @Deprecated
-    @GetMapping("/ledgers/{id}")
-    @Timed
-    public ResponseEntity<Ledger> getLedger(@PathVariable Long id) {
-        log.debug("REST request to get Ledger : {}", id);
-        Optional<Ledger> ledger = ledgerService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(ledger);
-    }
-
-    /**
      * DELETE  /ledgers/:id : delete the "id" ledger.
      *
      * @param id the id of the ledger to delete
@@ -189,13 +158,29 @@ public class LedgerResource {
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
-    @PostMapping("/ledgers/receipts")
+    @PostMapping("/ledger-receipts")
     @Timed
-    public LedgerGroupVM createLedgerV2(@RequestBody LedgerReceipt ledgerReceipt) {
+    public LedgerReceiptVM createLedgerReceipt(@RequestBody LedgerReceipt ledgerReceipt) {
+        return LedgerGroupMapper.INSTANCE.convertLedgerReceiptFromDomainToVM(
+            ledgerReceiptRepository.save(ledgerReceipt)
+        );
+    }
 
-        log.info("Hello: {}", ledgerReceipt);
-        ledgerReceiptRepository.save(ledgerReceipt);
+    @PostMapping("/ledger-receipts/{id}/ledger-receipt-printed-records")
+    @Timed
+    public LedgerReceiptPrintedRecordVM createLedgerReceiptRecord(
+        @PathVariable(name = "id") Long id,
+        @Valid @RequestBody LedgerReceiptPrintedRecordCreateVM ledgerReceiptPrintedRecordCreateVM
+    ) {
+        LedgerReceipt ledgerReceipt = ledgerReceiptRepository.findById(id)
+            .orElseThrow(() -> new BadRequestAlertException("Can not found ledger receipt by id", ENTITY_NAME, "notfound"));
 
-        return new LedgerGroupVM();
+        LedgerReceiptPrintedRecord ledgerReceiptPrintedRecord =
+            LedgerGroupMapper.INSTANCE.convertLedgerReceiptPrintedRecordFromCreateVMToDomain(ledgerReceiptPrintedRecordCreateVM);
+        ledgerReceiptPrintedRecord.setLedgerReceipt(ledgerReceipt);
+
+        return LedgerGroupMapper.INSTANCE.convertLedgerReceiptPrintedRecordFromDomainToVM(
+            ledgerReceiptPrintedRecordRepository.save(ledgerReceiptPrintedRecord)
+        );
     }
 }
