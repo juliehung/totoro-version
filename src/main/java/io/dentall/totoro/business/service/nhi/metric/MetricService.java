@@ -307,6 +307,8 @@ public class MetricService implements ApplicationContextAware {
 
         Collection<MetricDisposal> disposals = source.stream().parallel()
             .map(NhiMetricRawMapper.INSTANCE::mapToMetricTreatment)
+            .filter(metricTreatment -> nonNull(metricTreatment.getDoctorId()))
+            .filter(metricTreatment -> nonNull(metricTreatment.getPatientId()))
             .reduce(new ConcurrentHashMap<Long, MetricDisposal>(source.size() / 2), (map, treatment) -> {
                     MetricDisposal disposal = ofNullable(map.get(treatment.getDisposalId())).orElse(NhiMetricRawMapper.INSTANCE.mapToMetricDisposal(treatment));
                     if (nonNull(treatment.getTreatmentProcedureCode())) {
