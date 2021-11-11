@@ -1,6 +1,7 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import io.dentall.totoro.business.service.ImageGcsBusinessService;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.LedgerGroupRepository;
 import io.dentall.totoro.repository.LedgerReceiptPrintedRecordRepository;
@@ -16,15 +17,20 @@ import io.dentall.totoro.web.rest.util.PaginationUtil;
 import io.dentall.totoro.web.rest.vm.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,13 +57,16 @@ public class LedgerResource {
 
     private final LedgerReceiptPrintedRecordRepository ledgerReceiptPrintedRecordRepository;
 
+    private final ApplicationContext applicationContext;
+
     public LedgerResource(
         LedgerService ledgerService,
         LedgerQueryService ledgerQueryService,
         LedgerGroupRepository ledgerGroupRepository,
         PatientService patientService,
         LedgerReceiptRepository ledgerReceiptRepository,
-        LedgerReceiptPrintedRecordRepository ledgerReceiptPrintedRecordRepository
+        LedgerReceiptPrintedRecordRepository ledgerReceiptPrintedRecordRepository,
+        ApplicationContext applicationContext
     ) {
         this.ledgerService = ledgerService;
         this.ledgerQueryService = ledgerQueryService;
@@ -65,6 +74,7 @@ public class LedgerResource {
         this.patientService = patientService;
         this.ledgerReceiptRepository = ledgerReceiptRepository;
         this.ledgerReceiptPrintedRecordRepository = ledgerReceiptPrintedRecordRepository;
+        this.applicationContext = applicationContext;
     }
 
     /**
@@ -161,6 +171,10 @@ public class LedgerResource {
     @PostMapping("/ledger-receipts")
     @Timed
     public LedgerReceiptVM createLedgerReceipt(@RequestBody LedgerReceipt ledgerReceipt) {
+        if (ledgerReceipt.getLedgers().size() == 0) {
+            throw new BadRequestAlertException("Associated ledger for ledger receipt is required.", ENTITY_NAME, "fieldrequired");
+        }
+
         return LedgerGroupMapper.INSTANCE.convertLedgerReceiptFromDomainToVM(
             ledgerReceiptRepository.save(ledgerReceipt)
         );
@@ -168,15 +182,53 @@ public class LedgerResource {
 
     @PostMapping("/ledger-receipts/{id}/ledger-receipt-printed-records")
     @Timed
+    @Transactional
     public LedgerReceiptPrintedRecordVM createLedgerReceiptRecord(
         @PathVariable(name = "id") Long id,
-        @Valid @RequestBody LedgerReceiptPrintedRecordCreateVM ledgerReceiptPrintedRecordCreateVM
-    ) {
+        @RequestParam("file") MultipartFile file
+    ) throws IOException {
         LedgerReceipt ledgerReceipt = ledgerReceiptRepository.findById(id)
             .orElseThrow(() -> new BadRequestAlertException("Can not found ledger receipt by id", ENTITY_NAME, "notfound"));
+        if (ledgerReceipt.getLedgers() == null ||
+            ledgerReceipt.getLedgers().get(0) == null ||
+            ledgerReceipt.getLedgers().get(0).getId() == null ||
+            ledgerReceipt.getLedgers().get(0).getPatientId() == null ||
+            ledgerReceipt.getLedgers().get(0).getLedgerGroup() == null
+        ) {
+            throw new BadRequestAlertException("Can not found ledger receipt by id", ENTITY_NAME, "fieldrequired");
+        }
+        if (!file.getContentType().equals("application/pdf")) {
+            throw new BadRequestAlertException("Only support file mime as application/pdf", ENTITY_NAME, "mimerequired");
+        }
 
-        LedgerReceiptPrintedRecord ledgerReceiptPrintedRecord =
-            LedgerGroupMapper.INSTANCE.convertLedgerReceiptPrintedRecordFromCreateVMToDomain(ledgerReceiptPrintedRecordCreateVM);
+        Patient patient = patientService.findPatientById(ledgerReceipt.getLedgers().get(0).getPatientId());
+
+        ImageGcsBusinessService imageGcsBusinessService = applicationContext.getBean(ImageGcsBusinessService.class);
+
+        String filePath = imageGcsBusinessService.getClinicName()
+            .concat("/")
+            .concat(patient.getId().toString())
+            .concat("/");
+        String fileName = "收支紀錄"
+            .concat("_")
+            .concat(patient.getName())
+            .concat(patient.getBirth().toString())
+            .concat("_")
+            .concat(ledgerReceipt.getLedgers().get(0).getLedgerGroup().getProjectCode())
+            .concat(ledgerReceipt.getLedgers().get(0).getLedgerGroup().getDisplayName())
+            .concat(".pdf");
+
+        imageGcsBusinessService.uploadFile(
+            filePath,
+            fileName,
+            file.getBytes(),
+            "application/pdf"
+        );
+
+        LedgerReceiptPrintedRecord ledgerReceiptPrintedRecord = new LedgerReceiptPrintedRecord();
+        ledgerReceiptPrintedRecord.setTime(Instant.now());
+        ledgerReceiptPrintedRecord.setFilePath(filePath);
+        ledgerReceiptPrintedRecord.setFileName(fileName);
         ledgerReceiptPrintedRecord.setLedgerReceipt(ledgerReceipt);
 
         return LedgerGroupMapper.INSTANCE.convertLedgerReceiptPrintedRecordFromDomainToVM(

@@ -1,6 +1,5 @@
 package io.dentall.totoro.web.rest.vm;
 
-import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
 public class LedgerReceiptPrintedRecordVM {

@@ -36,4 +36,5 @@ public interface LedgerGroupMapper {
     LedgerReceiptPrintedRecord convertLedgerReceiptPrintedRecordFromCreateVMToDomain(LedgerReceiptPrintedRecordCreateVM vm);
 
     LedgerReceiptPrintedRecordVM convertLedgerReceiptPrintedRecordFromDomainToVM(LedgerReceiptPrintedRecord domain);
+
 }
