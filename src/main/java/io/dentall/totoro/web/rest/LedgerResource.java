@@ -141,11 +141,9 @@ public class LedgerResource {
         Page<Ledger> page = ledgerQueryService.findByCriteria(criteria, pageable);
         List<LedgerVM> result = page.getContent().stream()
             .map(d -> {
-                LedgerUnwrapGroupVM ledgerUnwrapGroupVM = LedgerGroupMapper.INSTANCE.convertLedgerToLedgerUnwrapGroupVM(d);
-                LedgerVM ledgerVM = new LedgerVM();
-                ledgerVM.setLedger(ledgerUnwrapGroupVM);
+                LedgerVM ledgerVM = LedgerGroupMapper.INSTANCE.convertLedgerFromDomainToVM(d);
 
-                ledgerUnwrapGroupVM.getLedgerReceipts()
+                ledgerVM.getLedgerReceipts()
                     .forEach(d2 -> {
                         d2.getLedgerReceiptPrintedRecords()
                             .forEach(d3 -> {

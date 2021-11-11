@@ -88,9 +88,7 @@ public class LedgerBusinessResource {
         Page<Ledger> page = ledgerQueryService.findByCriteria(criteria, pageable);
         List<LedgerVM> result = page.getContent().stream()
             .map(d -> {
-                LedgerUnwrapGroupVM ledgerUnwrapGroupVM = LedgerGroupMapper.INSTANCE.convertLedgerToLedgerUnwrapGroupVM(d);
-                LedgerVM ledgerVM = new LedgerVM();
-                ledgerVM.setLedger(ledgerUnwrapGroupVM);
+                LedgerVM ledgerVM = LedgerGroupMapper.INSTANCE.convertLedgerFromDomainToVM(d);
 
                 Patient p = patientService.findPatientById(d.getLedgerGroup().getPatientId());
                 ledgerVM.setPatient(p);
