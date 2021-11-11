@@ -6,9 +6,7 @@ import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.LedgerGroupRepository;
 import io.dentall.totoro.repository.LedgerReceiptPrintedRecordRepository;
 import io.dentall.totoro.repository.LedgerReceiptRepository;
-import io.dentall.totoro.service.LedgerQueryService;
-import io.dentall.totoro.service.LedgerService;
-import io.dentall.totoro.service.PatientService;
+import io.dentall.totoro.service.*;
 import io.dentall.totoro.service.dto.LedgerCriteria;
 import io.dentall.totoro.service.mapper.LedgerGroupMapper;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
@@ -53,28 +51,32 @@ public class LedgerResource {
 
     private final PatientService patientService;
 
+    private final UserServiceV2 userServiceV2;
+
     private final LedgerReceiptRepository ledgerReceiptRepository;
 
     private final LedgerReceiptPrintedRecordRepository ledgerReceiptPrintedRecordRepository;
 
-    private final ApplicationContext applicationContext;
+    private final ImageGcsBusinessService imageGcsBusinessService;
 
     public LedgerResource(
         LedgerService ledgerService,
         LedgerQueryService ledgerQueryService,
         LedgerGroupRepository ledgerGroupRepository,
         PatientService patientService,
+        UserServiceV2 userServiceV2,
         LedgerReceiptRepository ledgerReceiptRepository,
         LedgerReceiptPrintedRecordRepository ledgerReceiptPrintedRecordRepository,
-        ApplicationContext applicationContext
+        ImageGcsBusinessService imageGcsBusinessService
     ) {
         this.ledgerService = ledgerService;
         this.ledgerQueryService = ledgerQueryService;
         this.ledgerGroupRepository = ledgerGroupRepository;
         this.patientService = patientService;
+        this.userServiceV2 = userServiceV2;
         this.ledgerReceiptRepository = ledgerReceiptRepository;
         this.ledgerReceiptPrintedRecordRepository = ledgerReceiptPrintedRecordRepository;
-        this.applicationContext = applicationContext;
+        this.imageGcsBusinessService = imageGcsBusinessService;
     }
 
     /**
@@ -143,6 +145,14 @@ public class LedgerResource {
                 LedgerVM ledgerVM = new LedgerVM();
                 ledgerVM.setLedger(ledgerUnwrapGroupVM);
 
+                ledgerUnwrapGroupVM.getLedgerReceipts()
+                    .forEach(d2 -> {
+                        d2.getLedgerReceiptPrintedRecords()
+                            .forEach(d3 -> {
+                                d3.setFilePath(imageGcsBusinessService.getUrlForDownload().concat(d3.getFilePath()));
+                            });
+                    });
+
                 Patient p = patientService.findPatientById(d.getLedgerGroup().getPatientId());
                 ledgerVM.setPatient(p);
 
@@ -203,8 +213,6 @@ public class LedgerResource {
 
         Patient patient = patientService.findPatientById(ledgerReceipt.getLedgers().get(0).getPatientId());
 
-        ImageGcsBusinessService imageGcsBusinessService = applicationContext.getBean(ImageGcsBusinessService.class);
-
         String filePath = imageGcsBusinessService.getClinicName()
             .concat("/")
             .concat(patient.getId().toString())
@@ -227,11 +235,11 @@ public class LedgerResource {
 
         LedgerReceiptPrintedRecord ledgerReceiptPrintedRecord = new LedgerReceiptPrintedRecord();
         ledgerReceiptPrintedRecord.setTime(Instant.now());
-        ledgerReceiptPrintedRecord.setFilePath(filePath);
+        ledgerReceiptPrintedRecord.setFilePath(imageGcsBusinessService.getUrlForDownload().concat(filePath));
         ledgerReceiptPrintedRecord.setFileName(fileName);
         ledgerReceiptPrintedRecord.setLedgerReceipt(ledgerReceipt);
 
-        return LedgerGroupMapper.INSTANCE.convertLedgerReceiptPrintedRecordFromDomainToVM(
+        return LedgerGroupMapper.INSTANCE.ledgerReceiptPrintedRecordToLedgerReceiptPrintedRecordVM(
             ledgerReceiptPrintedRecordRepository.save(ledgerReceiptPrintedRecord)
         );
     }

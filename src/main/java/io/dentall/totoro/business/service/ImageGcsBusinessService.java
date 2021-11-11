@@ -4,6 +4,7 @@ import com.google.cloud.storage.*;
 import io.dentall.totoro.domain.Image;
 import io.dentall.totoro.repository.ImageRepository;
 import org.apache.commons.io.IOUtils;
+import org.mapstruct.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -134,4 +135,5 @@ public class ImageGcsBusinessService extends ImageBusinessService {
     public String getClinicName() {
         return this.CLINIC_NAME;
     }
+
 }

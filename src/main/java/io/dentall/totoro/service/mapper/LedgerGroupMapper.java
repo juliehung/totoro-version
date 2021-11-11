@@ -1,17 +1,17 @@
 package io.dentall.totoro.service.mapper;
 
-import io.dentall.totoro.domain.Ledger;
-import io.dentall.totoro.domain.LedgerGroup;
-import io.dentall.totoro.domain.LedgerReceipt;
-import io.dentall.totoro.domain.LedgerReceiptPrintedRecord;
-import io.dentall.totoro.web.rest.vm.LedgerReceiptPrintedRecordCreateVM;
+import io.dentall.totoro.business.service.ImageGcsBusinessService;
+import io.dentall.totoro.domain.*;
 import io.dentall.totoro.web.rest.vm.LedgerReceiptPrintedRecordVM;
 import io.dentall.totoro.web.rest.vm.LedgerReceiptVM;
 import io.dentall.totoro.web.rest.vm.LedgerUnwrapGroupVM;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-@Mapper( nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
+@Mapper(
+    imports = { ImageGcsBusinessService.class },
+    nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
+)
 public interface LedgerGroupMapper {
 
     LedgerGroupMapper INSTANCE = Mappers.getMapper( LedgerGroupMapper.class );
@@ -20,6 +20,8 @@ public interface LedgerGroupMapper {
         @MappingTarget LedgerGroup origin,
         LedgerGroup patch
     );
+
+    LedgerReceiptPrintedRecordVM ledgerReceiptPrintedRecordToLedgerReceiptPrintedRecordVM(LedgerReceiptPrintedRecord ledgerReceiptPrintedRecord);
 
     @Mapping(target = "gid", source = "ledgerGroup.id")
     @Mapping(target = "type", source = "ledgerGroup.type")
@@ -32,9 +34,5 @@ public interface LedgerGroupMapper {
     Ledger convertLedgerUnwrapGroupVMToLedger(LedgerUnwrapGroupVM vm);
 
     LedgerReceiptVM convertLedgerReceiptFromDomainToVM(LedgerReceipt domain);
-
-    LedgerReceiptPrintedRecord convertLedgerReceiptPrintedRecordFromCreateVMToDomain(LedgerReceiptPrintedRecordCreateVM vm);
-
-    LedgerReceiptPrintedRecordVM convertLedgerReceiptPrintedRecordFromDomainToVM(LedgerReceiptPrintedRecord domain);
 
 }
