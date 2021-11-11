@@ -33,6 +33,7 @@ import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 
 @RestController
 @RequestMapping("/api/nhi/metric")
@@ -74,12 +75,17 @@ public class NhiMetricResource {
         @RequestParam LocalDate begin,
         @RequestParam(required = false) List<Long> excludeDisposalIds) {
         log.debug("REST request to dashboard : begin={}, excludeDisposalId={}", begin, excludeDisposalIds);
-
-        List<MetricLVM> vm = metricService.getDashboardMetric(begin, excludeDisposalIds);
-        Map<String, List<MetricLVM>> map = new HashMap<>();
-        map.put("metrics", vm);
-
-        return ResponseEntity.ok().body(map);
+        try {
+            List<MetricLVM> vm = metricService.getDashboardMetric(begin, excludeDisposalIds);
+            Map<String, List<MetricLVM>> map = new HashMap<>();
+            map.put("metrics", vm);
+            return ResponseEntity.ok().body(map);
+        } catch (Exception e) {
+            log.error("metric error", e);
+            Map<String, List<MetricLVM>> map = new HashMap<>();
+            map.put("metrics", emptyList());
+            return ResponseEntity.ok().body(map);
+        }
     }
 
     @GetMapping("/composite-metric")
@@ -267,7 +273,7 @@ public class NhiMetricResource {
         @RequestBody(required = false) String cancelReason
     ) {
         NhiMetricReport report = nhiMetricReportRepository.findById(id)
-                .orElseThrow(() -> new BadRequestAlertException("Report not found", "NhiMetricReport", "notfound"));
+            .orElseThrow(() -> new BadRequestAlertException("Report not found", "NhiMetricReport", "notfound"));
         report.setStatus(BatchStatus.CANCEL);
         report.getComment().setCancelReason(cancelReason);
 
