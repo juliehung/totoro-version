@@ -44,10 +44,8 @@ jobs:
                 with:
                     java-version: '8'
                     distribution: 'adopt-openj9'
-            -   name: "Grant execute permission for gradlew"
-                run: chmod +x gradlew
             -   name: "Run NHI Rule Integration Test Automatic"
-                run: ./gradlew cucumber_nhi_rule_2
+                run: ./gradlew.bat cucumber_nhi_rule_2
             -   name: "Upload Cucumber Report"
                 if: ${{ failure() }}
                 uses: actions/upload-artifact@v2.2.4
