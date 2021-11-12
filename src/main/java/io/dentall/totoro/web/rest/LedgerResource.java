@@ -15,7 +15,6 @@ import io.dentall.totoro.web.rest.util.PaginationUtil;
 import io.dentall.totoro.web.rest.vm.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -51,8 +50,6 @@ public class LedgerResource {
 
     private final PatientService patientService;
 
-    private final UserServiceV2 userServiceV2;
-
     private final LedgerReceiptRepository ledgerReceiptRepository;
 
     private final LedgerReceiptPrintedRecordRepository ledgerReceiptPrintedRecordRepository;
@@ -64,7 +61,6 @@ public class LedgerResource {
         LedgerQueryService ledgerQueryService,
         LedgerGroupRepository ledgerGroupRepository,
         PatientService patientService,
-        UserServiceV2 userServiceV2,
         LedgerReceiptRepository ledgerReceiptRepository,
         LedgerReceiptPrintedRecordRepository ledgerReceiptPrintedRecordRepository,
         ImageGcsBusinessService imageGcsBusinessService
@@ -73,7 +69,6 @@ public class LedgerResource {
         this.ledgerQueryService = ledgerQueryService;
         this.ledgerGroupRepository = ledgerGroupRepository;
         this.patientService = patientService;
-        this.userServiceV2 = userServiceV2;
         this.ledgerReceiptRepository = ledgerReceiptRepository;
         this.ledgerReceiptPrintedRecordRepository = ledgerReceiptPrintedRecordRepository;
         this.imageGcsBusinessService = imageGcsBusinessService;
@@ -182,6 +177,8 @@ public class LedgerResource {
         if (ledgerReceiptCreateVM.getLedgers().size() == 0) {
             throw new BadRequestAlertException("Associated ledger for ledger receipt is required.", ENTITY_NAME, "fieldrequired");
         }
+
+        ledgerService.validateLedgersInLedgerReceipt(ledgerReceiptCreateVM);
 
         LedgerReceipt ledgerReceipt = LedgerGroupMapper.INSTANCE.convertLedgerReceiptFromCreateVMToDomain(
             ledgerReceiptCreateVM

@@ -6,6 +6,7 @@ import io.dentall.totoro.repository.LedgerReceiptRepository;
 import io.dentall.totoro.repository.LedgerRepository;
 import io.dentall.totoro.repository.TreatmentPlanRepository;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
+import io.dentall.totoro.web.rest.vm.LedgerReceiptCreateVM;
 import io.dentall.totoro.web.rest.vm.LedgerUnwrapGroupUpdateVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -140,5 +140,31 @@ public class LedgerService {
             .get();
     }
 
+    public void validateLedgersInLedgerReceipt(LedgerReceiptCreateVM ledgerReceiptCreateVM) {
+        List<Long> ledgerIds = new ArrayList<>();
 
+        // Ledgers must exist and have the same gid to ledger receipt
+        ledgerReceiptCreateVM.getLedgers().forEach(d -> ledgerIds.add(d.getId()));
+        List<Ledger> ledgers = ledgerRepository.findAllById(ledgerIds);
+        if (ledgers.size() !=  ledgerIds.size()) {
+            throw new BadRequestAlertException(
+                "Can not found all ledgers by id",
+                "LEDGER",
+                "notfound"
+            );
+        }
+
+        if (ledgers.stream()
+                .filter(d -> !ledgerReceiptCreateVM.getGid().equals(d.getLedgerGroup().getId()))
+                .findAny()
+                .isPresent()
+        ) {
+            throw new BadRequestAlertException(
+                "Require the same gid for ledgers and ledger receipt",
+                "LEDGER",
+                "limitation"
+            );
+        }
+
+    }
 }
