@@ -52,6 +52,10 @@ public class LedgerReceipt extends AbstractAuditingEntity implements Serializabl
     @Column(name = "time")
     private Instant time;
 
+    @ManyToOne
+    @JoinColumn(name = "gid")
+    private LedgerGroup ledgerGroup;
+
     @ManyToMany
     @JoinTable(
         name="ledger_ledger_receipt",
@@ -75,6 +79,14 @@ public class LedgerReceipt extends AbstractAuditingEntity implements Serializabl
         name = "ledger_receipt_id"
     )
     private List<LedgerReceiptPrintedRecord> ledgerReceiptPrintedRecords = new ArrayList<>();
+
+    public LedgerGroup getLedgerGroup() {
+        return ledgerGroup;
+    }
+
+    public void setLedgerGroup(LedgerGroup ledgerGroup) {
+        this.ledgerGroup = ledgerGroup;
+    }
 
     public List<Ledger> getLedgers() {
         return ledgers;

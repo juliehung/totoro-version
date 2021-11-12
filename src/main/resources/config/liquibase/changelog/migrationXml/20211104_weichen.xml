@@ -10,6 +10,7 @@
                 id bigint
                     constraint pk_ledger_receipt
                         primary key,
+                gid bigint,
                 signed boolean,
                 type varchar(20),
                 range_type varchar(20),

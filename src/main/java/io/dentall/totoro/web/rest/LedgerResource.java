@@ -178,10 +178,14 @@ public class LedgerResource {
 
     @PostMapping("/ledger-receipts")
     @Timed
-    public LedgerReceiptVM createLedgerReceipt(@RequestBody LedgerReceipt ledgerReceipt) {
-        if (ledgerReceipt.getLedgers().size() == 0) {
+    public LedgerReceiptVM createLedgerReceipt(@Valid @RequestBody LedgerReceiptCreateVM ledgerReceiptCreateVM) {
+        if (ledgerReceiptCreateVM.getLedgers().size() == 0) {
             throw new BadRequestAlertException("Associated ledger for ledger receipt is required.", ENTITY_NAME, "fieldrequired");
         }
+
+        LedgerReceipt ledgerReceipt = LedgerGroupMapper.INSTANCE.convertLedgerReceiptFromCreateVMToDomain(
+            ledgerReceiptCreateVM
+        );
 
         return LedgerGroupMapper.INSTANCE.convertLedgerReceiptFromDomainToVM(
             ledgerReceiptRepository.save(ledgerReceipt)

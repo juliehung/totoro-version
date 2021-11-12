@@ -2,12 +2,12 @@ package io.dentall.totoro.service.mapper;
 
 import io.dentall.totoro.business.service.ImageGcsBusinessService;
 import io.dentall.totoro.domain.*;
-import io.dentall.totoro.web.rest.vm.LedgerReceiptPrintedRecordVM;
-import io.dentall.totoro.web.rest.vm.LedgerReceiptVM;
-import io.dentall.totoro.web.rest.vm.LedgerUnwrapGroupVM;
-import io.dentall.totoro.web.rest.vm.LedgerVM;
+import io.dentall.totoro.web.rest.vm.*;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Mapper(
     imports = { ImageGcsBusinessService.class },
@@ -35,5 +35,15 @@ public interface LedgerGroupMapper {
     Ledger convertLedgerUnwrapGroupVMToLedger(LedgerUnwrapGroupVM vm);
 
     LedgerReceiptVM convertLedgerReceiptFromDomainToVM(LedgerReceipt domain);
+
+    @Mapping(target = "ledgerGroup", qualifiedByName = { "TranslateLedgerReceiptGidToDomain" })
+    LedgerReceipt convertLedgerReceiptFromCreateVMToDomain(LedgerReceiptCreateVM ledgerReceiptCreateVM);
+
+    @Named("TranslateLedgerReceiptGidToDomain")
+    default LedgerGroup translateLedgerReceiptGidToDomain(Long gid) {
+       LedgerGroup ledgerGroup = new LedgerGroup();
+       ledgerGroup.setId(gid);
+       return ledgerGroup;
+    }
 
 }
