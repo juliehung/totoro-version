@@ -4,6 +4,8 @@ import io.dentall.totoro.domain.LedgerReceipt;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 /**
  * Spring Data  repository for the Ledger entity.
@@ -11,5 +13,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface LedgerReceiptRepository extends JpaRepository<LedgerReceipt, Long> {
-
+    List<LedgerReceipt> findAllByLedgerGroup_id(Long gid);
 }

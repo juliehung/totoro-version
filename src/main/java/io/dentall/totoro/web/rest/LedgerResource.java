@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -142,7 +143,10 @@ public class LedgerResource {
                     .forEach(d2 -> {
                         d2.getLedgerReceiptPrintedRecords()
                             .forEach(d3 -> {
-                                d3.setFilePath(imageGcsBusinessService.getUrlForDownload().concat(d3.getFilePath()));
+                                d3.setUrl(imageGcsBusinessService.getUrlForDownload()
+                                    .concat(d3.getFilePath())
+                                    .concat(d3.getFileName())
+                                );
                             });
                     });
 
@@ -155,6 +159,16 @@ public class LedgerResource {
 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/ledgers");
         return ResponseEntity.ok().headers(headers).body(result);
+    }
+
+    @GetMapping("/ledger-receipts")
+    @Timed
+    public List<LedgerReceiptExcelVM> findLedgerReceiptsByGid(
+        @RequestParam(name = "gid") Long gid
+    ) {
+        return LedgerGroupMapper.INSTANCE.ledgerReceiptListToLedgerReceiptExcelVMList(
+            ledgerReceiptRepository.findAllByLedgerGroup_id(gid)
+        );
     }
 
     /**

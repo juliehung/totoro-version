@@ -6,13 +6,13 @@ import io.dentall.totoro.web.rest.vm.*;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Mapper(
     imports = { ImageGcsBusinessService.class },
     nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
 )
+@DecoratedWith(LedgerGroupMapperDecorator.class)
 public interface LedgerGroupMapper {
 
     LedgerGroupMapper INSTANCE = Mappers.getMapper( LedgerGroupMapper.class );
@@ -36,14 +36,14 @@ public interface LedgerGroupMapper {
 
     LedgerReceiptVM convertLedgerReceiptFromDomainToVM(LedgerReceipt domain);
 
-    @Mapping(target = "ledgerGroup", qualifiedByName = { "TranslateLedgerReceiptGidToDomain" })
     LedgerReceipt convertLedgerReceiptFromCreateVMToDomain(LedgerReceiptCreateVM ledgerReceiptCreateVM);
 
-    @Named("TranslateLedgerReceiptGidToDomain")
-    default LedgerGroup translateLedgerReceiptGidToDomain(Long gid) {
-       LedgerGroup ledgerGroup = new LedgerGroup();
-       ledgerGroup.setId(gid);
-       return ledgerGroup;
-    }
+    @Mapping(target = "displayName", source = "ledgerGroup.displayName")
+    @Mapping(target = "projectCode", source = "ledgerGroup.projectCode")
+    @Mapping(target = "ledgerGroupType", source = "ledgerGroup.projectCode")
+    @Mapping(target = "receiptRangeType", source = "rangeType")
+    LedgerReceiptExcelVM ledgerReceiptToLedgerReceiptExcelVM(LedgerReceipt domain);
+
+    List<LedgerReceiptExcelVM> ledgerReceiptListToLedgerReceiptExcelVMList(List<LedgerReceipt> domains);
 
 }
