@@ -36,13 +36,6 @@ jobs:
 
     Nhi-Rule-Test-Part2:
         runs-on: [ self-hosted, dentall-his-runner-2 ]
-        services:
-            postgres:
-                image: postgres
-                env:
-                    POSTGRES_DB: totoro
-                    POSTGRES_USER: totoro
-                    POSTGRES_PASSWORD: totoro
         steps:
             -   name: "Check out branch"
                 uses: actions/checkout@v2
