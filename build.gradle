@@ -385,16 +385,28 @@ task cucumber_nhi_rule_1() {
     }
 }
 
+task pathingJar(type: Jar) {
+    classifier 'pathing'
+    doFirst {
+        manifest {
+            attributes 'Class-Path': configurations.cucumberRuntime.files.collect { project.uri(it) }.join(' ')
+        }
+    }
+    dependsOn configurations.cucumberRuntime
+}
+
 task cucumber_nhi_rule_2() {
     def cucumberTags = project.getProperties().get("cucumber.filter.tags", "@nhi and (not @nhi-90-series and not @nhi-91-series and not @nhi-92-series)")
-    dependsOn assemble, testClasses
+    dependsOn assemble, testClasses, pathingJar
     doLast {
         assert cucumberTags.length() > 0
         javaexec {
             main = "io.cucumber.core.cli.Main"
-            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', 'html:build/reports/cucumber2/cucumber.html', '--plugin', 'de.monochromata.cucumber.report.PrettyReports:build/reports/cucumber2', '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features']
-            environment = ['spring.profiles.active': 'test,no-swagger,embedded-postgres,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml', 'cucumber.filter.tags': "${cucumberTags}"]
+            classpath = files("${buildDir}/libs/totoro-pathing.jar") + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', "html:${buildDir}/reports/cucumber2/cucumber.html", '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features']
+            environment = ['cucumber.filter.tags': "${cucumberTags}"]
+//            systemProperties = ['java.io.tmpdir': 'C:\\Users\\Estelle\\javatmpdir', 'pgembed.cached_path': 'C:\\Users\\Estelle\\pgembedded-installation', 'pgembed.shared_buffers': '128', 'spring.profiles.active': 'test,no-swagger,embedded-postgres,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml']
+            systemProperties = ['spring.profiles.active': 'test,no-swagger,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml']
         }
     }
 }
