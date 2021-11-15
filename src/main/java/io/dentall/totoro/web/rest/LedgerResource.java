@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -248,7 +247,7 @@ public class LedgerResource {
 
         LedgerReceiptPrintedRecord ledgerReceiptPrintedRecord = new LedgerReceiptPrintedRecord();
         ledgerReceiptPrintedRecord.setTime(Instant.now());
-        ledgerReceiptPrintedRecord.setFilePath(imageGcsBusinessService.getUrlForDownload().concat(filePath));
+        ledgerReceiptPrintedRecord.setFilePath(filePath);
         ledgerReceiptPrintedRecord.setFileName(fileName);
         ledgerReceiptPrintedRecord.setLedgerReceipt(ledgerReceipt);
 
