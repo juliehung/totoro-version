@@ -31,8 +31,8 @@ jobs:
                 if: ${{ failure() }}
                 uses: actions/upload-artifact@v2.2.4
                 with:
-                    name: cucumber-artifact-1
-                    path: build/reports/cucumber1/
+                    name: nhirule1-artifact
+                    path: build/reports/nhirule1/
 
     Nhi-Rule-Test-Part2:
         runs-on: [ self-hosted, dentall-his-runner-2 ]
@@ -45,10 +45,10 @@ jobs:
                     java-version: '8'
                     distribution: 'adopt-openj9'
             -   name: "Run NHI Rule Integration Test Automatic"
-                run: ./gradlew.bat --debug cucumber_nhi_rule_2
+                run: ./gradlew.bat cucumber_nhi_rule_2
             -   name: "Upload Cucumber Report"
                 if: ${{ failure() }}
                 uses: actions/upload-artifact@v2.2.4
                 with:
-                    name: cucumber-artifact-2
-                    path: build/reports/cucumber2/
+                    name: nhirule2-artifact
+                    path: build/reports/nhirule2/

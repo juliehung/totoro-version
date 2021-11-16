@@ -69,8 +69,8 @@ jobs:
     #                if: ${{ failure() }}
     #                uses: actions/upload-artifact@v2.2.4
     #                with:
-    #                    name: cucumber-artifact-1
-    #                    path: build/reports/cucumber1/
+    #                    name: nhirule1-artifact
+    #                    path: build/reports/nhirule1/
 
     #    Nhi-Rule-Test-Part2:
     #        runs-on: [ self-hosted, dentall-his-runner-2 ]
@@ -92,8 +92,8 @@ jobs:
     #                if: ${{ failure() }}
     #                uses: actions/upload-artifact@v2.2.4
     #                with:
-    #                    name: cucumber-artifact-2
-    #                    path: build/reports/cucumber2/
+    #                    name: nhirule2-artifact
+    #                    path: build/reports/nhirule2/
 
     Metric-Test:
         runs-on: ubuntu-18.04
