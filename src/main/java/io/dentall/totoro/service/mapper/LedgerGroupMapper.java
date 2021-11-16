@@ -30,6 +30,7 @@ public interface LedgerGroupMapper {
     @Mapping(target = "displayName", source = "ledgerGroup.displayName")
     @Mapping(target = "patientId", source = "ledgerGroup.patientId")
     @Mapping(target = "amount", source = "ledgerGroup.amount")
+    @Mapping(target = "doctorId", source = "ledgerGroup.doctorId")
     LedgerVM convertLedgerFromDomainToVM(Ledger l);
 
     Ledger convertLedgerUnwrapGroupVMToLedger(LedgerUnwrapGroupVM vm);

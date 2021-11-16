@@ -76,6 +76,36 @@ public class LedgerResource {
         this.imageGcsBusinessService = imageGcsBusinessService;
     }
 
+
+    @PostMapping("/ledger-groups")
+    @Timed
+    public LedgerGroup createLedgerGroup(@RequestBody @Valid LedgerGroup ledgerGroup) {
+        return ledgerGroupRepository.save(ledgerGroup);
+    }
+
+    @GetMapping("/ledger-groups")
+    @Timed
+    public List<LedgerGroup> getLedgerGroup(@RequestParam(value = "patientId") Long patientId) {
+        return ledgerGroupRepository.findByPatientId(patientId);
+    }
+
+    @PatchMapping("/ledger-groups")
+    @Timed
+    @Transactional
+    public LedgerGroup updateLedgerGroup(@RequestBody @Valid LedgerGroup updateLedgerGroup) {
+        log.info("Patch ledger group by id {} ", updateLedgerGroup.getId());
+        if (updateLedgerGroup.getId() == null) {
+            throw new BadRequestAlertException("Require ledger group id", ENTITY_NAME, "noid");
+        }
+
+        LedgerGroup ledgerGroup = ledgerGroupRepository.findById(updateLedgerGroup.getId())
+            .orElseThrow(() -> new BadRequestAlertException("Can not found ledger group by id", ENTITY_NAME, "notfound"));
+
+        LedgerGroupMapper.INSTANCE.patching(ledgerGroup, updateLedgerGroup);
+
+        return ledgerGroup;
+    }
+
     /**
      * POST  /ledgers : Create a new ledger.
      *

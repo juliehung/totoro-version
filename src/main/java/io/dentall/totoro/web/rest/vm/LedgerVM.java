@@ -35,10 +35,25 @@ public class LedgerVM {
 
     Patient patient;
 
+    @Deprecated
     String doctor;
+
+    Long doctorId;
 
     public LedgerVM() {
 
+    }
+
+    public void setDoctor(String doctor) {
+        this.doctor = doctor;
+    }
+
+    public Long getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(Long doctorId) {
+        this.doctorId = doctorId;
     }
 
     public String getType() {
