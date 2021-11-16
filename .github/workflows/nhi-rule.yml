@@ -37,7 +37,6 @@ jobs:
             -   name: "Run NHI Rule Integration Test Automatic on Windows"
                 if: ${{ runner.os == 'Windows' }}
                 run: ./gradlew.bat -Pcucumber.output.dir=${{ env.OUTPUT_DIR }} -Pcucumber.filter.tags="${{ env.TAGS }}" cucumber_nhi_rule
-                shell: bash
             -   name: "Upload Cucumber Report"
                 if: ${{ failure() }}
                 uses: actions/upload-artifact@v2.2.4
@@ -69,7 +68,6 @@ jobs:
             -   name: "Run NHI Rule Integration Test Automatic on Windows"
                 if: ${{ runner.os == 'Windows' }}
                 run: ./gradlew.bat -Pcucumber.output.dir=${{ env.OUTPUT_DIR }} -Pcucumber.filter.tags="${{ env.TAGS }}" cucumber_nhi_rule
-                shell: bash
             -   name: "Upload Cucumber Report"
                 if: ${{ failure() }}
                 uses: actions/upload-artifact@v2.2.4
@@ -101,7 +99,6 @@ jobs:
             -   name: "Run NHI Rule Integration Test Automatic on Windows"
                 if: ${{ runner.os == 'Windows' }}
                 run: ./gradlew.bat -Pcucumber.output.dir=${{ env.OUTPUT_DIR }} -Pcucumber.filter.tags="${{ env.TAGS }}" cucumber_nhi_rule
-                shell: bash
             -   name: "Upload Cucumber Report"
                 if: ${{ failure() }}
                 uses: actions/upload-artifact@v2.2.4
