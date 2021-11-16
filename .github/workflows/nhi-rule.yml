@@ -15,6 +15,9 @@ on:
 jobs:
     Nhi-Rule-Test-Part1:
         runs-on: [ self-hosted, dentall-his-runner ]
+        env:
+            OUTPUT_DIR: "nhirule1"
+            TAGS: "@nhi-90-series or @nhi-91-series or @nhi-92-series"
         steps:
             -   name: "Check out branch"
                 uses: actions/checkout@v2
@@ -24,18 +27,33 @@ jobs:
                     java-version: '8'
                     distribution: 'adopt-openj9'
             -   name: "Grant execute permission for gradlew"
-                run: chmod +x gradlew
+                run: |
+                    if [ "${{ runner.os }}" == "Linux" ]; then
+                        chmod +x gradlew
+                    fi
             -   name: "Run NHI Rule Integration Test Automatic"
-                run: ./gradlew cucumber_nhi_rule_1
+                run: |
+                    if [ "${{ runner.os }}" == "Linux" ]; then
+                        ./gradlew -Pcucumber.output.dir=${{ env.OUTPUT_DIR }} -Pcucumber.filter.tags=${{ TAGS }} cucumber_nhi_rule
+                    elif [ "${{ runner.os }}" == "Windows" ]; then
+                        ./gradlew.bat -Pcucumber.output.dir=${{ env.OUTPUT_DIR }} -Pcucumber.filter.tags=${{ env.TAGS }} cucumber_nhi_rule
+                    else
+                        echo "$RUNNER_OS not supported"
+                        exit 1
+                    fi
+                shell: bash
             -   name: "Upload Cucumber Report"
                 if: ${{ failure() }}
                 uses: actions/upload-artifact@v2.2.4
                 with:
-                    name: nhirule1-artifact
-                    path: build/reports/nhirule1/
+                    name: ${{ env.OUTPUT_DIR }}-artifact
+                    path: build/reports/${{ env.OUTPUT_DIR }}/
 
     Nhi-Rule-Test-Part2:
-        runs-on: [ self-hosted, dentall-his-runner-2 ]
+        runs-on: [ self-hosted, dentall-his-runner ]
+        env:
+            OUTPUT_DIR: "nhirule2"
+            TAGS: "@nhi-89-series"
         steps:
             -   name: "Check out branch"
                 uses: actions/checkout@v2
@@ -44,11 +62,61 @@ jobs:
                 with:
                     java-version: '8'
                     distribution: 'adopt-openj9'
+            -   name: "Grant execute permission for gradlew"
+                run: |
+                    if [ "${{ runner.os }}" == "Linux" ]; then
+                        chmod +x gradlew
+                    fi
             -   name: "Run NHI Rule Integration Test Automatic"
-                run: ./gradlew.bat cucumber_nhi_rule_2
+                run: |
+                    if [ "${{ runner.os }}" == "Linux" ]; then
+                        ./gradlew -Pcucumber.output.dir=${{ env.OUTPUT_DIR }} -Pcucumber.filter.tags=${{ TAGS }} cucumber_nhi_rule
+                    elif [ "${{ runner.os }}" == "Windows" ]; then
+                        ./gradlew.bat -Pcucumber.output.dir=${{ env.OUTPUT_DIR }} -Pcucumber.filter.tags=${{ env.TAGS }} cucumber_nhi_rule
+                    else
+                        echo "$RUNNER_OS not supported"
+                        exit 1
+                    fi
+                shell: bash
             -   name: "Upload Cucumber Report"
                 if: ${{ failure() }}
                 uses: actions/upload-artifact@v2.2.4
                 with:
-                    name: nhirule2-artifact
-                    path: build/reports/nhirule2/
+                    name: ${{ env.OUTPUT_DIR }}-artifact
+                    path: build/reports/${{ env.OUTPUT_DIR }}/
+
+    Nhi-Rule-Test-Part3:
+        runs-on: [ self-hosted, dentall-his-runner ]
+        env:
+            OUTPUT_DIR: "nhirule3"
+            TAGS: "@nhi and (not @nhi-89-series and not @nhi-90-series and not @nhi-91-series and not @nhi-92-series)"
+        steps:
+            -   name: "Check out branch"
+                uses: actions/checkout@v2
+            -   name: "Set up JDK 1.8"
+                uses: actions/setup-java@v2
+                with:
+                    java-version: '8'
+                    distribution: 'adopt-openj9'
+            -   name: "Grant execute permission for gradlew"
+                run: |
+                    if [ "${{ runner.os }}" == "Linux" ]; then
+                        chmod +x gradlew
+                    fi
+            -   name: "Run NHI Rule Integration Test Automatic"
+                run: |
+                    if [ "${{ runner.os }}" == "Linux" ]; then
+                        ./gradlew -Pcucumber.output.dir=${{ env.OUTPUT_DIR }} -Pcucumber.filter.tags=${{ TAGS }} cucumber_nhi_rule
+                    elif [ "${{ runner.os }}" == "Windows" ]; then
+                        ./gradlew.bat -Pcucumber.output.dir=${{ env.OUTPUT_DIR }} -Pcucumber.filter.tags=${{ env.TAGS }} cucumber_nhi_rule
+                    else
+                        echo "$RUNNER_OS not supported"
+                        exit 1
+                    fi
+                shell: bash
+            -   name: "Upload Cucumber Report"
+                if: ${{ failure() }}
+                uses: actions/upload-artifact@v2.2.4
+                with:
+                    name: ${{ env.OUTPUT_DIR }}-artifact
+                    path: build/reports/${{ env.OUTPUT_DIR }}/

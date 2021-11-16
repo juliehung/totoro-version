@@ -375,21 +375,6 @@ dependencies {
     testCompile "org.testcontainers:junit-jupiter:1.16.2"
 }
 
-task cucumber_nhi_rule_1() {
-    def cucumberTags = project.getProperties().get("cucumber.filter.tags", "@nhi-90-series or @nhi-91-series or @nhi-92-series")
-    dependsOn assemble, testClasses
-    doLast {
-        assert cucumberTags.length() > 0
-        javaexec {
-            main = "io.cucumber.core.cli.Main"
-            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', "html:${buildDir}/reports/nhirule1/cucumber.html", '--plugin', "de.monochromata.cucumber.report.PrettyReports:${buildDir}/reports/nhirule1", '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features']
-            environment = ['cucumber.filter.tags': "${cucumberTags}"]
-            systemProperties = ['spring.profiles.active': 'test,no-swagger,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml']
-        }
-    }
-}
-
 task pathingJar(type: Jar) {
     classifier 'pathing'
     doFirst {
@@ -400,17 +385,24 @@ task pathingJar(type: Jar) {
     dependsOn configurations.cucumberRuntime
 }
 
-task cucumber_nhi_rule_2() {
-    def cucumberTags = project.getProperties().get("cucumber.filter.tags", "@nhi and (not @nhi-90-series and not @nhi-91-series and not @nhi-92-series)")
+task cucumber_nhi_rule() {
+    def outputDir = project.getProperties().get("cucumber.output.dir")
+    def cucumberTags = project.getProperties().get("cucumber.filter.tags")
     dependsOn assemble, testClasses, pathingJar
     doLast {
         assert cucumberTags.length() > 0
         javaexec {
             main = "io.cucumber.core.cli.Main"
-            classpath = files("${buildDir}/libs/totoro-pathing.jar") + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', "html:${buildDir}/reports/nhirule2/cucumber.html", '--plugin', "de.monochromata.cucumber.report.PrettyReports:${buildDir}/reports/nhirule2", '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features']
             environment = ['cucumber.filter.tags': "${cucumberTags}"]
-            systemProperties = ['java.io.tmpdir': "${buildDir}\\tmp", 'spring.profiles.active': 'test,no-swagger,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml']
+            args = ['--plugin', "html:${buildDir}/reports/${outputDir}/cucumber.html", '--plugin', "de.monochromata.cucumber.report.PrettyReports:${buildDir}/reports/${outputDir}", '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features']
+            if (isWindows()) {
+                classpath = files("${buildDir}/libs/totoro-pathing.jar") + sourceSets.main.output + sourceSets.test.output
+                systemProperties = ['java.io.tmpdir': "${buildDir}\\tmp", 'spring.profiles.active': 'test,no-swagger,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml']
+            } else {
+                classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+                systemProperties = ['spring.profiles.active': 'test,no-swagger,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml']
+            }
+
         }
     }
 }
@@ -428,6 +420,10 @@ task cucumber_metric() {
             systemProperties = ['spring.profiles.active': 'test,no-swagger,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml']
         }
     }
+}
+
+static def isWindows() {
+    return org.gradle.internal.os.OperatingSystem.current().isWindows()
 }
 
 /**
