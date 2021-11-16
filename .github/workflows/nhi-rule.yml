@@ -34,9 +34,9 @@ jobs:
             -   name: "Run NHI Rule Integration Test Automatic"
                 run: |
                     if [ "${{ runner.os }}" == "Linux" ]; then
-                        ./gradlew -Pcucumber.output.dir=${{ env.OUTPUT_DIR }} -Pcucumber.filter.tags=${{ env.TAGS }} cucumber_nhi_rule
+                        ./gradlew -Pcucumber.output.dir=${{ env.OUTPUT_DIR }} -Pcucumber.filter.tags="${{ env.TAGS }}" cucumber_nhi_rule
                     elif [ "${{ runner.os }}" == "Windows" ]; then
-                        ./gradlew.bat -Pcucumber.output.dir=${{ env.OUTPUT_DIR }} -Pcucumber.filter.tags=${{ env.TAGS }} cucumber_nhi_rule
+                        ./gradlew.bat -Pcucumber.output.dir=${{ env.OUTPUT_DIR }} -Pcucumber.filter.tags="${{ env.TAGS }}" cucumber_nhi_rule
                     else
                         echo "$RUNNER_OS not supported"
                         exit 1
@@ -70,9 +70,9 @@ jobs:
             -   name: "Run NHI Rule Integration Test Automatic"
                 run: |
                     if [ "${{ runner.os }}" == "Linux" ]; then
-                        ./gradlew -Pcucumber.output.dir=${{ env.OUTPUT_DIR }} -Pcucumber.filter.tags=${{ env.TAGS }} cucumber_nhi_rule
+                        ./gradlew -Pcucumber.output.dir=${{ env.OUTPUT_DIR }} -Pcucumber.filter.tags="${{ env.TAGS }}" cucumber_nhi_rule
                     elif [ "${{ runner.os }}" == "Windows" ]; then
-                        ./gradlew.bat -Pcucumber.output.dir=${{ env.OUTPUT_DIR }} -Pcucumber.filter.tags=${{ env.TAGS }} cucumber_nhi_rule
+                        ./gradlew.bat -Pcucumber.output.dir=${{ env.OUTPUT_DIR }} -Pcucumber.filter.tags="${{ env.TAGS }}" cucumber_nhi_rule
                     else
                         echo "$RUNNER_OS not supported"
                         exit 1
@@ -106,9 +106,9 @@ jobs:
             -   name: "Run NHI Rule Integration Test Automatic"
                 run: |
                     if [ "${{ runner.os }}" == "Linux" ]; then
-                        ./gradlew -Pcucumber.output.dir=${{ env.OUTPUT_DIR }} -Pcucumber.filter.tags=${{ env.TAGS }} cucumber_nhi_rule
+                        ./gradlew -Pcucumber.output.dir=${{ env.OUTPUT_DIR }} -Pcucumber.filter.tags="${{ env.TAGS }}" cucumber_nhi_rule
                     elif [ "${{ runner.os }}" == "Windows" ]; then
-                        ./gradlew.bat -Pcucumber.output.dir=${{ env.OUTPUT_DIR }} -Pcucumber.filter.tags=${{ env.TAGS }} cucumber_nhi_rule
+                        ./gradlew.bat -Pcucumber.output.dir=${{ env.OUTPUT_DIR }} -Pcucumber.filter.tags="${{ env.TAGS }}" cucumber_nhi_rule
                     else
                         echo "$RUNNER_OS not supported"
                         exit 1
