@@ -31,6 +31,7 @@ jobs:
                     if [ "${{ runner.os }}" == "Linux" ]; then
                         chmod +x gradlew
                     fi
+                shell: bash
             -   name: "Run NHI Rule Integration Test Automatic"
                 run: |
                     if [ "${{ runner.os }}" == "Linux" ]; then
@@ -67,6 +68,7 @@ jobs:
                     if [ "${{ runner.os }}" == "Linux" ]; then
                         chmod +x gradlew
                     fi
+                shell: bash
             -   name: "Run NHI Rule Integration Test Automatic"
                 run: |
                     if [ "${{ runner.os }}" == "Linux" ]; then
@@ -103,6 +105,7 @@ jobs:
                     if [ "${{ runner.os }}" == "Linux" ]; then
                         chmod +x gradlew
                     fi
+                shell: bash
             -   name: "Run NHI Rule Integration Test Automatic"
                 run: |
                     if [ "${{ runner.os }}" == "Linux" ]; then
