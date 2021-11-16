@@ -410,7 +410,7 @@ task cucumber_nhi_rule_2() {
             classpath = files("${buildDir}/libs/totoro-pathing.jar") + sourceSets.main.output + sourceSets.test.output
             args = ['--plugin', "html:${buildDir}/reports/nhirule2/cucumber.html", '--plugin', "de.monochromata.cucumber.report.PrettyReports:${buildDir}/reports/nhirule2", '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features']
             environment = ['cucumber.filter.tags': "${cucumberTags}"]
-            systemProperties = ['spring.profiles.active': 'test,no-swagger,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml']
+            systemProperties = ['java.io.tmpdir': "${buildDir}\\tmp", 'spring.profiles.active': 'test,no-swagger,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml']
         }
     }
 }
