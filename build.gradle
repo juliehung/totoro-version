@@ -386,7 +386,7 @@ task pathingJar(type: Jar) {
 }
 
 task cucumber_nhi_rule() {
-    def outputDir = project.getProperties().get("cucumber.output.dir")
+    def outputDir = "nhirule"
     def cucumberTags = project.getProperties().get("cucumber.filter.tags")
     dependsOn assemble, testClasses, pathingJar
     doLast {
