@@ -162,6 +162,14 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
         };
     }
 
+    @Given
+
+    @Given("增加期間限定收支")
+    public void addSpecificDurationLedger() {
+
+    }
+
+
     @Then("依專案 gid 查詢")
     public void getLedgerByGid(List<LedgerVM> expects) throws Exception {
         MockHttpServletRequestBuilder requestBuilder = get(ledgerApiPath)

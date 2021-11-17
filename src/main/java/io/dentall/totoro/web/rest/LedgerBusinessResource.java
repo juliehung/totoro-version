@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 /**
  * REST controller for managing Ledger.
  */
+@Deprecated
 @RestController
 @RequestMapping("/api/business")
 public class LedgerBusinessResource {
