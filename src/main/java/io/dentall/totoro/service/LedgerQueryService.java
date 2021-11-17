@@ -10,6 +10,7 @@ import javax.persistence.criteria.JoinType;
 import io.dentall.totoro.repository.LedgerGroupRepository;
 import io.dentall.totoro.service.mapper.LedgerGroupMapper;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
+import io.github.jhipster.service.filter.StringFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -104,8 +105,13 @@ public class LedgerQueryService extends QueryService<Ledger> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildSpecification(criteria.getId(), Ledger_.id));
             }
+            if (criteria.getGid() != null) {
+                specification = specification.and(buildSpecification(criteria.getGid(),
+                    root -> root.join(Ledger_.ledgerGroup, JoinType.LEFT).get(LedgerGroup_.id)));
+            }
             if (criteria.getAmount() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getAmount(), Ledger_.amount));
+                specification = specification.and(buildSpecification(criteria.getAmount(),
+                    root -> root.join(Ledger_.ledgerGroup, JoinType.LEFT).get(LedgerGroup_.amount)));
             }
             if (criteria.getCharge() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getCharge(), Ledger_.charge));
@@ -116,14 +122,17 @@ public class LedgerQueryService extends QueryService<Ledger> {
             if (criteria.getNote() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getNote(), Ledger_.note));
             }
-            if (criteria.getDoctor() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getDoctor(), Ledger_.doctor));
+            if (criteria.getDoctorId() != null) {
+                specification = specification.and(buildSpecification(criteria.getDoctorId(),
+                    root -> root.join(Ledger_.ledgerGroup, JoinType.LEFT).get(LedgerGroup_.doctorId)));
             }
             if (criteria.getProjectCode() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getProjectCode(), Ledger_.projectCode));
+                specification = specification.and(buildSpecification(criteria.getProjectCode(),
+                    root -> root.join(Ledger_.ledgerGroup, JoinType.LEFT).get(LedgerGroup_.projectCode)));
             }
             if (criteria.getDisplayName() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getDisplayName(), Ledger_.displayName));
+                specification = specification.and(buildSpecification(criteria.getDisplayName(),
+                    root -> root.join(Ledger_.ledgerGroup, JoinType.LEFT).get(LedgerGroup_.displayName)));
             }
             if (criteria.getType() != null) {
                 specification = specification.and(buildSpecification(criteria.getType(),
@@ -135,18 +144,6 @@ public class LedgerQueryService extends QueryService<Ledger> {
             if (criteria.getPatientId() != null) {
                 specification = specification.and(buildSpecification(criteria.getPatientId(),
                     root -> root.join(Ledger_.ledgerGroup, JoinType.LEFT).get(LedgerGroup_.patientId)));
-            }
-            if (criteria.getCreatedDate() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getCreatedDate(), Ledger_.createdDate));
-            }
-            if (criteria.getCreatedBy() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getCreatedBy(), Ledger_.createdBy));
-            }
-            if (criteria.getLastModifiedDate() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getLastModifiedDate(), Ledger_.lastModifiedDate));
-            }
-            if (criteria.getLastModifiedBy() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getLastModifiedBy(), Ledger_.lastModifiedBy));
             }
         }
         return specification;

@@ -33,8 +33,6 @@ public class LedgerCriteria implements Serializable {
 
     private StringFilter note;
 
-    private StringFilter doctor;
-
     private LongFilter gid;
 
     private LongFilter patientId;
@@ -45,29 +43,11 @@ public class LedgerCriteria implements Serializable {
 
     private StringFilter displayName;
 
-    private InstantFilter createdDate;
+    private LongFilter doctorId;
 
-    private StringFilter createdBy;
-
-    private InstantFilter lastModifiedDate;
-
-    private StringFilter lastModifiedBy;
-
-    private LongFilter treatmentPlanId;
+    private StringFilter doctor;
 
     private StringFilter projectCode;
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
-    public StringFilter getProjectCode() {
-        return projectCode;
-    }
-
-    public void setProjectCode(StringFilter projectCode) {
-        this.projectCode = projectCode;
-    }
 
     public LongFilter getId() {
         return id;
@@ -109,68 +89,12 @@ public class LedgerCriteria implements Serializable {
         this.note = note;
     }
 
-    public StringFilter getDoctor() {
-        return doctor;
-    }
-
-    public void setDoctor(StringFilter doctor) {
-        this.doctor = doctor;
-    }
-
     public LongFilter getGid() {
         return gid;
     }
 
     public void setGid(LongFilter gid) {
         this.gid = gid;
-    }
-
-    public StringFilter getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(StringFilter displayName) {
-        this.displayName = displayName;
-    }
-
-    public InstantFilter getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(InstantFilter createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public StringFilter getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(StringFilter createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public InstantFilter getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(InstantFilter lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public StringFilter getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(StringFilter lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public LongFilter getTreatmentPlanId() {
-        return treatmentPlanId;
-    }
-
-    public void setTreatmentPlanId(LongFilter treatmentPlanId) {
-        this.treatmentPlanId = treatmentPlanId;
     }
 
     public LongFilter getPatientId() {
@@ -197,79 +121,35 @@ public class LedgerCriteria implements Serializable {
         this.date = date;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final LedgerCriteria that = (LedgerCriteria) o;
-        return
-            Objects.equals(id, that.id) &&
-            Objects.equals(amount, that.amount) &&
-            Objects.equals(charge, that.charge) &&
-            Objects.equals(arrears, that.arrears) &&
-            Objects.equals(note, that.note) &&
-            Objects.equals(doctor, that.doctor) &&
-            Objects.equals(gid, that.gid) &&
-            Objects.equals(patientId, that.patientId) &&
-            Objects.equals(type, that.type) &&
-            Objects.equals(date, that.date) &&
-            Objects.equals(projectCode, that.projectCode) &&
-            Objects.equals(displayName, that.displayName) &&
-            Objects.equals(createdDate, that.createdDate) &&
-            Objects.equals(createdBy, that.createdBy) &&
-            Objects.equals(lastModifiedDate, that.lastModifiedDate) &&
-            Objects.equals(lastModifiedBy, that.lastModifiedBy) &&
-            Objects.equals(treatmentPlanId, that.treatmentPlanId);
+    public StringFilter getDisplayName() {
+        return displayName;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-        id,
-        amount,
-        charge,
-        arrears,
-        note,
-        projectCode,
-        doctor,
-        gid,
-        date,
-        patientId,
-        type,
-        displayName,
-        createdDate,
-        createdBy,
-        lastModifiedDate,
-        lastModifiedBy,
-        treatmentPlanId
-        );
+    public void setDisplayName(StringFilter displayName) {
+        this.displayName = displayName;
     }
 
-    @Override
-    public String toString() {
-        return "LedgerCriteria{" +
-                (id != null ? "id=" + id + ", " : "") +
-                (amount != null ? "amount=" + amount + ", " : "") +
-                (charge != null ? "charge=" + charge + ", " : "") +
-                (arrears != null ? "arrears=" + arrears + ", " : "") +
-                (note != null ? "note=" + note + ", " : "") +
-                (doctor != null ? "doctor=" + doctor + ", " : "") +
-                (gid != null ? "gid=" + gid + ", " : "") +
-                (type != null ? "type=" + type + ", " : "") +
-                (date != null ? "date=" + date + ", " : "") +
-                (projectCode != null ? "projectCode=" + projectCode + ", " : "") +
-                (patientId != null ? "patientId=" + patientId + ", " : "") +
-                (displayName != null ? "displayName=" + displayName + ", " : "") +
-                (createdDate != null ? "createdDate=" + createdDate + ", " : "") +
-                (createdBy != null ? "createdBy=" + createdBy + ", " : "") +
-                (lastModifiedDate != null ? "lastModifiedDate=" + lastModifiedDate + ", " : "") +
-                (lastModifiedBy != null ? "lastModifiedBy=" + lastModifiedBy + ", " : "") +
-                (treatmentPlanId != null ? "treatmentPlanId=" + treatmentPlanId + ", " : "") +
-            "}";
+    public LongFilter getDoctorId() {
+        return doctorId;
     }
 
+    public void setDoctorId(LongFilter doctorId) {
+        this.doctorId = doctorId;
+    }
+
+    public StringFilter getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(StringFilter doctor) {
+        this.doctor = doctor;
+    }
+
+    public StringFilter getProjectCode() {
+        return projectCode;
+    }
+
+    public void setProjectCode(StringFilter projectCode) {
+        this.projectCode = projectCode;
+    }
 }

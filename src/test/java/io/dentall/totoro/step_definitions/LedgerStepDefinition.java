@@ -107,7 +107,11 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
 
     @DataTableType
     public LedgerVM ledgerVM(Map<String, String> entry) {
-        return LedgerTestMapper.INSTANCE.mapToLedgerVM(entry);
+        LedgerVM vm = LedgerTestMapper.INSTANCE.mapToLedgerVM(entry);
+        vm.setPatient(patientTestInfoHolder.getPatient());
+        vm.setDoctorId(userTestInfoHolder.getUser().getId());
+
+        return vm;
     }
 
     @DataTableType
@@ -158,11 +162,11 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
         };
     }
 
-    @Then("依專案 id 查詢")
-    public void validateLedgerVMs(List<LedgerVM> expects) throws Exception {
+    @Then("依專案 gid 查詢")
+    public void getLedgerByGid(List<LedgerVM> expects) throws Exception {
         MockHttpServletRequestBuilder requestBuilder = get(ledgerApiPath)
             .contentType(APPLICATION_JSON)
-            .param("gid.equals", "1");
+            .param("gid.equals", expects.get(0).getGid().toString());
 
         ResultActions resultActions = this.mvc.perform(requestBuilder);
 
@@ -174,44 +178,93 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
         Assert.assertEquals(ledgers.size(), expects.size());
 
         for (int i = 0; i < ledgers.size(); i++) {
-            Assert.assertEquals(
-                ledgers.get(i).getGid(),
-                expects.get(i).getGid()
-            );
-            Assert.assertEquals(
-                ledgers.get(i).getAmount(),
-                expects.get(i).getAmount()
-            );
-            Assert.assertEquals(
-                ledgers.get(i).getDate(),
-                expects.get(i).getDate()
-            );
-            Assert.assertEquals(
-                ledgers.get(i).getType(),
-                expects.get(i).getType()
-            );
-            Assert.assertEquals(
-                ledgers.get(i).getProjectCode(),
-                expects.get(i).getProjectCode()
-            );
-            Assert.assertEquals(
-                ledgers.get(i).getDisplayName(),
-                expects.get(i).getDisplayName()
-            );
-            Assert.assertEquals(
-                ledgers.get(i).getCharge(),
-                expects.get(i).getCharge()
-            );
-            Assert.assertEquals(
-                ledgers.get(i).getNote(),
-                expects.get(i).getNote()
-            );
-            Assert.assertEquals(
-                ledgers.get(i).getIncludeStampTax(),
-                expects.get(i).getIncludeStampTax()
-            );
+            validateLedgerVM(ledgers.get(i), expects.get(i));
         }
+    }
 
+    @Then("依專案 patient id 查詢")
+    public void getLedgerByPatientId(List<LedgerVM> expects) throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = get(ledgerApiPath)
+            .contentType(APPLICATION_JSON)
+            .param("patientId.equals", patientTestInfoHolder.getPatient().getId().toString());
+
+        ResultActions resultActions = this.mvc.perform(requestBuilder);
+
+        List<LedgerVM> ledgers = objectMapper.readValue(
+            resultActions.andReturn().getResponse().getContentAsString(),
+            new TypeReference<List<LedgerVM>>() {}
+        );
+
+        Assert.assertEquals(ledgers.size(), expects.size());
+
+        for (int i = 0; i < ledgers.size(); i++) {
+            validateLedgerVM(ledgers.get(i), expects.get(i));
+        }
+    }
+
+    @Then("依專案 doctor id 查詢")
+    public void getLedgerByDoctorId(List<LedgerVM> expects) throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = get(ledgerApiPath)
+            .contentType(APPLICATION_JSON)
+            .param("doctorId.equals", userTestInfoHolder.getUser().getId().toString())
+            ;
+
+        ResultActions resultActions = this.mvc.perform(requestBuilder);
+
+        List<LedgerVM> ledgers = objectMapper.readValue(
+            resultActions.andReturn().getResponse().getContentAsString(),
+            new TypeReference<List<LedgerVM>>() {
+            }
+        );
+
+        Assert.assertEquals(ledgers.size(), expects.size());
+
+        for (int i = 0; i < ledgers.size(); i++) {
+            validateLedgerVM(ledgers.get(i), expects.get(i));
+        }
+    }
+
+    private void validateLedgerVM(LedgerVM target, LedgerVM expected) throws Exception {
+        Assert.assertEquals(
+            target.getGid(),
+            expected.getGid()
+        );
+        Assert.assertEquals(
+            target.getAmount(),
+            expected.getAmount()
+        );
+        Assert.assertEquals(
+            target.getDate(),
+            expected.getDate()
+        );
+        Assert.assertEquals(
+            target.getType(),
+            expected.getType()
+        );
+        Assert.assertEquals(
+            target.getProjectCode(),
+            expected.getProjectCode()
+        );
+        Assert.assertEquals(
+            target.getDisplayName(),
+            expected.getDisplayName()
+        );
+        Assert.assertEquals(
+            target.getCharge(),
+            expected.getCharge()
+        );
+        Assert.assertEquals(
+            target.getNote(),
+            expected.getNote()
+        );
+        Assert.assertEquals(
+            target.getIncludeStampTax(),
+            expected.getIncludeStampTax()
+        );
+        Assert.assertEquals(
+            target.getDoctorId(),
+            expected.getDoctorId()
+        );
     }
 
 }
