@@ -7,7 +7,7 @@
     <!-- '00129C','00130C','00133C','00134C' -->
     <changeSet id="20211115-weichen" author="WeiChen">
         <sql>
-            update nhi_procedure set expiration_time = '2020-3-31T16:00:00Z' where id in (7, 9, 10, 11);
+            update nhi_procedure set expiration_time = '2020-3-31T16:00:00Z' where id in (8, 9, 10, 11);
         </sql>
     </changeSet>
 </databaseChangeLog>
