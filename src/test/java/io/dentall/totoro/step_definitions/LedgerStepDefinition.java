@@ -33,6 +33,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -138,14 +139,22 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
         LedgerReceiptVM result = LedgerTestMapper.INSTANCE.mapToLedgerReceiptVM (entry);
 
         if (entry.containsKey("rangeBegin")) {
-            result.setRangeBegin(
-                Instant.parse(entry.get("rangeBegin").concat("T00:00:00Z"))
-            );
+            if (!entry.get("rangeBegin").equals("null")) {
+                result.setRangeBegin(
+                    Instant.parse(entry.get("rangeBegin").concat("T00:00:00Z"))
+                );
+            } else {
+                result.setRangeBegin(null);
+            }
         }
         if (entry.containsKey("rangeEnd")) {
-            result.setRangeEnd(
-                Instant.parse(entry.get("rangeEnd").concat("T00:00:00Z"))
-            );
+            if (!entry.get("rangeEnd").equals("null")) {
+                result.setRangeEnd(
+                    Instant.parse(entry.get("rangeEnd").concat("T00:00:00Z"))
+                );
+            } else {
+                result.setRangeEnd(null);
+            }
         }
 
         return result;
@@ -237,25 +246,26 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
     }
 
     @Given("增加當前限定收據，{yesNo}印花總繳")
-    public void addCurrentLedgerToReceipt(boolean hasStampTax, boolean hasSigned) throws Exception {
+    public void addCurrentLedgerToReceipt(boolean hasStampTax) throws Exception {
         LedgerReceiptCreateVM ledgerReceiptCreateVM = new LedgerReceiptCreateVM();
         ledgerReceiptCreateVM.setGid(ledgerTestInfoHolder.getLedgerGroup().getId());
         ledgerReceiptCreateVM.setType(LedgerReceiptType.NONE);
         ledgerReceiptCreateVM.setRangeType(LedgerReceiptRangeType.CURRENT);
         ledgerReceiptCreateVM.setStampTax(hasStampTax);
-        ledgerReceiptCreateVM.setSigned(hasSigned);
-        ledgerReceiptCreateVM.setLedgers(
-            Arrays.asList(
-                ledgerTestInfoHolder.getLedgers().get(ledgerTestInfoHolder.getLedgerReceipts().size()-1)
-            )
+        ledgerReceiptCreateVM.setTime(Instant.now());
+
+        List<Ledger> ledgers = new ArrayList<>();
+        ledgers.add(
+            ledgerTestInfoHolder.getLedgers().get(ledgerTestInfoHolder.getLedgers().size()-1)
         );
+        ledgerReceiptCreateVM.setLedgers(ledgers);
 
         this.mvc.perform(
             post(ledgerReceiptApiPath)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(ledgerReceiptCreateVM))
         );
-        
+
         System.out.println("");
     }
 

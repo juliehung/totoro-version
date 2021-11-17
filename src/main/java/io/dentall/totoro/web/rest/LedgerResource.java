@@ -223,7 +223,9 @@ public class LedgerResource {
             throw new BadRequestAlertException("Associated ledger for ledger receipt is required.", ENTITY_NAME, "fieldrequired");
         }
 
-        ledgerService.validateLedgersInLedgerReceipt(ledgerReceiptCreateVM);
+        // Prevent object been modified by validate method
+        final LedgerReceiptCreateVM ledgerReceiptCreateVMForValidate = ledgerReceiptCreateVM;
+        ledgerService.validateLedgersInLedgerReceipt(ledgerReceiptCreateVMForValidate);
 
         LedgerReceipt ledgerReceipt = LedgerGroupMapper.INSTANCE.convertLedgerReceiptFromCreateVMToDomain(
             ledgerReceiptCreateVM
