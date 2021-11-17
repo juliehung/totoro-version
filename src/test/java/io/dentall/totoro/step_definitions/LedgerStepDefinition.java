@@ -162,10 +162,18 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
         };
     }
 
-    @Given
+    @Given("增加當前限定收據")
+    public void addCurrentLedgerToReceipt() {
 
-    @Given("增加期間限定收支")
-    public void addSpecificDurationLedger() {
+    }
+
+    @Given("增加期間限定收據")
+    public void addSpecificDurationLedgerToReceipt() {
+
+    }
+
+    @Given("增加整筆專案收據")
+    public void addWholeProjectToReceipt() {
 
     }
 
