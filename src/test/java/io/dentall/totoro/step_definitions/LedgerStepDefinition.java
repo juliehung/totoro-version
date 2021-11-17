@@ -3,6 +3,7 @@ package io.dentall.totoro.step_definitions;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.cucumber.java.Before;
 import io.cucumber.java.DataTableType;
+import io.cucumber.java.ParameterType;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.dentall.totoro.business.service.ImageGcsBusinessService;
@@ -10,13 +11,17 @@ import io.dentall.totoro.domain.Ledger;
 import io.dentall.totoro.domain.LedgerGroup;
 import io.dentall.totoro.domain.LedgerReceipt;
 import io.dentall.totoro.domain.LedgerReceiptPrintedRecord;
+import io.dentall.totoro.domain.enumeration.LedgerReceiptRangeType;
+import io.dentall.totoro.domain.enumeration.LedgerReceiptType;
 import io.dentall.totoro.mapper.LedgerTestMapper;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.*;
+import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.step_definitions.holders.LedgerTestInfoHolder;
 import io.dentall.totoro.step_definitions.holders.PatientTestInfoHolder;
 import io.dentall.totoro.step_definitions.holders.UserTestInfoHolder;
 import io.dentall.totoro.web.rest.LedgerResource;
+import io.dentall.totoro.web.rest.vm.LedgerReceiptCreateVM;
 import io.dentall.totoro.web.rest.vm.LedgerUnwrapGroupVM;
 import io.dentall.totoro.web.rest.vm.LedgerVM;
 import org.junit.Assert;
@@ -26,9 +31,11 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
+import static io.dentall.totoro.step_definitions.StepDefinitionUtil.DurationParamTypeRegularExpression;
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -124,6 +131,53 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
         return LedgerTestMapper.INSTANCE.mapToLedgerReceiptPrintedRecord(entry);
     }
 
+    @ParameterType("包含|不包含")
+    public boolean yesNo(String yesNo){
+        if (yesNo.equals("包含")) {
+            return true;
+        } else if (yesNo.equals("不包含")) {
+            return false;
+        } else {
+            return false;
+        }
+    }
+
+    @ParameterType(
+        name = "duration",
+        value = DurationParamTypeRegularExpression
+    )
+    public DateTimeUtil.BeginEnd duration(
+        String beginYear,
+        String beginMonth,
+        String beginDay,
+        String endYear,
+        String endMonth,
+        String endDay
+    ) {
+        DateTimeUtil.BeginEnd result = new DateTimeUtil.BeginEnd();
+
+        result.setBegin(
+            Instant.parse(
+                String.valueOf(beginYear)
+                    .concat("-")
+                    .concat(String.valueOf(beginMonth))
+                    .concat("-")
+                    .concat(String.valueOf(beginDay))
+            )
+        );
+        result.setEnd(
+            Instant.parse(
+                String.valueOf(endYear)
+                    .concat("-")
+                    .concat(String.valueOf(endMonth))
+                    .concat("-")
+                    .concat(String.valueOf(endDay))
+            )
+        );
+
+        return result;
+    }
+
     @Given("為病患產生一個新的專案")
     public void createLedgerGroup(LedgerGroup ledgerGroup) throws Exception {
         ledgerGroup.setDoctorId(userTestInfoHolder.getUser().getId());
@@ -158,25 +212,45 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
                 Ledger.class
             );
 
-            System.out.println(responseBody.toString());
+            ledgerTestInfoHolder.getLedgers().add(responseBody);
         };
     }
 
-    @Given("增加當前限定收據")
-    public void addCurrentLedgerToReceipt() {
+    @Given("增加當前限定收據，{yesNo}印花總繳")
+    public void addCurrentLedgerToReceipt(boolean yesNo) throws Exception {
+        LedgerReceiptCreateVM ledgerReceiptCreateVM = new LedgerReceiptCreateVM();
+        ledgerReceiptCreateVM.setGid(ledgerTestInfoHolder.getLedgerGroup().getId());
+        ledgerReceiptCreateVM.setLedgers(ledgerTestInfoHolder.getLedgers());
+        ledgerReceiptCreateVM.setType(LedgerReceiptType.NONE);
+        ledgerReceiptCreateVM.setRangeType(LedgerReceiptRangeType.CURRENT);
+        ledgerReceiptCreateVM.setStampTax(yesNo);
 
+        this.mvc.perform(
+            post(ledgerReceiptApiPath)
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(ledgerReceiptCreateVM))
+        );
+        System.out.println("");
     }
 
-    @Given("增加期間限定收據")
-    public void addSpecificDurationLedgerToReceipt() {
+    @Given("增加期間限定收據{duration}，{yesNo}印花總繳")
+    public void addSpecificDurationLedgerToReceipt(DateTimeUtil.BeginEnd beginEnd, boolean yesNo) throws Exception {
+        LedgerReceiptCreateVM ledgerReceiptCreateVM = new LedgerReceiptCreateVM();
+        ledgerReceiptCreateVM.setGid(ledgerTestInfoHolder.getLedgerGroup().getId());
+        ledgerReceiptCreateVM.setLedgers(ledgerTestInfoHolder.getLedgers());
+        ledgerReceiptCreateVM.setType(LedgerReceiptType.RECREATE);
+        ledgerReceiptCreateVM.setRangeType(LedgerReceiptRangeType.SPECIFIC_BEGIN_END);
+        ledgerReceiptCreateVM.setRangeBegin(beginEnd.getBegin());
+        ledgerReceiptCreateVM.setRangeEnd(beginEnd.getEnd());
+        ledgerReceiptCreateVM.setStampTax(yesNo);
 
+        this.mvc.perform(
+            post(ledgerReceiptApiPath)
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(ledgerReceiptCreateVM))
+        );
+        System.out.println("");
     }
-
-    @Given("增加整筆專案收據")
-    public void addWholeProjectToReceipt() {
-
-    }
-
 
     @Then("依專案 gid 查詢")
     public void getLedgerByGid(List<LedgerVM> expects) throws Exception {
