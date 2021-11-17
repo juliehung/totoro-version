@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <!-- '00129C','00130C','00133C','00134C' -->
+    <changeSet id="20211115-weichen" author="WeiChen">
+        <sql>
+            update nhi_procedure set expiration_time = '2020-3-31T16:00:00Z' where id in (7, 9, 10, 11);
+        </sql>
+    </changeSet>
+</databaseChangeLog>
