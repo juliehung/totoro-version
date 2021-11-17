@@ -1,4 +1,4 @@
-@nhi @nhi-92-series
+@nhi @nhi-92-series @part2
 Feature: 92073C 口腔黏膜難症特別處置
 
     Scenario Outline: 全部檢核成功

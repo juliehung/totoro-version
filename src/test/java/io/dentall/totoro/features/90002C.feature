@@ -1,4 +1,4 @@
-@nhi @nhi-90-series
+@nhi @nhi-90-series @part1
 Feature: 90002C 恆牙根管治療（雙根）
 
     Scenario Outline: 全部檢核成功

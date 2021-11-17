@@ -1,4 +1,4 @@
-@nhi @nhi-91-series
+@nhi @nhi-91-series @part2
 Feature: 91008C 齒齦下括除術(含牙根整平術)-局部(3齒以內)
 
     Scenario Outline: 全部檢核成功

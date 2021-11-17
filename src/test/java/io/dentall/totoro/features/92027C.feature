@@ -1,4 +1,4 @@
-@nhi @nhi-92-series
+@nhi @nhi-92-series @part1
 Feature: 92027C 齦蓋切除術
 
     Scenario Outline: 全部檢核成功

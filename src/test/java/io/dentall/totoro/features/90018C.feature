@@ -1,4 +1,4 @@
-@nhi @nhi-90-series
+@nhi @nhi-90-series @part2
 Feature: 90018C 乳牙多根管治療
 
     Scenario Outline: 全部檢核成功

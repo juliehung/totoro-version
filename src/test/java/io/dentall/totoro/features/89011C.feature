@@ -1,4 +1,4 @@
-@nhi @nhi-89-series
+@nhi @nhi-89-series @part2
 Feature: 89011C 玻璃離子體充填
 
     Scenario Outline: 全部檢核成功

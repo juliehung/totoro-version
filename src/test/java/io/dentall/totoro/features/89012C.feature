@@ -1,4 +1,4 @@
-@nhi @nhi-89-series
+@nhi @nhi-89-series @part3
 Feature: 89012C 前牙三面複合樹脂充填
 
     Scenario Outline: 全部檢核成功

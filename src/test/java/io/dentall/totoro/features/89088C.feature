@@ -1,4 +1,4 @@
-@nhi @nhi-89-series
+@nhi @nhi-89-series @part3
 Feature: 89088C 牙體復形轉出醫療院所之轉診費用
 
     Scenario Outline: 全部檢核成功

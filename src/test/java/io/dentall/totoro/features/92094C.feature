@@ -1,4 +1,4 @@
-@nhi @nhi-92-series
+@nhi @nhi-92-series @part2
 Feature: 92094C 週六、日及國定假日牙醫門診急症處置
 
     Scenario Outline: 全部檢核成功

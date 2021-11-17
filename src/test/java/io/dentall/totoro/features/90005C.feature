@@ -1,4 +1,4 @@
-@nhi @nhi-90-series
+@nhi @nhi-90-series @part1
 Feature: 90005C 乳牙斷髓處理
 
     Scenario Outline: 全部檢核成功

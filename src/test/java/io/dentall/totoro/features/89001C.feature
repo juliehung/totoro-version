@@ -1,4 +1,4 @@
-@nhi @nhi-89-series
+@nhi @nhi-89-series @part1
 Feature: 89001C 銀粉充填 － 單面
 
     Scenario Outline: 全部檢核成功

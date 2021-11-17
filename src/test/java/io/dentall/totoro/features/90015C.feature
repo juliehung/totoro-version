@@ -1,4 +1,4 @@
-@nhi @nhi-90-series
+@nhi @nhi-90-series @part2
 Feature: 90015C 根管開擴及清創
 
     Scenario Outline: 全部檢核成功

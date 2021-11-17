@@ -1,4 +1,4 @@
-@nhi @nhi-91-series
+@nhi @nhi-91-series @part1
 Feature: 91006C 齒齦下括除術(含牙根整平術)-全口
 
     Scenario Outline: 全部檢核成功

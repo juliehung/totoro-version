@@ -1,4 +1,4 @@
-@nhi @nhi-92-series
+@nhi @nhi-92-series @part2
 Feature: 92041C 齒槽骨成形術(1/2顎以內)
 
     Scenario Outline: 全部檢核成功
