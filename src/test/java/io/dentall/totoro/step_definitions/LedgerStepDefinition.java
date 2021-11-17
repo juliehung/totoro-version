@@ -22,6 +22,7 @@ import io.dentall.totoro.step_definitions.holders.PatientTestInfoHolder;
 import io.dentall.totoro.step_definitions.holders.UserTestInfoHolder;
 import io.dentall.totoro.web.rest.LedgerResource;
 import io.dentall.totoro.web.rest.vm.LedgerReceiptCreateVM;
+import io.dentall.totoro.web.rest.vm.LedgerReceiptVM;
 import io.dentall.totoro.web.rest.vm.LedgerUnwrapGroupVM;
 import io.dentall.totoro.web.rest.vm.LedgerVM;
 import org.junit.Assert;
@@ -32,6 +33,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -131,6 +133,24 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
         return LedgerTestMapper.INSTANCE.mapToLedgerReceiptPrintedRecord(entry);
     }
 
+    @DataTableType
+    public LedgerReceiptVM ledgerReceiptVM(Map<String, String> entry) {
+        LedgerReceiptVM result = LedgerTestMapper.INSTANCE.mapToLedgerReceiptVM (entry);
+
+        if (entry.containsKey("rangeBegin")) {
+            result.setRangeBegin(
+                Instant.parse(entry.get("rangeBegin").concat("T00:00:00Z"))
+            );
+        }
+        if (entry.containsKey("rangeEnd")) {
+            result.setRangeEnd(
+                Instant.parse(entry.get("rangeEnd").concat("T00:00:00Z"))
+            );
+        }
+
+        return result;
+    }
+
     @ParameterType("包含|不包含")
     public boolean yesNo(String yesNo){
         if (yesNo.equals("包含")) {
@@ -157,21 +177,21 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
         DateTimeUtil.BeginEnd result = new DateTimeUtil.BeginEnd();
 
         result.setBegin(
-            Instant.parse(
-                String.valueOf(beginYear)
-                    .concat("-")
-                    .concat(String.valueOf(beginMonth))
-                    .concat("-")
-                    .concat(String.valueOf(beginDay))
+            Instant.parse(beginYear
+                .concat("-")
+                .concat(beginMonth)
+                .concat("-")
+                .concat(beginDay)
+                .concat("T00:00:00Z")
             )
         );
         result.setEnd(
-            Instant.parse(
-                String.valueOf(endYear)
-                    .concat("-")
-                    .concat(String.valueOf(endMonth))
-                    .concat("-")
-                    .concat(String.valueOf(endDay))
+            Instant.parse(endYear
+                .concat("-")
+                .concat(endMonth)
+                .concat("-")
+                .concat(endDay)
+                .concat("T00:00:00Z")
             )
         );
 
@@ -217,19 +237,25 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
     }
 
     @Given("增加當前限定收據，{yesNo}印花總繳")
-    public void addCurrentLedgerToReceipt(boolean yesNo) throws Exception {
+    public void addCurrentLedgerToReceipt(boolean hasStampTax, boolean hasSigned) throws Exception {
         LedgerReceiptCreateVM ledgerReceiptCreateVM = new LedgerReceiptCreateVM();
         ledgerReceiptCreateVM.setGid(ledgerTestInfoHolder.getLedgerGroup().getId());
-        ledgerReceiptCreateVM.setLedgers(ledgerTestInfoHolder.getLedgers());
         ledgerReceiptCreateVM.setType(LedgerReceiptType.NONE);
         ledgerReceiptCreateVM.setRangeType(LedgerReceiptRangeType.CURRENT);
-        ledgerReceiptCreateVM.setStampTax(yesNo);
+        ledgerReceiptCreateVM.setStampTax(hasStampTax);
+        ledgerReceiptCreateVM.setSigned(hasSigned);
+        ledgerReceiptCreateVM.setLedgers(
+            Arrays.asList(
+                ledgerTestInfoHolder.getLedgers().get(ledgerTestInfoHolder.getLedgerReceipts().size()-1)
+            )
+        );
 
         this.mvc.perform(
             post(ledgerReceiptApiPath)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(ledgerReceiptCreateVM))
         );
+        
         System.out.println("");
     }
 
@@ -242,6 +268,7 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
         ledgerReceiptCreateVM.setRangeType(LedgerReceiptRangeType.SPECIFIC_BEGIN_END);
         ledgerReceiptCreateVM.setRangeBegin(beginEnd.getBegin());
         ledgerReceiptCreateVM.setRangeEnd(beginEnd.getEnd());
+        ledgerReceiptCreateVM.setTime(Instant.now());
         ledgerReceiptCreateVM.setStampTax(yesNo);
 
         this.mvc.perform(
@@ -249,7 +276,6 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(ledgerReceiptCreateVM))
         );
-        System.out.println("");
     }
 
     @Then("依專案 gid 查詢")
@@ -312,6 +338,22 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
         for (int i = 0; i < ledgers.size(); i++) {
             validateLedgerVM(ledgers.get(i), expects.get(i));
         }
+    }
+
+    @Then("依專案 gid 查詢收據資料")
+    public void getLedgerWithLedgerReceiptByGid(List<LedgerReceiptVM> receiptVM) throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = get(ledgerApiPath)
+            .contentType(APPLICATION_JSON)
+            .param("gid.equals", ledgerTestInfoHolder.getLedgerGroup().getId().toString());
+
+        ResultActions resultActions = this.mvc.perform(requestBuilder);
+
+        List<LedgerVM> ledgers = objectMapper.readValue(
+            resultActions.andReturn().getResponse().getContentAsString(),
+            new TypeReference<List<LedgerVM>>() {}
+        );
+
+        System.out.println("");
     }
 
     private void validateLedgerVM(LedgerVM target, LedgerVM expected) throws Exception {

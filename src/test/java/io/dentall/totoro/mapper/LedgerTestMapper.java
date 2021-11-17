@@ -4,12 +4,15 @@ import io.dentall.totoro.domain.Ledger;
 import io.dentall.totoro.domain.LedgerGroup;
 import io.dentall.totoro.domain.LedgerReceipt;
 import io.dentall.totoro.domain.LedgerReceiptPrintedRecord;
+import io.dentall.totoro.web.rest.vm.LedgerReceiptVM;
 import io.dentall.totoro.web.rest.vm.LedgerUnwrapGroupVM;
 import io.dentall.totoro.web.rest.vm.LedgerVM;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
+import java.time.Instant;
 import java.util.Map;
 
 @Mapper
@@ -43,7 +46,14 @@ public interface LedgerTestMapper {
     @Mapping(target="note", expression="java( map.get(\"note\") )")
     LedgerVM mapToLedgerVM(Map<String, String> map);
 
+    @Mapping(target="type", expression="java( io.dentall.totoro.domain.enumeration.LedgerReceiptType.valueOf(map.get(\"type\")) )")
+    @Mapping(target="rangeType", expression="java( io.dentall.totoro.domain.enumeration.LedgerReceiptRangeType.valueOf(map.get(\"rangeType\")) )")
+    @Mapping(target="signed", expression="java( Boolean.parseBoolean(map.get(\"signed\")) )")
+    @Mapping(target="stampTax", expression="java( Boolean.parseBoolean(map.get(\"stampTax\")) )")
+    LedgerReceiptVM mapToLedgerReceiptVM(Map<String, String> map);
+
     LedgerReceipt mapToLedgerReceipt(Map<String, String> map);
 
     LedgerReceiptPrintedRecord mapToLedgerReceiptPrintedRecord(Map<String, String> map);
+
 }

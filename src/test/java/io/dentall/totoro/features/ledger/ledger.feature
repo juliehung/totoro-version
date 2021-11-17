@@ -82,4 +82,7 @@ Feature: 收支邏輯
             | 1   | 60     | l-n-2  | 2021-01-03T00:00:00Z | true |
             | 1   | 70     | l-n-3  | 2021-01-04T00:00:00Z | false |
         Given 增加當前限定收據，包含印花總繳
+        Then 依專案 gid 查詢收據資料
+            | type | rangeType | rangeBegin | rangeEnd | signed | stampTax |
+            | NONE | CURRENT   | null       | null     | false  | true     |
         Given 增加期間限定收據2021-01-03~2021-01-07，不包含印花總繳
