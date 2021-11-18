@@ -403,7 +403,7 @@ task cucumber_nhi_rule() {
                 systemProperties = ['java.io.tmpdir': "${buildDir}\\tmp", 'spring.profiles.active': 'test,no-swagger,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml']
             } else {
                 classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-                systemProperties = ['mq.netty.port': "${mqNettyPort}", 'mqtt.port': "${mattPort}", 'mqtt.ws.port': "${wsPort}", 'mqtt.serverURIs': "tcp://localhost:${mattPort}", 'spring.profiles.active': 'test,no-swagger,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml']
+                systemProperties = ['spring.artemis.port': "${mqNettyPort}", 'mq.netty.port': "${mqNettyPort}", 'mqtt.port': "${mattPort}", 'mqtt.ws.port': "${wsPort}", 'mqtt.serverURIs': "tcp://localhost:${mattPort}", 'spring.profiles.active': 'test,no-swagger,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml']
             }
 
         }
