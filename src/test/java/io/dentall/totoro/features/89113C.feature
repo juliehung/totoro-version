@@ -1,4 +1,4 @@
-@nhi @nhi-89-series
+@nhi @nhi-89-series @part5
 Feature: 89113C 特殊狀況之複合體充填
 
     Scenario Outline: 全部檢核成功

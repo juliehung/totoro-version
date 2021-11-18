@@ -34,6 +34,7 @@ import static io.dentall.totoro.step_definitions.StepDefinitionUtil.DateParamTyp
 import static io.dentall.totoro.test.TestUtils.parseDays;
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static java.util.Arrays.asList;
+import static java.util.Optional.ofNullable;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -130,7 +131,7 @@ public class DisposalStepDefinition extends AbstractStepDefinition {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final DisposalResource resource1 = new DisposalResource(disposalService, disposalQueryService, nhiService, nhiExtendDisposalRepository, userRepository);
+        final DisposalResource resource1 = new DisposalResource(disposalService, disposalQueryService, nhiService, nhiExtendDisposalRepository, userRepository, null);
         final NhiExtendDisposalResource resource2 = new NhiExtendDisposalResource(nhiExtendDisposalService, disposalService);
         final TreatmentProcedureResource resource3 = new TreatmentProcedureResource(treatmentProcedureService, treatmentProcedureQueryService);
         final NhiMedicalRecordResource resource4 = new NhiMedicalRecordResource(nhiMedicalRecordService, nhiMedicalRecordQueryService, nhiTxRepository, nhiMedicineRepository, nhiExtendDisposalRepository);
@@ -270,10 +271,10 @@ public class DisposalStepDefinition extends AbstractStepDefinition {
     }
 
     private int retrievePastDays(Map<String, String> data) {
-        String pastDate = Optional.ofNullable(data.get("PastDate")).orElse(null);
-        int pastDays = Integer.parseInt(Optional.ofNullable(data.get("PastDays")).orElse("0"));
+        String pastDate = ofNullable(data.get("PastDate")).orElse(null);
+        int pastDays = Integer.parseInt(ofNullable(data.get("PastDays")).orElse("0"));
 
-        return Optional.ofNullable(pastDate)
+        return ofNullable(pastDate)
             .map(past -> datePattern.matcher(pastDate))
             .filter(matcher -> matcher.matches())
             .map(matcher -> parseDays(matcher.group(1), matcher.group(2), matcher.group(3)))
@@ -358,7 +359,7 @@ public class DisposalStepDefinition extends AbstractStepDefinition {
     @DataTableType
     public Set<NhiMedicalRecord> convertToNhiMedicalRecord(DataTable dataTable) {
         List<Map<String, String>> dataList = dataTable.asMaps();
-        return dataList.stream().map(data -> newNhiMedicalRecord(data)).collect(Collectors.toSet());
+        return dataList.stream().map(this::newNhiMedicalRecord).collect(Collectors.toSet());
     }
 
     private NhiMedicalRecord newNhiMedicalRecord(Map<String, String> data) {
@@ -366,6 +367,16 @@ public class DisposalStepDefinition extends AbstractStepDefinition {
         NhiMedicalRecord nhiMedicalRecord = new NhiMedicalRecord();
         nhiMedicalRecord.setNhiCode(data.get("NhiCode"));
         nhiMedicalRecord.setPart(data.get("Teeth"));
+        if (data.get("Usage") == null) {
+            nhiMedicalRecord.setUsage("");
+        } else {
+            nhiMedicalRecord.setUsage(data.get("Usage"));
+        }
+        if (data.get("Category") == null) {
+            nhiMedicalRecord.setNhiCategory("1");
+        } else {
+            nhiMedicalRecord.setNhiCategory(data.get("Category"));
+        }
         nhiMedicalRecord.setDate(transformLocalDateToRocDate(pastInstant(pastDays)));
         return nhiMedicalRecord;
     }

@@ -1,4 +1,4 @@
-@nhi @nhi-91-series
+@nhi @nhi-91-series @part2
 Feature: 91011C 牙齦切除術-局部（3齒以內）
 
     Scenario Outline: 全部檢核成功

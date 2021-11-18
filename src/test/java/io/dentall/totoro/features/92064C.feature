@@ -1,4 +1,4 @@
-@nhi @nhi-92-series
+@nhi @nhi-92-series @part2
 Feature: 92064C 手術去除解剖間隙內異物或牙齒
 
     Scenario Outline: 全部檢核成功

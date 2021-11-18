@@ -1,4 +1,4 @@
-@nhi @nhi-92-series
+@nhi @nhi-92-series @part1
 Feature: 92016C 複雜齒切除術
 
     Scenario Outline: 全部檢核成功

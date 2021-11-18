@@ -1,4 +1,4 @@
-@nhi @nhi-92-series
+@nhi @nhi-92-series @part2
 Feature: 92092C 乳牙複雜性拔牙
 
     Scenario Outline: 全部檢核成功

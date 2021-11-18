@@ -1,13 +1,20 @@
 package io.dentall.totoro.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.criteria.JoinType;
 
+import io.dentall.totoro.repository.LedgerGroupRepository;
+import io.dentall.totoro.service.mapper.LedgerGroupMapper;
+import io.dentall.totoro.web.rest.util.PaginationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,8 +40,14 @@ public class LedgerQueryService extends QueryService<Ledger> {
 
     private final LedgerRepository ledgerRepository;
 
-    public LedgerQueryService(LedgerRepository ledgerRepository) {
+    private final LedgerGroupRepository ledgerGroupRepository;
+
+    public LedgerQueryService(
+        LedgerRepository ledgerRepository,
+        LedgerGroupRepository ledgerGroupRepository
+    ) {
         this.ledgerRepository = ledgerRepository;
+        this.ledgerGroupRepository = ledgerGroupRepository;
     }
 
     /**
@@ -59,7 +72,10 @@ public class LedgerQueryService extends QueryService<Ledger> {
     public Page<Ledger> findByCriteria(LedgerCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Ledger> specification = createSpecification(criteria);
-        return ledgerRepository.findAll(specification, page);
+        page.getSortOr(new Sort(Sort.Direction.DESC, "date"));
+
+        Page<Ledger> ledgers = ledgerRepository.findAll(specification, page);
+        return ledgers;
     }
 
     /**
@@ -98,9 +114,6 @@ public class LedgerQueryService extends QueryService<Ledger> {
             if (criteria.getDoctor() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDoctor(), Ledger_.doctor));
             }
-            if (criteria.getGid() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getGid(), Ledger_.gid));
-            }
             if (criteria.getProjectCode() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getProjectCode(), Ledger_.projectCode));
             }
@@ -108,13 +121,15 @@ public class LedgerQueryService extends QueryService<Ledger> {
                 specification = specification.and(buildStringSpecification(criteria.getDisplayName(), Ledger_.displayName));
             }
             if (criteria.getType() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getType(), Ledger_.type));
+                specification = specification.and(buildSpecification(criteria.getType(),
+                    root -> root.join(Ledger_.ledgerGroup, JoinType.LEFT).get(LedgerGroup_.type)));
             }
             if (criteria.getDate() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getDate(), Ledger_.date));
             }
             if (criteria.getPatientId() != null) {
-                specification = specification.and(buildSpecification(criteria.getPatientId(), Ledger_.patientId));
+                specification = specification.and(buildSpecification(criteria.getPatientId(),
+                    root -> root.join(Ledger_.ledgerGroup, JoinType.LEFT).get(LedgerGroup_.patientId)));
             }
             if (criteria.getCreatedDate() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getCreatedDate(), Ledger_.createdDate));

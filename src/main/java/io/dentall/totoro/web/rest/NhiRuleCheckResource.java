@@ -11,6 +11,7 @@ import io.dentall.totoro.business.vm.nhi.NhiRuleCheckReportBody;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.domain.NhiMonthDeclarationRuleCheckReport;
 import io.dentall.totoro.domain.enumeration.BatchStatus;
+import io.dentall.totoro.repository.NhiProcedureRepository;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
@@ -38,12 +39,16 @@ public class NhiRuleCheckResource {
 
     private final ApplicationContext applicationContext;
 
+    private final NhiProcedureRepository nhiProcedureRepository;
+
     public NhiRuleCheckResource(
         NhiRuleCheckUtil nhiRuleCheckUtil,
-        ApplicationContext applicationContext
+        ApplicationContext applicationContext,
+        NhiProcedureRepository nhiProcedureRepository
     ) {
         this.nhiRuleCheckUtil = nhiRuleCheckUtil;
         this.applicationContext = applicationContext;
+        this.nhiProcedureRepository = nhiProcedureRepository;
     }
 
     @PostMapping("/validation")
@@ -95,10 +100,26 @@ public class NhiRuleCheckResource {
         IllegalAccessException
     {
         try {
-            return new ResponseEntity<>(
-                nhiRuleCheckUtil.dispatch(code, body),
-                HttpStatus.OK
-            );
+            if (nhiProcedureRepository.existsByCode(code)) {
+                return new ResponseEntity<>(
+                    nhiRuleCheckUtil.dispatch(code, body),
+                    HttpStatus.OK
+                );
+            } else {
+                NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
+                nhiRuleCheckUtil.addResultToVm(
+                    nhiRuleCheckUtil.appendCodeNotExistDanger(
+                        code
+                    ),
+                    vm
+                );
+
+                return new ResponseEntity<>(
+                    vm,
+                    HttpStatus.OK
+                );
+            }
+
         } catch (NoSuchMethodException | NoSuchFieldException e) {
             logger.error("NhiRuleCheckResource requested a code not supported, {}.", code);
             return new ResponseEntity<>(

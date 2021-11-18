@@ -1,4 +1,4 @@
-@nhi @nhi-92-series
+@nhi @nhi-92-series @part2
 Feature: 92059C 手術去除陷入上顎竇內牙齒或異物
 
     Scenario Outline: 全部檢核成功

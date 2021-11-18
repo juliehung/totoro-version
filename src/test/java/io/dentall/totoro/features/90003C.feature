@@ -1,4 +1,4 @@
-@nhi @nhi-90-series
+@nhi @nhi-90-series @part1
 Feature: 90003C 恆牙根管治療（三根）
 
     Scenario Outline: 全部檢核成功

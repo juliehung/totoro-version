@@ -1,4 +1,4 @@
-@nhi @nhi-92-series
+@nhi @nhi-92-series @part1
 Feature: 92013C 簡單性拔牙
 
     Scenario Outline: 全部檢核成功

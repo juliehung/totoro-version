@@ -1,4 +1,4 @@
-@nhi @nhi-91-series
+@nhi @nhi-91-series @part1
 Feature: 91003C 牙結石清除－局部
 
     Scenario Outline: 全部檢核成功

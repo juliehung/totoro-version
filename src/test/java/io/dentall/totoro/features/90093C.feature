@@ -1,4 +1,4 @@
-@nhi @nhi-90-series
+@nhi @nhi-90-series @part3
 Feature: 90093C 難症特別處理-根管特別彎曲、根管鈣化，器械斷折（非同一醫療院所)，以根管數計算
 
     Scenario Outline: 全部檢核成功

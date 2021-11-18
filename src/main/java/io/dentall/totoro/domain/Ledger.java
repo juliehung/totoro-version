@@ -1,5 +1,6 @@
 package io.dentall.totoro.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -31,7 +32,7 @@ public class Ledger implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @NotNull
+    @Deprecated
     @Column(name = "amount", nullable = false)
     private Double amount;
 
@@ -39,7 +40,7 @@ public class Ledger implements Serializable {
     @Column(name = "charge", nullable = false)
     private Double charge;
 
-    @NotNull
+    @Deprecated
     @Column(name = "arrears", nullable = false)
     private Double arrears;
 
@@ -47,24 +48,26 @@ public class Ledger implements Serializable {
     @Column(name = "note", length = 5100)
     private String note;
 
+    @Deprecated
     @Column(name = "doctor")
     private String doctor;
 
-    @Column(name = "gid")
-    private Long gid;
-
+    @Deprecated
     @Column(name = "display_name")
     private String displayName;
 
+    @Deprecated
     @Column(name = "project_code")
     private String projectCode;
 
+    @Deprecated
     @Column(name = "jhi_type")
     private String type;
 
     @Column(name = "jhi_date")
     private Instant date;
 
+    @Deprecated
     @Column(name = "patient_id")
     private Long patientId;
 
@@ -90,8 +93,14 @@ public class Ledger implements Serializable {
     @Column(name = "last_modified_by")
     private String lastModifiedBy;
 
+    @Deprecated
     @ManyToOne
     private TreatmentPlan treatmentPlan;
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "gid")
+    private LedgerGroup ledgerGroup;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
@@ -235,19 +244,6 @@ public class Ledger implements Serializable {
         this.doctor = doctor;
     }
 
-    public Long getGid() {
-        return gid;
-    }
-
-    public Ledger gid(Long gid) {
-        this.gid = gid;
-        return this;
-    }
-
-    public void setGid(Long gid) {
-        this.gid = gid;
-    }
-
     public String getDisplayName() {
         return displayName;
     }
@@ -342,6 +338,14 @@ public class Ledger implements Serializable {
         return Objects.equals(getId(), ledger.getId());
     }
 
+    public LedgerGroup getLedgerGroup() {
+        return ledgerGroup;
+    }
+
+    public void setLedgerGroup(LedgerGroup ledgerGroup) {
+        this.ledgerGroup = ledgerGroup;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(getId());
@@ -356,7 +360,6 @@ public class Ledger implements Serializable {
             ", arrears=" + getArrears() +
             ", note='" + getNote() + "'" +
             ", doctor='" + getDoctor() + "'" +
-            ", gid=" + getGid() +
             ", displayName='" + getDisplayName() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +

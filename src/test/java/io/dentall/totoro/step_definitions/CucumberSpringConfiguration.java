@@ -18,10 +18,13 @@ public class CucumberSpringConfiguration {
 
     static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+            // Initialize and start test containers
+            PostgresContainerConfiguration.initTestContainers();
+
             TestPropertyValues.of(
-                "spring.datasource.url=jdbc:postgresql://localhost:5432/totoro",
-                "spring.datasource.username=totoro",
-                "spring.datasource.password=totoro"
+                "spring.datasource.url=" + PostgresContainerConfiguration.getJdbcUrl(),
+                "spring.datasource.username=" + PostgresContainerConfiguration.getUsername(),
+                "spring.datasource.password=" + PostgresContainerConfiguration.getPassword()
             ).applyTo(configurableApplicationContext.getEnvironment());
             TestPropertyValues.of(
                 "zoneOffset=+08:00"

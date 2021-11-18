@@ -1,6 +1,7 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.Appointment;
+import io.dentall.totoro.domain.Disposal;
 import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.domain.Registration;
 import io.dentall.totoro.domain.enumeration.RegistrationStatus;
@@ -38,6 +39,8 @@ public class BroadcastService {
             messageSender.sendPatient(payloadTemplate(id));
         } else if (domain == Registration.class) {
             messageSender.sendRegistration(payloadTemplate(id));
+        } else if (domain == Disposal.class) {
+            messageSender.sendDisposal(payloadTemplate(id));
         }
     }
 

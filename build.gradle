@@ -22,9 +22,9 @@ buildscript {
  */
 plugins {
     id "org.sonarqube" version "2.6.2"
-    id "net.ltgt.apt-eclipse" version "0.18"
-    id "net.ltgt.apt-idea" version "0.18"
-    id "net.ltgt.apt" version "0.18"
+    id "net.ltgt.apt-eclipse" version "0.20"
+    id "net.ltgt.apt-idea" version "0.20"
+    id "net.ltgt.apt" version "0.20"
     id "io.spring.dependency-management" version "1.0.6.RELEASE"
     id "com.moowork.node" version "1.3.1"
     id "org.liquibase.gradle" version "2.0.1"
@@ -304,9 +304,13 @@ dependencies {
     compile "io.springfox:springfox-bean-validators"
     compile "org.postgresql:postgresql"
     liquibaseRuntime "org.postgresql:postgresql"
-    compile "org.mapstruct:mapstruct-jdk8:${mapstruct_version}"
+
+    // mapstrcut, 第一項須為 compile 否則 cucumber 會產生異常
+    compile "org.mapstruct:mapstruct:${mapstruct_version}"
+    implementation "org.mapstruct:mapstruct:${mapstruct_version}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
     testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
+
     annotationProcessor "org.hibernate:hibernate-jpamodelgen"
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor") {
         exclude group: 'com.vaadin.external.google', module: 'android-json'
@@ -365,18 +369,40 @@ dependencies {
     // POI
     implementation group: 'org.apache.poi', name: 'poi', version: '5.0.0'
     testCompile group: 'org.apache.poi', name: 'poi', version: '5.0.0'
+
+    // TestContainer
+    testCompile "org.testcontainers:postgresql:1.16.2"
+    testCompile "org.testcontainers:junit-jupiter:1.16.2"
+}
+
+task pathingJar(type: Jar) {
+    classifier 'pathing'
+    doFirst {
+        manifest {
+            attributes 'Class-Path': configurations.cucumberRuntime.files.collect { project.uri(it) }.join(' ')
+        }
+    }
+    dependsOn configurations.cucumberRuntime
 }
 
 task cucumber_nhi_rule() {
-    def cucumberTags = project.getProperties().get("cucumber.filter.tags", "@nhi")
-    dependsOn assemble, testClasses
+    def outputDir = "nhirule"
+    def cucumberTags = project.getProperties().get("cucumber.filter.tags")
+    dependsOn assemble, testClasses, pathingJar
     doLast {
         assert cucumberTags.length() > 0
         javaexec {
             main = "io.cucumber.core.cli.Main"
-            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', 'html:build/reports/cucumber/cucumber.html', '--plugin', 'de.monochromata.cucumber.report.PrettyReports:build/reports/cucumber', '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features']
-            environment = ['spring.profiles.active': 'test,no-swagger,embedded-postgres,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml', 'cucumber.filter.tags': "${cucumberTags}"]
+            environment = ['cucumber.filter.tags': "${cucumberTags}"]
+            args = ['--plugin', "html:${buildDir}/reports/${outputDir}/cucumber.html", '--plugin', "de.monochromata.cucumber.report.PrettyReports:${buildDir}/reports/${outputDir}", '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features']
+            if (isWindows()) {
+                classpath = files("${buildDir}/libs/totoro-pathing.jar") + sourceSets.main.output + sourceSets.test.output
+                systemProperties = ['java.io.tmpdir': "${buildDir}\\tmp", 'spring.profiles.active': 'test,no-swagger,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml']
+            } else {
+                classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+                systemProperties = ['spring.profiles.active': 'test,no-swagger,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml']
+            }
+
         }
     }
 }
@@ -389,10 +415,15 @@ task cucumber_metric() {
         javaexec {
             main = "io.cucumber.core.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', 'html:build/reports/cucumber/cucumber-metric.html', '--plugin', 'de.monochromata.cucumber.report.PrettyReports:build/reports/cucumber/cucumber-metric', '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features/metric']
-            environment = ['spring.profiles.active': 'test,no-swagger,embedded-postgres', 'cucumber.filter.tags': "${cucumberTags}"]
+            args = ['--plugin', "html:${buildDir}/reports/metric/cucumber-metric.html", '--plugin', "de.monochromata.cucumber.report.PrettyReports:${buildDir}/reports/metric/cucumber-metric", '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features/metric']
+            environment = ['cucumber.filter.tags': "${cucumberTags}"]
+            systemProperties = ['spring.profiles.active': 'test,no-swagger,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml']
         }
     }
+}
+
+static def isWindows() {
+    return org.gradle.internal.os.OperatingSystem.current().isWindows()
 }
 
 /**

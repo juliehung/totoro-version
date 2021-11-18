@@ -1,4 +1,4 @@
-@nhi @nhi-91-series
+@nhi @nhi-91-series @part2
 Feature: 91013C 牙齦切除術-施行根管治療或牙體復形時，所需之牙齦切除術
 
     Scenario Outline: 全部檢核成功

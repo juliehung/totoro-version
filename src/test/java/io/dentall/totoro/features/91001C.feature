@@ -1,4 +1,4 @@
-@nhi @nhi-91-series
+@nhi @nhi-91-series @part1
 Feature: 91001C 牙周病緊急處置
 
     Scenario Outline: 全部檢核成功

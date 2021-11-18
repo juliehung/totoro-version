@@ -1,4 +1,4 @@
-@nhi @nhi-8-series
+@nhi @nhi-8-series @part1
 Feature: 87 氟化防齲處理(包括牙醫師專業塗氟處理、一般性口腔檢查、衛生教育)
 
     Scenario Outline: 全部檢核成功

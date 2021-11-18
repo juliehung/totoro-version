@@ -3,11 +3,14 @@ package io.dentall.totoro.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.business.service.LedgerBusinessService;
 import io.dentall.totoro.domain.Ledger;
+import io.dentall.totoro.domain.Patient;
 import io.dentall.totoro.service.LedgerQueryService;
 import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.service.dto.LedgerCriteria;
+import io.dentall.totoro.service.mapper.LedgerGroupMapper;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
+import io.dentall.totoro.web.rest.vm.LedgerUnwrapGroupVM;
 import io.dentall.totoro.web.rest.vm.LedgerVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -66,6 +70,7 @@ public class LedgerBusinessResource {
      */
     @GetMapping("/ledgers")
     @Timed
+    @Transactional
     public ResponseEntity<List<LedgerVM>> getLedger(
         LedgerCriteria criteria,
         @RequestParam(name = "headOnly", required = false) boolean headOnly,
@@ -73,54 +78,31 @@ public class LedgerBusinessResource {
     ) {
         log.debug("REST request to find ledgers by id");
 
-        if (criteria.getPatientId() != null ||
-            criteria.getDate() != null ||
-            criteria.getProjectCode() != null
+        if (criteria.getPatientId() == null &&
+            criteria.getDate() == null &&
+            criteria.getProjectCode() == null
         ) {
-            Page<Ledger> page = ledgerQueryService.findByCriteria(criteria, pageable);
-            List<LedgerVM> content = page.getContent().stream()
-                .map(l -> {
-
-                    LedgerVM vm = new LedgerVM();
-                    vm.setLedger(l);
-
-                    if (l != null &&
-                        l.getPatientId() != null
-                    ) {
-                        vm.setPatient(patientService.findPatientById(l.getPatientId()));
-                    }
-
-                    return vm;
-                })
-                .collect(Collectors.toList());
-
-            return ResponseEntity
-                .ok()
-                .headers(PaginationUtil.generatePaginationHttpHeaders(page, "/api/business/ledgers"))
-                .body(page != null? content: null);
+            throw new BadRequestAlertException("Require patient id, date , project code to query", ENTITY_NAME, "badquery");
         }
 
-        Long id = criteria.getId() == null? null: criteria.getId().getEquals();
-        Long gid = criteria.getGid() == null? null: criteria.getGid().getEquals();
+        Page<Ledger> page = ledgerQueryService.findByCriteria(criteria, pageable);
+        List<LedgerVM> result = page.getContent().stream()
+            .map(d -> {
+                LedgerUnwrapGroupVM ledgerUnwrapGroupVM = LedgerGroupMapper.INSTANCE.convertLedgerToLedgerUnwrapGroupVM(d);
+                LedgerVM ledgerVM = new LedgerVM();
+                ledgerVM.setLedger(ledgerUnwrapGroupVM);
 
-        if (headOnly &&
-            (id == null || gid != null)
-        ) {
-            throw new BadRequestAlertException("Id must be fulfilled and gid must be empty for finding head", ENTITY_NAME, "paraconstraint");
-        }
+                Patient p = patientService.findPatientById(d.getLedgerGroup().getPatientId());
+                ledgerVM.setPatient(p);
 
-        if (!headOnly &&
-            (id != null || gid == null)
-        ) {
-            throw new BadRequestAlertException("Gid must be fulfilled and id must be empty for finding group", ENTITY_NAME, "paraconstraint");
-        }
-
-        List<LedgerVM> vm = ledgerBusinessService.findRecords(id, gid, headOnly).stream()
-            .map(LedgerVM::new)
+                return ledgerVM;
+            })
             .collect(Collectors.toList());
 
-        return new ResponseEntity<>(vm, HttpStatus.OK);
-
+        return ResponseEntity
+            .ok()
+            .headers(PaginationUtil.generatePaginationHttpHeaders(page, "/api/business/ledgers"))
+            .body(result);
     }
 
 }

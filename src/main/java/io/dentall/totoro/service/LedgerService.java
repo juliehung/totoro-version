@@ -3,6 +3,8 @@ package io.dentall.totoro.service;
 import io.dentall.totoro.domain.Ledger;
 import io.dentall.totoro.repository.LedgerRepository;
 import io.dentall.totoro.repository.TreatmentPlanRepository;
+import io.dentall.totoro.web.rest.vm.LedgerUnwrapGroupUpdateVM;
+import io.dentall.totoro.web.rest.vm.LedgerUnwrapGroupVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,22 +85,15 @@ public class LedgerService {
      * @param updateLedger the update entity
      * @return the entity
      */
-    public Ledger update(Ledger updateLedger) {
+    public Ledger update(LedgerUnwrapGroupUpdateVM updateLedger) {
         log.debug("Request to update Ledger : {}", updateLedger);
 
         return ledgerRepository
             .findById(updateLedger.getId())
             .map(ledger -> {
-                if (updateLedger.getAmount() != null) {
-                    ledger.setAmount(updateLedger.getAmount());
-                }
 
                 if (updateLedger.getCharge() != null) {
                     ledger.setCharge(updateLedger.getCharge());
-                }
-
-                if (updateLedger.getArrears() != null) {
-                    ledger.setArrears(updateLedger.getArrears());
                 }
 
                 if (updateLedger.getNote() != null) {
@@ -109,28 +104,8 @@ public class LedgerService {
                     ledger.setDoctor(updateLedger.getDoctor());
                 }
 
-                if (updateLedger.getProjectCode() != null) {
-                    ledger.setProjectCode(updateLedger.getProjectCode());
-                }
-
-                if (updateLedger.getType() != null) {
-                    ledger.setType(updateLedger.getType());
-                }
-
                 if (updateLedger.getDate() != null) {
                     ledger.setDate(updateLedger.getDate());
-                }
-
-                if (updateLedger.getPatientId() != null) {
-                    ledger.setPatientId(updateLedger.getPatientId());
-                }
-
-                if (updateLedger.getGid() != null) {
-                    ledger.setGid(updateLedger.getGid());
-                }
-
-                if (updateLedger.getDisplayName() != null) {
-                    ledger.setDisplayName(updateLedger.getDisplayName());
                 }
 
                 if (updateLedger.getIncludeStampTax() != null) {
@@ -139,10 +114,6 @@ public class LedgerService {
 
                 if (updateLedger.getPrintTime() != null) {
                     ledger.setPrintTime(updateLedger.getPrintTime());
-                }
-
-                if (updateLedger.getTreatmentPlan() != null && updateLedger.getTreatmentPlan().getId() != null) {
-                    treatmentPlanRepository.findById(updateLedger.getTreatmentPlan().getId()).ifPresent(ledger::setTreatmentPlan);
                 }
 
                 return ledger;

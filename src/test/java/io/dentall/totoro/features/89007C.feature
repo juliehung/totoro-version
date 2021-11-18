@@ -1,4 +1,4 @@
-@nhi @nhi-89-series
+@nhi @nhi-89-series @part2
 Feature: 89007C 釘強化術（每支）
 
     Scenario Outline: 全部檢核成功

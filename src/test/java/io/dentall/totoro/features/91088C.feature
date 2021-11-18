@@ -1,4 +1,4 @@
-@nhi @nhi-91-series
+@nhi @nhi-91-series @part3
 Feature: 91088C 牙周病轉出醫療院所之轉診費用
 
     Scenario Outline: 全部檢核成功

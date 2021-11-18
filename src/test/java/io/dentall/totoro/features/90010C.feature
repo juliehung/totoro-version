@@ -1,4 +1,4 @@
-@nhi @nhi-90-series
+@nhi @nhi-90-series @part1
 Feature: 90010C 根尖逆充填術
 
     Scenario Outline: 全部檢核成功

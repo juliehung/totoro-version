@@ -1,4 +1,4 @@
-@nhi @nhi-90-series
+@nhi @nhi-90-series @part2
 Feature: 90012C 橡皮障防濕裝置
 
     Scenario Outline: 全部檢核成功

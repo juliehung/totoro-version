@@ -1,4 +1,4 @@
-@nhi @nhi-91-series
+@nhi @nhi-91-series @part2
 Feature: 91017C 懷孕婦女牙結石清除-全口
 
     Scenario Outline: 全部檢核成功

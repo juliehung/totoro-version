@@ -1,4 +1,4 @@
-@nhi @nhi-92-series
+@nhi @nhi-92-series @part1
 Feature: 92001C 非特定局部治療
 
     Scenario Outline: 全部檢核成功

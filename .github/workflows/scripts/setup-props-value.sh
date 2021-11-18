@@ -8,12 +8,14 @@ Notify=false
 DevDeploy=true
 GcpRelease=false
 FirebaseRelease=false
+RunNhiRuleTest=false
 if [[ "${TagName}" =~ ^stg.+$ ]]; then
     VersionFile=stg.version.json
     DeployPort=8085
     Notify=true
     GcpRelease=true
     FirebaseRelease=true
+    RunNhiRuleTest=true
 elif [[ "${TagName}" =~ ^ms.+$ ]]; then
     VersionFile=stg.version.json
     DeployPort=8088
@@ -22,6 +24,7 @@ elif [[ "${TagName}" =~ ^nhi.+$ ]]; then
     DeployPort=8087
     Notify=true
     GcpRelease=true
+    RunNhiRuleTest=true
 elif [[ "${TagName}" =~ ^dev.+$ ]]; then
     VersionFile=dev.version.json
     DeployPort=8082
@@ -31,6 +34,7 @@ elif [[ "${TagName}" =~ ^[0-9]+.[0-9]+.[0-9]+.*$ ]]; then
     DevDeploy=false
     GcpRelease=true
     FirebaseRelease=true
+    RunNhiRuleTest=true
 else
     exit 1
 fi
@@ -43,3 +47,4 @@ echo "::set-output name=notify::${Notify}"
 echo "::set-output name=dev-deploy::${DevDeploy}"
 echo "::set-output name=gcp-release::${GcpRelease}"
 echo "::set-output name=firebase-release::${FirebaseRelease}"
+echo "::set-output name=run-nhi-rule-test::${RunNhiRuleTest}"

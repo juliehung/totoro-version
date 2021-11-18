@@ -83,6 +83,9 @@ public class Accounting implements Serializable {
     @Column(name = "other_deal_comment")
     private String otherDealComment;
 
+    @Column(name = "printed")
+    private Boolean printed;
+
     // Remember to maintain AccountingDTO and AccountingTable
 
     public Boolean getCopaymentExemption() {
@@ -305,7 +308,14 @@ public class Accounting implements Serializable {
         this.copaymentExemption = copaymentExemption;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+    public Boolean getPrinted() {
+        return printed;
+    }
+
+    public void setPrinted(Boolean printed) {
+        this.printed = printed;
+    }
+// jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {

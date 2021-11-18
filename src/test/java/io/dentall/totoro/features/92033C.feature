@@ -1,4 +1,4 @@
-@nhi @nhi-92-series
+@nhi @nhi-92-series @part2
 Feature: 92033C 牙齒切半術或牙根切斷術
 
     Scenario Outline: 全部檢核成功

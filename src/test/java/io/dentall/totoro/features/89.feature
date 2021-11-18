@@ -1,4 +1,4 @@
-@nhi @nhi-8-series
+@nhi @nhi-8-series @part1
 Feature: 89 社區巡迴服務氟化防齲處理(服務項目詳附註)
 
     Scenario Outline: 全部檢核成功

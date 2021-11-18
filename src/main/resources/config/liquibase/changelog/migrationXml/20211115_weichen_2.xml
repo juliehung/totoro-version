@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20211115-weichen-2" author="WeiChen">
+        <sql>
+            INSERT INTO nhi_procedure (id,code,name,point,effective_time,description,nhi_procedure_type_id,chief_complaint) values
+                ('237','00311C','符合牙醫門診加強感染管制實施方案之重度以上特定身心障礙(非精神疾病)者診察費','555','2020-03-31T16:00:00Z','','200','');
+            INSERT INTO nhi_procedure (id,code,name,point,effective_time,description,nhi_procedure_type_id,chief_complaint) values
+                ('238','00312C','符合牙醫門診加強感染管制實施方案之中度特定身心障礙(非精神疾病)者診察費','455','2020-03-31T16:00:00Z','','200','');
+            INSERT INTO nhi_procedure (id,code,name,point,effective_time,description,nhi_procedure_type_id,chief_complaint) values
+                ('239','00313C','符合牙醫門診加強感染管制實施方案之中度以上精神疾病病人診察費','355','2020-03-31T16:00:00Z','','200','');
+            INSERT INTO nhi_procedure (id,code,name,point,effective_time,description,nhi_procedure_type_id,chief_complaint) values
+                ('240','00314C','符合牙醫門診加強感染管制實施方案之輕度特定身心障礙者(非精神疾病)及失能老人診察費','355','2020-03-31T16:00:00Z','','200','');
+        </sql>
+    </changeSet>
+</databaseChangeLog>
