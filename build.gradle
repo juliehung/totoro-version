@@ -388,8 +388,8 @@ task pathingJar(type: Jar) {
 task cucumber_nhi_rule() {
     def outputDir = "nhirule"
     def cucumberTags = project.getProperties().get("cucumber.filter.tags")
-    def mattPort = randomMqttPort()
-    def wsPort = randomWsPort()
+    def mattPort = mqttPort()
+    def wsPort = wsPort()
     dependsOn assemble, testClasses, pathingJar
     doLast {
         assert cucumberTags.length() > 0
@@ -428,16 +428,27 @@ static def isWindows() {
     return org.gradle.internal.os.OperatingSystem.current().isWindows()
 }
 
-static def randomPort(int upper, int lower) {
-    return Math.abs(new Random().nextInt() % (upper - lower)) + lower
+static def mqttPort() {
+    return findFreePort(2500, 3000)
 }
 
-static def randomMqttPort() {
-    return randomPort(3000, 2500)
+static def wsPort() {
+    return findFreePort(8500, 9000)
 }
 
-static def randomWsPort() {
-    return randomPort(9000, 8500)
+static def findFreePort(lower, upper) {
+    for (int port in (lower..upper)) {
+        ServerSocket serverSocket = null
+        try {
+            serverSocket = new ServerSocket(port)
+            return serverSocket.getLocalPort()
+        } catch (IOException e) {
+        } finally {
+            if (serverSocket != null) {
+                serverSocket.close()
+            }
+        }
+    }
 }
 
 /**
