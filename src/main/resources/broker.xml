@@ -5,7 +5,7 @@
         <security-enabled>false</security-enabled>
 
         <acceptors>
-            <acceptor name="netty">tcp://0.0.0.0:61616?protocols=CORE</acceptor>
+            <acceptor name="netty">tcp://0.0.0.0:${mq.netty.port:61616}?protocols=CORE</acceptor>
             <acceptor name="mqtt">tcp://0.0.0.0:${mqtt.port:1883}?protocols=MQTT</acceptor>
             <acceptor name="mqtt_ws">tcp://0.0.0.0:${mqtt.ws.port:8081}?protocols=MQTT</acceptor>
             <!-- Artemis原本就支援在同一個protocol就可以運行tcp、ws了，但DentallHis架構是額外另開一個ws port，所以這邊也跟著開一個port -->
