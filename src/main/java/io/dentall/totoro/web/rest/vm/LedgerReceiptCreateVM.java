@@ -4,6 +4,8 @@ import io.dentall.totoro.domain.Ledger;
 import io.dentall.totoro.domain.enumeration.LedgerReceiptRangeType;
 import io.dentall.totoro.domain.enumeration.LedgerReceiptType;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.List;

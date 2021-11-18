@@ -2,6 +2,8 @@ package io.dentall.totoro.step_definitions.holders;
 
 import io.cucumber.spring.ScenarioScope;
 import io.dentall.totoro.domain.*;
+import io.dentall.totoro.web.rest.vm.LedgerReceiptPrintedRecordVM;
+import io.dentall.totoro.web.rest.vm.LedgerReceiptVM;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +19,8 @@ public class LedgerTestInfoHolder {
 
     private List<Ledger> ledgers = new ArrayList<>();
 
-    private List<LedgerReceipt> ledgerReceipts = new ArrayList<>();
+    private List<LedgerReceiptVM> ledgerReceipts = new ArrayList<>();
 
-    private List<LedgerReceiptPrintedRecord> ledgerReceiptPrintedRecords = new ArrayList<>();
+    private List<LedgerReceiptPrintedRecordVM> ledgerReceiptPrintedRecords = new ArrayList<>();
 
 }

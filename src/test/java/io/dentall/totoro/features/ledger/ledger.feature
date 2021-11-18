@@ -82,11 +82,24 @@ Feature: 收支邏輯
             | 1   | 60     | l-n-2  | 2021-01-03T00:00:00Z | true |
             | 1   | 70     | l-n-3  | 2021-01-04T00:00:00Z | false |
         Given 增加當前限定收據，包含印花總繳
-        Then 依專案 gid 查詢收據資料
-            | type | rangeType | rangeBegin | rangeEnd | signed | stampTax |
-            | NONE | CURRENT   | null       | null     | false  | true     |
+        Then 依專案 gid 查詢，應當僅當前收支包含收據資料
 
-    Scenario: 簡單增加列印紀錄
+    Scenario: 多收支多收據
+        Given 建立醫師
+        Given Alice 24 歲病人
+        Given 為病患產生一個新的專案
+            | id | amount | date | type | projectCode | displayName |
+            | 1  | 1000   | 2021-01-01T00:00:00Z | t-1 | p-c-1 | d-n-1 |
+        Given 增加一筆收支到新專案
+            | gid | charge | note | date | includeStampTax |
+            | 1   | 50     | l-n-1  | 2021-01-02T00:00:00Z | true |
+            | 1   | 60     | l-n-2  | 2021-01-03T00:00:00Z | true |
+            | 1   | 70     | l-n-3  | 2021-01-04T00:00:00Z | false |
+        Given 增加當前限定收據，包含印花總繳
+        Given 增加期間限定收據2021-01-03~2021-01-04，不包含印花總繳
+        Then 依專案 gid 查詢，收支包含數筆收據資料
+
+    Scenario: 增加列印紀錄
         Given 建立醫師
         Given Alice 24 歲病人
         Given 為病患產生一個新的專案

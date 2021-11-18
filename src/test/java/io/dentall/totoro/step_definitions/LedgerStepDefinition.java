@@ -16,18 +16,17 @@ import io.dentall.totoro.domain.enumeration.LedgerReceiptType;
 import io.dentall.totoro.mapper.LedgerTestMapper;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.*;
+import io.dentall.totoro.service.mapper.LedgerGroupMapper;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.step_definitions.holders.LedgerTestInfoHolder;
 import io.dentall.totoro.step_definitions.holders.PatientTestInfoHolder;
 import io.dentall.totoro.step_definitions.holders.UserTestInfoHolder;
 import io.dentall.totoro.web.rest.LedgerResource;
-import io.dentall.totoro.web.rest.vm.LedgerReceiptCreateVM;
-import io.dentall.totoro.web.rest.vm.LedgerReceiptVM;
-import io.dentall.totoro.web.rest.vm.LedgerUnwrapGroupVM;
-import io.dentall.totoro.web.rest.vm.LedgerVM;
+import io.dentall.totoro.web.rest.vm.*;
 import org.junit.Assert;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -260,31 +259,62 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
         );
         ledgerReceiptCreateVM.setLedgers(ledgers);
 
-        this.mvc.perform(
+        ResultActions resultActions = this.mvc.perform(
             post(ledgerReceiptApiPath)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(ledgerReceiptCreateVM))
         );
 
-        System.out.println("");
+        LedgerReceiptVM responseBody = objectMapper.readValue(
+            resultActions.andReturn().getResponse().getContentAsByteArray(),
+            LedgerReceiptVM.class
+        );
+        List<LedgerReceiptVM> ledgerReceipts = new ArrayList<>();
+        ledgerReceipts.add(responseBody);
+
+        ledgerTestInfoHolder.setLedgerReceipts(ledgerReceipts);
     }
 
     @Given("增加期間限定收據{duration}，{yesNo}印花總繳")
-    public void addSpecificDurationLedgerToReceipt(DateTimeUtil.BeginEnd beginEnd, boolean yesNo) throws Exception {
+    public void addSpecificDurationLedgerToReceipt(
+        DateTimeUtil.BeginEnd beginEnd,
+        boolean hasStampTax
+    ) throws Exception {
         LedgerReceiptCreateVM ledgerReceiptCreateVM = new LedgerReceiptCreateVM();
         ledgerReceiptCreateVM.setGid(ledgerTestInfoHolder.getLedgerGroup().getId());
-        ledgerReceiptCreateVM.setLedgers(ledgerTestInfoHolder.getLedgers());
         ledgerReceiptCreateVM.setType(LedgerReceiptType.RECREATE);
         ledgerReceiptCreateVM.setRangeType(LedgerReceiptRangeType.SPECIFIC_BEGIN_END);
         ledgerReceiptCreateVM.setRangeBegin(beginEnd.getBegin());
         ledgerReceiptCreateVM.setRangeEnd(beginEnd.getEnd());
         ledgerReceiptCreateVM.setTime(Instant.now());
-        ledgerReceiptCreateVM.setStampTax(yesNo);
+        ledgerReceiptCreateVM.setStampTax(hasStampTax);
 
-        this.mvc.perform(
-            post(ledgerReceiptApiPath)
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(ledgerReceiptCreateVM))
+        List<Ledger> ledgers = new ArrayList<>();
+        ledgers.add(ledgerTestInfoHolder.getLedgers().get(1));
+        ledgers.add(ledgerTestInfoHolder.getLedgers().get(2));
+        ledgerReceiptCreateVM.setLedgers(ledgers);
+
+        ResultActions resultActions = this.mvc.perform(
+                post(ledgerReceiptApiPath)
+                    .contentType(APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsBytes(ledgerReceiptCreateVM))
+            ).andExpect(status().is2xxSuccessful());
+
+        LedgerReceiptVM responseBody = objectMapper.readValue(
+            resultActions.andReturn().getResponse().getContentAsByteArray(),
+            LedgerReceiptVM.class
+        );
+
+        ledgerTestInfoHolder.getLedgerReceipts().add(responseBody);
+    }
+
+    @Given("增加列印")
+    public void addPrintedRecord() throws Exception {
+        MockMultipartFile fakePdf = new MockMultipartFile(
+            "fake.pdf",
+            null,
+            "application/pdf",
+            new byte[]{}
         );
     }
 
@@ -304,7 +334,7 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
         Assert.assertEquals(ledgers.size(), expects.size());
 
         for (int i = 0; i < ledgers.size(); i++) {
-            validateLedgerVM(ledgers.get(i), expects.get(i));
+            validateLedgerVM(expects.get(i), ledgers.get(i));
         }
     }
 
@@ -350,8 +380,8 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
         }
     }
 
-    @Then("依專案 gid 查詢收據資料")
-    public void getLedgerWithLedgerReceiptByGid(List<LedgerReceiptVM> receiptVM) throws Exception {
+    @Then("依專案 gid 查詢，應當僅當前收支包含收據資料")
+    public void getLedgerWithLedgerReceiptByGid() throws Exception {
         MockHttpServletRequestBuilder requestBuilder = get(ledgerApiPath)
             .contentType(APPLICATION_JSON)
             .param("gid.equals", ledgerTestInfoHolder.getLedgerGroup().getId().toString());
@@ -363,50 +393,146 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
             new TypeReference<List<LedgerVM>>() {}
         );
 
+        Assert.assertEquals(3, ledgers.size() );
+
+        for (int i = 0; i < ledgers.size(); i++) {
+            if (i == 2) {
+                Assert.assertEquals(1, ledgers.get(i).getLedgerReceipts().size());
+                validateLedgerReceiptVM(
+                    ledgerTestInfoHolder.getLedgerReceipts().get(0),
+                    ledgers.get(i).getLedgerReceipts().get(0)
+                );
+            } else {
+                Assert.assertEquals(0, ledgers.get(i).getLedgerReceipts().size());
+            }
+        }
+    }
+
+    @Then("依專案 gid 查詢，收支包含數筆收據資料")
+    public void getLedgersWithLedgerReceiptByGid() throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = get(ledgerApiPath)
+            .contentType(APPLICATION_JSON)
+            .param("gid.equals", ledgerTestInfoHolder.getLedgerGroup().getId().toString());
+
+        ResultActions resultActions = this.mvc.perform(requestBuilder);
+
+        List<LedgerVM> ledgers = objectMapper.readValue(
+            resultActions.andReturn().getResponse().getContentAsString(),
+            new TypeReference<List<LedgerVM>>() {}
+        );
+
+        Assert.assertEquals(3, ledgers.size() );
+
+        // 收據 1 應不包含收據
+        Assert.assertEquals(
+            0,
+            ledgers.get(0).getLedgerReceipts().size()
+        );
+        // 收據 2 應包含一筆收據
+        validateLedgerReceiptVM(
+            ledgerTestInfoHolder.getLedgerReceipts().get(1),
+            ledgers.get(1).getLedgerReceipts().get(0)
+        );
+        // 收據 3 應包含兩筆收據
+        validateLedgerReceiptVM(
+            ledgerTestInfoHolder.getLedgerReceipts().get(0),
+            ledgers.get(2).getLedgerReceipts().get(0)
+        );
+        validateLedgerReceiptVM(
+            ledgerTestInfoHolder.getLedgerReceipts().get(1),
+            ledgers.get(2).getLedgerReceipts().get(1)
+        );
+
         System.out.println("");
     }
 
-    private void validateLedgerVM(LedgerVM target, LedgerVM expected) throws Exception {
+    private void validateLedgerVM(
+        LedgerVM expected,
+        LedgerVM target
+    ) {
         Assert.assertEquals(
-            target.getGid(),
-            expected.getGid()
+            expected.getGid(),
+            target.getGid()
         );
         Assert.assertEquals(
-            target.getAmount(),
-            expected.getAmount()
+            expected.getAmount(),
+            target.getAmount()
         );
         Assert.assertEquals(
-            target.getDate(),
-            expected.getDate()
+            expected.getDate(),
+            target.getDate()
         );
         Assert.assertEquals(
-            target.getType(),
-            expected.getType()
+            expected.getType(),
+            target.getType()
         );
         Assert.assertEquals(
-            target.getProjectCode(),
-            expected.getProjectCode()
+            expected.getProjectCode(),
+            target.getProjectCode()
         );
         Assert.assertEquals(
-            target.getDisplayName(),
-            expected.getDisplayName()
+            expected.getDisplayName(),
+            target.getDisplayName()
         );
         Assert.assertEquals(
-            target.getCharge(),
-            expected.getCharge()
+            expected.getCharge(),
+            target.getCharge()
         );
         Assert.assertEquals(
-            target.getNote(),
-            expected.getNote()
+            expected.getNote(),
+            target.getNote()
         );
         Assert.assertEquals(
-            target.getIncludeStampTax(),
-            expected.getIncludeStampTax()
+            expected.getIncludeStampTax(),
+            target.getIncludeStampTax()
         );
         Assert.assertEquals(
-            target.getDoctorId(),
-            expected.getDoctorId()
+            expected.getDoctorId(),
+            target.getDoctorId()
         );
     }
 
+    private void validateLedgerReceiptVM(
+        LedgerReceiptVM expected,
+        LedgerReceiptVM target
+    ) {
+        Assert.assertEquals(
+            expected.getRangeBegin(),
+            target.getRangeBegin()
+        );
+        Assert.assertEquals(
+            expected.getRangeEnd(),
+            target.getRangeEnd()
+        );
+        Assert.assertEquals(
+            expected.getRangeType(),
+            target.getRangeType()
+        );
+        Assert.assertEquals(
+            expected.getType(),
+            target.getType()
+        );
+        Assert.assertEquals(
+            expected.getTime(),
+            target.getTime()
+        );
+        Assert.assertEquals(
+            expected.getStampTax(),
+            target.getStampTax()
+        );
+    }
+
+    private void validateLedgerReceiptPrintedRecordVM(
+        LedgerReceiptPrintedRecordVM expected,
+        LedgerReceiptPrintedRecordVM target
+    ) {
+        Assert.assertEquals(
+            expected.getTime(),
+            target.getTime()
+        );
+        Assert.assertEquals(
+            expected.getUrl(),
+            target.getUrl()
+        );
+    }
 }
