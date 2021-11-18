@@ -388,6 +388,8 @@ task pathingJar(type: Jar) {
 task cucumber_nhi_rule() {
     def outputDir = "nhirule"
     def cucumberTags = project.getProperties().get("cucumber.filter.tags")
+    def mattPort = randomMqttPort()
+    def wsPort = randomWsPort()
     dependsOn assemble, testClasses, pathingJar
     doLast {
         assert cucumberTags.length() > 0
@@ -400,7 +402,7 @@ task cucumber_nhi_rule() {
                 systemProperties = ['java.io.tmpdir': "${buildDir}\\tmp", 'spring.profiles.active': 'test,no-swagger,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml']
             } else {
                 classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-                systemProperties = ['spring.profiles.active': 'test,no-swagger,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml']
+                systemProperties = ['mqtt.port': "${mattPort}", 'mqtt.ws.port': "${wsPort}", 'mqtt.serverURIs': "tcp://localhost:${mattPort}", 'spring.profiles.active': 'test,no-swagger,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml']
             }
 
         }
@@ -424,6 +426,18 @@ task cucumber_metric() {
 
 static def isWindows() {
     return org.gradle.internal.os.OperatingSystem.current().isWindows()
+}
+
+static def randomPort(int upper, int lower) {
+    return Math.abs(new Random().nextInt() % (upper - lower)) + lower
+}
+
+static def randomMqttPort() {
+    return randomPort(3000, 2500)
+}
+
+static def randomWsPort() {
+    return randomPort(9000, 8500)
 }
 
 /**
