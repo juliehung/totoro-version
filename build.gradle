@@ -430,30 +430,19 @@ static def isWindows() {
 }
 
 static def mqNettyPort() {
-    return findFreePort(60000, 60500)
+    return randomPort(60000, 61000)
 }
 
 static def mqttPort() {
-    return findFreePort(2500, 3000)
+    return randomPort(2000, 3000)
 }
 
 static def wsPort() {
-    return findFreePort(8500, 9000)
+    return randomPort(9000, 10000)
 }
 
-static def findFreePort(lower, upper) {
-    for (int port in (lower..upper)) {
-        ServerSocket serverSocket = null
-        try {
-            serverSocket = new ServerSocket(port)
-            return serverSocket.getLocalPort()
-        } catch (IOException e) {
-        } finally {
-            if (serverSocket != null) {
-                serverSocket.close()
-            }
-        }
-    }
+static def randomPort(int lower, int upper) {
+    return Math.abs(new Random().nextInt() % (upper - lower)) + lower
 }
 
 /**
