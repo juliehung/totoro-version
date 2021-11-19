@@ -2,6 +2,7 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.business.service.ImageGcsBusinessService;
+import io.dentall.totoro.config.TimeConfig;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.LedgerGroupRepository;
 import io.dentall.totoro.repository.LedgerReceiptPrintedRecordRepository;
@@ -260,8 +261,10 @@ public class LedgerResource {
             .concat(patient.getName())
             .concat(patient.getBirth().toString())
             .concat("_")
-            .concat(ledgerReceipt.getLedgers().get(0).getLedgerGroup().getProjectCode())
-            .concat(ledgerReceipt.getLedgers().get(0).getLedgerGroup().getDisplayName())
+            .concat(ledgerReceipt.getLedgerGroup().getProjectCode())
+            .concat(ledgerReceipt.getLedgerGroup().getDisplayName())
+            .concat("_")
+            .concat(Instant.now().atOffset(TimeConfig.ZONE_OFF_SET).toString())
             .concat(".pdf");
 
         imageGcsBusinessService.uploadFile(

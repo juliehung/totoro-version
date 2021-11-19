@@ -129,7 +129,7 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
     }
 
     @DataTableType
-    public LedgerReceiptPrintedRecord ledgerReceiptPrintedRecord(Map<String, String> entry) {
+    public LedgerReceiptPrintedRecordVM ledgerReceiptPrintedRecord(Map<String, String> entry) {
         return LedgerTestMapper.INSTANCE.mapToLedgerReceiptPrintedRecord(entry);
     }
 
@@ -332,7 +332,16 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
             LedgerReceiptPrintedRecordVM.class
         );
 
-        System.out.println("");
+        Assert.assertNotNull(ledgerReceiptPrintedRecordVM.getUrl());
+        if (!ledgerReceiptPrintedRecordVM.getUrl().contains("http://fake.url/fakeBucket/fakeClinicName")) {
+            Assert.fail();
+        }
+        if (!ledgerReceiptPrintedRecordVM.getUrl().contains("Alice")) {
+            Assert.fail();
+        }
+        if (!ledgerReceiptPrintedRecordVM.getUrl().contains("p-c-1d-n-1")) {
+            Assert.fail();
+        }
     }
 
     @Then("依專案 gid 查詢")
@@ -543,10 +552,6 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
         LedgerReceiptPrintedRecordVM expected,
         LedgerReceiptPrintedRecordVM target
     ) {
-        Assert.assertEquals(
-            expected.getTime(),
-            target.getTime()
-        );
         Assert.assertEquals(
             expected.getUrl(),
             target.getUrl()

@@ -4,6 +4,7 @@ import io.dentall.totoro.domain.Ledger;
 import io.dentall.totoro.domain.LedgerGroup;
 import io.dentall.totoro.domain.LedgerReceipt;
 import io.dentall.totoro.domain.LedgerReceiptPrintedRecord;
+import io.dentall.totoro.web.rest.vm.LedgerReceiptPrintedRecordVM;
 import io.dentall.totoro.web.rest.vm.LedgerReceiptVM;
 import io.dentall.totoro.web.rest.vm.LedgerUnwrapGroupVM;
 import io.dentall.totoro.web.rest.vm.LedgerVM;
@@ -54,6 +55,7 @@ public interface LedgerTestMapper {
 
     LedgerReceipt mapToLedgerReceipt(Map<String, String> map);
 
-    LedgerReceiptPrintedRecord mapToLedgerReceiptPrintedRecord(Map<String, String> map);
+    @Mapping(target="url", expression="java( map.get(\"url\") )")
+    LedgerReceiptPrintedRecordVM mapToLedgerReceiptPrintedRecord(Map<String, String> map);
 
 }

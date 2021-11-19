@@ -19,6 +19,6 @@ public class FakeImageGCSService extends ImageGcsBusinessService {
 
     @Override
     public String getUrlForDownload() {
-        return "http://fake.url/";
+        return "http://fake.url/fakeBucket/";
     }
 }
