@@ -290,8 +290,16 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
         ledgerReceiptCreateVM.setStampTax(hasStampTax);
 
         List<Ledger> ledgers = new ArrayList<>();
-        ledgers.add(ledgerTestInfoHolder.getLedgers().get(1));
-        ledgers.add(ledgerTestInfoHolder.getLedgers().get(2));
+        for (Ledger ledger : ledgerTestInfoHolder.getLedgers()) {
+            if (ledger.getDate().equals(beginEnd.getBegin()) ||
+                ledger.getDate().equals(beginEnd.getEnd()) ||
+                ledger.getDate().isAfter(beginEnd.getBegin()) &&
+                    ledger.getDate().isBefore(beginEnd.getEnd())
+            ) {
+                ledgers.add(ledger);
+            }
+
+        }
         ledgerReceiptCreateVM.setLedgers(ledgers);
 
         ResultActions resultActions = this.mvc.perform(
@@ -327,35 +335,12 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
                 .file(fakePdf)
         ).andExpect(status().is2xxSuccessful());
 
-        LedgerReceiptPrintedRecordVM ledgerReceiptPrintedRecordVM = objectMapper.readValue(
-            resultActions.andReturn().getResponse().getContentAsString(),
-            LedgerReceiptPrintedRecordVM.class
-        );
 
-        Assert.assertNotNull(ledgerReceiptPrintedRecordVM.getUrl());
-        if (!ledgerReceiptPrintedRecordVM.getUrl().contains("http://fake.url/fakeBucket/fakeClinicName")) {
-            Assert.fail();
-        }
-        if (!ledgerReceiptPrintedRecordVM.getUrl().contains("Alice")) {
-            Assert.fail();
-        }
-        if (!ledgerReceiptPrintedRecordVM.getUrl().contains("p-c-1d-n-1")) {
-            Assert.fail();
-        }
     }
 
     @Then("依專案 gid 查詢")
     public void getLedgerByGid(List<LedgerVM> expects) throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = get(ledgerApiPath)
-            .contentType(APPLICATION_JSON)
-            .param("gid.equals", expects.get(0).getGid().toString());
-
-        ResultActions resultActions = this.mvc.perform(requestBuilder);
-
-        List<LedgerVM> ledgers = objectMapper.readValue(
-            resultActions.andReturn().getResponse().getContentAsString(),
-            new TypeReference<List<LedgerVM>>() {}
-        );
+        List<LedgerVM> ledgers = fireRequestForGetLedgers();
 
         Assert.assertEquals(ledgers.size(), expects.size());
 
@@ -408,16 +393,7 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
 
     @Then("依專案 gid 查詢，應當僅當前收支包含收據資料")
     public void getLedgerWithLedgerReceiptByGid() throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = get(ledgerApiPath)
-            .contentType(APPLICATION_JSON)
-            .param("gid.equals", ledgerTestInfoHolder.getLedgerGroup().getId().toString());
-
-        ResultActions resultActions = this.mvc.perform(requestBuilder);
-
-        List<LedgerVM> ledgers = objectMapper.readValue(
-            resultActions.andReturn().getResponse().getContentAsString(),
-            new TypeReference<List<LedgerVM>>() {}
-        );
+        List<LedgerVM> ledgers = fireRequestForGetLedgers();
 
         Assert.assertEquals(3, ledgers.size() );
 
@@ -436,16 +412,7 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
 
     @Then("依專案 gid 查詢，收支包含數筆收據資料")
     public void getLedgersWithLedgerReceiptByGid() throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = get(ledgerApiPath)
-            .contentType(APPLICATION_JSON)
-            .param("gid.equals", ledgerTestInfoHolder.getLedgerGroup().getId().toString());
-
-        ResultActions resultActions = this.mvc.perform(requestBuilder);
-
-        List<LedgerVM> ledgers = objectMapper.readValue(
-            resultActions.andReturn().getResponse().getContentAsString(),
-            new TypeReference<List<LedgerVM>>() {}
-        );
+        List<LedgerVM> ledgers = fireRequestForGetLedgers();
 
         Assert.assertEquals(3, ledgers.size() );
 
@@ -470,6 +437,77 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
         );
 
         System.out.println("");
+    }
+
+    @Then("依專案 gid 查詢，收支包含數筆列印紀錄資料")
+    public void getLedgersWithLedgerReceiptPrintedRecordByGid() throws Exception {
+        List<LedgerVM> ledgers = fireRequestForGetLedgers();
+
+        Assert.assertEquals(2, ledgers.get(0).getLedgerReceipts().get(0).getLedgerReceiptPrintedRecords().size());
+
+        LedgerReceiptPrintedRecordVM ledgerReceiptPrintedRecordVM =
+            ledgers.get(0).getLedgerReceipts().get(0).getLedgerReceiptPrintedRecords().get(0);
+
+        if (!ledgerReceiptPrintedRecordVM.getUrl().contains("http://fake.url/fakeBucket/fakeClinicName")) {
+            Assert.fail();
+        }
+        if (!ledgerReceiptPrintedRecordVM.getUrl().contains("Alice")) {
+            Assert.fail();
+        }
+        if (!ledgerReceiptPrintedRecordVM.getUrl().contains("p-c-1d-n-1")) {
+            Assert.fail();
+        }
+    }
+
+    @Then("刪除收據")
+    private void deleteLedgerVM() throws Exception {
+        this.mvc.perform(
+            delete(
+                ledgerApiPath
+                    .concat("/")
+                    .concat(
+                        String.valueOf(
+                            ledgerTestInfoHolder.getLedgers().get(0).getId()
+                        )
+                    )
+            )
+        )
+            .andExpect(status().is2xxSuccessful());
+    }
+
+    @Then("依專案 gid 查詢，其他收支收據仍然存在")
+    private void getLedgerAfterDelete() throws Exception {
+        List<LedgerVM> ledgers = fireRequestForGetLedgers();
+
+        // 確定有兩筆收據
+        Assert.assertEquals(
+            2,
+            ledgers.size()
+        );
+        // 第一筆收據
+        Assert.assertNotNull(ledgers.get(0).getLedgerReceipts());
+        if (ledgers.get(0).getLedgerReceipts().size() == 0) {
+            Assert.fail();
+        }
+        // 第二筆收據
+        Assert.assertNotNull(ledgers.get(1).getLedgerReceipts());
+        if (ledgers.get(1).getLedgerReceipts().size() == 0) {
+            Assert.fail();
+        }
+    }
+
+    private List<LedgerVM> fireRequestForGetLedgers() throws Exception {
+        ResultActions resultActions = this.mvc.perform(
+            get(ledgerApiPath)
+                .contentType(APPLICATION_JSON)
+                .param("gid.equals", ledgerTestInfoHolder.getLedgerGroup().getId().toString())
+        )
+            .andExpect(status().is2xxSuccessful());
+
+        return objectMapper.readValue(
+            resultActions.andReturn().getResponse().getContentAsString(),
+            new TypeReference<List<LedgerVM>>() {}
+        );
     }
 
     private void validateLedgerVM(
@@ -545,16 +583,6 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
         Assert.assertEquals(
             expected.getStampTax(),
             target.getStampTax()
-        );
-    }
-
-    private void validateLedgerReceiptPrintedRecordVM(
-        LedgerReceiptPrintedRecordVM expected,
-        LedgerReceiptPrintedRecordVM target
-    ) {
-        Assert.assertEquals(
-            expected.getUrl(),
-            target.getUrl()
         );
     }
 }
