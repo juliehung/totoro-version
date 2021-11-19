@@ -228,6 +228,7 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
     @Given("增加一筆收支到新專案")
     public void addLedgerToGroup(List<LedgerUnwrapGroupVM> ledgers) throws Exception {
         for (LedgerUnwrapGroupVM ledger : ledgers) {
+            ledger.setGid(ledgerTestInfoHolder.getLedgerGroup().getId());
             ledger.setDoctor(userTestInfoHolder.getUser().getId().toString());
 
             MockHttpServletRequestBuilder requestBuilder = post(ledgerApiPath)
@@ -362,10 +363,10 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
             new TypeReference<List<LedgerVM>>() {}
         );
 
-        Assert.assertEquals(ledgers.size(), expects.size());
+        Assert.assertEquals(expects.size(), ledgers.size());
 
         for (int i = 0; i < ledgers.size(); i++) {
-            validateLedgerVM(ledgers.get(i), expects.get(i));
+            validateLedgerVM(expects.get(i), ledgers.get(i));
         }
     }
 
@@ -384,10 +385,10 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
             }
         );
 
-        Assert.assertEquals(ledgers.size(), expects.size());
+        Assert.assertEquals(expects.size(), ledgers.size());
 
         for (int i = 0; i < ledgers.size(); i++) {
-            validateLedgerVM(ledgers.get(i), expects.get(i));
+            validateLedgerVM(expects.get(i), ledgers.get(i));
         }
     }
 
@@ -515,7 +516,7 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
         LedgerVM target
     ) {
         Assert.assertEquals(
-            expected.getGid(),
+            ledgerTestInfoHolder.getLedgerGroup().getId(),
             target.getGid()
         );
         Assert.assertEquals(

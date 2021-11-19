@@ -21,7 +21,6 @@ public interface LedgerTestMapper {
 
     LedgerTestMapper INSTANCE = Mappers.getMapper( LedgerTestMapper.class );
 
-    @Mapping(target="id", expression="java( Long.parseLong(map.get(\"id\")) )")
     @Mapping(target="amount", expression="java( Double.parseDouble(map.get(\"amount\")) )")
     @Mapping(target="date", expression="java( java.time.Instant.parse(map.get(\"date\")) )")
     @Mapping(target="type", expression="java( map.get(\"type\") )")
@@ -31,7 +30,6 @@ public interface LedgerTestMapper {
 
     @Mapping(target="charge", expression="java( Double.parseDouble(map.get(\"charge\")) )")
     @Mapping(target="date", expression="java( java.time.Instant.parse(map.get(\"date\")) )")
-    @Mapping(target="gid", expression="java( Long.parseLong(map.get(\"gid\")) )")
     @Mapping(target="includeStampTax", expression="java( Boolean.parseBoolean(map.get(\"includeStampTax\")) )")
     @Mapping(target="note", expression="java( map.get(\"note\") )")
     LedgerUnwrapGroupVM mapToLedger(Map<String, String> map);
@@ -42,7 +40,6 @@ public interface LedgerTestMapper {
     @Mapping(target="displayName", expression="java( map.get(\"displayName\") )" )
     @Mapping(target="charge", expression="java( Double.parseDouble(map.get(\"charge\")) )")
     @Mapping(target="date", expression="java( java.time.Instant.parse(map.get(\"date\")) )")
-    @Mapping(target="gid", expression="java( Long.parseLong(map.get(\"gid\")) )")
     @Mapping(target="includeStampTax", expression="java( Boolean.parseBoolean(map.get(\"includeStampTax\")) )")
     @Mapping(target="note", expression="java( map.get(\"note\") )")
     LedgerVM mapToLedgerVM(Map<String, String> map);
