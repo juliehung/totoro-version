@@ -40,8 +40,8 @@ import java.util.Map;
 import static io.dentall.totoro.step_definitions.StepDefinitionUtil.DurationParamTypeRegularExpression;
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.http.MediaType.APPLICATION_PDF;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class LedgerStepDefinition extends AbstractStepDefinition {
@@ -82,7 +82,7 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
 
     private String ledgerReceiptApiPath = "/api/ledger-receipts";
 
-    private String ledgerReceiptPrintedRecordApiPath = "/api/ledger-receipts/{id}/ledger-receipt-printed-records";
+    private String ledgerReceiptPrintedRecordApiPath = "/api/ledger-receipts/%d/ledger-receipt-printed-records";
 
     @Before
     public void setup() {
@@ -311,11 +311,28 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
     @Given("增加列印")
     public void addPrintedRecord() throws Exception {
         MockMultipartFile fakePdf = new MockMultipartFile(
-            "fake.pdf",
+            "file",
             null,
-            "application/pdf",
+            APPLICATION_PDF.toString(),
             new byte[]{}
         );
+
+        ResultActions resultActions = this.mvc.perform(
+            multipart(
+                String.format(
+                    ledgerReceiptPrintedRecordApiPath,
+                    ledgerTestInfoHolder.getLedgerReceipts().get(0).getId()
+                )
+            )
+                .file(fakePdf)
+        ).andExpect(status().is2xxSuccessful());
+
+        LedgerReceiptPrintedRecordVM ledgerReceiptPrintedRecordVM = objectMapper.readValue(
+            resultActions.andReturn().getResponse().getContentAsString(),
+            LedgerReceiptPrintedRecordVM.class
+        );
+
+        System.out.println("");
     }
 
     @Then("依專案 gid 查詢")

@@ -243,21 +243,13 @@ public class LedgerResource {
         @PathVariable(name = "id") Long id,
         @RequestParam("file") MultipartFile file
     ) throws IOException {
-        LedgerReceipt ledgerReceipt = ledgerReceiptRepository.findById(id)
-            .orElseThrow(() -> new BadRequestAlertException("Can not found ledger receipt by id", ENTITY_NAME, "notfound"));
-        if (ledgerReceipt.getLedgers() == null ||
-            ledgerReceipt.getLedgers().get(0) == null ||
-            ledgerReceipt.getLedgers().get(0).getId() == null ||
-            ledgerReceipt.getLedgers().get(0).getPatientId() == null ||
-            ledgerReceipt.getLedgers().get(0).getLedgerGroup() == null
-        ) {
-            throw new BadRequestAlertException("Can not found ledger receipt by id", ENTITY_NAME, "fieldrequired");
-        }
         if (!file.getContentType().equals("application/pdf")) {
             throw new BadRequestAlertException("Only support file mime as application/pdf", ENTITY_NAME, "mimerequired");
         }
 
-        Patient patient = patientService.findPatientById(ledgerReceipt.getLedgers().get(0).getPatientId());
+        LedgerReceipt ledgerReceipt = ledgerQueryService.findReceiptsById(id);
+
+        Patient patient = patientService.findPatientById(ledgerReceipt.getLedgerGroup().getPatientId());
 
         String filePath = imageGcsBusinessService.getClinicName()
             .concat("/")
@@ -285,8 +277,15 @@ public class LedgerResource {
         ledgerReceiptPrintedRecord.setFileName(fileName);
         ledgerReceiptPrintedRecord.setLedgerReceipt(ledgerReceipt);
 
-        return LedgerGroupMapper.INSTANCE.ledgerReceiptPrintedRecordToLedgerReceiptPrintedRecordVM(
+        LedgerReceiptPrintedRecordVM vm = LedgerGroupMapper.INSTANCE.ledgerReceiptPrintedRecordToLedgerReceiptPrintedRecordVM(
             ledgerReceiptPrintedRecordRepository.save(ledgerReceiptPrintedRecord)
         );
+        vm.setUrl(
+            imageGcsBusinessService.getUrlForDownload()
+                .concat(vm.getFilePath())
+                .concat(vm.getFileName())
+        );
+
+        return vm;
     }
 }

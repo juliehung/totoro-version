@@ -1,16 +1,12 @@
 package io.dentall.totoro.service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.persistence.criteria.JoinType;
 
 import io.dentall.totoro.repository.LedgerGroupRepository;
-import io.dentall.totoro.service.mapper.LedgerGroupMapper;
-import io.dentall.totoro.web.rest.util.PaginationUtil;
-import io.github.jhipster.service.filter.StringFilter;
+import io.dentall.totoro.repository.LedgerReceiptRepository;
+import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -43,12 +39,16 @@ public class LedgerQueryService extends QueryService<Ledger> {
 
     private final LedgerGroupRepository ledgerGroupRepository;
 
+    private final LedgerReceiptRepository ledgerReceiptRepository;
+
     public LedgerQueryService(
         LedgerRepository ledgerRepository,
-        LedgerGroupRepository ledgerGroupRepository
+        LedgerGroupRepository ledgerGroupRepository,
+        LedgerReceiptRepository ledgerReceiptRepository
     ) {
         this.ledgerRepository = ledgerRepository;
         this.ledgerGroupRepository = ledgerGroupRepository;
+        this.ledgerReceiptRepository = ledgerReceiptRepository;
     }
 
     /**
@@ -82,6 +82,20 @@ public class LedgerQueryService extends QueryService<Ledger> {
             }
         }
         return ledgers;
+    }
+
+    @Transactional(readOnly = true)
+    public LedgerReceipt findReceiptsById(Long id) {
+        LedgerReceipt ledgerReceipt = ledgerReceiptRepository.findById(id)
+            .orElseThrow(() -> new BadRequestAlertException("Can not found ledger receipt by id", "LEDGER", "notfound"));
+
+        try {
+            ledgerReceipt.getLedgers().get(0).getLedgerGroup();
+        } catch (Exception e) {
+            throw new BadRequestAlertException("Can not found ledger receipt by id", "LEDGER", "fieldrequired");
+        }
+
+        return ledgerReceipt;
     }
 
     /**
