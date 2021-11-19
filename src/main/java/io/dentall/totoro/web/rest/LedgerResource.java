@@ -81,6 +81,10 @@ public class LedgerResource {
     @PostMapping("/ledger-groups")
     @Timed
     public LedgerGroup createLedgerGroup(@RequestBody @Valid LedgerGroup ledgerGroup) {
+        if (ledgerGroup.getId() != null) {
+            throw new BadRequestAlertException("Can not include id for create ledger group", ENTITY_NAME, "limit");
+        }
+
         return ledgerGroupRepository.save(ledgerGroup);
     }
 
