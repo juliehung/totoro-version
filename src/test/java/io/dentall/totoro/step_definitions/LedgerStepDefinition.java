@@ -459,8 +459,8 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
         }
     }
 
-    @Then("刪除收據")
-    private void deleteLedgerVM() throws Exception {
+    @Then("刪除收支")
+    public void deleteLedgerVM() throws Exception {
         this.mvc.perform(
             delete(
                 ledgerApiPath
@@ -476,10 +476,10 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
     }
 
     @Then("依專案 gid 查詢，其他收支收據仍然存在")
-    private void getLedgerAfterDelete() throws Exception {
+    public void getLedgerAfterDelete() throws Exception {
         List<LedgerVM> ledgers = fireRequestForGetLedgers();
 
-        // 確定有兩筆收據
+        // 確定有兩筆收支
         Assert.assertEquals(
             2,
             ledgers.size()

@@ -113,7 +113,7 @@ Feature: 收支邏輯
         Given 增加列印
         Then 依專案 gid 查詢，收支包含數筆列印紀錄資料
 
-    Scenario: 刪除收據
+    Scenario: 刪除收支後，其他收支仍有收據紀錄
         Given 建立醫師
         Given Alice 24 歲病人
         Given 為病患產生一個新的專案
@@ -126,5 +126,5 @@ Feature: 收支邏輯
             | 1   | 70     | l-n-3  | 2021-01-04T00:00:00Z | false |
         Given 增加當前限定收據，包含印花總繳
         Given 增加期間限定收據2021-01-01~2021-01-04，不包含印花總繳
-        Then 刪除收據
+        Then 刪除收支
         Then 依專案 gid 查詢，其他收支收據仍然存在
