@@ -41,7 +41,7 @@ public class UserStepDefinition extends AbstractStepDefinition {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final UserResource resource = new UserResource(userService, userRepository, mailService);
+        final UserResource resource = new UserResource(userService, userRepository, mailService, null, null);
         this.mvc = MockMvcBuilders.standaloneSetup(resource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

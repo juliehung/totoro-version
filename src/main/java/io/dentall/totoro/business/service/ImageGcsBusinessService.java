@@ -8,8 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -133,5 +136,23 @@ public class ImageGcsBusinessService extends ImageBusinessService {
 
     public String getClinicName() {
         return this.CLINIC_NAME;
+    }
+
+    public void uploadUserAvatar(
+        Long id,
+        byte[] content
+    ) throws Exception {
+        String filePath = String.format(
+            "users/%d/",
+            id
+        );
+        String fileName = "avatar.png";
+
+        this.uploadFile(
+            filePath,
+            fileName,
+            content,
+            MediaType.IMAGE_PNG_VALUE
+        );
     }
 }

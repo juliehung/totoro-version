@@ -1,5 +1,6 @@
 package io.dentall.totoro.web.rest;
 
+import io.dentall.totoro.business.service.ImageGcsBusinessService;
 import io.dentall.totoro.config.Constants;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.UserRepository;
@@ -7,6 +8,7 @@ import io.dentall.totoro.security.AuthoritiesConstants;
 import io.dentall.totoro.service.MailService;
 import io.dentall.totoro.service.UserService;
 import io.dentall.totoro.service.dto.UserDTO;
+import io.dentall.totoro.service.mapper.UserMapper;
 import io.dentall.totoro.web.rest.errors.*;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -14,8 +16,10 @@ import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.web.rest.vm.ManagedUserVM;
 import io.github.jhipster.web.util.ResponseUtil;
 
+import io.micrometer.core.instrument.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -53,6 +58,7 @@ import java.util.*;
  * <p>
  * Another option would be to have a specific JPA entity graph to handle this case.
  */
+@Profile("img-gcs")
 @RestController
 @RequestMapping("/api")
 public class UserResource {
@@ -65,11 +71,22 @@ public class UserResource {
 
     private final MailService mailService;
 
-    public UserResource(UserService userService, UserRepository userRepository, MailService mailService) {
+    private final ImageGcsBusinessService imageGcsBusinessService;
 
+    private final UserMapper userMapper;
+
+    public UserResource(
+        UserService userService,
+        UserRepository userRepository,
+        MailService mailService,
+        ImageGcsBusinessService imageGcsBusinessService,
+        UserMapper userMapper
+    ) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.mailService = mailService;
+        this.imageGcsBusinessService = imageGcsBusinessService;
+        this.userMapper = userMapper;
     }
 
     /**
@@ -139,11 +156,37 @@ public class UserResource {
      * @return the ResponseEntity with status 200 (OK) and with body all users
      */
     @GetMapping("/users")
+    @Transactional
     @Timed
-    public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) {
-        final Page<UserDTO> page = userService.getAllManagedUsers(pageable);
+    public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) throws Exception {
+        List<UserDTO> result = new ArrayList<>();
+
+        Page<User> page = userService.getAllManagedUsersWithExtendUser(pageable);
+        for (User user : page.getContent()) {
+            if (user.getExtendUser().getAvatar() != null &&
+                user.getExtendUser().getAvatar().length > 0
+            ) {
+                imageGcsBusinessService.uploadUserAvatar(user.getId(), user.getExtendUser().getAvatar());
+                user.getExtendUser().setAvatar(new byte[]{});
+                user.getExtendUser().setFilePath(String.format("users/%d/", user.getId()));
+                user.getExtendUser().setFileName("avatar.png");
+            }
+
+            if(StringUtils.isNotBlank(user.getExtendUser().getFilePath()) &&
+                StringUtils.isNotBlank(user.getExtendUser().getFileName())
+            ) {
+                UserDTO userDTO = userMapper.userToUserDTO(user);
+                userDTO.setImageUrl(
+                    imageGcsBusinessService.getUrlForUpload()
+                        .concat(userDTO.getExtendUser().getFilePath())
+                        .concat(userDTO.getExtendUser().getFileName())
+                );
+                result.add(userDTO);
+            }
+        }
+
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/users");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return new ResponseEntity<>(result, headers, HttpStatus.OK);
     }
 
     /**
