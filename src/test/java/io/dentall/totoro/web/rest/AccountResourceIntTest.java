@@ -756,36 +756,6 @@ public class AccountResourceIntTest {
 
     @Test
     @Transactional
-    @WithMockUser("upload-avatar")
-    public void testUploadAvatar() throws Exception {
-        User user = new User();
-        user.setLogin("upload-avatar");
-        user.setEmail("upload-avatar@example.com");
-        user.setActivated(true);
-        user.setPassword(passwordEncoder.encode("test"));
-
-        ExtendUser extendUser = new ExtendUser();
-        extendUser.setUser(user);
-        user.setExtendUser(extendUser);
-
-        userRepository.saveAndFlush(user);
-
-        MockMultipartFile file = new MockMultipartFile(
-            "file",
-            UPLOAD_FILENAME,
-            UPLOAD_CONTENT_TYPE,
-            FileUtils.openInputStream(ResourceUtils.getFile(getClass().getResource("/static/" + UPLOAD_FILENAME))));
-        restMvc.perform(MockMvcRequestBuilders.multipart("/api/account/avatar").file(file))
-            .andExpect(status().isOk())
-            .andExpect(content().string(Matchers.containsString(UPLOAD_FILENAME)));
-
-        User updatedUser = userRepository.findOneByLogin(user.getLogin()).orElse(null);
-        assertThat(updatedUser.getImageUrl()).isNotEmpty();
-        assertThat(updatedUser.getExtendUser().getAvatarContentType()).isEqualTo(UPLOAD_CONTENT_TYPE);
-    }
-
-    @Test
-    @Transactional
     @WithMockUser("get-avatar")
     public void testGetAvatar() throws Exception {
         User user = new User();

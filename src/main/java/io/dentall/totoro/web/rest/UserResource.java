@@ -163,26 +163,30 @@ public class UserResource {
 
         Page<User> page = userService.getAllManagedUsersWithExtendUser(pageable);
         for (User user : page.getContent()) {
-            if (user.getExtendUser().getAvatar() != null &&
-                user.getExtendUser().getAvatar().length > 0
-            ) {
-                imageGcsBusinessService.uploadUserAvatar(user.getId(), user.getExtendUser().getAvatar());
-                user.getExtendUser().setAvatar(new byte[]{});
-                user.getExtendUser().setFilePath(String.format("users/%d/", user.getId()));
-                user.getExtendUser().setFileName("avatar.png");
+            UserDTO userDTO = userMapper.userToUserDTO(user);
+
+            if (user.getExtendUser() != null) {
+                if (user.getExtendUser().getAvatar() != null &&
+                    user.getExtendUser().getAvatar().length > 0
+                ) {
+                    imageGcsBusinessService.uploadUserAvatar(user.getId(), user.getExtendUser().getAvatar());
+                    user.getExtendUser().setAvatar(new byte[]{});
+                    user.getExtendUser().setFilePath(String.format("users/%d/", user.getId()));
+                    user.getExtendUser().setFileName("avatar.png");
+                }
+
+                if(StringUtils.isNotBlank(user.getExtendUser().getFilePath()) &&
+                    StringUtils.isNotBlank(user.getExtendUser().getFileName())
+                ) {
+                    userDTO.setImageUrl(
+                        imageGcsBusinessService.getUrlForUpload()
+                            .concat(userDTO.getExtendUser().getFilePath())
+                            .concat(userDTO.getExtendUser().getFileName())
+                    );
+                }
             }
 
-            if(StringUtils.isNotBlank(user.getExtendUser().getFilePath()) &&
-                StringUtils.isNotBlank(user.getExtendUser().getFileName())
-            ) {
-                UserDTO userDTO = userMapper.userToUserDTO(user);
-                userDTO.setImageUrl(
-                    imageGcsBusinessService.getUrlForUpload()
-                        .concat(userDTO.getExtendUser().getFilePath())
-                        .concat(userDTO.getExtendUser().getFileName())
-                );
-                result.add(userDTO);
-            }
+            result.add(userDTO);
         }
 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/users");
