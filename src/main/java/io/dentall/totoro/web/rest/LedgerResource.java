@@ -188,6 +188,7 @@ public class LedgerResource {
 
                 Patient p = patientService.findPatientById(d.getLedgerGroup().getPatientId());
                 ledgerVM.setPatient(p);
+                ledgerVM.setDoctorId(Long.valueOf(d.getDoctor()));
 
                 return ledgerVM;
             })
