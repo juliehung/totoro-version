@@ -385,6 +385,18 @@ public class UserService {
                 extendUser.setNationalId(updateExtendUser.getNationalId());
             }
 
+            if (updateExtendUser.getLicenseNo() != null) {
+                extendUser.setLicenseNo(updateExtendUser.getLicenseNo());
+            }
+
+            if (updateExtendUser.getPracticeDate() != null) {
+                extendUser.setPracticeDate(updateExtendUser.getPracticeDate());
+            }
+
+            if (updateExtendUser.getQualification() != null) {
+                extendUser.setQualification(updateExtendUser.getQualification());
+            }
+
             log.debug("Changed Information for ExtendUser: {}", extendUser);
         }
     }

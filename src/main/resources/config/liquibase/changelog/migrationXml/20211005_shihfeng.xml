@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20211005-shihfeng_1" author="ShihFeng">
+        <sql>
+            update relationship_options set jhi_order = 5 where id = 4;
+            insert into relationship_options (id, code, name, jhi_order) values (5, 'siblings', '兄弟姊妹', 4);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
