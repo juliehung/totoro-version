@@ -46,6 +46,10 @@ public class ImageGcsBusinessService extends ImageBusinessService {
 
     private final String CLINIC_NAME;
 
+    private final String AVATAR_FILE_PATH_FORMAT = "users/%d/";
+
+    private final String AVATAR_FILE_NAME = "avatar.png";
+
     public ImageGcsBusinessService(
         ImageRepository imageRepository,
         @Value("${gcp.bucket-name}") String bucketName,
@@ -143,16 +147,27 @@ public class ImageGcsBusinessService extends ImageBusinessService {
         byte[] content
     ) throws Exception {
         String filePath = String.format(
-            "users/%d/",
+            AVATAR_FILE_PATH_FORMAT,
             id
         );
-        String fileName = "avatar.png";
 
         this.uploadFile(
             filePath,
-            fileName,
+            AVATAR_FILE_NAME,
             content,
             MediaType.IMAGE_PNG_VALUE
         );
+    }
+
+    // id must be user's id
+    public String getAvatarFilePath(Long id) {
+        return String.format(
+            this.AVATAR_FILE_PATH_FORMAT,
+            id
+        );
+    }
+
+    public String getAvatarFileName() {
+        return this.AVATAR_FILE_NAME;
     }
 }

@@ -13,6 +13,7 @@ import io.dentall.totoro.service.UserService;
 import io.dentall.totoro.service.UserServiceV2;
 import io.dentall.totoro.service.dto.PasswordChangeDTO;
 import io.dentall.totoro.service.dto.UserDTO;
+import io.dentall.totoro.service.mapper.UserMapper;
 import io.dentall.totoro.web.rest.errors.*;
 import io.dentall.totoro.web.rest.util.AvatarUtil;
 import io.dentall.totoro.web.rest.vm.AvatarVM;
@@ -56,13 +57,16 @@ public class AccountResource {
 
     private final ImageGcsBusinessService imageGcsBusinessService;
 
+    private final UserMapper userMapper;
+
     public AccountResource(
         UserRepository userRepository,
         UserService userService,
         MailService mailService,
         AvatarService avatarService,
         UserServiceV2 userServiceV2,
-        ImageGcsBusinessService imageGcsBusinessService
+        ImageGcsBusinessService imageGcsBusinessService,
+        UserMapper userMapper
     ) {
         this.userRepository = userRepository;
         this.userService = userService;
@@ -70,6 +74,7 @@ public class AccountResource {
         this.avatarService = avatarService;
         this.userServiceV2 = userServiceV2;
         this.imageGcsBusinessService = imageGcsBusinessService;
+        this.userMapper = userMapper;
     }
 
     /**
@@ -129,9 +134,19 @@ public class AccountResource {
     @GetMapping("/account")
     @Timed
     public UserDTO getAccount() {
-        return userService.getUserWithAuthorities()
-            .map(UserDTO::new)
-            .orElseThrow(() -> new InternalServerErrorException("User could not be found"));
+        log.debug("REST request to get Account");
+
+        User user = userService.getUserWithAuthorities()
+            .orElseThrow(() -> new BadRequestAlertException("Can not found user by id", "USER", "notfound"));
+        user.getExtendUser();
+        UserDTO userDTO = userMapper.userToUserDTO(user);
+        userDTO.setImageUrl(
+            imageGcsBusinessService.getUrlForUpload()
+                .concat(userDTO.getExtendUser().getFilePath())
+                .concat(userDTO.getExtendUser().getFileName())
+        );
+
+        return userDTO;
     }
 
     /**
@@ -230,6 +245,8 @@ public class AccountResource {
 
         user.getExtendUser().setAvatar(new byte[]{});
         user.getExtendUser().setAvatarContentType("");
+        user.getExtendUser().setFilePath(imageGcsBusinessService.getAvatarFilePath(user.getId()));
+        user.getExtendUser().setFileName(imageGcsBusinessService.getAvatarFileName());
 
         return "";
     }

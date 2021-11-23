@@ -8,6 +8,7 @@ import io.dentall.totoro.security.AuthoritiesConstants;
 import io.dentall.totoro.service.MailService;
 import io.dentall.totoro.service.UserService;
 import io.dentall.totoro.service.dto.UserDTO;
+import io.dentall.totoro.service.mapper.UserDomainMapper;
 import io.dentall.totoro.service.mapper.UserMapper;
 import io.dentall.totoro.web.rest.errors.*;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
@@ -172,8 +173,8 @@ public class UserResource {
                 ) {
                     imageGcsBusinessService.uploadUserAvatar(user.getId(), user.getExtendUser().getAvatar());
                     user.getExtendUser().setAvatar(new byte[]{});
-                    user.getExtendUser().setFilePath(String.format("users/%d/", user.getId()));
-                    user.getExtendUser().setFileName("avatar.png");
+                    user.getExtendUser().setFilePath(imageGcsBusinessService.getAvatarFilePath(user.getId()));
+                    user.getExtendUser().setFileName(imageGcsBusinessService.getAvatarFileName());
                 }
 
                 if(StringUtils.isNotBlank(user.getExtendUser().getFilePath()) &&
@@ -212,11 +213,22 @@ public class UserResource {
      */
     @GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}")
     @Timed
-    public ResponseEntity<UserDTO> getUser(@PathVariable String login) {
+    @Transactional
+    public UserDTO getUser(@PathVariable String login) {
         log.debug("REST request to get User : {}", login);
-        return ResponseUtil.wrapOrNotFound(
-            userService.getUserWithAuthoritiesByLogin(login)
-                .map(UserDTO::new));
+        ImageGcsBusinessService imageGcsBusinessService = applicationContext.getBean(ImageGcsBusinessService.class);
+
+        User user = userService.getUserWithAuthoritiesByLogin(login)
+            .orElseThrow(() -> new BadRequestAlertException("Can not found user by id", "USER", "notfound"));
+        user.getExtendUser();
+        UserDTO userDTO = userMapper.userToUserDTO(user);
+        userDTO.setImageUrl(
+            imageGcsBusinessService.getUrlForUpload()
+                .concat(userDTO.getExtendUser().getFilePath())
+                .concat(userDTO.getExtendUser().getFileName())
+        );
+
+        return userDTO;
     }
 
     /**
