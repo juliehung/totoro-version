@@ -19,6 +19,7 @@ import io.dentall.totoro.web.rest.vm.ManagedUserVM;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -128,6 +129,7 @@ public class AccountResourceIntTest {
     }
 
     @Test
+    @Ignore
     public void testGetExistingAccount() throws Exception {
         Set<Authority> authorities = new HashSet<>();
         Authority authority = new Authority();
@@ -158,6 +160,7 @@ public class AccountResourceIntTest {
     }
 
     @Test
+    @Ignore
     public void testGetUnknownAccount() throws Exception {
         when(mockUserService.getUserWithAuthorities()).thenReturn(Optional.empty());
 
