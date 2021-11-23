@@ -19,6 +19,7 @@ import io.github.jhipster.web.util.ResponseUtil;
 import io.micrometer.core.instrument.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -58,7 +59,6 @@ import java.util.*;
  * <p>
  * Another option would be to have a specific JPA entity graph to handle this case.
  */
-@Profile("img-gcs")
 @RestController
 @RequestMapping("/api")
 public class UserResource {
@@ -71,7 +71,7 @@ public class UserResource {
 
     private final MailService mailService;
 
-    private final ImageGcsBusinessService imageGcsBusinessService;
+    private ApplicationContext applicationContext;
 
     private final UserMapper userMapper;
 
@@ -79,13 +79,13 @@ public class UserResource {
         UserService userService,
         UserRepository userRepository,
         MailService mailService,
-        ImageGcsBusinessService imageGcsBusinessService,
+        ApplicationContext applicationContext,
         UserMapper userMapper
     ) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.mailService = mailService;
-        this.imageGcsBusinessService = imageGcsBusinessService;
+        this.applicationContext = applicationContext;
         this.userMapper = userMapper;
     }
 
@@ -160,6 +160,7 @@ public class UserResource {
     @Timed
     public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) throws Exception {
         List<UserDTO> result = new ArrayList<>();
+        ImageGcsBusinessService imageGcsBusinessService = applicationContext.getBean(ImageGcsBusinessService.class);
 
         Page<User> page = userService.getAllManagedUsersWithExtendUser(pageable);
         for (User user : page.getContent()) {
