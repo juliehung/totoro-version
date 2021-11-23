@@ -4,10 +4,14 @@ import java.util.List;
 
 import javax.persistence.criteria.JoinType;
 
+import io.dentall.totoro.repository.LedgerGroupRepository;
+import io.dentall.totoro.repository.LedgerReceiptRepository;
+import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,8 +37,18 @@ public class LedgerQueryService extends QueryService<Ledger> {
 
     private final LedgerRepository ledgerRepository;
 
-    public LedgerQueryService(LedgerRepository ledgerRepository) {
+    private final LedgerGroupRepository ledgerGroupRepository;
+
+    private final LedgerReceiptRepository ledgerReceiptRepository;
+
+    public LedgerQueryService(
+        LedgerRepository ledgerRepository,
+        LedgerGroupRepository ledgerGroupRepository,
+        LedgerReceiptRepository ledgerReceiptRepository
+    ) {
         this.ledgerRepository = ledgerRepository;
+        this.ledgerGroupRepository = ledgerGroupRepository;
+        this.ledgerReceiptRepository = ledgerReceiptRepository;
     }
 
     /**
@@ -59,7 +73,23 @@ public class LedgerQueryService extends QueryService<Ledger> {
     public Page<Ledger> findByCriteria(LedgerCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Ledger> specification = createSpecification(criteria);
-        return ledgerRepository.findAll(specification, page);
+        page.getSortOr(new Sort(Sort.Direction.DESC, "date"));
+
+        Page<Ledger> ledgers = ledgerRepository.findAll(specification, page);
+        for (Ledger ledger : ledgers) {
+            for (LedgerReceipt ledgerReceipt : ledger.getLedgerReceipts()) {
+                ledgerReceipt.getLedgerReceiptPrintedRecords();
+            }
+        }
+        return ledgers;
+    }
+
+    @Transactional(readOnly = true)
+    public LedgerReceipt findReceiptsById(Long id) {
+        LedgerReceipt ledgerReceipt = ledgerReceiptRepository.findById(id)
+            .orElseThrow(() -> new BadRequestAlertException("Can not found ledger receipt by id", "LEDGER", "notfound"));
+
+        return ledgerReceipt;
     }
 
     /**
@@ -83,8 +113,13 @@ public class LedgerQueryService extends QueryService<Ledger> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildSpecification(criteria.getId(), Ledger_.id));
             }
+            if (criteria.getGid() != null) {
+                specification = specification.and(buildSpecification(criteria.getGid(),
+                    root -> root.join(Ledger_.ledgerGroup, JoinType.LEFT).get(LedgerGroup_.id)));
+            }
             if (criteria.getAmount() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getAmount(), Ledger_.amount));
+                specification = specification.and(buildSpecification(criteria.getAmount(),
+                    root -> root.join(Ledger_.ledgerGroup, JoinType.LEFT).get(LedgerGroup_.amount)));
             }
             if (criteria.getCharge() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getCharge(), Ledger_.charge));
@@ -95,42 +130,28 @@ public class LedgerQueryService extends QueryService<Ledger> {
             if (criteria.getNote() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getNote(), Ledger_.note));
             }
-            if (criteria.getDoctor() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getDoctor(), Ledger_.doctor));
-            }
-            if (criteria.getGid() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getGid(), Ledger_.gid));
+            if (criteria.getDoctorId() != null) {
+                specification = specification.and(buildSpecification(criteria.getDoctorId(),
+                    root -> root.join(Ledger_.ledgerGroup, JoinType.LEFT).get(LedgerGroup_.doctorId)));
             }
             if (criteria.getProjectCode() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getProjectCode(), Ledger_.projectCode));
+                specification = specification.and(buildSpecification(criteria.getProjectCode(),
+                    root -> root.join(Ledger_.ledgerGroup, JoinType.LEFT).get(LedgerGroup_.projectCode)));
             }
             if (criteria.getDisplayName() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getDisplayName(), Ledger_.displayName));
+                specification = specification.and(buildSpecification(criteria.getDisplayName(),
+                    root -> root.join(Ledger_.ledgerGroup, JoinType.LEFT).get(LedgerGroup_.displayName)));
             }
             if (criteria.getType() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getType(), Ledger_.type));
+                specification = specification.and(buildSpecification(criteria.getType(),
+                    root -> root.join(Ledger_.ledgerGroup, JoinType.LEFT).get(LedgerGroup_.type)));
             }
             if (criteria.getDate() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getDate(), Ledger_.date));
             }
             if (criteria.getPatientId() != null) {
-                specification = specification.and(buildSpecification(criteria.getPatientId(), Ledger_.patientId));
-            }
-            if (criteria.getCreatedDate() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getCreatedDate(), Ledger_.createdDate));
-            }
-            if (criteria.getCreatedBy() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getCreatedBy(), Ledger_.createdBy));
-            }
-            if (criteria.getLastModifiedDate() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getLastModifiedDate(), Ledger_.lastModifiedDate));
-            }
-            if (criteria.getLastModifiedBy() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getLastModifiedBy(), Ledger_.lastModifiedBy));
-            }
-            if (criteria.getTreatmentPlanId() != null) {
-                specification = specification.and(buildSpecification(criteria.getTreatmentPlanId(),
-                    root -> root.join(Ledger_.treatmentPlan, JoinType.LEFT).get(TreatmentPlan_.id)));
+                specification = specification.and(buildSpecification(criteria.getPatientId(),
+                    root -> root.join(Ledger_.ledgerGroup, JoinType.LEFT).get(LedgerGroup_.patientId)));
             }
         }
         return specification;

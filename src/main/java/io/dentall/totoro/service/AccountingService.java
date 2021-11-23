@@ -130,6 +130,10 @@ public class AccountingService {
                     accounting.setOtherDealComment(updateAccounting.getOtherDealComment());
                 }
 
+                if (updateAccounting.getPrinted() != null) {
+                    accounting.setPrinted(updateAccounting.getPrinted());
+                }
+
                 return accounting;
             })
             .get();

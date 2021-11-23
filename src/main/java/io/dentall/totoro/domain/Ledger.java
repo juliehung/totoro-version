@@ -1,5 +1,6 @@
 package io.dentall.totoro.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -14,6 +15,8 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -31,7 +34,7 @@ public class Ledger implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @NotNull
+    @Deprecated
     @Column(name = "amount", nullable = false)
     private Double amount;
 
@@ -39,7 +42,7 @@ public class Ledger implements Serializable {
     @Column(name = "charge", nullable = false)
     private Double charge;
 
-    @NotNull
+    @Deprecated
     @Column(name = "arrears", nullable = false)
     private Double arrears;
 
@@ -47,24 +50,28 @@ public class Ledger implements Serializable {
     @Column(name = "note", length = 5100)
     private String note;
 
+    // 由於開發期間預計有可能有 uwp, web 混用的狀況，所以導致，部分介面仍保有 doctor 這個欄位
+    // 若在之後整理時，確定不被使用了，可以在統整成統一個欄位名稱
+    @Deprecated
     @Column(name = "doctor")
     private String doctor;
 
-    @Column(name = "gid")
-    private Long gid;
-
+    @Deprecated
     @Column(name = "display_name")
     private String displayName;
 
+    @Deprecated
     @Column(name = "project_code")
     private String projectCode;
 
+    @Deprecated
     @Column(name = "jhi_type")
     private String type;
 
     @Column(name = "jhi_date")
     private Instant date;
 
+    @Deprecated
     @Column(name = "patient_id")
     private Long patientId;
 
@@ -91,9 +98,22 @@ public class Ledger implements Serializable {
     private String lastModifiedBy;
 
     @ManyToOne
-    private TreatmentPlan treatmentPlan;
+    @JsonIgnore
+    @JoinColumn(name = "gid")
+    private LedgerGroup ledgerGroup;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    @ManyToMany(
+        mappedBy = "ledgers"
+    )
+    private List<LedgerReceipt> ledgerReceipts = new ArrayList<>();
+
+    public List<LedgerReceipt> getLedgerReceipts() {
+        return ledgerReceipts;
+    }
+
+    public void setLedgerReceipts(List<LedgerReceipt> ledgerReceipts) {
+        this.ledgerReceipts = ledgerReceipts;
+    }
 
     public Ledger includeStampTax(Boolean includeStampTax) {
         this.includeStampTax = includeStampTax;
@@ -235,19 +255,6 @@ public class Ledger implements Serializable {
         this.doctor = doctor;
     }
 
-    public Long getGid() {
-        return gid;
-    }
-
-    public Ledger gid(Long gid) {
-        this.gid = gid;
-        return this;
-    }
-
-    public void setGid(Long gid) {
-        this.gid = gid;
-    }
-
     public String getDisplayName() {
         return displayName;
     }
@@ -313,20 +320,6 @@ public class Ledger implements Serializable {
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    public TreatmentPlan getTreatmentPlan() {
-        return treatmentPlan;
-    }
-
-    public Ledger treatmentPlan(TreatmentPlan treatmentPlan) {
-        this.treatmentPlan = treatmentPlan;
-        return this;
-    }
-
-    public void setTreatmentPlan(TreatmentPlan treatmentPlan) {
-        this.treatmentPlan = treatmentPlan;
-    }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -340,6 +333,14 @@ public class Ledger implements Serializable {
             return false;
         }
         return Objects.equals(getId(), ledger.getId());
+    }
+
+    public LedgerGroup getLedgerGroup() {
+        return ledgerGroup;
+    }
+
+    public void setLedgerGroup(LedgerGroup ledgerGroup) {
+        this.ledgerGroup = ledgerGroup;
     }
 
     @Override
@@ -356,7 +357,6 @@ public class Ledger implements Serializable {
             ", arrears=" + getArrears() +
             ", note='" + getNote() + "'" +
             ", doctor='" + getDoctor() + "'" +
-            ", gid=" + getGid() +
             ", displayName='" + getDisplayName() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +

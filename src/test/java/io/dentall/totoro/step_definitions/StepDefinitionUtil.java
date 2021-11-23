@@ -9,4 +9,6 @@ public class StepDefinitionUtil {
     public static final String HIS_SourceType = "HIS";
 
     public static final String DateParamTypeRegularExpression = "(.*年[初|中|底|前]?)?(.*月[初|中|底|前]?)?的?(([當|昨|前|今][日|天])|(\\d+號))?";
+
+    public static final String DurationParamTypeRegularExpression = "(\\d{4})-(\\d{1,2})-(\\d{1,2})~(\\d{4})-(\\d{1,2})-(\\d{1,2})";
 }

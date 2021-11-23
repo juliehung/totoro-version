@@ -83,6 +83,7 @@ jobs:
             dev-deploy: ${{ steps.setup-props-value.outputs.dev-deploy }}
             gcp-release: ${{ steps.setup-props-value.outputs.gcp-release }}
             firebase-release: ${{ steps.setup-props-value.outputs.firebase-release }}
+            run-nhi-rule-test: ${{ steps.setup-props-value.outputs.run-nhi-rule-test }}
         steps:
             -   name: "Check out totoro admin"
                 uses: actions/checkout@v2

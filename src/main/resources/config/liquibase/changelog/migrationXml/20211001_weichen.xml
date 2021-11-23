@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20211001-weichen" author="WeiChen">
+        <sql>
+            create table ledger_group
+            (
+                id bigint not null
+                    constraint pk_ledger_group
+                        primary key,
+                jhi_date timestamp,
+                patient_id bigint,
+                doctor_id bigint,
+                display_name varchar(255),
+                project_code varchar(255),
+                jhi_type varchar(255),
+                amount double precision not null,
+                created_by varchar(50),
+                created_date timestamp,
+                last_modified_by varchar(50),
+                last_modified_date timestamp
+            );
+        </sql>
+        <createIndex tableName="ledger_group" indexName="idx_ledger_group_id">
+            <column name="id"/>
+        </createIndex>
+        <createIndex tableName="ledger_group" indexName="idx_ledger_group_patient_id">
+            <column name="patient_id"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

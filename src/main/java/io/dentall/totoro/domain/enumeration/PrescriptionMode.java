@@ -4,7 +4,7 @@ package io.dentall.totoro.domain.enumeration;
  * The PrescriptionMode enumeration.
  */
 public enum PrescriptionMode {
-    SELF("01"), DELIVERY("02"), NONE("");
+    SELF("01"), DELIVERY("02"), NONE(""), PROXIED_INSPECTION("04");
 
     private final String value;
 

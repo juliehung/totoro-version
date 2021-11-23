@@ -3,6 +3,7 @@ package io.dentall.totoro.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.dentall.totoro.domain.enumeration.PrescriptionMode;
 import io.dentall.totoro.domain.enumeration.TreatmentProcedureStatus;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -65,6 +66,15 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     @Column(name = "nhi_icd_10_cm")
     private String nhiIcd10Cm;
 
+    // 醫令調劑
+    @Enumerated(EnumType.STRING)
+    @Column(name = "jhi_mode")
+    private PrescriptionMode mode;
+
+    // 代檢醫事機構代碼
+    @Column(name = "proxied_inspection_hospital_code")
+    private String proxiedInspectionHospitalCode;
+
     @ManyToOne
     @JsonIgnoreProperties("")
     private NhiProcedure nhiProcedure;
@@ -101,6 +111,14 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     @JsonIgnore
     private Instant createdDate;
 
+    public PrescriptionMode getMode() {
+        return mode;
+    }
+
+    public void setMode(PrescriptionMode mode) {
+        this.mode = mode;
+    }
+
     public Long getId() {
         return id;
     }
@@ -116,6 +134,14 @@ public class TreatmentProcedure extends AbstractDoctorAndAuditingEntity<Treatmen
     public TreatmentProcedure status(TreatmentProcedureStatus status) {
         this.status = status;
         return this;
+    }
+
+    public String getProxiedInspectionHospitalCode() {
+        return proxiedInspectionHospitalCode;
+    }
+
+    public void setProxiedInspectionHospitalCode(String proxiedInspectionHospitalCode) {
+        this.proxiedInspectionHospitalCode = proxiedInspectionHospitalCode;
     }
 
     public void setStatus(TreatmentProcedureStatus status) {

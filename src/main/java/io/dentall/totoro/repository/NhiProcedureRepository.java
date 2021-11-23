@@ -19,4 +19,6 @@ public interface NhiProcedureRepository extends JpaRepository<NhiProcedure, Long
     Optional<NhiProcedureTable> findNhiProcedureById(Long id);
 
     List<PlainDisposalInfoListDTO> findByCodeInOrderByCode(List<String> code);
+
+    boolean existsByCode(String code);
 }

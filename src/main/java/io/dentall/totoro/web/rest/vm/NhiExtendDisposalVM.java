@@ -24,6 +24,8 @@ public class NhiExtendDisposalVM implements Serializable {
     @JsonUnwrapped
     private NhiExtendDisposal nhiExtendDisposal;
 
+    private Long dependedDisposalId;
+
     public NhiExtendDisposalVM() {
 
     }
@@ -72,5 +74,13 @@ public class NhiExtendDisposalVM implements Serializable {
 
     public void setNhiExtendDisposal(NhiExtendDisposal nhiExtendDisposal) {
         this.nhiExtendDisposal = nhiExtendDisposal;
+    }
+
+    public Long getDependedDisposalId() {
+        return dependedDisposalId;
+    }
+
+    public void setDependedDisposalId(Long dependedDisposalId) {
+        this.dependedDisposalId = dependedDisposalId;
     }
 }

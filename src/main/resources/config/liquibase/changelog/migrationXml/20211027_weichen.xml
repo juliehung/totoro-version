@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <!-- 設計表示過去資料需視為未列印 -->
+    <changeSet id="20211027-weichen" author="WeiChen">
+        <sql>
+            alter table accounting add column printed boolean;
+        </sql>
+        <sql>
+            update accounting set printed = false;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

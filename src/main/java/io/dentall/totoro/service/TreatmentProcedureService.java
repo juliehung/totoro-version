@@ -322,6 +322,14 @@ public class TreatmentProcedureService {
                         .forEach(todo -> todo.getTreatmentProcedures().remove(treatmentProcedure));
                 }
 
+                if (updateTreatmentProcedure.getProxiedInspectionHospitalCode() != null) {
+                    treatmentProcedure.setProxiedInspectionHospitalCode(updateTreatmentProcedure.getProxiedInspectionHospitalCode());
+                }
+
+                if (updateTreatmentProcedure.getMode() != null) {
+                    treatmentProcedure.setMode(updateTreatmentProcedure.getMode());
+                }
+
                 return treatmentProcedure;
             })
             .get();
