@@ -5,11 +5,11 @@ import io.dentall.totoro.domain.*;
 import io.dentall.totoro.web.rest.vm.*;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 @Mapper(
-    imports = { ImageGcsBusinessService.class },
     nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
 )
 @DecoratedWith(LedgerGroupMapperDecorator.class)
