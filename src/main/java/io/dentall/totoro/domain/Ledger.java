@@ -50,6 +50,8 @@ public class Ledger implements Serializable {
     @Column(name = "note", length = 5100)
     private String note;
 
+    // 由於開發期間預計有可能有 uwp, web 混用的狀況，所以導致，部分介面仍保有 doctor 這個欄位
+    // 若在之後整理時，確定不被使用了，可以在統整成統一個欄位名稱
     @Deprecated
     @Column(name = "doctor")
     private String doctor;
