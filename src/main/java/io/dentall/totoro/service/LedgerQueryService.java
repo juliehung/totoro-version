@@ -89,12 +89,6 @@ public class LedgerQueryService extends QueryService<Ledger> {
         LedgerReceipt ledgerReceipt = ledgerReceiptRepository.findById(id)
             .orElseThrow(() -> new BadRequestAlertException("Can not found ledger receipt by id", "LEDGER", "notfound"));
 
-        try {
-            ledgerReceipt.getLedgers().get(0).getLedgerGroup();
-        } catch (Exception e) {
-            throw new BadRequestAlertException("Can not found ledger receipt by id", "LEDGER", "fieldrequired");
-        }
-
         return ledgerReceipt;
     }
 
