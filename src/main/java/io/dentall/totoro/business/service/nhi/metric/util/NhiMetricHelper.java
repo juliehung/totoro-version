@@ -210,7 +210,8 @@ public class NhiMetricHelper {
     private static long calculatePtCount(
         Long disposalId,
         LocalDate date,
-        long patientId, String cardNumber,
+        Long patientId,
+        String cardNumber,
         long count,
         Set<String> existPatientCardNumber,
         Set<Long> existDisposal

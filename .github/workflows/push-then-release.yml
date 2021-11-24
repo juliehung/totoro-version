@@ -47,6 +47,54 @@ jobs:
                 env:
                     SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/totoro
 
+    #    Nhi-Rule-Test-Part1:
+    #        runs-on: [ self-hosted, dentall-his-runner ]
+    #        needs: [ Props ]
+    #        env:
+    #            RUN_NHI_RULE_TEST: ${{ needs.Props.outputs.run-nhi-rule-test }}
+    #        steps:
+    #            -   name: "Check out branch"
+    #                uses: actions/checkout@v2
+    #            -   name: "Set up JDK 1.8"
+    #                uses: actions/setup-java@v2
+    #                with:
+    #                    java-version: '8'
+    #                    distribution: 'adopt-openj9'
+    #            -   name: "Grant execute permission for gradlew"
+    #                run: chmod +x gradlew
+    #            -   name: "Run NHI Rule Integration Test Automatic"
+    #                if: ${{ env.RUN_NHI_RULE_TEST == 'true' }}
+    #                run: ./gradlew cucumber_nhi_rule_1
+    #            -   name: "Upload Cucumber Report"
+    #                if: ${{ failure() }}
+    #                uses: actions/upload-artifact@v2.2.4
+    #                with:
+    #                    name: nhirule1-artifact
+    #                    path: build/reports/nhirule1/
+
+    #    Nhi-Rule-Test-Part2:
+    #        runs-on: [ self-hosted, dentall-his-runner-2 ]
+    #        needs: [ Props ]
+    #        env:
+    #            RUN_NHI_RULE_TEST: ${{ needs.Props.outputs.run-nhi-rule-test }}
+    #        steps:
+    #            -   name: "Check out branch"
+    #                uses: actions/checkout@v2
+    #            -   name: "Set up JDK 1.8"
+    #                uses: actions/setup-java@v2
+    #                with:
+    #                    java-version: '8'
+    #                    distribution: 'adopt-openj9'
+    #            -   name: "Run NHI Rule Integration Test Automatic"
+    #                if: ${{ env.RUN_NHI_RULE_TEST == 'true' }}
+    #                run: ./gradlew.bat cucumber_nhi_rule_2
+    #            -   name: "Upload Cucumber Report"
+    #                if: ${{ failure() }}
+    #                uses: actions/upload-artifact@v2.2.4
+    #                with:
+    #                    name: nhirule2-artifact
+    #                    path: build/reports/nhirule2/
+
     Metric-Test:
         runs-on: ubuntu-18.04
         steps:

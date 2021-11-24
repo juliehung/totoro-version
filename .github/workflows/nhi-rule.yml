@@ -5,10 +5,6 @@ name: NHI Rule Integration Test
 
 on:
     workflow_dispatch:
-        inputs:
-            tags:
-                description: 'Which Cucumber Tags you want to run'
-                required: true
     push:
         branches:
             - '**nhi-rule**'
@@ -17,27 +13,33 @@ on:
             - '**nhi-rule**'
 
 jobs:
-    nhi-rule-test:
+    Nhi-Rule-Test:
         runs-on: [ self-hosted, dentall-his-runner ]
+        strategy:
+            matrix:
+                tag: [ "@nhi-34-series", "@nhi-8-series and @part1", "@nhi-8-series and @part2", "@nhi-89-series and @part1", "@nhi-89-series and @part2", "@nhi-89-series and @part3", "@nhi-89-series and @part4", "@nhi-89-series and @part5", "@nhi-90-series and @part1", "@nhi-90-series and @part2", "@nhi-90-series and @part3", "@nhi-91-series and @part1", "@nhi-91-series and @part2", "@nhi-91-series and @part3", "@nhi-92-series and @part1", "@nhi-92-series and @part2", "@nhi and (not @nhi-34-series and not @nhi-8-series and not @nhi-89-series and not @nhi-90-series and not @nhi-91-series and not @nhi-92-series)" ]
         steps:
-            -   name: Check out branch
+            -   name: "Check out branch"
                 uses: actions/checkout@v2
-            -   name: Set up JDK 1.8
+            -   name: "Set up JDK 1.8"
                 uses: actions/setup-java@v2
                 with:
                     java-version: '8'
                     distribution: 'adopt-openj9'
-            -   name: Grant execute permission for gradlew
+            -   name: "Grant execute permission for gradlew"
+                if: ${{ runner.os == 'Linux' }}
                 run: chmod +x gradlew
-            -   name: Run NHI Rule Integration Test Automatic
-                if: ${{github.event.inputs.tags == '' }}
-                run: ./gradlew cucumber_nhi_rule
-            -   name: Run NHI Rule Integration Test Manually
-                if: ${{github.event.inputs.tags != '' }}
-                run: ./gradlew -Pcucumber.filter.tags=${{github.event.inputs.tags}} cucumber_nhi_rule
-            -   name: Upload Cucumber Report
+                shell: bash
+            -   name: "Run NHI Rule Integration Test Automatic on Linux"
+                if: ${{ runner.os == 'Linux' }}
+                run: ./gradlew -Pcucumber.filter.tags="${{ matrix.tag }}" cucumber_nhi_rule
+                shell: bash
+            -   name: "Run NHI Rule Integration Test Automatic on Windows"
+                if: ${{ runner.os == 'Windows' }}
+                run: ./gradlew.bat -P cucumber.filter.tags="${{ matrix.tag }}" cucumber_nhi_rule
+            -   name: "Upload Cucumber Report"
                 if: ${{ failure() }}
                 uses: actions/upload-artifact@v2.2.4
                 with:
-                    name: cucumber-artifact
-                    path: build/reports/cucumber/
+                    name: nhirule-artifact-${{ hashFiles('build/reports/nhirule/cucumber.html') }}
+                    path: build/reports/nhirule/

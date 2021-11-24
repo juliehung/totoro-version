@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
  * Normal mappers are generated using MapStruct, this one is hand-coded as MapStruct
  * support is still in beta, and requires a manual step with an IDE.
  */
+@Deprecated
 @Service
 public class UserMapper {
 

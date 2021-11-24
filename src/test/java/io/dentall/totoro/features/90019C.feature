@@ -1,4 +1,4 @@
-@nhi @nhi-90-series
+@nhi @nhi-90-series @part2
 Feature: 90019C 恆牙根管治療（四根）
 
     Scenario Outline: 全部檢核成功

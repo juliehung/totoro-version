@@ -1,4 +1,4 @@
-@nhi @nhi-91-series
+@nhi @nhi-91-series @part2
 Feature: 91012C 牙齦切除術 － 1/3 顎
 
     Scenario Outline: 全部檢核成功

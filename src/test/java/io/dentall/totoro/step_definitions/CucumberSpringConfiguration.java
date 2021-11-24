@@ -12,7 +12,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 
 @CucumberContextConfiguration
-@SpringBootTest(classes = TotoroApp.class)
+@SpringBootTest(classes = TotoroApp.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = {NhiMetricServiceTest.class, MetricTestInfoHolder.class, TimeConfig.class}, initializers = CucumberSpringConfiguration.Initializer.class)
 public class CucumberSpringConfiguration {
 

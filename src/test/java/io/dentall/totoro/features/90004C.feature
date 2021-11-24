@@ -1,4 +1,4 @@
-@nhi @nhi-90-series
+@nhi @nhi-90-series @part1
 Feature: 90004C 齒內治療緊急處理
 
     Scenario Outline: 全部檢核成功

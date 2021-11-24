@@ -309,6 +309,17 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public Page<User> getAllManagedUsersWithExtendUser(Pageable pageable) {
+        Page<User> users = userRepository.findAllByLoginNot(pageable, Constants.ANONYMOUS_USER);
+
+        for (User user : users) {
+            user.getExtendUser();
+        }
+
+        return users;
+    }
+
+    @Transactional(readOnly = true)
     public Page<UserDTO> getAllManagedUsers(Pageable pageable) {
         return userRepository.findAllByLoginNot(pageable, Constants.ANONYMOUS_USER).map(UserDTO::new);
     }

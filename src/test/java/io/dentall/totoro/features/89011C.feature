@@ -1,4 +1,4 @@
-@nhi @nhi-89-series
+@nhi @nhi-89-series @part2
 Feature: 89011C 玻璃離子體充填
 
     Scenario Outline: 全部檢核成功
@@ -129,23 +129,23 @@ Feature: 89011C 玻璃離子體充填
             | 89011C       | 51         | DL           | 30                | 90007C           | 51             | NotPass   |
             | 89011C       | 51         | DL           | 30                | 90007C           | 52             | Pass      |
 
-    Scenario Outline: （IC）未曾申報過 90007C 代碼
+    Scenario Outline: （IC）同牙位未曾申報過 90007C 代碼
         Given 建立醫師
         Given Wind 24 歲病人
         Given 新增健保醫療:
-            | PastDays          | NhiCode          | Teeth |
-            | <PastMedicalDays> | <MedicalNhiCode> | 54    |
+            | PastDays          | NhiCode          | Teeth          |
+            | <PastMedicalDays> | <MedicalNhiCode> | <MedicalTeeth> |
         Given 建立預約
         Given 建立掛號
         Given 產生診療計畫
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 任意時間點未曾申報過指定代碼 <MedicalNhiCode>，確認結果是否為 <PassOrNot>
+        Then 任意時間點牙位 <IssueTeeth> 未曾申報過指定代碼 <MedicalNhiCode>，確認結果是否為 <PassOrNot>
         Examples:
-            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | PassOrNot |
-            | 89011C       | 54         | DL           | 30              | 90007C         | NotPass   |
-            | 89011C       | 54         | DL           | 30              | 01271C         | Pass      |
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | PassOrNot |
+            | 89011C       | 54         | DL           | 30              | 90007C         | 54           | NotPass   |
+            | 89011C       | 54         | DL           | 30              | 90007C         | 55           | Pass      |
 
     Scenario Outline: （HIS）同牙位前30天內不得有89006C，但如果這中間有90001C, 90002C, 90003C, 90019C, 90020C則例外
         Given 建立醫師
@@ -220,9 +220,9 @@ Feature: 89011C 玻璃離子體充填
         Given 建立醫師
         Given Wind 24 歲病人
         Given 新增健保醫療:
-            | PastDays                | NhiCode          | Teeth             |
-            | <89006CPastMedicalDays> | 89006C           | <MedicalTeeth>    |
-            | <PastMedicalDays>       | <MedicalNhiCode> | <MedicalTeeth>    |
+            | PastDays                | NhiCode          | Teeth          |
+            | <89006CPastMedicalDays> | 89006C           | <MedicalTeeth> |
+            | <PastMedicalDays>       | <MedicalNhiCode> | <MedicalTeeth> |
         Given 建立預約
         Given 建立掛號
         Given 產生診療計畫

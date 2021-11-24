@@ -369,18 +369,43 @@ dependencies {
     // POI
     implementation group: 'org.apache.poi', name: 'poi', version: '5.0.0'
     testCompile group: 'org.apache.poi', name: 'poi', version: '5.0.0'
+
+    // TestContainer
+    testCompile "org.testcontainers:postgresql:1.16.2"
+    testCompile "org.testcontainers:junit-jupiter:1.16.2"
+}
+
+task pathingJar(type: Jar) {
+    classifier 'pathing'
+    doFirst {
+        manifest {
+            attributes 'Class-Path': configurations.cucumberRuntime.files.collect { project.uri(it) }.join(' ')
+        }
+    }
+    dependsOn configurations.cucumberRuntime
 }
 
 task cucumber_nhi_rule() {
-    def cucumberTags = project.getProperties().get("cucumber.filter.tags", "@nhi")
-    dependsOn assemble, testClasses
+    def outputDir = "nhirule"
+    def cucumberTags = project.getProperties().get("cucumber.filter.tags")
+    def mqNettyPort = mqNettyPort()
+    def mattPort = mqttPort()
+    def wsPort = wsPort()
+    dependsOn assemble, testClasses, pathingJar
     doLast {
         assert cucumberTags.length() > 0
         javaexec {
             main = "io.cucumber.core.cli.Main"
-            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', 'html:build/reports/cucumber/cucumber.html', '--plugin', 'de.monochromata.cucumber.report.PrettyReports:build/reports/cucumber', '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features']
-            environment = ['spring.profiles.active': 'test,no-swagger,embedded-postgres,no-async-liquibase', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml', 'cucumber.filter.tags': "${cucumberTags}"]
+            environment = ['cucumber.filter.tags': "${cucumberTags}"]
+            args = ['--plugin', "html:${buildDir}/reports/${outputDir}/cucumber.html", '--plugin', "de.monochromata.cucumber.report.PrettyReports:${buildDir}/reports/${outputDir}", '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features']
+            if (isWindows()) {
+                classpath = files("${buildDir}/libs/totoro-pathing.jar") + sourceSets.main.output + sourceSets.test.output
+                systemProperties = ['java.io.tmpdir': "${buildDir}\\tmp", 'spring.profiles.active': 'test,no-swagger,no-async-liquibase,embedded-postgres', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml']
+            } else {
+                classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+                systemProperties = ['spring.artemis.port': "${mqNettyPort}", 'mq.netty.port': "${mqNettyPort}", 'mqtt.port': "${mattPort}", 'mqtt.ws.port': "${wsPort}", 'mqtt.serverURIs': "tcp://localhost:${mattPort}", 'spring.profiles.active': 'test,no-swagger,no-async-liquibase,embedded-postgres', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml']
+            }
+
         }
     }
 }
@@ -393,10 +418,31 @@ task cucumber_metric() {
         javaexec {
             main = "io.cucumber.core.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', 'html:build/reports/cucumber/cucumber-metric.html', '--plugin', 'de.monochromata.cucumber.report.PrettyReports:build/reports/cucumber/cucumber-metric', '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features/metric']
-            environment = ['spring.profiles.active': 'test,no-swagger,embedded-postgres', 'cucumber.filter.tags': "${cucumberTags}"]
+            args = ['--plugin', "html:${buildDir}/reports/metric/cucumber-metric.html", '--plugin', "de.monochromata.cucumber.report.PrettyReports:${buildDir}/reports/metric/cucumber-metric", '--glue', 'io.dentall.totoro.step_definitions', 'src/test/java/io/dentall/totoro/features/metric']
+            environment = ['cucumber.filter.tags': "${cucumberTags}"]
+            systemProperties = ['spring.profiles.active': 'test,no-swagger,no-async-liquibase,embedded-postgres', 'spring.liquibase.change-log': 'classpath:config/liquibase/master.xml']
         }
     }
+}
+
+static def isWindows() {
+    return org.gradle.internal.os.OperatingSystem.current().isWindows()
+}
+
+static def mqNettyPort() {
+    return randomPort(60000, 61000)
+}
+
+static def mqttPort() {
+    return randomPort(2000, 3000)
+}
+
+static def wsPort() {
+    return randomPort(9000, 10000)
+}
+
+static def randomPort(int lower, int upper) {
+    return Math.abs(new Random().nextInt() % (upper - lower)) + lower
 }
 
 /**

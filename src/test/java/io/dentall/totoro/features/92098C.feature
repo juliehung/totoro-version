@@ -1,4 +1,4 @@
-@nhi @nhi-92-series
+@nhi @nhi-92-series @part2
 Feature: 92098C 顱顎關節障礙特殊檢查費-複診
 
     Scenario Outline: 全部檢核成功

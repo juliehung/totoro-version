@@ -1,5 +1,6 @@
 package io.dentall.totoro.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import io.swagger.annotations.ApiModelProperty;
@@ -33,6 +34,8 @@ public class ExtendUser implements Serializable, Avatar {
     @Column(name = "calendar_id")
     private String calendarId;
 
+    @Deprecated
+    @JsonIgnore
     @Lob
     @Column(name = "avatar")
     private byte[] avatar;
@@ -52,6 +55,12 @@ public class ExtendUser implements Serializable, Avatar {
     @Column(name = "qualification")
     @Type(type = "jsonb")
     private Map<String, String> qualification;
+
+    @Column(name = "file_path")
+    private String filePath;
+
+    @Column(name = "file_name")
+    private String fileName;
 
     @OneToOne
     @MapsId
@@ -81,6 +90,26 @@ public class ExtendUser implements Serializable, Avatar {
 
     @OneToMany(mappedBy = "doctor")
     private Set<Calendar> calendars = new HashSet<>();
+
+    public Boolean getFirstLogin() {
+        return firstLogin;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
     public Long getId() {
         return id;

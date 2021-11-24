@@ -1,4 +1,4 @@
-@nhi @nhi-92-series
+@nhi @nhi-92-series @part2
 Feature: 92063C 手術拔除深部阻生齒
 
     Scenario Outline: 全部檢核成功

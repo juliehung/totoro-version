@@ -1,4 +1,4 @@
-@nhi @nhi-92-series
+@nhi @nhi-92-series @part2
 Feature: 92095C 顎顏面骨壞死術後傷口照護
 
     Scenario Outline: 全部檢核成功

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20211111-weichen" author="WeiChen">
+        <sql>
+            update nhi_procedure set expiration_time = null where id in (1, 2, 3, 4, 5, 6, 7, 12, 13, 14, 15, 16, 17, 18);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

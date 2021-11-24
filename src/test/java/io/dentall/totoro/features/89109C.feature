@@ -1,4 +1,4 @@
-@nhi @nhi-89-series
+@nhi @nhi-89-series @part4
 Feature: 89109C 特殊狀況之後牙複合樹脂充填-雙面
 
     Scenario Outline: 全部檢核成功
