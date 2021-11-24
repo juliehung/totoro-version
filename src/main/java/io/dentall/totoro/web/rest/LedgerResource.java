@@ -215,9 +215,21 @@ public class LedgerResource {
         ExampleMatcher matcher = ExampleMatcher.matching()
             .withIgnorePaths("createdDate", "lastModifiedDate", "ledgerGroup.createdDate", "ledgerGroup.lastModifiedDate");
 
-        return LedgerGroupMapper.INSTANCE.ledgerReceiptListToLedgerReceiptExcelVMList(
+        List<LedgerReceiptExcelVM> vmList = LedgerGroupMapper.INSTANCE.ledgerReceiptListToLedgerReceiptExcelVMList(
             ledgerReceiptRepository.findAll(Example.of(lr, matcher))
         );
+
+        for (LedgerReceiptExcelVM vm : vmList) {
+            for (LedgerReceiptPrintedRecordVM printedRecordVM : vm.getLedgerReceiptPrintedRecords()) {
+                printedRecordVM.setUrl(
+                    imageGcsBusinessService.getUrlForDownload()
+                        .concat(printedRecordVM.getFilePath())
+                        .concat(printedRecordVM.getFileName())
+                );
+            }
+        }
+
+        return vmList;
     }
 
     /**
