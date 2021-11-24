@@ -222,11 +222,16 @@ public class UserResource {
             .orElseThrow(() -> new BadRequestAlertException("Can not found user by id", "USER", "notfound"));
         user.getExtendUser();
         UserDTO userDTO = userMapper.userToUserDTO(user);
-        userDTO.setImageUrl(
-            imageGcsBusinessService.getUrlForUpload()
-                .concat(userDTO.getExtendUser().getFilePath())
-                .concat(userDTO.getExtendUser().getFileName())
-        );
+        if (userDTO.getExtendUser() != null &&
+            StringUtils.isNotBlank(userDTO.getExtendUser().getFilePath()) &&
+            StringUtils.isNotBlank(userDTO.getExtendUser().getFileName())
+        ) {
+            userDTO.setImageUrl(
+                imageGcsBusinessService.getUrlForUpload()
+                    .concat(userDTO.getExtendUser().getFilePath())
+                    .concat(userDTO.getExtendUser().getFileName())
+            );
+        }
 
         return userDTO;
     }
