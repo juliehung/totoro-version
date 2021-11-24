@@ -13,5 +13,4 @@ import java.util.List;
 @SuppressWarnings("unused")
 @Repository
 public interface LedgerReceiptRepository extends JpaRepository<LedgerReceipt, Long> {
-    List<LedgerReceipt> findAllByLedgerGroup_id(Long gid);
 }

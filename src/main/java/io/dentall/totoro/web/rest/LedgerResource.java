@@ -17,6 +17,8 @@ import io.dentall.totoro.web.rest.vm.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -201,10 +203,20 @@ public class LedgerResource {
     @GetMapping("/ledger-receipts")
     @Timed
     public List<LedgerReceiptExcelVM> findLedgerReceiptsByGid(
-        @RequestParam(name = "gid") Long gid
+        @RequestParam(required = false, name = "gid") Long gid,
+        @RequestParam(required = false, name = "id") Long id
     ) {
+        LedgerReceipt lr = new LedgerReceipt();
+        LedgerGroup lg = new LedgerGroup();
+        lg.setId(gid);
+        lr.setId(id);
+        lr.setLedgerGroup(lg);
+
+        ExampleMatcher matcher = ExampleMatcher.matching()
+            .withIgnorePaths("createdDate", "lastModifiedDate", "ledgerGroup.createdDate", "ledgerGroup.lastModifiedDate");
+
         return LedgerGroupMapper.INSTANCE.ledgerReceiptListToLedgerReceiptExcelVMList(
-            ledgerReceiptRepository.findAllByLedgerGroup_id(gid)
+            ledgerReceiptRepository.findAll(Example.of(lr, matcher))
         );
     }
 
