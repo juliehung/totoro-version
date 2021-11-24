@@ -1,5 +1,6 @@
 package io.dentall.totoro.service;
 
+import io.dentall.totoro.business.service.ImageGcsBusinessService;
 import io.dentall.totoro.config.Constants;
 import io.dentall.totoro.domain.Authority;
 import io.dentall.totoro.domain.ExtendUser;
@@ -15,6 +16,7 @@ import io.dentall.totoro.service.util.RandomUtil;
 import io.dentall.totoro.web.rest.errors.EmailAlreadyUsedException;
 import io.dentall.totoro.web.rest.errors.InvalidPasswordException;
 import io.dentall.totoro.web.rest.errors.LoginAlreadyUsedException;
+import io.micrometer.core.instrument.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -409,6 +411,59 @@ public class UserService {
             }
 
             log.debug("Changed Information for ExtendUser: {}", extendUser);
+        }
+    }
+
+    public boolean hasAvatar(User user) {
+        return (
+            user.getExtendUser() != null &&
+                StringUtils.isNotBlank(user.getExtendUser().getFilePath()) &&
+                StringUtils.isNotBlank(user.getExtendUser().getFileName())
+        );
+    }
+
+    @Transactional
+    public void setAvatarBlank(User user) {
+        if (user.getExtendUser() != null) {
+            user.getExtendUser().setAvatar(null);
+            user.getExtendUser().setAvatarContentType(null);
+            user.getExtendUser().setFilePath(null);
+            user.getExtendUser().setFileName(null);
+        }
+    }
+
+    @Transactional
+    public void transformLocalAvatarToGcsAvatar(
+        User user,
+        ImageGcsBusinessService imageGcsBusinessService
+    ) throws Exception {
+        if (user.getExtendUser() != null) {
+            if (user.getExtendUser().getAvatar() != null &&
+                user.getExtendUser().getAvatar().length > 0
+            ) {
+                String fileName = imageGcsBusinessService.uploadUserAvatar(user.getId(), user.getExtendUser().getAvatar());
+                this.setAvatarBlank(user);
+                user.getExtendUser().setFilePath(imageGcsBusinessService.getAvatarFilePath(user.getId()));
+                user.getExtendUser().setFileName(fileName);
+            }
+        }
+    }
+
+    public void appendImageUrlToUserDTO(
+        final User user,
+        UserDTO userDTO,
+        ImageGcsBusinessService imageGcsBusinessService
+    ) {
+        if (StringUtils.isNotBlank(user.getExtendUser().getFilePath()) &&
+            StringUtils.isNotBlank(user.getExtendUser().getFileName())
+        ) {
+            userDTO.setImageUrl(
+                imageGcsBusinessService.getUrlForUpload()
+                    .concat(userDTO.getExtendUser().getFilePath())
+                    .concat(userDTO.getExtendUser().getFileName())
+            );
+        } else {
+            userDTO.setImageUrl("");
         }
     }
 }

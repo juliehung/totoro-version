@@ -34,7 +34,6 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.*;
 
-
 /**
  * REST controller for managing the current user's account.
  */
@@ -132,24 +131,19 @@ public class AccountResource {
      * @throws RuntimeException 500 (Internal Server Error) if the user couldn't be returned
      */
     @GetMapping("/account")
+    @Transactional
     @Timed
-    public UserDTO getAccount() {
+    public UserDTO getAccount() throws Exception {
         log.debug("REST request to get Account");
 
         User user = userService.getUserWithAuthorities()
             .orElseThrow(() -> new BadRequestAlertException("Can not found user by id", "USER", "notfound"));
         user.getExtendUser();
+
         UserDTO userDTO = userMapper.userToUserDTO(user);
-        if (userDTO.getExtendUser() != null &&
-            StringUtils.isNotBlank(userDTO.getExtendUser().getFilePath()) &&
-            StringUtils.isNotBlank(userDTO.getExtendUser().getFileName())
-        ) {
-            userDTO.setImageUrl(
-                imageGcsBusinessService.getUrlForUpload()
-                    .concat(userDTO.getExtendUser().getFilePath())
-                    .concat(userDTO.getExtendUser().getFileName())
-            );
-        }
+
+        userService.transformLocalAvatarToGcsAvatar(user, imageGcsBusinessService);
+        userService.appendImageUrlToUserDTO(user, userDTO, imageGcsBusinessService);
 
         return userDTO;
     }
@@ -239,28 +233,54 @@ public class AccountResource {
     @PostMapping("/account/avatar")
     @Transactional
     @Timed
-    public String uploadAvatar(
+    public ResponseEntity<Void> uploadAvatar(
         @RequestParam("file") MultipartFile file
     ) throws Exception {
         User user = SecurityUtils.getCurrentUserLogin()
             .flatMap(userRepository::findOneByLogin)
             .orElseThrow(() -> new BadRequestAlertException("Can not found user by current login", "USER", "notfound"));
 
-        imageGcsBusinessService.uploadUserAvatar(user.getId(), file.getBytes());
+        // Before upload if there already has avatar remove it first
+        if (userService.hasAvatar(user)) {
+            imageGcsBusinessService.deleteFile(user.getExtendUser().getFilePath(), user.getExtendUser().getFileName());
+        }
 
-        user.getExtendUser().setAvatar(new byte[]{});
-        user.getExtendUser().setAvatarContentType("");
+        String fileName = imageGcsBusinessService.uploadUserAvatar(user.getId(), file.getBytes());
+
+        userService.setAvatarBlank(user);
         user.getExtendUser().setFilePath(imageGcsBusinessService.getAvatarFilePath(user.getId()));
-        user.getExtendUser().setFileName(imageGcsBusinessService.getAvatarFileName());
+        user.getExtendUser().setFileName(fileName);
+
+        return ResponseEntity.ok(null);
+    }
+
+    @DeleteMapping("/account/avatar")
+    @Transactional
+    @Timed
+    public String deleteAvatar() throws Exception {
+        User user = SecurityUtils.getCurrentUserLogin()
+            .flatMap(userRepository::findOneByLogin)
+            .orElseThrow(() -> new BadRequestAlertException("Can not found user by current login", "USER", "notfound"));
+
+        if (!userService.hasAvatar(user)) {
+            throw new BadRequestAlertException("Can not found avatar in user by id", "USER", "nofound");
+        }
+
+        try {
+            imageGcsBusinessService.deleteFile(user.getExtendUser().getFilePath(), user.getExtendUser().getFileName());
+        } catch (Exception e) {
+            // Do not care gcp is remove or not. Make sure it will be wiped out of db.
+        }
+
+        userService.setAvatarBlank(user);
 
         return "";
     }
 
     /**
-     * GET /account/avatar : get the current user's avatar.
-     *
-     * @return AvatarVM object body
+     * Do no use it and notify fe
      */
+    @Deprecated
     @GetMapping("/account/avatar")
     @Timed
     public ResponseEntity<AvatarVM> getAvatar() {

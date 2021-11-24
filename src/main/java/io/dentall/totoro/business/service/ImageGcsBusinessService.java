@@ -4,18 +4,16 @@ import com.google.cloud.storage.*;
 import io.dentall.totoro.domain.Image;
 import io.dentall.totoro.repository.ImageRepository;
 import org.apache.commons.io.IOUtils;
-import org.mapstruct.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -47,9 +45,7 @@ public class ImageGcsBusinessService extends ImageBusinessService {
 
     private final String CLINIC_NAME;
 
-    private final String AVATAR_FILE_PATH_FORMAT = "users/%d/";
-
-    private final String AVATAR_FILE_NAME = "avatar.png";
+    private final String AVATAR_FILE_PATH_FORMAT;
 
     public ImageGcsBusinessService(
         ImageRepository imageRepository,
@@ -61,6 +57,7 @@ public class ImageGcsBusinessService extends ImageBusinessService {
         GCS_BASE_URL = "https://storage.googleapis.com/" + bucketName + "/";
         READ_GCS_BASE_URL = "https://storage.cloud.google.com/" + bucketName + "/";
         CLINIC_NAME = clinicName;
+        AVATAR_FILE_PATH_FORMAT = clinicName.concat("/").concat("users/%d/");
     }
 
 
@@ -122,6 +119,11 @@ public class ImageGcsBusinessService extends ImageBusinessService {
         storage.create(blobInfo, content);
     }
 
+    public void deleteFile(String remoteFilePath, String remoteFileName) throws Exception {
+        BlobId blobId = BlobId.of(BUCKET_NAME, remoteFilePath.concat(remoteFileName));
+        storage.delete(blobId);
+    }
+
     @Override
     public int disconnect() {
         return 200;
@@ -143,7 +145,7 @@ public class ImageGcsBusinessService extends ImageBusinessService {
         return this.CLINIC_NAME;
     }
 
-    public void uploadUserAvatar(
+    public String uploadUserAvatar(
         Long id,
         byte[] content
     ) throws Exception {
@@ -151,24 +153,27 @@ public class ImageGcsBusinessService extends ImageBusinessService {
             AVATAR_FILE_PATH_FORMAT,
             id
         );
+        String fileName = this.getAvatarFileName();
 
         this.uploadFile(
             filePath,
-            AVATAR_FILE_NAME,
+            fileName,
             content,
             MediaType.IMAGE_PNG_VALUE
         );
+
+        return fileName;
     }
 
     // id must be user's id
     public String getAvatarFilePath(Long id) {
         return String.format(
-            this.AVATAR_FILE_PATH_FORMAT,
+            AVATAR_FILE_PATH_FORMAT,
             id
         );
     }
 
     public String getAvatarFileName() {
-        return this.AVATAR_FILE_NAME;
+        return "avatar_".concat(Instant.now().toString()).concat(".png");
     }
 }

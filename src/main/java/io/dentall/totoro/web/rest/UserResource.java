@@ -8,7 +8,6 @@ import io.dentall.totoro.security.AuthoritiesConstants;
 import io.dentall.totoro.service.MailService;
 import io.dentall.totoro.service.UserService;
 import io.dentall.totoro.service.dto.UserDTO;
-import io.dentall.totoro.service.mapper.UserDomainMapper;
 import io.dentall.totoro.service.mapper.UserMapper;
 import io.dentall.totoro.web.rest.errors.*;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
@@ -17,11 +16,9 @@ import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.web.rest.vm.ManagedUserVM;
 import io.github.jhipster.web.util.ResponseUtil;
 
-import io.micrometer.core.instrument.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -167,26 +164,8 @@ public class UserResource {
         for (User user : page.getContent()) {
             UserDTO userDTO = userMapper.userToUserDTO(user);
 
-            if (user.getExtendUser() != null) {
-                if (user.getExtendUser().getAvatar() != null &&
-                    user.getExtendUser().getAvatar().length > 0
-                ) {
-                    imageGcsBusinessService.uploadUserAvatar(user.getId(), user.getExtendUser().getAvatar());
-                    user.getExtendUser().setAvatar(new byte[]{});
-                    user.getExtendUser().setFilePath(imageGcsBusinessService.getAvatarFilePath(user.getId()));
-                    user.getExtendUser().setFileName(imageGcsBusinessService.getAvatarFileName());
-                }
-
-                if(StringUtils.isNotBlank(user.getExtendUser().getFilePath()) &&
-                    StringUtils.isNotBlank(user.getExtendUser().getFileName())
-                ) {
-                    userDTO.setImageUrl(
-                        imageGcsBusinessService.getUrlForUpload()
-                            .concat(userDTO.getExtendUser().getFilePath())
-                            .concat(userDTO.getExtendUser().getFileName())
-                    );
-                }
-            }
+            userService.transformLocalAvatarToGcsAvatar(user, imageGcsBusinessService);
+            userService.appendImageUrlToUserDTO(user, userDTO, imageGcsBusinessService);
 
             result.add(userDTO);
         }
@@ -214,7 +193,7 @@ public class UserResource {
     @GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}")
     @Timed
     @Transactional
-    public UserDTO getUser(@PathVariable String login) {
+    public UserDTO getUser(@PathVariable String login) throws Exception {
         log.debug("REST request to get User : {}", login);
         ImageGcsBusinessService imageGcsBusinessService = applicationContext.getBean(ImageGcsBusinessService.class);
 
@@ -222,16 +201,9 @@ public class UserResource {
             .orElseThrow(() -> new BadRequestAlertException("Can not found user by id", "USER", "notfound"));
         user.getExtendUser();
         UserDTO userDTO = userMapper.userToUserDTO(user);
-        if (userDTO.getExtendUser() != null &&
-            StringUtils.isNotBlank(userDTO.getExtendUser().getFilePath()) &&
-            StringUtils.isNotBlank(userDTO.getExtendUser().getFileName())
-        ) {
-            userDTO.setImageUrl(
-                imageGcsBusinessService.getUrlForUpload()
-                    .concat(userDTO.getExtendUser().getFilePath())
-                    .concat(userDTO.getExtendUser().getFileName())
-            );
-        }
+
+        userService.transformLocalAvatarToGcsAvatar(user, imageGcsBusinessService);
+        userService.appendImageUrlToUserDTO(user, userDTO, imageGcsBusinessService);
 
         return userDTO;
     }
