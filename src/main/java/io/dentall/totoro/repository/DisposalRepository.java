@@ -62,6 +62,8 @@ public interface DisposalRepository extends JpaRepository<Disposal, Long>, JpaSp
 
     Page<DisposalTable> findDisposalByRegistration_Appointment_Patient_Id(Long patientId, Pageable pageable);
 
+    Optional<DisposalTable> findDisposalByIdAndRegistration_Appointment_Patient_Id(Long disposalId, Long patientId);
+
     Optional<DisposalTable> findDisposalById(Long id);
 
     Optional<AppointmentService.AppointmentRegistrationDisposal> findByRegistration_Id(Long id);

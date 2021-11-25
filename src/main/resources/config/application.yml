@@ -42,8 +42,8 @@ management:
 spring:
     servlet:
         multipart:
-            max-file-size: 10MB
-            max-request-size: 11MB
+            max-file-size: 20MB
+            max-request-size: 21MB
     application:
         name: totoro
     profiles:
@@ -165,3 +165,4 @@ queue:
 
 gcp:
     timeout: 300000
+    gcs-base-url: https://storage.googleapis.com

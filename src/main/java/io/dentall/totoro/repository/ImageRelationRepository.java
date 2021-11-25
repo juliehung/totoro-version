@@ -15,15 +15,21 @@ import java.util.stream.Stream;
 
 
 /**
+ * 2021.12.02
+ * 改使用 {@link PatientDocumentRepository}
+ * <p>
  * Spring Data  repository for the ImageRelation entity.
  */
 @SuppressWarnings("unused")
+@Deprecated
 @Repository
 public interface ImageRelationRepository extends JpaRepository<ImageRelation, Long>, JpaSpecificationExecutor<ImageRelation> {
 
+    @Deprecated
     @EntityGraph(attributePaths = "image")
     @Query("SELECT imageRelation FROM ImageRelation imageRelation WHERE imageRelation.domain = :domain AND imageRelation.domainId = :domainId")
     Stream<ImageRelation> findDistinctImageByDomainAndDomainId(@Param("domain") ImageRelationDomain domain, @Param("domainId") Long domainId);
 
+    @Deprecated
     Page<ImageRelation> findByDomainAndImage_Patient_IdOrderByDomainIdDesc(ImageRelationDomain domain, Long patientId, Pageable pageable);
 }

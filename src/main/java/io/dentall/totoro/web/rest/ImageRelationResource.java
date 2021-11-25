@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -28,6 +29,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * 2021.12.02 改使用 {@link PatientDocumentResource} 進行檔案操作
+ */
+@Deprecated
 @Profile({"img-host", "img-gcs"})
 @RestController
 @RequestMapping("/api")
@@ -57,6 +62,15 @@ public class ImageRelationResource {
         this.disposalRepository = disposalRepository;
     }
 
+
+    /**
+     * 2021.12.02 改使用 {@link PatientDocumentResource#createDocument(Long, Long, MultipartFile)} 進行檔案上傳
+     *
+     * @param imageRelation
+     * @return
+     * @throws URISyntaxException
+     */
+    @Deprecated
     @PostMapping("/image-relations")
     public ResponseEntity<ImageRelation> createImageRelation(@Valid @RequestBody ImageRelation imageRelation) throws URISyntaxException {
         ImageRelation result = imageRelationBusinessService.createImageRelation(imageRelation);
@@ -66,11 +80,28 @@ public class ImageRelationResource {
             .body(result);
     }
 
+    /**
+     * 2021.12.02 改使用 {@link PatientDocumentResource#getDocuments(Long, Long, String, Pageable)} 進行檔案查詢
+     *
+     * @param domain
+     * @param domainId
+     * @return
+     */
+    @Deprecated
     @GetMapping("/image-relations/images")
     public ResponseEntity<List<ImageRelationPathVM>> getImagePathsByDomain(@RequestParam(value = "domain") ImageRelationDomain domain, @RequestParam(value = "domainId") Long domainId) {
         return ResponseEntity.ok(imageRelationBusinessService.getImageRelationPathsByDomain(domain, domainId));
     }
 
+    /**
+     * 2021.12.02 改使用 {@link PatientDocumentResource#getDocuments(Long, Long, String, Pageable)} 進行檔案查詢
+     *
+     * @param patientId
+     * @param domain
+     * @param pageable
+     * @return
+     */
+    @Deprecated
     @GetMapping("/image-relations/patients/{patientId}")
     public ResponseEntity<List<ImageVM>> getImagePathsByPatient(
         @PathVariable Long patientId,
@@ -113,10 +144,13 @@ public class ImageRelationResource {
 
     /**
      * DELETE  /image-relations/:id : delete the "id" image-relation.
+     * <p>
+     * 2021.12.02 改使用 {@link PatientDocumentResource#getDocuments(Long, Long, String, Pageable)} 進行檔案刪除
      *
      * @param id the id of the image-relation to delete
      * @return the ResponseEntity with status 200 (OK)
      */
+    @Deprecated
     @DeleteMapping("/image-relations/{id}")
     public ResponseEntity<Void> deleteImageRelation(@PathVariable Long id) {
         log.debug("REST request to delete ImageRelation : {}", id);
