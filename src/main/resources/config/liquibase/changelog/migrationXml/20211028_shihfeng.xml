@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20211028-shihfeng_1" author="ShihFeng">
+        <sql>
+            create table report_record
+            (
+                id                 bigint      not null
+                    constraint report_record_pk
+                        primary key,
+                category           varchar(50) not null,
+                status             varchar     not null,
+                attrs              jsonb,
+                file_path          text,
+                file_name          text,
+                comment            text,
+                created_by         varchar(50) not null,
+                created_date       timestamp   not null,
+                last_modified_by   varchar(50) not null,
+                last_modified_date timestamp   not null
+            );
+
+            alter table report_record
+                owner to totoro;
+
+            create index report_record_attrs_index
+                on report_record using gin (attrs);
+
+            create sequence report_record_id_seq;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

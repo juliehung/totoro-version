@@ -104,6 +104,16 @@ public class ImageGcsBusinessService extends ImageBusinessService {
         storage.create(blobInfo, IOUtils.toByteArray(inputStream));
     }
 
+    public void uploadFile(String remotePath, String remoteFileName, byte[] content, String contentType) {
+        BlobId blobId = BlobId.of(BUCKET_NAME, remotePath.concat(remoteFileName));
+        BlobInfo blobInfo = BlobInfo
+            .newBuilder(blobId)
+            .setContentType(contentType)
+            .setAcl(Collections.singletonList(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER)))
+            .build();
+        storage.create(blobInfo, content);
+    }
+
     @Override
     public int disconnect() {
         return 200;
