@@ -8,6 +8,7 @@ import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
@@ -33,7 +34,7 @@ public class ReportRecord extends AbstractAuditingEntity implements Serializable
 
     @Type(type = "jsonb")
     @Column(name = "attrs", nullable = false)
-    private Map<String, String> attrs;
+    private Map<String, String> attrs = new HashMap<>();
 
     @Column(name = "file_path", nullable = false)
     private String filePath;
@@ -103,17 +104,17 @@ public class ReportRecord extends AbstractAuditingEntity implements Serializable
     @Override
     public String toString() {
         return "ReportRecord{" +
-                "id=" + id + '\'' +
-                "category=" + category + '\'' +
-                "status=" + status + '\'' +
-                "attrs=" + attrs + '\'' +
-                "filePath=" + filePath + '\'' +
-                "fileName=" + fileName + '\'' +
-                "comment=" + comment + '\'' +
-                "createdBy=" + getCreatedBy() + '\'' +
-                "createdDate=" + getCreatedDate() + '\'' +
-                "lastModifiedBy=" + getLastModifiedBy() + '\'' +
-                "lastModifiedDate=" + getLastModifiedDate() + '\'' +
-                '}';
+            "id=" + id + '\'' +
+            "category=" + category + '\'' +
+            "status=" + status + '\'' +
+            "attrs=" + attrs + '\'' +
+            "filePath=" + filePath + '\'' +
+            "fileName=" + fileName + '\'' +
+            "comment=" + comment + '\'' +
+            "createdBy=" + getCreatedBy() + '\'' +
+            "createdDate=" + getCreatedDate() + '\'' +
+            "lastModifiedBy=" + getLastModifiedBy() + '\'' +
+            "lastModifiedDate=" + getLastModifiedDate() + '\'' +
+            '}';
     }
 }
