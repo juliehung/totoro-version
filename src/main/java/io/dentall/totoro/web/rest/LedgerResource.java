@@ -113,6 +113,20 @@ public class LedgerResource {
         return ledgerGroup;
     }
 
+    @DeleteMapping("/ledger-groups/{id}")
+    @Timed
+    @Transactional
+    public ResponseEntity<Void> removeLedgerGroup(@PathVariable Long id) {
+        List<Ledger> ledgers = ledgerService.getLedgersByGid(id);
+        for (Ledger ledger : ledgers) {
+            ledgerService.delete(ledger.getId());
+        }
+
+        ledgerGroupRepository.deleteById(id);
+
+        return ResponseEntity.ok(null);
+    }
+
     /**
      * POST  /ledgers : Create a new ledger.
      *

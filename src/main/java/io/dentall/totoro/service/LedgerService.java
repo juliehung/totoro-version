@@ -1,6 +1,7 @@
 package io.dentall.totoro.service;
 
 import io.dentall.totoro.domain.Ledger;
+import io.dentall.totoro.domain.LedgerGroup;
 import io.dentall.totoro.domain.LedgerReceipt;
 import io.dentall.totoro.repository.LedgerReceiptRepository;
 import io.dentall.totoro.repository.LedgerRepository;
@@ -11,6 +12,7 @@ import io.dentall.totoro.web.rest.vm.LedgerUnwrapGroupUpdateVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -166,5 +168,9 @@ public class LedgerService {
             );
         }
 
+    }
+
+    public List<Ledger> getLedgersByGid(Long gid) {
+        return ledgerRepository.findByLedgerGroup_Id(gid);
     }
 }
