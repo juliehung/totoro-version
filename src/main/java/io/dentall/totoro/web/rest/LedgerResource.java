@@ -213,6 +213,7 @@ public class LedgerResource {
 
                 try {
                     Patient p = patientService.findPatientById(d.getLedgerGroup().getPatientId());
+                    ledgerVM.setPatientId(p.getId());
                     ledgerVM.setPatient(p);
                 } catch(Exception e) {
                     log.error("[Ledger]: " + e.getMessage());
