@@ -65,7 +65,7 @@ public class NoteResource {
             throw new BadRequestAlertException("Can not found patient by id", ENTITY_NAME, "notfound");
         }
 
-        if (NoteType.TREATMENT.equals(noteCreateVM.getType()) &&
+        if (NoteType.DOCTOR.equals(noteCreateVM.getType()) &&
             noteCreateVM.getUserId() == null
         ) {
             throw new BadRequestAlertException("Require user id wile note type is treatment", ENTITY_NAME, "required");

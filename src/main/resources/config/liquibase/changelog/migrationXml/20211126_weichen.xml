@@ -18,6 +18,8 @@
               last_modified_date timestamp
             );
             create sequence note_seq start with 1 increment by 1;
+            insert into note (id, patient_id, type, content) select nextval('note_seq'), id, 'SHARED', clinic_note from patient;
+            insert into note (id, patient_id, type, content) select nextval('note_seq'), id, 'SERVICE', note from patient;
         </sql>
     </changeSet>
 </databaseChangeLog>
