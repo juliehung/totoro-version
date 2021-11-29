@@ -75,8 +75,8 @@ public class TreatmentReportService implements ReportService, ApplicationContext
         this.reportRecordRepository = reportRecordRepository;
     }
 
-    public List<TreatmentReportVM> getReport(String treatmentType, String treatmentId) {
-        List<ReportRecord> result = reportRecordRepository.findTreatmentReport(treatmentType, treatmentId);
+    public List<TreatmentReportVM> getReport() {
+        List<ReportRecord> result = reportRecordRepository.findByCategoryOrderByCreatedDateDesc(TREATMENT);
         List<TreatmentReportVM> vmList = ReportVmMapper.INSTANCE.mapToTreatmentReportVM(result);
         vmList.forEach(vm -> vm.setUrl(gcsBaseUrl + "/" + bucketName + "/"));
         return vmList;

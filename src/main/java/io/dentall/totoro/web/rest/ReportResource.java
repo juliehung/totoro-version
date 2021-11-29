@@ -58,9 +58,9 @@ public class ReportResource {
     }
 
     @GetMapping("/treatment")
-    public ResponseEntity<List<TreatmentReportVM>> getTreatmentReport(@RequestParam("treatmentType") String treatmentType, @RequestParam("treatmentId") String treatmentId) {
-        log.debug("REST request to getTreatmentReport, treatmentType: {}, treatmentId: {} ", treatmentType, treatmentId);
-        return ResponseEntity.ok(treatmentReportService.getReport(treatmentType, treatmentId));
+    public ResponseEntity<List<TreatmentReportVM>> getTreatmentReport() {
+        log.debug("REST request to getTreatmentReport");
+        return ResponseEntity.ok(treatmentReportService.getReport());
     }
 
     @PatchMapping("/treatment/{id}/cancel")
