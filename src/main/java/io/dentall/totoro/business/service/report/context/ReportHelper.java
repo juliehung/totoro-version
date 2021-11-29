@@ -126,6 +126,13 @@ public class ReportHelper {
             .collect(toList());
     }
 
+    public static int countingSettingCount(BookSetting bookSetting) {
+        return (int) stream(bookSetting.getClass().getDeclaredMethods())
+            .filter(m -> m.getName().startsWith("get"))
+            .filter(m -> m.getName().endsWith("ReportSetting"))
+            .filter(m -> ReportSetting.class.isAssignableFrom(m.getReturnType()))
+            .count();
+    }
 
     // 先複製過來使用，等程式合併進release後再改用
     public static int calculatePtCount(

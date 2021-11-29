@@ -23,8 +23,7 @@ import java.time.Instant;
 import java.util.*;
 
 import static io.dentall.totoro.business.service.report.context.ReportCategory.FOLLOWUP;
-import static io.dentall.totoro.business.service.report.context.ReportHelper.displayDisposalDate;
-import static io.dentall.totoro.business.service.report.context.ReportHelper.getReportList;
+import static io.dentall.totoro.business.service.report.context.ReportHelper.*;
 import static io.dentall.totoro.domain.enumeration.BackupFileCatalog.FOLLOWUP_REPORT;
 import static io.dentall.totoro.domain.enumeration.BatchStatus.CANCEL;
 import static io.dentall.totoro.service.util.DateTimeUtil.formatToMinguoDate;
@@ -149,7 +148,7 @@ public class FollowupReportService implements ReportService, ApplicationContextA
             sheetNames.add(bookSetting.getOwnExpenseReportSetting().getSheetName());
         }
 
-        return join("、", sheetNames);
+        return countingSettingCount(bookSetting) == sheetNames.size() ? "全部" : join("、", sheetNames);
     }
 
     private String getDoctorNameAttr(Set<Long> doctorIds) {
