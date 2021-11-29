@@ -130,8 +130,13 @@ public class LedgerQueryService extends QueryService<Ledger> {
             if (criteria.getNote() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getNote(), Ledger_.note));
             }
+            // For ledger
             if (criteria.getDoctorId() != null) {
-                specification = specification.and(buildSpecification(criteria.getDoctorId(),
+                specification = specification.and(buildStringSpecification(criteria.getDoctorId(), Ledger_.doctor));
+            }
+            // For ledger group doctor
+            if (criteria.getLedgerGroupDoctorId() != null) {
+                specification = specification.and(buildSpecification(criteria.getLedgerGroupDoctorId(),
                     root -> root.join(Ledger_.ledgerGroup, JoinType.LEFT).get(LedgerGroup_.doctorId)));
             }
             if (criteria.getProjectCode() != null) {

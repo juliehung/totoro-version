@@ -43,9 +43,9 @@ public class LedgerCriteria implements Serializable {
 
     private StringFilter displayName;
 
-    private LongFilter doctorId;
+    private StringFilter doctorId;
 
-    private StringFilter doctor;
+    private LongFilter ledgerGroupDoctorId;
 
     private StringFilter projectCode;
 
@@ -129,20 +129,20 @@ public class LedgerCriteria implements Serializable {
         this.displayName = displayName;
     }
 
-    public LongFilter getDoctorId() {
+    public StringFilter getDoctorId() {
         return doctorId;
     }
 
-    public void setDoctorId(LongFilter doctorId) {
+    public void setDoctorId(StringFilter doctorId) {
         this.doctorId = doctorId;
     }
 
-    public StringFilter getDoctor() {
-        return doctor;
+    public LongFilter getLedgerGroupDoctorId() {
+        return ledgerGroupDoctorId;
     }
 
-    public void setDoctor(StringFilter doctor) {
-        this.doctor = doctor;
+    public void setLedgerGroupDoctorId(LongFilter ledgerGroupDoctorId) {
+        this.ledgerGroupDoctorId = ledgerGroupDoctorId;
     }
 
     public StringFilter getProjectCode() {
