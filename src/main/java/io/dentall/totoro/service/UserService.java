@@ -466,4 +466,8 @@ public class UserService {
             userDTO.setImageUrl("");
         }
     }
+
+    public boolean hasUser(Long id) {
+        return userRepository.existsById(id);
+    }
 }

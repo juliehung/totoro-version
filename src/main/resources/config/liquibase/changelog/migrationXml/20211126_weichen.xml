@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20211126-weichen" author="WeiChen">
+        <sql>
+            create table note (
+              id bigint,
+              type varchar(20),
+              content varchar,
+              patient_id bigint,
+              user_id bigint,
+              created_by varchar(50),
+              created_date timestamp,
+              last_modified_by varchar(50),
+              last_modified_date timestamp
+            );
+            create sequence note_seq start with 1 increment by 1;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

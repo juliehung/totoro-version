@@ -732,4 +732,5 @@ public class PatientService extends QueryService<Patient> {
 
         return vm;
     }
+
 }
