@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 
@@ -139,13 +140,15 @@ public class ReportAspect {
         }
     }
 
-    private void uploadFile(ReportRunner reportRunner, ReportRecord reportRecord, ByteArrayOutputStream outputStream) {
-        imageGcsBusinessServiceOptional.ifPresent(s -> s.uploadFile(
-            reportRecord.getFilePath(),
-            reportRecord.getFileName(),
-            outputStream.toByteArray(),
-            reportRunner.backupFileCatalog().getFileExtension()
-        ));
+    private void uploadFile(ReportRunner reportRunner, ReportRecord reportRecord, ByteArrayOutputStream outputStream) throws IOException {
+        if (imageGcsBusinessServiceOptional.isPresent()) {
+            imageGcsBusinessServiceOptional.get().uploadFile(
+                reportRecord.getFilePath(),
+                reportRecord.getFileName(),
+                outputStream.toByteArray(),
+                reportRunner.backupFileCatalog().getFileExtension()
+            );
+        }
     }
 
 }
