@@ -187,6 +187,7 @@ public class LedgerResource {
     public ResponseEntity<List<LedgerVM>> getAllLedgers(LedgerCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Ledgers by criteria: {}", criteria);
         Page<Ledger> page = ledgerQueryService.findByCriteria(criteria, pageable);
+
         List<LedgerVM> result = page.getContent().stream()
             .map(d -> {
                 LedgerVM ledgerVM = LedgerGroupMapper.INSTANCE.convertLedgerFromDomainToVM(d);
