@@ -483,6 +483,10 @@ public class PatientService extends QueryService<Patient> {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to found resource")));
     }
 
+    public boolean hasPatient(Long id) {
+        return patientRepository.existsById(id);
+    }
+
     public HashSet<Patient> getPatientRelationship(Long id, Method m) {
         try {
             // 由於 prod 下，transition 機制跟 dev 不同，造成 object 出 service 後，尚未被註記成 initialized，使得 json wrapping 時

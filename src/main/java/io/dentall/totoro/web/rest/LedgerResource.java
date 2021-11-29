@@ -87,6 +87,10 @@ public class LedgerResource {
             throw new BadRequestAlertException("Can not include id for create ledger group", ENTITY_NAME, "limit");
         }
 
+        if (!patientService.hasPatient(ledgerGroup.getPatientId())) {
+            throw new BadRequestAlertException("Can not found patient by id", ENTITY_NAME, "notfound");
+        }
+
         return ledgerGroupRepository.save(ledgerGroup);
     }
 
@@ -103,6 +107,10 @@ public class LedgerResource {
         log.info("Patch ledger group by id {} ", updateLedgerGroup.getId());
         if (updateLedgerGroup.getId() == null) {
             throw new BadRequestAlertException("Require ledger group id", ENTITY_NAME, "noid");
+        }
+
+        if (updateLedgerGroup.getPatientId() != null) {
+            throw new BadRequestAlertException("Unable to modify patient id of ledger group", ENTITY_NAME, "limit");
         }
 
         LedgerGroup ledgerGroup = ledgerGroupRepository.findById(updateLedgerGroup.getId())
@@ -203,8 +211,13 @@ public class LedgerResource {
                             });
                     });
 
-                Patient p = patientService.findPatientById(d.getLedgerGroup().getPatientId());
-                ledgerVM.setPatient(p);
+                try {
+                    Patient p = patientService.findPatientById(d.getLedgerGroup().getPatientId());
+                    ledgerVM.setPatient(p);
+                } catch(Exception e) {
+                    log.error("[Ledger]: " + e.getMessage());
+                }
+
                 ledgerVM.setDoctorId(Long.valueOf(d.getDoctor()));
 
                 return ledgerVM;
