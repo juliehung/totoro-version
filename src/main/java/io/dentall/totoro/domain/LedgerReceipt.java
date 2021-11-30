@@ -52,6 +52,12 @@ public class LedgerReceipt extends AbstractAuditingEntity implements Serializabl
     @Column(name = "time")
     private Instant time;
 
+    @Column(name = "file_path")
+    private String filePath;
+
+    @Column(name = "file_name")
+    private String fileName;
+
     @ManyToOne
     @JoinColumn(name = "gid")
     private LedgerGroup ledgerGroup;
@@ -79,6 +85,22 @@ public class LedgerReceipt extends AbstractAuditingEntity implements Serializabl
         name = "ledger_receipt_id"
     )
     private List<LedgerReceiptPrintedRecord> ledgerReceiptPrintedRecords = new ArrayList<>();
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
 
     public LedgerGroup getLedgerGroup() {
         return ledgerGroup;

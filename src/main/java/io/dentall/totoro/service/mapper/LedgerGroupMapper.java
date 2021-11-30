@@ -17,7 +17,7 @@ public interface LedgerGroupMapper {
 
     LedgerGroupMapper INSTANCE = Mappers.getMapper( LedgerGroupMapper.class );
 
-    void patching(
+    void patchLedgerGroup(
         @MappingTarget LedgerGroup origin,
         LedgerGroup patch
     );

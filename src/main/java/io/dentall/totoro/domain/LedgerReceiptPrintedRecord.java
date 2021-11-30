@@ -26,30 +26,8 @@ public class LedgerReceiptPrintedRecord extends AbstractAuditingEntity implement
     @Column(name = "time")
     private Instant time;
 
-    @Column(name = "file_path")
-    private String filePath;
-
-    @Column(name = "file_name")
-    private String fileName;
-
     @ManyToOne
     private LedgerReceipt ledgerReceipt;
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
 
     public LedgerReceipt getLedgerReceipt() {
         return ledgerReceipt;

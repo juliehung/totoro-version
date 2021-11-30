@@ -91,8 +91,10 @@ public class LedgerBusinessResource {
             .map(d -> {
                 LedgerVM ledgerVM = LedgerGroupMapper.INSTANCE.convertLedgerFromDomainToVM(d);
 
-                Patient p = patientService.findPatientById(d.getLedgerGroup().getPatientId());
+                Patient p = patientService.findPatientById(d.getLedgerGroup().getPatientId())
+                    .orElse(new Patient());
                 ledgerVM.setPatient(p);
+                ledgerVM.setPatientId(p.getId());
 
                 return ledgerVM;
             })

@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -116,7 +117,7 @@ public class LedgerResource {
         LedgerGroup ledgerGroup = ledgerGroupRepository.findById(updateLedgerGroup.getId())
             .orElseThrow(() -> new BadRequestAlertException("Can not found ledger group by id", ENTITY_NAME, "notfound"));
 
-        LedgerGroupMapper.INSTANCE.patching(ledgerGroup, updateLedgerGroup);
+        LedgerGroupMapper.INSTANCE.patchLedgerGroup(ledgerGroup, updateLedgerGroup);
 
         return ledgerGroup;
     }
@@ -199,25 +200,30 @@ public class LedgerResource {
         List<LedgerVM> result = page.getContent().stream()
             .map(d -> {
                 LedgerVM ledgerVM = LedgerGroupMapper.INSTANCE.convertLedgerFromDomainToVM(d);
+                HashMap<Long, String> urls = new HashMap<>();
+                d.getLedgerReceipts().forEach(lr -> {
+                    if (lr.getFilePath() != null &&
+                        lr.getFileName() != null
+                    ) {
+                        urls.put(
+                            lr.getId(),
+                            imageGcsBusinessService.getUrlForDownload()
+                                .concat(lr.getFilePath())
+                                .concat(lr.getFileName())
+                        );
+                    }
+                });
 
-                ledgerVM.getLedgerReceipts()
-                    .forEach(d2 -> {
-                        d2.getLedgerReceiptPrintedRecords()
-                            .forEach(d3 -> {
-                                d3.setUrl(imageGcsBusinessService.getUrlForDownload()
-                                    .concat(d3.getFilePath())
-                                    .concat(d3.getFileName())
-                                );
-                            });
-                    });
+                ledgerVM.getLedgerReceipts().forEach(vmlr -> {
+                    if (urls.containsKey(vmlr.getId())) {
+                        vmlr.setUrl(urls.get(vmlr.getId()));
+                    }
+                });
 
-                try {
-                    Patient p = patientService.findPatientById(d.getLedgerGroup().getPatientId());
-                    ledgerVM.setPatientId(p.getId());
-                    ledgerVM.setPatient(p);
-                } catch(Exception e) {
-                    log.error("[Ledger]: " + e.getMessage());
-                }
+                Patient p = patientService.findPatientById(d.getLedgerGroup().getPatientId())
+                    .orElse(new Patient());
+                ledgerVM.setPatientId(p.getId());
+                ledgerVM.setPatient(p);
 
                 ledgerVM.setDoctorId(Long.valueOf(d.getDoctor()));
 
@@ -249,16 +255,40 @@ public class LedgerResource {
         );
 
         for (LedgerReceiptExcelVM vm : vmList) {
-            for (LedgerReceiptPrintedRecordVM printedRecordVM : vm.getLedgerReceiptPrintedRecords()) {
-                printedRecordVM.setUrl(
+            if (vm.getFilePath() != null &&
+                vm.getFileName() != null
+            ) {
+                vm.setUrl(
                     imageGcsBusinessService.getUrlForDownload()
-                        .concat(printedRecordVM.getFilePath())
-                        .concat(printedRecordVM.getFileName())
+                        .concat(vm.getFilePath())
+                        .concat(vm.getFileName())
                 );
             }
         }
 
         return vmList;
+    }
+
+    /**
+     * Only modify ledgerReceipt.signed from false to true.
+     * @param ledgerReceiptVM
+     * @return
+     */
+    @PatchMapping("/ledger-receipts")
+    @Timed
+    @Transactional
+    public LedgerReceiptVM updateLedgerReceipt(@RequestBody @Valid LedgerReceiptVM ledgerReceiptVM) {
+        log.info("Patch ledger receipt by id {} ", ledgerReceiptVM.getId());
+        if (ledgerReceiptVM.getId() == null) {
+            throw new BadRequestAlertException("Id is required", ENTITY_NAME, "required");
+        }
+
+        LedgerReceipt ledgerReceipt = ledgerReceiptRepository.findById(ledgerReceiptVM.getId())
+            .orElseThrow(() -> new BadRequestAlertException("Can not found ledger receipt by id", ENTITY_NAME, "notfound"));
+
+        ledgerReceipt.setSigned(true);
+
+        return LedgerGroupMapper.INSTANCE.convertLedgerReceiptFromDomainToVM(ledgerReceipt);
     }
 
     /**
@@ -295,10 +325,10 @@ public class LedgerResource {
         );
     }
 
-    @PostMapping("/ledger-receipts/{id}/ledger-receipt-printed-records")
+    @PostMapping("/ledger-receipts/{id}/pdf")
     @Timed
     @Transactional
-    public LedgerReceiptPrintedRecordVM createLedgerReceiptRecord(
+    public LedgerReceiptVM uploadFileAndModifyLedgerReceipt(
         @PathVariable(name = "id") Long id,
         @RequestParam("file") MultipartFile file
     ) throws IOException {
@@ -306,9 +336,17 @@ public class LedgerResource {
             throw new BadRequestAlertException("Only support file mime as application/pdf", ENTITY_NAME, "mimerequired");
         }
 
-        LedgerReceipt ledgerReceipt = ledgerQueryService.findReceiptsById(id);
+        LedgerReceipt ledgerReceipt = ledgerReceiptRepository.findById(id)
+            .orElseThrow(() -> new BadRequestAlertException("Can not found ledger receipt by id", ENTITY_NAME, "notfound"));
 
-        Patient patient = patientService.findPatientById(ledgerReceipt.getLedgerGroup().getPatientId());
+        if (ledgerReceipt.getFilePath() != null ||
+            ledgerReceipt.getFileName() != null
+        ) {
+            throw new BadRequestAlertException("Can not post a file while ledger receipt already has one", ENTITY_NAME, "limit");
+        }
+
+        Patient patient = patientService.findPatientById(ledgerReceipt.getLedgerGroup().getPatientId())
+            .orElseThrow(() -> new BadRequestAlertException("Can not found patient by id from ledgerReceipt.ledgerGroup.patientId", ENTITY_NAME, "notfound"));
 
         String filePath = imageGcsBusinessService.getClinicName()
             .concat("/")
@@ -332,21 +370,34 @@ public class LedgerResource {
             "application/pdf"
         );
 
-        LedgerReceiptPrintedRecord ledgerReceiptPrintedRecord = new LedgerReceiptPrintedRecord();
-        ledgerReceiptPrintedRecord.setTime(Instant.now());
-        ledgerReceiptPrintedRecord.setFilePath(filePath);
-        ledgerReceiptPrintedRecord.setFileName(fileName);
-        ledgerReceiptPrintedRecord.setLedgerReceipt(ledgerReceipt);
+        ledgerReceipt.setFilePath(filePath);
+        ledgerReceipt.setFileName(fileName);
 
-        LedgerReceiptPrintedRecordVM vm = LedgerGroupMapper.INSTANCE.ledgerReceiptPrintedRecordToLedgerReceiptPrintedRecordVM(
-            ledgerReceiptPrintedRecordRepository.save(ledgerReceiptPrintedRecord)
-        );
+        LedgerReceiptVM vm = LedgerGroupMapper.INSTANCE.convertLedgerReceiptFromDomainToVM(ledgerReceipt);
         vm.setUrl(
             imageGcsBusinessService.getUrlForDownload()
-                .concat(vm.getFilePath())
-                .concat(vm.getFileName())
+                .concat(filePath)
+                .concat(fileName)
         );
 
         return vm;
+    }
+
+    @PostMapping("/ledger-receipts/{id}/ledger-receipt-printed-records")
+    @Timed
+    @Transactional
+    public LedgerReceiptPrintedRecordVM createLedgerReceiptRecord(
+        @PathVariable(name = "id") Long id
+    ) throws IOException {
+        LedgerReceipt ledgerReceipt = ledgerReceiptRepository.findById(id)
+            .orElseThrow(() -> new BadRequestAlertException("Can not found ledger receipt by id", ENTITY_NAME, "notfound"));
+
+        LedgerReceiptPrintedRecord ledgerReceiptPrintedRecord = new LedgerReceiptPrintedRecord();
+        ledgerReceiptPrintedRecord.setTime(Instant.now());
+        ledgerReceiptPrintedRecord.setLedgerReceipt(ledgerReceipt);
+
+        return LedgerGroupMapper.INSTANCE.ledgerReceiptPrintedRecordToLedgerReceiptPrintedRecordVM(
+            ledgerReceiptPrintedRecordRepository.save(ledgerReceiptPrintedRecord)
+        );
     }
 }

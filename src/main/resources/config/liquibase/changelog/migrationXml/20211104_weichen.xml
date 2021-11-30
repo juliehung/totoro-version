@@ -18,6 +18,8 @@
                 range_end timestamp,
                 stamp_tax boolean,
                 time timestamp,
+                file_path varchar,
+                file_name varchar,
                 created_by varchar(50),
                 created_date timestamp,
                 last_modified_by varchar(50),
@@ -47,8 +49,6 @@
                     constraint fk_ledger_receipt_printed_record_ledger_receipt_id
                         references ledger_receipt,
                 time timestamp,
-                file_path varchar,
-                file_name varchar,
                 created_by varchar(50),
                 created_date timestamp,
                 last_modified_by varchar(50),

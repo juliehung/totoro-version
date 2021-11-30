@@ -11,6 +11,7 @@ import io.dentall.totoro.domain.enumeration.TreatmentType;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.dto.PatientCriteria;
 import io.dentall.totoro.service.dto.table.DisposalTable;
+import io.dentall.totoro.service.dto.table.PatientTable;
 import io.dentall.totoro.service.mapper.PatientMapper;
 import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.service.util.FilterUtil;
@@ -477,10 +478,13 @@ public class PatientService extends QueryService<Patient> {
         return txt.toUpperCase() + '%';
     }
 
-    public Patient findPatientById(Long patientId) {
-        return PatientMapper.patientTableToPatient(
-            patientRepository.findPatientById(patientId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to found resource")));
+    public Optional<Patient> findPatientById(Long patientId) {
+        Optional<PatientTable> optP = patientRepository.findPatientById(patientId);
+        if (optP.isPresent()) {
+            return Optional.of(PatientMapper.patientTableToPatient(optP.get()));
+        } else {
+            return Optional.empty();
+        }
     }
 
     public boolean hasPatient(Long id) {
