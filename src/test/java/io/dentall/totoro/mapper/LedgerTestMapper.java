@@ -52,7 +52,6 @@ public interface LedgerTestMapper {
 
     LedgerReceipt mapToLedgerReceipt(Map<String, String> map);
 
-    @Mapping(target="url", expression="java( map.get(\"url\") )")
     LedgerReceiptPrintedRecordVM mapToLedgerReceiptPrintedRecord(Map<String, String> map);
 
 }

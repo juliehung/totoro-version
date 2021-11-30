@@ -448,16 +448,6 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
 
         LedgerReceiptPrintedRecordVM ledgerReceiptPrintedRecordVM =
             ledgers.get(0).getLedgerReceipts().get(0).getLedgerReceiptPrintedRecords().get(0);
-
-        if (!ledgerReceiptPrintedRecordVM.getUrl().contains("http://fake.url/fakeBucket/fakeClinicName")) {
-            Assert.fail();
-        }
-        if (!ledgerReceiptPrintedRecordVM.getUrl().contains("Alice")) {
-            Assert.fail();
-        }
-        if (!ledgerReceiptPrintedRecordVM.getUrl().contains("p-c-1d-n-1")) {
-            Assert.fail();
-        }
     }
 
     @Then("刪除收支")
