@@ -161,7 +161,7 @@ public class TreatmentReportService implements ReportService, ApplicationContext
         TreatmentBookSetting bookSetting = (TreatmentBookSetting) setting;
         String date = "";
         String doctor = "";
-        String item = getItemNameAttr(bookSetting.getIncludeTreatmentCodes());
+        String item = getItemNameAttr(bookSetting, bookSetting.getIncludeTreatmentCodes());
         String exportTime = formatToMinguoDate(bookSetting.getExportTime().atOffset(TimeConfig.ZONE_OFF_SET), "yyy/MM/dd HH:mm");
         String treatmentType = "";
         String treatmentId = isNull(bookSetting.getIncludeTreatmentIds()) || bookSetting.getIncludeTreatmentIds().isEmpty() ? "all" :
@@ -222,8 +222,22 @@ public class TreatmentReportService implements ReportService, ApplicationContext
                 .collect(joining("、"));
     }
 
-    private String getItemNameAttr(Set<String> includeNhiProcedureCodes) {
-        return isNull(includeNhiProcedureCodes) || includeNhiProcedureCodes.isEmpty() ? "全部項目" :
+    private String getItemNameAttr(TreatmentBookSetting bookSetting, Set<String> includeNhiProcedureCodes) {
+        String itemName = "全部項目";
+        if (nonNull(bookSetting.getDailyNhiReportSetting())) {
+            itemName = "全健保代碼";
+        } else if (nonNull(bookSetting.getDailyOwnExpenseReportSetting())) {
+            itemName = "全自費項目";
+        } else if (nonNull(bookSetting.getDailyDrugReportSetting())) {
+            itemName = "全部藥品";
+        } else if (nonNull(bookSetting.getMonthlyNhiReportSetting())) {
+            itemName = "全健保代碼";
+        } else if (nonNull(bookSetting.getMonthlyOwnExpenseReportSetting())) {
+            itemName = "全自費項目";
+        } else if (nonNull(bookSetting.getMonthlyDrugReportSetting())) {
+            itemName = "全部藥品";
+        }
+        return isNull(includeNhiProcedureCodes) || includeNhiProcedureCodes.isEmpty() ? itemName :
             join("、", includeNhiProcedureCodes);
     }
 
