@@ -3,6 +3,8 @@ package io.dentall.totoro.web.rest.vm;
 import io.dentall.totoro.domain.enumeration.NoteType;
 import io.dentall.totoro.service.dto.DoctorVM;
 
+import java.util.Objects;
+
 public class NoteVM {
 
     private Long id;
@@ -53,5 +55,18 @@ public class NoteVM {
 
     public void setPatientId(Long patientId) {
         this.patientId = patientId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NoteVM noteVM = (NoteVM) o;
+        return Objects.equals(id, noteVM.id) && type == noteVM.type && Objects.equals(content, noteVM.content) && Objects.equals(userId, noteVM.userId) && Objects.equals(patientId, noteVM.patientId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, type, content, userId, patientId);
     }
 }

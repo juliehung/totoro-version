@@ -2,11 +2,14 @@ package io.dentall.totoro.web.rest.vm;
 
 import io.dentall.totoro.domain.enumeration.NoteType;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 
 public class NoteCreateVM {
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private NoteType type;
 
     private String content;

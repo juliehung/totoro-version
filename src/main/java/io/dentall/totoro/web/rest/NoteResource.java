@@ -9,9 +9,6 @@ import io.dentall.totoro.repository.NoteRepository;
 import io.dentall.totoro.service.PatientService;
 import io.dentall.totoro.service.UserService;
 import io.dentall.totoro.service.mapper.NoteMapper;
-import io.dentall.totoro.service.mapper.PatientDomainMapper;
-import io.dentall.totoro.service.mapper.PatientMapper;
-import io.dentall.totoro.service.mapper.UserDomainMapper;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
 import io.dentall.totoro.web.rest.vm.NoteCreateVM;
@@ -120,8 +117,14 @@ public class NoteResource {
         @RequestParam(value ="type", required = false) NoteType type
     ) {
         Note note = new Note();
-        note.setId(id);
-        note.setType(type);
+
+        if (id != null) {
+            note.setId(id);
+        }
+
+        if (type != null) {
+            note.setType(type);
+        }
 
         if (patientId != null) {
             Patient patient = new Patient();
