@@ -88,20 +88,30 @@ public class NoteDefinition extends AbstractStepDefinition {
         Patient fakePatient = new Patient();
         fakePatient.setId(0L);
 
-        if (!"NotExist".equals(entry.get("patientName"))) {
-            note.setPatient(
-                patientTestInfoHolder.getPatientMap().get(entry.get("patientName"))
-            );
-        } else {
-            note.setPatient(fakePatient);
+        switch (entry.get("patientName")) {
+            case "NotExist":
+                note.setPatient(fakePatient);
+                break;
+            case "Null":
+                break;
+            default:
+                note.setPatient(
+                    patientTestInfoHolder.getPatientMap().get(entry.get("patientName"))
+                );
+                break;
         }
 
-        if (!"NotExist".equals(entry.get("doctorName"))) {
-            note.setUser(
-                userTestInfoHolder.getUserMap().get(entry.get("doctorName"))
-            );
-        } else {
-            note.setUser(fakeUser);
+        switch (entry.get("doctorName")) {
+            case "NotExist":
+                note.setUser(fakeUser);
+                break;
+            case "Null":
+                break;
+            default:
+                note.setUser(
+                    userTestInfoHolder.getUserMap().get(entry.get("doctorName"))
+                );
+                break;
         }
 
         return note;
@@ -118,12 +128,14 @@ public class NoteDefinition extends AbstractStepDefinition {
                         k -> new ArrayList<>()
                     )
                     .add(noteVM);
-                noteTestInfoHolder.getDoctorNoteMap()
-                    .computeIfAbsent(
-                        note.getUser().getFirstName(),
-                        k -> new ArrayList<>()
-                    )
-                    .add(noteVM);
+                if (note.getUser() != null) {
+                    noteTestInfoHolder.getDoctorNoteMap()
+                        .computeIfAbsent(
+                            note.getUser().getFirstName(),
+                            k -> new ArrayList<>()
+                        )
+                        .add(noteVM);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 Assert.fail();
@@ -145,7 +157,7 @@ public class NoteDefinition extends AbstractStepDefinition {
     @Then("查詢有關病患 {word} 的筆記")
     public void queryPatientNotesValidation(String patientName) throws Exception {
         List<NoteVM> notes = getNotes(
-            NoteType.DOCTOR,
+            null,
             patientTestInfoHolder.getPatientMap().get(patientName).getId(),
             null
         );

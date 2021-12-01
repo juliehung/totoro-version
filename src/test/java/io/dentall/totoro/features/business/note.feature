@@ -7,6 +7,7 @@ Feature: 筆記邏輯
         Given Duke 24 歲病人
         Given Ema 24 歲病人
         Given Faker 24 歲病人
+        Given Hank 24 歲病人
 
     Scenario: 簡單建立病患筆記
         Given 建立筆記
@@ -16,8 +17,11 @@ Feature: 筆記邏輯
             | DOCTOR | content_Alice_Ema  | Alice | Ema |
             | DOCTOR | content_Alice_Duke  | Bob | Cathy |
             | DOCTOR | content_Alice_Duke  | Bob | Duke |
+            | SHARED | shared_content | Null | Hank |
+            | SERVICE | service_content | Null | Hank |
         Then 查詢醫生 Alice 的筆記
         Then 查詢有關病患 Cathy 的筆記
+        Then 查詢有關病患 Hank 的筆記
 
     Scenario: 查無病患筆記
         Then 應當查無病患 Faker 的筆記
