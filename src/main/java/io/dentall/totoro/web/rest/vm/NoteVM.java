@@ -3,12 +3,15 @@ package io.dentall.totoro.web.rest.vm;
 import io.dentall.totoro.domain.enumeration.NoteType;
 import io.dentall.totoro.service.dto.DoctorVM;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.Objects;
 
 public class NoteVM {
 
     private Long id;
 
+    @Enumerated(value = EnumType.STRING)
     private NoteType type;
 
     private String content;

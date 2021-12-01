@@ -26,11 +26,11 @@ Feature: 筆記邏輯
         Then 應當查無醫師 Goose 的筆記
 
     Scenario: 產生一筆不存在病患的筆記
-        Given 建立筆記
+        Then 建立筆記失敗
             | type | content | doctorName | patientName |
             | DOCTOR | content_Alice_NotExist  | Alice | NotExist |
 
     Scenario: 產生一筆不存在醫師的筆記
-        Given 建立筆記
+        Then 建立筆記失敗
             | type | content | doctorName | patientName |
             | DOCTOR | content_NotExist_Cathy  | NotExist | Cathy |

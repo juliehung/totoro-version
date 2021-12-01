@@ -6,6 +6,8 @@ import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.dentall.totoro.domain.Note;
+import io.dentall.totoro.domain.Patient;
+import io.dentall.totoro.domain.User;
 import io.dentall.totoro.domain.enumeration.NoteType;
 import io.dentall.totoro.repository.NoteRepository;
 import io.dentall.totoro.service.PatientService;
@@ -26,7 +28,6 @@ import org.junit.Assert;
 import org.springframework.util.LinkedMultiValueMap;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -81,13 +82,27 @@ public class NoteDefinition extends AbstractStepDefinition {
     public Note note(Map<String, String> entry) {
         Note note = NoteTestMapper.INSTANCE.mapToNote(entry);
 
+        User fakeUser = new User();
+        fakeUser.setId(0L);
 
-        note.setPatient(
-            patientTestInfoHolder.getPatientMap().get(entry.get("patientName"))
-        );
-        note.setUser(
-            userTestInfoHolder.getUserMap().get(entry.get("doctorName"))
-        );
+        Patient fakePatient = new Patient();
+        fakePatient.setId(0L);
+
+        if (!"NotExist".equals(entry.get("patientName"))) {
+            note.setPatient(
+                patientTestInfoHolder.getPatientMap().get(entry.get("patientName"))
+            );
+        } else {
+            note.setPatient(fakePatient);
+        }
+
+        if (!"NotExist".equals(entry.get("doctorName"))) {
+            note.setUser(
+                userTestInfoHolder.getUserMap().get(entry.get("doctorName"))
+            );
+        } else {
+            note.setUser(fakeUser);
+        }
 
         return note;
     }
@@ -97,16 +112,21 @@ public class NoteDefinition extends AbstractStepDefinition {
         notes.forEach(note -> {
             try {
                 NoteVM noteVM = postNote(NoteTestMapper.INSTANCE.noteToNoteCreateVM(note));
-                noteTestInfoHolder.getPatientNoteMap().putIfAbsent(
-                    note.getPatient().getName(),
-                    new ArrayList<>(Arrays.asList(noteVM))
-                ).add(noteVM);
-                noteTestInfoHolder.getDoctorNoteMap().putIfAbsent(
-                    note.getUser().getFirstName(),
-                    new ArrayList<>(Arrays.asList(noteVM))
-                ).add(noteVM);
+                noteTestInfoHolder.getPatientNoteMap()
+                    .computeIfAbsent(
+                        note.getPatient().getName(),
+                        k -> new ArrayList<>()
+                    )
+                    .add(noteVM);
+                noteTestInfoHolder.getDoctorNoteMap()
+                    .computeIfAbsent(
+                        note.getUser().getFirstName(),
+                        k -> new ArrayList<>()
+                    )
+                    .add(noteVM);
             } catch (Exception e) {
                 e.printStackTrace();
+                Assert.fail();
             }
         });
     }
@@ -153,10 +173,17 @@ public class NoteDefinition extends AbstractStepDefinition {
         Assert.assertEquals(0, notes.size());
     }
 
-    private NoteVM postNote(NoteCreateVM note) throws Exception {
+    @Then("建立筆記失敗")
+    public void createDoctorNoteFail(List<Note> notes) throws Exception {
+        for (Note note : notes) {
+            postNoteAssumeFail(NoteTestMapper.INSTANCE.noteToNoteCreateVM(note));
+        }
+    }
+
+    private NoteVM postNote(NoteCreateVM noteCreateVM) throws Exception {
         MockHttpServletRequestBuilder requestBuilder = post(noteApi)
             .contentType(APPLICATION_JSON)
-            .content(objectMapper.writeValueAsBytes(note));
+            .content(objectMapper.writeValueAsBytes(noteCreateVM));
 
         ResultActions resultActions = this.mvc.perform(requestBuilder);
 
@@ -166,6 +193,15 @@ public class NoteDefinition extends AbstractStepDefinition {
         noteTestInfoHolder.getNoteVms().add(noteVM);
 
         return noteVM;
+    }
+
+    private void postNoteAssumeFail(NoteCreateVM noteCreateVM) throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = post(noteApi)
+            .contentType(APPLICATION_JSON)
+            .content(objectMapper.writeValueAsBytes(noteCreateVM));
+
+        this.mvc.perform(requestBuilder)
+            .andExpect(status().is4xxClientError());
     }
 
     private List<NoteVM> getNotes(
