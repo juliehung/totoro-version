@@ -87,23 +87,23 @@ public class NoteResource {
         }
 
         return NoteMapper.INSTANCE.convertNoteDomainToVm(
-            noteRepository.save(note)
+            noteRepository.saveAndFlush(note)
         );
     }
 
     @PatchMapping("/notes/{id}")
     @Timed
     @Transactional
-    public Note createNotes(
+    public NoteVM patchNote(
         @PathVariable(name = "id") Long id,
-        @RequestBody String content
+        @RequestBody NoteCreateVM updateNote
     ) {
         Note note = noteRepository.findById(id)
             .orElseThrow(() -> new BadRequestAlertException("Can not found note by id", ENTITY_NAME, "notfound"));
 
-        note.setContent(content);
+        note.setContent(updateNote.getContent());
 
-        return note;
+        return NoteMapper.INSTANCE.convertNoteDomainToVm(note);
     }
 
     @GetMapping("/notes")

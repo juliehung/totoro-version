@@ -29,7 +29,7 @@ public class Note extends AbstractAuditingEntity {
     private Patient patient;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable=false, updatable=false)
+    @JoinColumn(name="user_id", updatable=false)
     private User user;
 
     public String getContent() {

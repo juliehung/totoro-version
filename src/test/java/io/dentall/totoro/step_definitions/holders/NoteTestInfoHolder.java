@@ -20,13 +20,39 @@ public class NoteTestInfoHolder {
     // Latest note
     private NoteVM noteVm;
 
-    // Keep all patients in scenario scope as list
-    private List<NoteVM> noteVms = new ArrayList<>();
-
     // Keep created notes group by doctor
     private Map<String, List<NoteVM>> doctorNoteMap = new HashMap<>();
 
     // Keep created notes group by patient
     private Map<String, List<NoteVM>> patientNoteMap = new HashMap<>();
 
+    public void cleanNotes() {
+        this.cleanPatientNotes();
+        this.cleanDoctorNotes();
+    }
+
+    public void assignNotes(String patientName, String doctorName, NoteVM noteVM) {
+       this.patientNoteMap
+            .computeIfAbsent(
+                patientName,
+                k -> new ArrayList<>()
+            )
+            .add(noteVM);
+        if (doctorName != null) {
+            this.doctorNoteMap
+                .computeIfAbsent(
+                    doctorName,
+                    k -> new ArrayList<>()
+                )
+                .add(noteVM);
+        }
+    }
+
+    private void cleanDoctorNotes() {
+        this.doctorNoteMap = new HashMap<>();
+    }
+
+    private void cleanPatientNotes() {
+        this.patientNoteMap = new HashMap<>();
+    }
 }

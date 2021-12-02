@@ -38,3 +38,16 @@ Feature: 筆記邏輯
         Then 建立筆記失敗
             | type | content | doctorName | patientName |
             | DOCTOR | content_NotExist_Cathy  | NotExist | Cathy |
+
+    Scenario: 更新筆記內容
+        Given 建立筆記
+            | type | content | doctorName | patientName |
+            | SERVICE | service | Null | Cathy |
+            | SHARED | share | Null | Cathy |
+            | DOCTOR  | content_Alice_Cathy  | Alice | Cathy |
+        Then 更改內容
+            | type | content | doctorName | patientName |
+            | SERVICE | modified_service | Null | Cathy |
+            | SHARED | modified_share | Null | Cathy |
+            | DOCTOR  | modified_content_Alice_Cathy  | Alice | Cathy |
+        Then 查詢醫生 Alice 的筆記

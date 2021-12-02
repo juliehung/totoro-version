@@ -1,7 +1,6 @@
 package io.dentall.totoro.web.rest.vm;
 
 import io.dentall.totoro.domain.enumeration.NoteType;
-import io.dentall.totoro.service.dto.DoctorVM;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -72,4 +71,5 @@ public class NoteVM {
     public int hashCode() {
         return Objects.hash(id, type, content, userId, patientId);
     }
+
 }

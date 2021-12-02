@@ -1,12 +1,9 @@
 package io.dentall.totoro.test.mapper;
 
 import io.dentall.totoro.domain.Note;
-import io.dentall.totoro.domain.Patient;
-import io.dentall.totoro.domain.User;
 import io.dentall.totoro.web.rest.vm.NoteCreateVM;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
 import java.util.Map;

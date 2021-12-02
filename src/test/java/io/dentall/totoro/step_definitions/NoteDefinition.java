@@ -19,6 +19,7 @@ import io.dentall.totoro.test.mapper.NoteTestMapper;
 import io.dentall.totoro.web.rest.NoteResource;
 import io.dentall.totoro.web.rest.vm.NoteCreateVM;
 import io.dentall.totoro.web.rest.vm.NoteVM;
+import org.apache.commons.lang.StringUtils;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
@@ -27,14 +28,15 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.junit.Assert;
 import org.springframework.util.LinkedMultiValueMap;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class NoteDefinition extends AbstractStepDefinition {
@@ -58,6 +60,8 @@ public class NoteDefinition extends AbstractStepDefinition {
     NoteTestInfoHolder noteTestInfoHolder;
 
     String noteApi = "/api/notes";
+
+    String notePatchApi = "/api/notes/%d";
 
     @Before
     public void setup() {
@@ -122,20 +126,11 @@ public class NoteDefinition extends AbstractStepDefinition {
         notes.forEach(note -> {
             try {
                 NoteVM noteVM = postNote(NoteTestMapper.INSTANCE.noteToNoteCreateVM(note));
-                noteTestInfoHolder.getPatientNoteMap()
-                    .computeIfAbsent(
-                        note.getPatient().getName(),
-                        k -> new ArrayList<>()
-                    )
-                    .add(noteVM);
-                if (note.getUser() != null) {
-                    noteTestInfoHolder.getDoctorNoteMap()
-                        .computeIfAbsent(
-                            note.getUser().getFirstName(),
-                            k -> new ArrayList<>()
-                        )
-                        .add(noteVM);
-                }
+                noteTestInfoHolder.assignNotes(
+                    note.getPatient().getName(),
+                    note.getUser() == null ? null : note.getUser().getFirstName(),
+                    noteVM
+                );
             } catch (Exception e) {
                 e.printStackTrace();
                 Assert.fail();
@@ -192,6 +187,57 @@ public class NoteDefinition extends AbstractStepDefinition {
         }
     }
 
+    @Then("更改內容")
+    public void patchingNotes(List<Note> inputNotes) throws Exception {
+        String samePatient = null;
+
+        noteTestInfoHolder.cleanNotes();
+
+        for (Note inputNote : inputNotes) {
+            if (StringUtils.isNotBlank(samePatient) &&
+                !samePatient.equals(inputNote.getPatient().getName())
+            ) {
+                Assert.fail("This test case must be using the same patient.");
+            } else {
+                samePatient = inputNote.getPatient().getName();
+            }
+
+            // Query and validate data
+            List<NoteVM> noteVMs = getNotes(
+                inputNote.getType(),
+                inputNote.getPatient() == null ? null : inputNote.getPatient().getId(),
+                inputNote.getUser() == null ? null : inputNote.getUser().getId()
+            );
+            Assert.assertEquals(1, noteVMs.size());
+
+            // Patching
+            noteVMs.get(0).setContent(inputNote.getContent());
+            NoteVM noteVM = patchNote(noteVMs.get(0));
+
+            // Set response as state for later validation
+            noteTestInfoHolder.assignNotes(
+                inputNote.getPatient().getName(),
+                inputNote.getUser() == null ? null : inputNote.getUser().getFirstName(),
+                noteVM
+            );
+        }
+
+        // Query all notes by patient
+        List<NoteVM> expectedNotes = noteTestInfoHolder.getPatientNoteMap().get(samePatient);
+        List<NoteVM> targetNotes = getNotes(
+            null,
+            patientTestInfoHolder.getPatientMap().get(samePatient).getId(),
+            null
+        );
+
+        Assert.assertEquals(expectedNotes.size(), targetNotes.size());
+        validateNotes(
+            expectedNotes.stream().sorted(this::compareNotes).collect(Collectors.toList()),
+            targetNotes.stream().sorted(this::compareNotes).collect(Collectors.toList())
+        );
+
+    }
+
     private NoteVM postNote(NoteCreateVM noteCreateVM) throws Exception {
         MockHttpServletRequestBuilder requestBuilder = post(noteApi)
             .contentType(APPLICATION_JSON)
@@ -200,9 +246,6 @@ public class NoteDefinition extends AbstractStepDefinition {
         ResultActions resultActions = this.mvc.perform(requestBuilder);
 
         NoteVM noteVM = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsByteArray(), NoteVM.class);
-
-        noteTestInfoHolder.setNoteVm(noteVM);
-        noteTestInfoHolder.getNoteVms().add(noteVM);
 
         return noteVM;
     }
@@ -238,6 +281,19 @@ public class NoteDefinition extends AbstractStepDefinition {
             resultActions.andReturn().getResponse().getContentAsString(),
             new TypeReference<List<NoteVM>>() {}
         );
+    }
+
+    private NoteVM patchNote(NoteVM noteVM) throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = patch(String.format(notePatchApi, noteVM.getId()))
+            .contentType(APPLICATION_JSON)
+            .content(objectMapper.writeValueAsBytes(noteVM));
+
+        ResultActions resultActions = this.mvc.perform(requestBuilder)
+            .andExpect(status().is2xxSuccessful());
+
+        NoteVM resNoteVM = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsByteArray(), NoteVM.class);
+
+        return resNoteVM;
     }
 
     private List<NoteVM> getEmptyNoteList(
@@ -301,5 +357,12 @@ public class NoteDefinition extends AbstractStepDefinition {
         NoteVM target
     ) {
         Assert.assertTrue(expected.equals(target));
+    }
+
+    private int compareNotes(
+        NoteVM o1,
+        NoteVM o2
+    ) {
+        return o1.getId() > o2.getId() ? 1 : -1;
     }
 }
