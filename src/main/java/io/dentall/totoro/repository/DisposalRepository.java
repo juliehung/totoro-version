@@ -28,7 +28,7 @@ public interface DisposalRepository extends JpaRepository<Disposal, Long>, JpaSp
 
     Optional<DisposalTable> findByTreatmentProcedures_Id(Long treatmentProcedureId);
 
-    List<SameTreatmentVM> findByRegistration_Appointment_Patient_IdAndDateTimeBetween(Long patientId, Instant begin, Instant end);
+    Page<SameTreatmentVM> findByRegistration_Appointment_Patient_IdAndDateTimeBetween(Long patientId, Instant begin, Instant end, Pageable pageable);
 
     Page<DisposalTable> findDisposalByRegistration_Appointment_Patient_Id(Long patientId, Pageable pageable);
 

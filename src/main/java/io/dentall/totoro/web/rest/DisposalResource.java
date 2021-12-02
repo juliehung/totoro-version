@@ -1,6 +1,8 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.api.Http;
+import io.dentall.totoro.domain.Disposal;
 import io.dentall.totoro.config.TimeConfig;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.PlainDisposalType;
@@ -203,21 +205,27 @@ public class DisposalResource {
     @GetMapping("/disposals/same-treatment")
     @Timed
     @Transactional
-    public List<SameTreatmentVM> findSameTreatment(
+    public ResponseEntity<List<SameTreatmentVM>> findSameTreatment(
         @RequestParam(name = "patientId") Long patientId,
         @RequestParam(required = false, name = "begin") Instant begin,
-        @RequestParam(name = "end") Instant end
+        @RequestParam(name = "end") Instant end,
+        Pageable pageable
     ) {
         if (begin == null) {
             begin = TimeConfig.MINIMUM_INSTANT;
         }
 
-        return disposalService.findSameTreatment(patientId, begin, end).stream()
+        Page<SameTreatmentVM> txs = disposalService.findSameTreatment(patientId, begin, end, pageable);
+        List<SameTreatmentVM> contents = txs.stream()
             .filter(Objects::nonNull)
             .filter(vm -> vm.getTreatmentProcedures_NhiProcedure_code() != null &&
                 StringUtils.isNotBlank(vm.getNhiExtendDisposals_a18())
             )
             .collect(Collectors.toList());
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(txs, "/api/disposals/same-treatment");
+
+        return ResponseEntity.ok().headers(headers).body(contents);
     }
 
     @GetMapping("/disposals/plain")
