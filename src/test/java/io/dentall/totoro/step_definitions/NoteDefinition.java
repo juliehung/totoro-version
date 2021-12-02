@@ -211,8 +211,9 @@ public class NoteDefinition extends AbstractStepDefinition {
             Assert.assertEquals(1, noteVMs.size());
 
             // Patching
-            noteVMs.get(0).setContent(inputNote.getContent());
-            NoteVM noteVM = patchNote(noteVMs.get(0));
+            NoteCreateVM noteCreateVM = new NoteCreateVM();
+            noteCreateVM.setContent(inputNote.getContent());
+            NoteVM noteVM = patchNote(noteVMs.get(0).getId(), noteCreateVM);
 
             // Set response as state for later validation
             noteTestInfoHolder.assignNotes(
@@ -283,10 +284,10 @@ public class NoteDefinition extends AbstractStepDefinition {
         );
     }
 
-    private NoteVM patchNote(NoteVM noteVM) throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = patch(String.format(notePatchApi, noteVM.getId()))
+    private NoteVM patchNote(Long id, NoteCreateVM noteCreateVM) throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = patch(String.format(notePatchApi, id))
             .contentType(APPLICATION_JSON)
-            .content(objectMapper.writeValueAsBytes(noteVM));
+            .content(objectMapper.writeValueAsBytes(noteCreateVM));
 
         ResultActions resultActions = this.mvc.perform(requestBuilder)
             .andExpect(status().is2xxSuccessful());

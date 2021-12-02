@@ -17,7 +17,7 @@ public interface NoteMapper {
     NoteMapper INSTANCE = Mappers.getMapper(NoteMapper.class);
 
     @Mapping(target = "patientId", source = "note.patient.id")
-    @Mapping(target = "userId", source = "note.user.id")
+    @Mapping(target = "userId", expression = "java( note.getUser() == null ? null : note.getUser().getId() )")
     NoteVM convertNoteDomainToVm(Note note);
 
     Note convertNoteCreateVmToDomain(NoteCreateVM noteCreateVM);
