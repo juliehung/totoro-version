@@ -216,16 +216,9 @@ public class DisposalResource {
         }
 
         Page<SameTreatmentVM> txs = disposalService.findSameTreatment(patientId, begin, end, pageable);
-        List<SameTreatmentVM> contents = txs.stream()
-            .filter(Objects::nonNull)
-            .filter(vm -> vm.getTreatmentProcedures_NhiProcedure_code() != null &&
-                StringUtils.isNotBlank(vm.getNhiExtendDisposals_a18())
-            )
-            .collect(Collectors.toList());
-
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(txs, "/api/disposals/same-treatment");
 
-        return ResponseEntity.ok().headers(headers).body(contents);
+        return ResponseEntity.ok().headers(headers).body(txs.getContent());
     }
 
     @GetMapping("/disposals/plain")
