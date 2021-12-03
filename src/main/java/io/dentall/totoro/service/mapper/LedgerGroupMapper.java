@@ -17,6 +17,7 @@ public interface LedgerGroupMapper {
 
     LedgerGroupMapper INSTANCE = Mappers.getMapper( LedgerGroupMapper.class );
 
+    @Mapping(target = "patientId", ignore = true)
     void patchLedgerGroup(
         @MappingTarget LedgerGroup origin,
         LedgerGroup patch

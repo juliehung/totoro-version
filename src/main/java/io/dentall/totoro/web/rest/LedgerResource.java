@@ -7,6 +7,7 @@ import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.LedgerGroupRepository;
 import io.dentall.totoro.repository.LedgerReceiptPrintedRecordRepository;
 import io.dentall.totoro.repository.LedgerReceiptRepository;
+import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.service.*;
 import io.dentall.totoro.service.dto.LedgerCriteria;
 import io.dentall.totoro.service.mapper.LedgerGroupMapper;
@@ -62,6 +63,8 @@ public class LedgerResource {
 
     private final ImageGcsBusinessService imageGcsBusinessService;
 
+    private final UserRepository userRepository;
+
     public LedgerResource(
         LedgerService ledgerService,
         LedgerQueryService ledgerQueryService,
@@ -69,7 +72,8 @@ public class LedgerResource {
         PatientService patientService,
         LedgerReceiptRepository ledgerReceiptRepository,
         LedgerReceiptPrintedRecordRepository ledgerReceiptPrintedRecordRepository,
-        ImageGcsBusinessService imageGcsBusinessService
+        ImageGcsBusinessService imageGcsBusinessService,
+        UserRepository userRepository
     ) {
         this.ledgerService = ledgerService;
         this.ledgerQueryService = ledgerQueryService;
@@ -78,6 +82,7 @@ public class LedgerResource {
         this.ledgerReceiptRepository = ledgerReceiptRepository;
         this.ledgerReceiptPrintedRecordRepository = ledgerReceiptPrintedRecordRepository;
         this.imageGcsBusinessService = imageGcsBusinessService;
+        this.userRepository = userRepository;
     }
 
 
@@ -92,6 +97,12 @@ public class LedgerResource {
             throw new BadRequestAlertException("Can not found patient by id", ENTITY_NAME, "notfound");
         }
 
+        if (ledgerGroup.getDoctorId() != null &&
+            !userRepository.existsById(ledgerGroup.getDoctorId())
+        ) {
+            throw new BadRequestAlertException("Can not found user by id", ENTITY_NAME, "notfound");
+        }
+
         return ledgerGroupRepository.save(ledgerGroup);
     }
 
@@ -104,19 +115,22 @@ public class LedgerResource {
     @PatchMapping("/ledger-groups")
     @Timed
     @Transactional
-    public LedgerGroup updateLedgerGroup(@RequestBody @Valid LedgerGroup updateLedgerGroup) {
+    public LedgerGroup updateLedgerGroup(@RequestBody LedgerGroup updateLedgerGroup) {
         log.info("Patch ledger group by id {} ", updateLedgerGroup.getId());
         if (updateLedgerGroup.getId() == null) {
             throw new BadRequestAlertException("Require ledger group id", ENTITY_NAME, "noid");
         }
 
-        if (updateLedgerGroup.getPatientId() != null) {
-            throw new BadRequestAlertException("Unable to modify patient id of ledger group", ENTITY_NAME, "limit");
+        if (updateLedgerGroup.getDoctorId() != null &&
+            !userRepository.existsById(updateLedgerGroup.getDoctorId())
+        ) {
+            throw new BadRequestAlertException("Can not found user by id", ENTITY_NAME, "notfound");
         }
 
         LedgerGroup ledgerGroup = ledgerGroupRepository.findById(updateLedgerGroup.getId())
             .orElseThrow(() -> new BadRequestAlertException("Can not found ledger group by id", ENTITY_NAME, "notfound"));
 
+        // Patient id is immutable. It will be ignored to update origin one with mapper rule.
         LedgerGroupMapper.INSTANCE.patchLedgerGroup(ledgerGroup, updateLedgerGroup);
 
         return ledgerGroup;

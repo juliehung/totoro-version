@@ -68,6 +68,9 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
     private ImageGcsBusinessService imageGcsBusinessService;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private LedgerTestInfoHolder ledgerTestInfoHolder;
 
     @Autowired
@@ -94,7 +97,8 @@ public class LedgerStepDefinition extends AbstractStepDefinition {
             patientService,
             ledgerReceiptRepository,
             ledgerReceiptPrintedRecordRepository,
-            imageGcsBusinessService
+            imageGcsBusinessService,
+            userRepository
         );
         this.mvc = MockMvcBuilders.standaloneSetup(resource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
