@@ -28,7 +28,35 @@ public interface DisposalRepository extends JpaRepository<Disposal, Long>, JpaSp
 
     Optional<DisposalTable> findByTreatmentProcedures_Id(Long treatmentProcedureId);
 
-    List<SameTreatmentVM> findByRegistration_Appointment_Patient_IdAndDateTimeBetween(Long patientId, Instant begin, Instant end);
+    @Query(
+        value = "select tp.id as id, " +
+            "ned.a18 as a18, " +
+            "ned.a23 as a23, " +
+            "netp.a74 as a74, " +
+            "tp.completed_date as completedDate, " +
+            "np.code as code, " +
+            "np.name as name " +
+            "from disposal d " +
+            "left join appointment a on d.registration_id = a.registration_id " +
+            "left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "left join nhi_extend_treatment_procedure netp on tp.id = netp.treatment_procedure_id " +
+            "left join nhi_procedure np on tp.nhi_procedure_id = np.id " +
+            "where a.patient_id = :patientId " +
+            "and d.date_time between :begin and :end " +
+            "and tp.nhi_procedure_id is not null " +
+            "and trim(ned.a18) <> '' ",
+        countQuery = "select count(*) from disposal d " +
+            "left join appointment a on d.registration_id = a.registration_id " +
+            "left join treatment_procedure tp on d.id = tp.disposal_id " +
+            "left join nhi_extend_disposal ned on d.id = ned.disposal_id " +
+            "where a.patient_id = :patientId " +
+            "and d.date_time between :begin and :end " +
+            "and tp.nhi_procedure_id is not null " +
+            "and trim(ned.a18) <> '' ",
+        nativeQuery = true
+    )
+    Page<SameTreatmentVM> findByRegistration_Appointment_Patient_IdAndDateTimeBetween(Long patientId, Instant begin, Instant end, Pageable pageable);
 
     Page<DisposalTable> findDisposalByRegistration_Appointment_Patient_Id(Long patientId, Pageable pageable);
 
