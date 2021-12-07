@@ -45,7 +45,8 @@ public interface DisposalRepository extends JpaRepository<Disposal, Long>, JpaSp
             "where a.patient_id = :patientId " +
             "and d.date_time between :begin and :end " +
             "and tp.nhi_procedure_id is not null " +
-            "and trim(ned.a18) <> '' ",
+            "and trim(ned.a18) <> '' " +
+            "and ned.a23 not in ('AA', 'AB', 'AC') ",
         countQuery = "select count(*) from disposal d " +
             "left join appointment a on d.registration_id = a.registration_id " +
             "left join treatment_procedure tp on d.id = tp.disposal_id " +
@@ -53,7 +54,8 @@ public interface DisposalRepository extends JpaRepository<Disposal, Long>, JpaSp
             "where a.patient_id = :patientId " +
             "and d.date_time between :begin and :end " +
             "and tp.nhi_procedure_id is not null " +
-            "and trim(ned.a18) <> '' ",
+            "and trim(ned.a18) <> '' " +
+            "and ned.a23 not in ('AA', 'AB', 'AC') ",
         nativeQuery = true
     )
     Page<SameTreatmentVM> findByRegistration_Appointment_Patient_IdAndDateTimeBetween(Long patientId, Instant begin, Instant end, Pageable pageable);
