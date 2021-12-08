@@ -716,19 +716,16 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         // resultActions.andExpect(jsonPath("$.validated").value(equalTo(passOrNot)));
 
         if (innerPassOrNot == false) {
-            try {
-                assertThat(message).isNotEmpty();
-                resultActions.andExpect(jsonPath(innerPath + ".message").value(hasItem(message)));
-                resultActions.andExpect(jsonPath(innerPath + ".validated").value(hasItem(false)));
-            } catch(Exception e) {
-                // 若有異常，則印出結果，以便除錯，並回傳原錯誤訊息
-                NhiRuleCheckResultVM vm = objectMapper.readValue(
-                    resultActions.andReturn().getResponse().getContentAsString(),
-                    NhiRuleCheckResultVM.class
-                );
-                System.out.println(vm.getMessages().toString());
-                throw e;
-            }
+            assertThat(message).isNotEmpty();
+            // 則印出response body，以便除錯，並回傳原錯誤訊息
+            NhiRuleCheckResultVM vm = objectMapper.readValue(
+                resultActions.andReturn().getResponse().getContentAsString(),
+                NhiRuleCheckResultVM.class
+            );
+            System.out.println(vm.getMessages().toString());
+
+            resultActions.andExpect(jsonPath(innerPath + ".message").value(hasItem(message)));
+            resultActions.andExpect(jsonPath(innerPath + ".validated").value(hasItem(false)));
         } else {
             // 這邊檢查會有盲點，因為參數 message 有可能與回傳的檢查訊息本來就是不一樣，所以測試會照樣通過，所以測案至少要有反例最好
             resultActions.andExpect(jsonPath(innerPath).value(empty()));
