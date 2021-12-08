@@ -1,5 +1,6 @@
 package io.dentall.totoro.step_definitions;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
 import io.cucumber.java.DataTableType;
@@ -11,6 +12,7 @@ import io.dentall.totoro.business.service.nhi.util.NhiRuleCheckUtil;
 import io.dentall.totoro.business.service.nhi.util.ToothConstraint;
 import io.dentall.totoro.business.service.nhi.util.ToothUtil.ToothPhase;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckBody;
+import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckTxSnapshot;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.repository.NhiExtendTreatmentProcedureRepository;
@@ -21,6 +23,7 @@ import io.dentall.totoro.test.TestUtils;
 import io.dentall.totoro.test.dao.NhiTreatment;
 import io.dentall.totoro.test.mapper.NhiTreatmentTestMapper;
 import io.dentall.totoro.web.rest.NhiRuleCheckResource;
+import io.dentall.totoro.web.rest.vm.LedgerVM;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -709,13 +712,23 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
 
     private void checkResult(ResultActions resultActions, boolean passOrNot, boolean innerPassOrNot, String message) throws Exception {
         String innerPath = "$.checkHistory[?(@.message == '" + message + "')]";
-//        暫不檢查 validated，因為目前代碼檢查機制是每項檢核有錯誤，都會讓validated為false，所以即使測試檢核A通過，但也有可能被檢核B測試不通過影響到
-//        resultActions.andExpect(jsonPath("$.validated").value(equalTo(passOrNot)));
+        // 暫不檢查 validated，因為目前代碼檢查機制是每項檢核有錯誤，都會讓validated為false，所以即使測試檢核A通過，但也有可能被檢核B測試不通過影響到
+        // resultActions.andExpect(jsonPath("$.validated").value(equalTo(passOrNot)));
 
         if (innerPassOrNot == false) {
-            assertThat(message).isNotEmpty();
-            resultActions.andExpect(jsonPath(innerPath + ".message").value(hasItem(message)));
-            resultActions.andExpect(jsonPath(innerPath + ".validated").value(hasItem(false)));
+            try {
+                assertThat(message).isNotEmpty();
+                resultActions.andExpect(jsonPath(innerPath + ".message").value(hasItem(message)));
+                resultActions.andExpect(jsonPath(innerPath + ".validated").value(hasItem(false)));
+            } catch(Exception e) {
+                // 若有異常，則印出結果，以便除錯，並回傳原錯誤訊息
+                NhiRuleCheckResultVM vm = objectMapper.readValue(
+                    resultActions.andReturn().getResponse().getContentAsString(),
+                    NhiRuleCheckResultVM.class
+                );
+                System.out.println(vm.getMessages().toString());
+                throw e;
+            }
         } else {
             // 這邊檢查會有盲點，因為參數 message 有可能與回傳的檢查訊息本來就是不一樣，所以測試會照樣通過，所以測案至少要有反例最好
             resultActions.andExpect(jsonPath(innerPath).value(empty()));

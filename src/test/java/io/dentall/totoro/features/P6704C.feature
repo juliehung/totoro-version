@@ -36,7 +36,7 @@ Feature: P6704C 嚴重齲齒兒童口腔健康照護複診治療-第二次
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D8_1
+        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <TreatmentNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | GapDay | PassOrNot |
             | P6704C       | FM         | DL           | 89                | P6703C           | FM             | 90     | NotPass   |
@@ -55,7 +55,7 @@ Feature: P6704C 嚴重齲齒兒童口腔健康照護複診治療-第二次
         When 執行診療代碼 <IssueNhiCode> 檢查:
             | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
             |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
-        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D8_1
+        Then 檢查 <IssueNhiCode> 診療項目，在病患過去 <GapDay> 天紀錄中，不應包含特定的 <MedicalNhiCode> 診療代碼，確認結果是否為 <PassOrNot> 且檢查訊息類型為 D1_2
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapDay | PassOrNot |
             | P6704C       | FM         | DL           | 89                | P6703C           | FM             | 90     | NotPass   |
@@ -64,6 +64,47 @@ Feature: P6704C 嚴重齲齒兒童口腔健康照護複診治療-第二次
             | P6704C       | FM         | DL           | 89                | P6703C           | FM             | 90     | NotPass   |
             | P6704C       | FM         | DL           | 90                | P6703C           | FM             | 90     | NotPass   |
             | P6704C       | FM         | DL           | 91                | P6703C           | FM             | 90     | Pass      |
+
+    Scenario Outline: （HIS）180 天內，曾經有 P6703C 治療項目
+        Given 建立醫師
+        Given Wind 24 歲病人
+        Given 在過去第 <PastTreatmentDays> 天，建立預約
+        Given 在過去第 <PastTreatmentDays> 天，建立掛號
+        Given 在過去第 <PastTreatmentDays> 天，產生診療計畫
+        And 新增診療代碼:
+            | PastDays            | A72 | A73                | A74              | A75 | A76 | A77 | A78 | A79 |
+            | <PastTreatmentDays> | 3   | <TreatmentNhiCode> | <TreatmentTeeth> | MOB | 0   | 1.0 | 03  |     |
+        Given 建立預約
+        Given 建立掛號
+        Given 產生診療計畫
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
+        Then 檢查 180 天內，應有 <TreatmentNhiCode> 診療項目存在，確認結果是否為 <PassOrNot>
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | PassOrNot |
+            | P6704C       | 11         | MOB          | 179                | P6703C           | 11             | Pass      |
+            | P6704C       | 11         | MOB          | 180                | P6703C           | 11             | Pass      |
+            | P6704C       | 11         | MOB          | 181                | P6703C           | 11             | NotPass   |
+
+    Scenario Outline: （IC）180 天內，曾經有 P6703C 治療項目
+        Given 建立醫師
+        Given Wind 24 歲病人
+        Given 新增健保醫療:
+            | PastDays          | NhiCode          | Teeth          |
+            | <PastMedicalDays> | <MedicalNhiCode> | <MedicalTeeth> |
+        Given 建立預約
+        Given 建立掛號
+        Given 產生診療計畫
+        When 執行診療代碼 <IssueNhiCode> 檢查:
+            | NhiCode | Teeth | Surface | NewNhiCode     | NewTeeth     | NewSurface     |
+            |         |       |         | <IssueNhiCode> | <IssueTeeth> | <IssueSurface> |
+        Then 檢查 180 天內，應有 <MedicalNhiCode> 診療項目存在，確認結果是否為 <PassOrNot>
+        Examples:
+            | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | PassOrNot |
+            | P6704C       | 11         | MOB          | 179                | P6703C           | 11             | Pass      |
+            | P6704C       | 11         | MOB          | 180                | P6703C           | 11             | Pass      |
+            | P6704C       | 11         | MOB          | 181                | P6703C           | 11             | NotPass   |
 
     Scenario Outline: （Disposal）不得與91014C、91020C、91114C、92051B、92072C、P30002、81、87同時申報
         Given 建立醫師

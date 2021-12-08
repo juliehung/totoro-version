@@ -102,18 +102,6 @@ public class NhiRuleCheckScriptP6XXXX {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         nhiRuleCheckUtil.addResultToVm(
-            nhiRuleCheckUtil.isDependOnCodeBeforeDate(
-                dto,
-                null,
-                Arrays.asList("P6703C"),
-                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_180_DAY),
-                String.valueOf(DateTimeUtil.NHI_180_DAY.getDays()),
-                NhiRuleCheckFormat.D1_2
-            ),
-            vm
-        );
-
-        nhiRuleCheckUtil.addResultToVm(
             nhiRuleCheckUtil.isCodeBeforeDateV2(
                 dto,
                 null,
@@ -121,6 +109,18 @@ public class NhiRuleCheckScriptP6XXXX {
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
                 String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
                 1,
+                NhiRuleCheckFormat.D1_2
+            ),
+            vm
+        );
+
+        nhiRuleCheckUtil.addResultToVm(
+            nhiRuleCheckUtil.isDependOnCodeBeforeDate(
+                dto,
+                null,
+                Arrays.asList("P6703C"),
+                nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_180_DAY),
+                String.valueOf(DateTimeUtil.NHI_180_DAY.getDays()),
                 NhiRuleCheckFormat.D8_1
             ),
             vm
