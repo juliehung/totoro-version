@@ -29,7 +29,7 @@ Feature: 92072C 口乾症塗氟
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 92072C       | FM         | MOB          | Pass      |
 
-    Scenario Outline: （HIS）90天內，不應有 92072C 診療項目
+    Scenario Outline: （HIS）90天內，不應有 92072C、P6702C、P6703C、P6704C、P6705C 診療項目
         Given 建立醫師
         Given Scott 24 歲病人
         Given 在過去第 <PastTreatmentDays> 天，建立預約
@@ -48,10 +48,23 @@ Feature: 92072C 口乾症塗氟
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | GapDay | PassOrNot |
             | 92072C       | FM         | DL           | 89                | 92072C           | FM             | 90     | NotPass   |
+            | 92072C       | FM         | DL           | 89                | P6702C           | FM             | 90     | NotPass   |
+            | 92072C       | FM         | DL           | 89                | P6703C           | FM             | 90     | NotPass   |
+            | 92072C       | FM         | DL           | 89                | P6704C           | FM             | 90     | NotPass   |
+            | 92072C       | FM         | DL           | 89                | P6705C           | FM             | 90     | NotPass   |
             | 92072C       | FM         | DL           | 90                | 92072C           | FM             | 90     | NotPass   |
+            | 92072C       | FM         | DL           | 90                | P6702C           | FM             | 90     | NotPass   |
+            | 92072C       | FM         | DL           | 90                | P6703C           | FM             | 90     | NotPass   |
+            | 92072C       | FM         | DL           | 90                | P6704C           | FM             | 90     | NotPass   |
+            | 92072C       | FM         | DL           | 90                | P6705C           | FM             | 90     | NotPass   |
             | 92072C       | FM         | DL           | 91                | 92072C           | FM             | 90     | Pass      |
+            | 92072C       | FM         | DL           | 91                | P6702C           | FM             | 90     | Pass      |
+            | 92072C       | FM         | DL           | 91                | P6703C           | FM             | 90     | Pass      |
+            | 92072C       | FM         | DL           | 91                | P6704C           | FM             | 90     | Pass      |
+            | 92072C       | FM         | DL           | 91                | P6705C           | FM             | 90     | Pass      |
 
-    Scenario Outline: （IC）90天內，不應有 92072C 診療項目
+
+    Scenario Outline: （IC）90天內，不應有 92072C、P6702C、P6703C、P6704C、P6705C 診療項目
         Given 建立醫師
         Given Scott 24 歲病人
         Given 新增健保醫療:
@@ -67,8 +80,20 @@ Feature: 92072C 口乾症塗氟
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapDay | PassOrNot |
             | 92072C       | FM         | DL           | 89              | 92072C         | FM           | 90     | NotPass   |
+            | 92072C       | FM         | DL           | 89              | P6702C         | FM           | 90     | NotPass   |
+            | 92072C       | FM         | DL           | 89              | P6703C         | FM           | 90     | NotPass   |
+            | 92072C       | FM         | DL           | 89              | P6704C         | FM           | 90     | NotPass   |
+            | 92072C       | FM         | DL           | 89              | P6705C         | FM           | 90     | NotPass   |
             | 92072C       | FM         | DL           | 90              | 92072C         | FM           | 90     | NotPass   |
+            | 92072C       | FM         | DL           | 90              | P6702C         | FM           | 90     | NotPass   |
+            | 92072C       | FM         | DL           | 90              | P6703C         | FM           | 90     | NotPass   |
+            | 92072C       | FM         | DL           | 90              | P6704C         | FM           | 90     | NotPass   |
+            | 92072C       | FM         | DL           | 90              | P6705C         | FM           | 90     | NotPass   |
             | 92072C       | FM         | DL           | 91              | 92072C         | FM           | 90     | Pass      |
+            | 92072C       | FM         | DL           | 91              | P6702C         | FM           | 90     | Pass      |
+            | 92072C       | FM         | DL           | 91              | P6703C         | FM           | 90     | Pass      |
+            | 92072C       | FM         | DL           | 91              | P6704C         | FM           | 90     | Pass      |
+            | 92072C       | FM         | DL           | 91              | P6705C         | FM           | 90     | Pass      |
 
     Scenario Outline: 檢查治療的牙位是否為 FULL_ZONE
         Given 建立醫師
