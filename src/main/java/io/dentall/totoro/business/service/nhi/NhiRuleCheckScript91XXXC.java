@@ -1022,7 +1022,7 @@ public class NhiRuleCheckScript91XXXC {
             nhiRuleCheckUtil.isCodeBeforeDateV2(
                 dto,
                 null,
-                Arrays.asList("91003C", "91005C", "91015C", "91016C", "91017C", "91018C", "91089C"),
+                Arrays.asList("91003C", "91005C", "91015C", "91016C", "91017C", "91018C", "91089C", "P6702C", "P6703C", "P6704C", "P6705C"),
                 nhiRuleCheckUtil.regularDayDurationCalculation(dto, DateTimeUtil.NHI_90_DAY),
                 String.valueOf(DateTimeUtil.NHI_90_DAY.getDays()),
                 1,
