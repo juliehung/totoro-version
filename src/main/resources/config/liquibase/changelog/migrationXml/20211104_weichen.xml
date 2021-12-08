@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20211104-weichen" author="WeiChen">
+        <sql>
+            create table ledger_receipt (
+                id bigint
+                    constraint pk_ledger_receipt
+                        primary key,
+                gid bigint,
+                signed boolean,
+                type varchar(20),
+                range_type varchar(20),
+                range_begin timestamp,
+                range_end timestamp,
+                stamp_tax boolean,
+                time timestamp,
+                file_path varchar,
+                file_name varchar,
+                created_by varchar(50),
+                created_date timestamp,
+                last_modified_by varchar(50),
+                last_modified_date timestamp
+            );
+            create index on ledger_receipt (id);
+            create sequence ledger_receipt_seq start with 1 increment by 1;
+        </sql>
+        <sql>
+            create table ledger_ledger_receipt (
+                ledger_id bigint not null
+                    constraint fk_ledger_ledger_ledger_id
+                        references ledger (id),
+                ledger_receipt_id bigint not null
+                    constraint fk_ledger_ledger_receipt_ledger_id
+                        references ledger_receipt (id)
+            );
+            create index on ledger_ledger_receipt (ledger_id, ledger_receipt_id);
+            create sequence ledger_ledger_receipt_seq start with 1 increment by 1;
+        </sql>
+        <sql>
+            create table ledger_receipt_printed_record (
+                id bigint
+                    constraint pk_ledger_receipt_printed_record
+                        primary key,
+                ledger_receipt_id bigint
+                    constraint fk_ledger_receipt_printed_record_ledger_receipt_id
+                        references ledger_receipt,
+                time timestamp,
+                created_by varchar(50),
+                created_date timestamp,
+                last_modified_by varchar(50),
+                last_modified_date timestamp
+            );
+            create index on ledger_receipt_printed_record (id);
+            create sequence ledger_receipt_printed_record_seq start with 1 increment by 1;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

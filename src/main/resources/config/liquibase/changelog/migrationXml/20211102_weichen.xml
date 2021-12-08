@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20211102-weichen" author="WeiChen">
+        <sql>
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.vendor.vixwin', 'false') on conflict do nothing;
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.vendor.poye', 'false');
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.vendor.ray', 'false');
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.vendor.vatech', 'false');
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.vendor.apixia', 'false');
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.vendor.cliniview10', 'false');
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.vendor.vistasoft', 'false');
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.vendor.carestream', 'false');
+
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.vixwin.path.application', 'C:\\vixwin\\vixwin') on conflict do nothing;;
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.poye.path.application', 'C:\\PoYe Dental Imaging\\FSEZDent.exe');
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.ray.path.application', 'C:\\Ray\\RayView\\RayBridge\\RayBridge.exe');
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.vatech.path.application', 'C:\\Program Files (x86)\\VATECH\\EzDent-i\\Bin\\VTE2Loader_ReqAdmin32.exe');
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.apaxia.path.application', 'C:\\DIGIREX\\digirex.exe');
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.cliniview10.path.application', 'C:\\Program Files (x86)\\CLINIVIEW\\CliniView.exe');
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.vistasoft.path.application', 'C:\\Program Files\\Duerr\\VistaSoft\\Clients\\VistaSoft.exe');
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.carestream.path.application', 'C:\\Program Files (x86)\\Carestream\\CSImaging8\\TW.exe');
+
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.vixwin.path.xml', 'W:\\VXIMAGES') on conflict do nothing;;
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.ray.path.xml', 'C:\\Ray');
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.vatech.path.xml', 'C:\\Program Files (x86)\\VATECH\\EzDent-i\\Bin');
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.apaxia.path.init', 'C:\\DIGIREX');
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.vistasoft.path.txt', 'C:\\Program Files\\Duerr');
+            insert into configuration_map (id, config_key, config_value) values (nextval('hibernate_sequence'), 'web.xray.carestream.path.image', '');
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

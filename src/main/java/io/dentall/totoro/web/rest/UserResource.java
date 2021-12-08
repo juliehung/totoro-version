@@ -1,5 +1,6 @@
 package io.dentall.totoro.web.rest;
 
+import io.dentall.totoro.business.service.ImageGcsBusinessService;
 import io.dentall.totoro.config.Constants;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.UserRepository;
@@ -7,6 +8,7 @@ import io.dentall.totoro.security.AuthoritiesConstants;
 import io.dentall.totoro.service.MailService;
 import io.dentall.totoro.service.UserService;
 import io.dentall.totoro.service.dto.UserDTO;
+import io.dentall.totoro.service.mapper.UserMapper;
 import io.dentall.totoro.web.rest.errors.*;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -16,6 +18,7 @@ import io.github.jhipster.web.util.ResponseUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -65,11 +69,22 @@ public class UserResource {
 
     private final MailService mailService;
 
-    public UserResource(UserService userService, UserRepository userRepository, MailService mailService) {
+    private ApplicationContext applicationContext;
 
+    private final UserMapper userMapper;
+
+    public UserResource(
+        UserService userService,
+        UserRepository userRepository,
+        MailService mailService,
+        ApplicationContext applicationContext,
+        UserMapper userMapper
+    ) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.mailService = mailService;
+        this.applicationContext = applicationContext;
+        this.userMapper = userMapper;
     }
 
     /**
@@ -139,11 +154,24 @@ public class UserResource {
      * @return the ResponseEntity with status 200 (OK) and with body all users
      */
     @GetMapping("/users")
+    @Transactional
     @Timed
-    public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) {
-        final Page<UserDTO> page = userService.getAllManagedUsers(pageable);
+    public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) throws Exception {
+        List<UserDTO> result = new ArrayList<>();
+        ImageGcsBusinessService imageGcsBusinessService = applicationContext.getBean(ImageGcsBusinessService.class);
+
+        Page<User> page = userService.getAllManagedUsersWithExtendUser(pageable);
+        for (User user : page.getContent()) {
+            UserDTO userDTO = userMapper.userToUserDTO(user);
+
+            userService.transformLocalAvatarToGcsAvatar(user, imageGcsBusinessService);
+            userService.appendImageUrlToUserDTO(user, userDTO, imageGcsBusinessService);
+
+            result.add(userDTO);
+        }
+
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/users");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return new ResponseEntity<>(result, headers, HttpStatus.OK);
     }
 
     /**
@@ -164,11 +192,20 @@ public class UserResource {
      */
     @GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}")
     @Timed
-    public ResponseEntity<UserDTO> getUser(@PathVariable String login) {
+    @Transactional
+    public UserDTO getUser(@PathVariable String login) throws Exception {
         log.debug("REST request to get User : {}", login);
-        return ResponseUtil.wrapOrNotFound(
-            userService.getUserWithAuthoritiesByLogin(login)
-                .map(UserDTO::new));
+        ImageGcsBusinessService imageGcsBusinessService = applicationContext.getBean(ImageGcsBusinessService.class);
+
+        User user = userService.getUserWithAuthoritiesByLogin(login)
+            .orElseThrow(() -> new BadRequestAlertException("Can not found user by id", "USER", "notfound"));
+        user.getExtendUser();
+        UserDTO userDTO = userMapper.userToUserDTO(user);
+
+        userService.transformLocalAvatarToGcsAvatar(user, imageGcsBusinessService);
+        userService.appendImageUrlToUserDTO(user, userDTO, imageGcsBusinessService);
+
+        return userDTO;
     }
 
     /**

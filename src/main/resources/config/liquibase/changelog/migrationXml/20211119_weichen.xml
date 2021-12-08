@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20211119-weichen" author="WeiChen">
+        <!--
+            由於 gid 原先由前端負責維護，且是利用時間來表示，並回傳給後端存入。在 1.31 之後，轉移
+            至後端接管。為了避免衝突，將其時間設定為 2022-01-01T00:00:00Z，若固有資料超過這個時
+            間，則會有衝圖問題，但理論上不會有伺服器用舊版的到這個時間點才是。
+        -->
+        <sql>
+            CREATE INDEX idx_ledger_group_doctor_id ON ledger_group (doctor_id);
+            CREATE SEQUENCE ledger_group_seq START WITH 1640995200000;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

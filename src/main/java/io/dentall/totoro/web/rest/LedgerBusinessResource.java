@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 /**
  * REST controller for managing Ledger.
  */
+@Deprecated
 @RestController
 @RequestMapping("/api/business")
 public class LedgerBusinessResource {
@@ -88,12 +89,12 @@ public class LedgerBusinessResource {
         Page<Ledger> page = ledgerQueryService.findByCriteria(criteria, pageable);
         List<LedgerVM> result = page.getContent().stream()
             .map(d -> {
-                LedgerUnwrapGroupVM ledgerUnwrapGroupVM = LedgerGroupMapper.INSTANCE.convertLedgerToLedgerUnwrapGroupVM(d);
-                LedgerVM ledgerVM = new LedgerVM();
-                ledgerVM.setLedger(ledgerUnwrapGroupVM);
+                LedgerVM ledgerVM = LedgerGroupMapper.INSTANCE.convertLedgerFromDomainToVM(d);
 
-                Patient p = patientService.findPatientById(d.getLedgerGroup().getPatientId());
+                Patient p = patientService.findPatientById(d.getLedgerGroup().getPatientId())
+                    .orElse(new Patient());
                 ledgerVM.setPatient(p);
+                ledgerVM.setPatientId(p.getId());
 
                 return ledgerVM;
             })

@@ -1,12 +1,15 @@
 package io.dentall.totoro.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -14,6 +17,7 @@ import java.util.*;
  */
 @Entity
 @Table(name = "extend_user")
+@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 public class ExtendUser implements Serializable, Avatar {
 
     private static final long serialVersionUID = 1L;
@@ -30,6 +34,8 @@ public class ExtendUser implements Serializable, Avatar {
     @Column(name = "calendar_id")
     private String calendarId;
 
+    @Deprecated
+    @JsonIgnore
     @Lob
     @Column(name = "avatar")
     private byte[] avatar;
@@ -39,6 +45,22 @@ public class ExtendUser implements Serializable, Avatar {
 
     @Column(name = "national_id")
     private String nationalId;
+
+    @Column(name = "license_no")
+    private String licenseNo;
+
+    @Column(name = "practice_date")
+    private LocalDate practiceDate;
+
+    @Column(name = "qualification")
+    @Type(type = "jsonb")
+    private Map<String, String> qualification;
+
+    @Column(name = "file_path")
+    private String filePath;
+
+    @Column(name = "file_name")
+    private String fileName;
 
     @OneToOne
     @MapsId
@@ -68,6 +90,26 @@ public class ExtendUser implements Serializable, Avatar {
 
     @OneToMany(mappedBy = "doctor")
     private Set<Calendar> calendars = new HashSet<>();
+
+    public Boolean getFirstLogin() {
+        return firstLogin;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
     public Long getId() {
         return id;
@@ -368,6 +410,30 @@ public class ExtendUser implements Serializable, Avatar {
         this.calendars = calendars;
     }
 
+    public String getLicenseNo() {
+        return licenseNo;
+    }
+
+    public void setLicenseNo(String licenseNo) {
+        this.licenseNo = licenseNo;
+    }
+
+    public LocalDate getPracticeDate() {
+        return practiceDate;
+    }
+
+    public void setPracticeDate(LocalDate practiceDate) {
+        this.practiceDate = practiceDate;
+    }
+
+    public Map<String, String> getQualification() {
+        return qualification;
+    }
+
+    public void setQualification(Map<String, String> qualification) {
+        this.qualification = qualification;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -391,11 +457,14 @@ public class ExtendUser implements Serializable, Avatar {
     @Override
     public String toString() {
         return "ExtendUser{" +
-            "id=" + getId() +
-            ", firstLogin='" + isFirstLogin() + "'" +
-            ", avatar='" + Arrays.toString(getAvatar()) + "'" +
-            ", avatarContentType='" + getAvatarContentType() + "'" +
-            ", nationalId='" + getNationalId() + "'" +
-            "}";
+            "id=" + id +
+            ", firstLogin=" + firstLogin +
+            ", avatar=" + Arrays.toString(avatar) +
+            ", avatarContentType='" + avatarContentType + '\'' +
+            ", nationalId='" + nationalId + '\'' +
+            ", licenseNo='" + licenseNo + '\'' +
+            ", practiceDate=" + practiceDate +
+            ", qualification=" + qualification +
+            '}';
     }
 }

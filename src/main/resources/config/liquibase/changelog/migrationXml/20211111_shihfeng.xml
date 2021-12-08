@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20211111-shihfeng" author="ShihFeng">
+        <sql>
+            alter table extend_user
+                add license_no varchar(64);
+
+            alter table extend_user
+                add practice_date date;
+
+            alter table extend_user
+                add qualification json;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

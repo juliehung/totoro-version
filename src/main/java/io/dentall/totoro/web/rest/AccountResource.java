@@ -2,6 +2,7 @@ package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 
+import io.dentall.totoro.business.service.ImageGcsBusinessService;
 import io.dentall.totoro.domain.ExtendUser;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.UserRepository;
@@ -9,8 +10,10 @@ import io.dentall.totoro.security.SecurityUtils;
 import io.dentall.totoro.service.AvatarService;
 import io.dentall.totoro.service.MailService;
 import io.dentall.totoro.service.UserService;
+import io.dentall.totoro.service.UserServiceV2;
 import io.dentall.totoro.service.dto.PasswordChangeDTO;
 import io.dentall.totoro.service.dto.UserDTO;
+import io.dentall.totoro.service.mapper.UserMapper;
 import io.dentall.totoro.web.rest.errors.*;
 import io.dentall.totoro.web.rest.util.AvatarUtil;
 import io.dentall.totoro.web.rest.vm.AvatarVM;
@@ -20,19 +23,21 @@ import io.dentall.totoro.web.rest.vm.ManagedUserVM;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.*;
-
 
 /**
  * REST controller for managing the current user's account.
  */
+@Profile("img-gcs")
 @RestController
 @RequestMapping("/api")
 public class AccountResource {
@@ -47,11 +52,28 @@ public class AccountResource {
 
     private final AvatarService avatarService;
 
-    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService, AvatarService avatarService) {
+    private final UserServiceV2 userServiceV2;
+
+    private final ImageGcsBusinessService imageGcsBusinessService;
+
+    private final UserMapper userMapper;
+
+    public AccountResource(
+        UserRepository userRepository,
+        UserService userService,
+        MailService mailService,
+        AvatarService avatarService,
+        UserServiceV2 userServiceV2,
+        ImageGcsBusinessService imageGcsBusinessService,
+        UserMapper userMapper
+    ) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailService = mailService;
         this.avatarService = avatarService;
+        this.userServiceV2 = userServiceV2;
+        this.imageGcsBusinessService = imageGcsBusinessService;
+        this.userMapper = userMapper;
     }
 
     /**
@@ -109,11 +131,21 @@ public class AccountResource {
      * @throws RuntimeException 500 (Internal Server Error) if the user couldn't be returned
      */
     @GetMapping("/account")
+    @Transactional
     @Timed
-    public UserDTO getAccount() {
-        return userService.getUserWithAuthorities()
-            .map(UserDTO::new)
-            .orElseThrow(() -> new InternalServerErrorException("User could not be found"));
+    public UserDTO getAccount() throws Exception {
+        log.debug("REST request to get Account");
+
+        User user = userService.getUserWithAuthorities()
+            .orElseThrow(() -> new BadRequestAlertException("Can not found user by id", "USER", "notfound"));
+        user.getExtendUser();
+
+        UserDTO userDTO = userMapper.userToUserDTO(user);
+
+        userService.transformLocalAvatarToGcsAvatar(user, imageGcsBusinessService);
+        userService.appendImageUrlToUserDTO(user, userDTO, imageGcsBusinessService);
+
+        return userDTO;
     }
 
     /**
@@ -199,16 +231,56 @@ public class AccountResource {
      * @throws InternalServerErrorException 500 (InternalServerError) if user could not store avatar
      */
     @PostMapping("/account/avatar")
+    @Transactional
     @Timed
-    public String uploadAvatar(@RequestParam("file") MultipartFile file) {
-        return avatarService.storeUserAvatar(file).orElseThrow(() -> new InternalServerErrorException("User could not store avatar"));
+    public ResponseEntity<Void> uploadAvatar(
+        @RequestParam("file") MultipartFile file
+    ) throws Exception {
+        User user = SecurityUtils.getCurrentUserLogin()
+            .flatMap(userRepository::findOneByLogin)
+            .orElseThrow(() -> new BadRequestAlertException("Can not found user by current login", "USER", "notfound"));
+
+        // Before upload if there already has avatar remove it first
+        if (userService.hasAvatar(user)) {
+            imageGcsBusinessService.deleteFile(user.getExtendUser().getFilePath(), user.getExtendUser().getFileName());
+        }
+
+        String fileName = imageGcsBusinessService.uploadUserAvatar(user.getId(), file.getBytes());
+
+        userService.setAvatarBlank(user);
+        user.getExtendUser().setFilePath(imageGcsBusinessService.getAvatarFilePath(user.getId()));
+        user.getExtendUser().setFileName(fileName);
+
+        return ResponseEntity.ok(null);
+    }
+
+    @DeleteMapping("/account/avatar")
+    @Transactional
+    @Timed
+    public String deleteAvatar() throws Exception {
+        User user = SecurityUtils.getCurrentUserLogin()
+            .flatMap(userRepository::findOneByLogin)
+            .orElseThrow(() -> new BadRequestAlertException("Can not found user by current login", "USER", "notfound"));
+
+        if (!userService.hasAvatar(user)) {
+            throw new BadRequestAlertException("Can not found avatar in user by id", "USER", "nofound");
+        }
+
+        try {
+            imageGcsBusinessService.deleteFile(user.getExtendUser().getFilePath(), user.getExtendUser().getFileName());
+        } catch (Exception e) {
+            // Do not care gcp is remove or not. Make sure it will be wiped out of db.
+        }
+
+        userService.setAvatarBlank(user);
+
+        return "";
     }
 
     /**
-     * GET /account/avatar : get the current user's avatar.
-     *
-     * @return AvatarVM object body
+     * Do no use it and notify fe
      */
+    @Deprecated
     @GetMapping("/account/avatar")
     @Timed
     public ResponseEntity<AvatarVM> getAvatar() {

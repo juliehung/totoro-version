@@ -2,6 +2,7 @@ package io.dentall.totoro.web.rest.vm;
 
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.List;
 
 public class LedgerUnwrapGroupVM {
     private Long id;
@@ -41,6 +42,16 @@ public class LedgerUnwrapGroupVM {
     private Instant lastModifiedDate;
 
     private String lastModifiedBy;
+
+    private List<LedgerReceiptVM> ledgerReceipts;
+
+    public List<LedgerReceiptVM> getLedgerReceipts() {
+        return ledgerReceipts;
+    }
+
+    public void setLedgerReceipts(List<LedgerReceiptVM> ledgerReceipts) {
+        this.ledgerReceipts = ledgerReceipts;
+    }
 
     public Long getId() {
         return id;
