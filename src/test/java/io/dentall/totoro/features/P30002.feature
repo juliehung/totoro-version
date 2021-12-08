@@ -15,7 +15,7 @@ Feature: P30002 牙醫特殊服務試辦計畫身心障礙牙醫服務-氟化物
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | P30002       | 11         | MOB          | Pass      |
 
-    Scenario Outline: （HIS）90天內，不應有 P30002 診療項目
+    Scenario Outline: （HIS）90天內，不應有 P30002、P6702C、P6703C、P6704C、P6705C 診療項目
         Given 建立醫師
         Given Scott 24 歲病人
         Given 在過去第 <PastTreatmentDays> 天，建立預約
@@ -34,10 +34,22 @@ Feature: P30002 牙醫特殊服務試辦計畫身心障礙牙醫服務-氟化物
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastTreatmentDays | TreatmentNhiCode | TreatmentTeeth | TreatmentSurface | GapDay | PassOrNot |
             | P30002       | 11         | MOB          | 89                | P30002           | 11             | MOB              | 90     | NotPass   |
+            | P30002       | 11         | MOB          | 89                | P6702C           | 11             | MOB              | 90     | NotPass   |
+            | P30002       | 11         | MOB          | 89                | P6703C           | 11             | MOB              | 90     | NotPass   |
+            | P30002       | 11         | MOB          | 89                | P6704C           | 11             | MOB              | 90     | NotPass   |
+            | P30002       | 11         | MOB          | 89                | P6705C           | 11             | MOB              | 90     | NotPass   |
             | P30002       | 11         | MOB          | 90                | P30002           | 11             | MOB              | 90     | NotPass   |
+            | P30002       | 11         | MOB          | 90                | P6702C           | 11             | MOB              | 90     | NotPass   |
+            | P30002       | 11         | MOB          | 90                | P6703C           | 11             | MOB              | 90     | NotPass   |
+            | P30002       | 11         | MOB          | 90                | P6704C           | 11             | MOB              | 90     | NotPass   |
+            | P30002       | 11         | MOB          | 90                | P6705C           | 11             | MOB              | 90     | NotPass   |
             | P30002       | 11         | MOB          | 91                | P30002           | 11             | MOB              | 90     | Pass      |
+            | P30002       | 11         | MOB          | 91                | P6702C           | 11             | MOB              | 90     | Pass   |
+            | P30002       | 11         | MOB          | 91                | P6703C           | 11             | MOB              | 90     | Pass   |
+            | P30002       | 11         | MOB          | 91                | P6704C           | 11             | MOB              | 90     | Pass   |
+            | P30002       | 11         | MOB          | 91                | P6705C           | 11             | MOB              | 90     | Pass   |
 
-    Scenario Outline: （IC）90天內，不應有 P30002 診療項目
+    Scenario Outline: （IC）90天內，不應有 P30002、P6702C、P6703C、P6704C、P6705C 診療項目
         Given 建立醫師
         Given Scott 24 歲病人
         Given 新增健保醫療:
@@ -53,5 +65,17 @@ Feature: P30002 牙醫特殊服務試辦計畫身心障礙牙醫服務-氟化物
         Examples:
             | IssueNhiCode | IssueTeeth | IssueSurface | PastMedicalDays | MedicalNhiCode | MedicalTeeth | GapDay | PassOrNot |
             | P30002       | 11         | MOB          | 89              | P30002         | 11           | 90     | NotPass   |
+            | P30002       | 11         | MOB          | 89              | P6702C         | 11           | 90     | NotPass   |
+            | P30002       | 11         | MOB          | 89              | P6703C         | 11           | 90     | NotPass   |
+            | P30002       | 11         | MOB          | 89              | P6704C         | 11           | 90     | NotPass   |
+            | P30002       | 11         | MOB          | 89              | P6705C         | 11           | 90     | NotPass   |
             | P30002       | 11         | MOB          | 90              | P30002         | 11           | 90     | NotPass   |
+            | P30002       | 11         | MOB          | 90              | P6702C         | 11           | 90     | NotPass   |
+            | P30002       | 11         | MOB          | 90              | P6703C         | 11           | 90     | NotPass   |
+            | P30002       | 11         | MOB          | 90              | P6704C         | 11           | 90     | NotPass   |
+            | P30002       | 11         | MOB          | 90              | P6705C         | 11           | 90     | NotPass   |
             | P30002       | 11         | MOB          | 91              | P30002         | 11           | 90     | Pass      |
+            | P30002       | 11         | MOB          | 91              | P6702C         | 11           | 90     | Pass      |
+            | P30002       | 11         | MOB          | 91              | P6703C         | 11           | 90     | Pass      |
+            | P30002       | 11         | MOB          | 91              | P6704C         | 11           | 90     | Pass      |
+            | P30002       | 11         | MOB          | 91              | P6705C         | 11           | 90     | Pass      |
