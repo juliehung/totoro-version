@@ -438,6 +438,8 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
             msgArgs = new Object[]{issueNhiCode, type, pastTreatmentDate};
         } else if (msgFormat == D7_1) {
             msgArgs = new Object[]{issueNhiCode, dayGap, type, pastTreatmentDate};
+        } else if (msgFormat == D8_1) {
+            msgArgs = new Object[]{issueNhiCode, dayGap, treatmentNhiCode};
         } else if (msgFormat == W1_1) {
             msgArgs = new Object[]{issueNhiCode, treatmentNhiCode, type, pastTreatmentDate, dayGap, issueNhiCode, transformLocalDateToRocDateForDisplay(issueDisposal.getDateTime())};
         } else if (msgFormat == PERIO_1) {
