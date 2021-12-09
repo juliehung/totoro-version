@@ -172,7 +172,6 @@ Feature: 91114C 特殊牙周暨齲齒控制基本處置
             | 91114C       | 86         | DL           | NotPass   |
             | 91114C       | 91         | DL           | NotPass   |
 
-
     Scenario Outline: （HIS）90天內，不應有 P6702C、P6703C、P6704C、P6705C 診療項目
         Given 建立醫師
         Given Kelly 30 歲病人
