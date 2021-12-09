@@ -4,6 +4,7 @@ import io.dentall.totoro.domain.enumeration.NoteType;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.time.Instant;
 import java.util.Objects;
 
 public class NoteVM {
@@ -18,6 +19,10 @@ public class NoteVM {
     private Long userId;
 
     private Long patientId;
+
+    private String lastModifiedBy;
+
+    private Instant lastModifiedDate;
 
     public Long getId() {
         return id;
@@ -57,6 +62,22 @@ public class NoteVM {
 
     public void setPatientId(Long patientId) {
         this.patientId = patientId;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     @Override

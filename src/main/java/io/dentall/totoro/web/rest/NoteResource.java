@@ -74,6 +74,34 @@ public class NoteResource {
             throw new BadRequestAlertException("Can not found user by id", ENTITY_NAME, "notfound");
         }
 
+        if (NoteType.SERVICE.equals(noteCreateVM.getType()) ||
+            NoteType.SHARED.equals(noteCreateVM.getType())
+        ) {
+            if (noteCreateVM.getUserId() != null) {
+                throw new BadRequestAlertException("Service or shared note must keep user id empty", ENTITY_NAME, "limit");
+            }
+
+            Note queryNote = new Note();
+
+            Patient queryPatient = new Patient();
+            queryPatient.setId(noteCreateVM.getPatientId());
+
+            queryNote.setPatient(queryPatient);
+            queryNote.setType(noteCreateVM.getType());
+
+            if (noteRepository.exists(Example.of(queryNote, this.getNoteExampleMatcher()))) {
+                throw new BadRequestAlertException(
+                    String.format(
+                      "Already has %s with patient %d",
+                        noteCreateVM.getType(),
+                        noteCreateVM.getPatientId()
+                    ),
+                    ENTITY_NAME,
+                    "notfound"
+                );
+            }
+        }
+
         Note note = NoteMapper.INSTANCE.convertNoteCreateVmToDomain(noteCreateVM);
 
         Patient p = new Patient();
@@ -101,9 +129,9 @@ public class NoteResource {
             .orElseThrow(() -> new BadRequestAlertException("Can not found note by id", ENTITY_NAME, "notfound"));
 
         note.setContent(updateNote.getContent());
-        noteRepository.saveAndFlush(note);
+        Note responseNote = noteRepository.saveAndFlush(note);
 
-        return NoteMapper.INSTANCE.convertNoteDomainToVm(note);
+        return NoteMapper.INSTANCE.convertNoteDomainToVm(responseNote);
     }
 
     @GetMapping("/notes")
@@ -138,11 +166,8 @@ public class NoteResource {
             note.setUser(user);
         }
 
-        ExampleMatcher matcher = ExampleMatcher.matching()
-            .withIgnorePaths("createdDate", "lastModifiedDate", "user.createdDate", "user.lastModifiedDate", "user.activated", "patient.createdDate", "patient.lastModifiedDate");
-
         Page<Note> notes = noteRepository.findAll(
-            Example.of(note, matcher),
+            Example.of(note, this.getNoteExampleMatcher()),
             page
         );
 
@@ -152,6 +177,11 @@ public class NoteResource {
 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(notes, "/api/notes");
         return ResponseEntity.ok().headers(headers).body(contents);
+    }
+
+    private ExampleMatcher getNoteExampleMatcher() {
+        return ExampleMatcher.matching()
+            .withIgnorePaths("createdDate", "lastModifiedDate", "user.createdDate", "user.lastModifiedDate", "user.activated", "patient.createdDate", "patient.lastModifiedDate");
     }
 
 }
