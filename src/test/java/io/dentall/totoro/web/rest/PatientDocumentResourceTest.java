@@ -67,6 +67,12 @@ public class PatientDocumentResourceTest {
     private UserRepository userRepository;
 
     @Autowired
+    private ImageRepository imageRepository;
+
+    @Autowired
+    private ImageRelationRepository imageRelationRepository;
+
+    @Autowired
     private PatientDocumentRepository patientDocumentRepository;
 
     @Autowired
@@ -101,6 +107,8 @@ public class PatientDocumentResourceTest {
         disposalRepository.deleteAllInBatch();
         appointmentRepository.deleteAllInBatch();
         registrationRepository.deleteAllInBatch();
+        imageRelationRepository.deleteAllInBatch();
+        imageRepository.deleteAllInBatch();
         patientRepository.deleteAllInBatch();
         userRepository.delete(user);
     }

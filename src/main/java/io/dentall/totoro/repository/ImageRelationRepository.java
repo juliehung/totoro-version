@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 
@@ -32,4 +33,6 @@ public interface ImageRelationRepository extends JpaRepository<ImageRelation, Lo
 
     @Deprecated
     Page<ImageRelation> findByDomainAndImage_Patient_IdOrderByDomainIdDesc(ImageRelationDomain domain, Long patientId, Pageable pageable);
+
+    List<ImageRelation> findImageRelationsByDomainAndDomainIdAndImage_IdAndImage_Patient_Id(ImageRelationDomain domain, Long domainId, Long imageId, Long patientId);
 }

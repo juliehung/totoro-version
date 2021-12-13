@@ -12,7 +12,7 @@ import static java.util.Optional.ofNullable;
 @Service
 public class FakeImageGCSService extends ImageGcsBusinessService {
     public FakeImageGCSService(ImageRepository imageRepository) {
-        super(null, "fakeBucket", "fakeClinicName");
+        super(imageRepository, "fakeBucket", "fakeClinicName");
     }
 
     @Override
