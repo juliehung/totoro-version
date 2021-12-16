@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet id="20211206-weichen" author="WeiChen">
+        <sql>
+            create sequence nhi_procedure_seq start 241 increment by 1;
+            INSERT INTO nhi_procedure (id,code,name,point,effective_time,expiration_time,nhi_procedure_type_id) values (nextval('nhi_procedure_seq'),'P6701C','嚴重齲齒兒童口腔健康照護初診診察費','635','2021-07-31T16:00:00Z','2029-12-29T15:59:59Z','200');
+            INSERT INTO nhi_procedure (id,code,name,point,effective_time,expiration_time,nhi_procedure_type_id) values (nextval('nhi_procedure_seq'),'P6702C','嚴重齲齒兒童口腔健康照護初診治療','1000','2021-07-31T16:00:00Z','2029-12-29T15:59:59Z','190');
+            INSERT INTO nhi_procedure (id,code,name,point,effective_time,expiration_time,nhi_procedure_type_id) values (nextval('nhi_procedure_seq'),'P6703C','嚴重齲齒兒童口腔健康照護複診治療-第一次','700','2021-07-31T16:00:00Z','2029-12-29T15:59:59Z','190');
+            INSERT INTO nhi_procedure (id,code,name,point,effective_time,expiration_time,nhi_procedure_type_id) values (nextval('nhi_procedure_seq'),'P6704C','嚴重齲齒兒童口腔健康照護複診治療-第二次','1000','2021-07-31T16:00:00Z','2029-12-29T15:59:59Z','190');
+            INSERT INTO nhi_procedure (id,code,name,point,effective_time,expiration_time,nhi_procedure_type_id) values (nextval('nhi_procedure_seq'),'P6705C','嚴重齲齒兒童口腔健康照護複診治療-第三次','635','2021-07-31T16:00:00Z','2029-12-29T15:59:59Z','190');
+        </sql>
+    </changeSet>
+</databaseChangeLog>

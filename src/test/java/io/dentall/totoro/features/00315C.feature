@@ -124,7 +124,7 @@ Feature: 00315C 符合牙醫門診加強感染管制實施方案之環口全景X
             | IssueNhiCode | IssueTeeth | IssueSurface | PassOrNot |
             | 00315C       | 11         | MOB          | Pass      |
 
-    Scenario Outline: （HIS）365天內，不應有 01271C/01272C/01273C/00316C/00317C 診療項目
+    Scenario Outline: （HIS）365天內，不應有 01271C/01272C/01273C/00316C/00317C/P6701C 診療項目
         Given 建立醫師
         Given Scott 24 歲病人
         Given 在過去第 <PastTreatmentDays> 天，建立預約
@@ -157,8 +157,11 @@ Feature: 00315C 符合牙醫門診加強感染管制實施方案之環口全景X
             | 00315C       | 11         | MOB          | 364               | 00317C           | 11             | MOB              | 365    | NotPass   |
             | 00315C       | 11         | MOB          | 365               | 00317C           | 11             | MOB              | 365    | NotPass   |
             | 00315C       | 11         | MOB          | 366               | 00317C           | 11             | MOB              | 365    | Pass      |
+            | 00315C       | 11         | MOB          | 364               | P6701C           | 11             | MOB              | 365    | NotPass   |
+            | 00315C       | 11         | MOB          | 365               | P6701C           | 11             | MOB              | 365    | NotPass   |
+            | 00315C       | 11         | MOB          | 366               | P6701C           | 11             | MOB              | 365    | Pass      |
 
-    Scenario Outline: （IC）365天內，不應有 01271C/01272C/01273C/00316C/00317C 診療項目
+    Scenario Outline: （IC）365天內，不應有 01271C/01272C/01273C/00316C/00317C/P6701C 診療項目
         Given 建立醫師
         Given Scott 24 歲病人
         Given 新增健保醫療:
@@ -185,6 +188,6 @@ Feature: 00315C 符合牙醫門診加強感染管制實施方案之環口全景X
             | 00315C       | 11         | MOB          | 364             | 00316C         | 11           | 365    | NotPass   |
             | 00315C       | 11         | MOB          | 365             | 00316C         | 11           | 365    | NotPass   |
             | 00315C       | 11         | MOB          | 366             | 00316C         | 11           | 365    | Pass      |
-            | 00315C       | 11         | MOB          | 364             | 00317C         | 11           | 365    | NotPass   |
-            | 00315C       | 11         | MOB          | 365             | 00317C         | 11           | 365    | NotPass   |
-            | 00315C       | 11         | MOB          | 366             | 00317C         | 11           | 365    | Pass      |
+            | 00315C       | 11         | MOB          | 364             | P6701C         | 11           | 365    | NotPass   |
+            | 00315C       | 11         | MOB          | 365             | P6701C         | 11           | 365    | NotPass   |
+            | 00315C       | 11         | MOB          | 366             | P6701C         | 11           | 365    | Pass      |
