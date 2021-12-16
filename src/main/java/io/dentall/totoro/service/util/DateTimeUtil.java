@@ -72,11 +72,7 @@ public final class DateTimeUtil {
             return lastMonth;
         }
     }
-<<<<<<< HEAD
-=======
-
     ;
->>>>>>> milestone-1.32
 
     public static final Period NHI_0_DAY = Period.ofDays(0);
 
