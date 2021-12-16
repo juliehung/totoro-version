@@ -381,7 +381,7 @@ task cucumber_nhi_rule() {
     def mqNettyPort = mqNettyPort()
     def mattPort = mqttPort()
     def wsPort = wsPort()
-    dependsOn assemble, testClasses, pathingJar
+    dependsOn assemble, testClasses
     doLast {
         assert cucumberTags.length() > 0
         javaexec {
