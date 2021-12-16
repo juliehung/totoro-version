@@ -1,8 +1,8 @@
 {
   "totoroAdmin": "stg-2.10.4",
   "totoroAdminModifiedTime": "2021-12-14T02:20+00:00",
-  "totoroWeb": "stg-1.31.1.6",
-  "totoroWebModifiedTime": "2021-12-14T07:42+00:00",
+  "totoroWeb": "stg-1.31.1.7",
+  "totoroWebModifiedTime": "2021-12-16T04:16+00:00",
   "deploy8085Time": "1900-01-01T00:00+00:00",
-  "webRunId": "1576711149"
+  "webRunId": "1585880195"
 }
