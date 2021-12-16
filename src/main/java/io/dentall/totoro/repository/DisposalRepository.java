@@ -98,7 +98,7 @@ public interface DisposalRepository extends JpaRepository<Disposal, Long>, JpaSp
         "    right join patient_doctor_filter pdf on pdf.patientNid = ned.a12 and pdf.doctorNid = ned.a15 " +
         "where a73 = :code " +
         "and trim(a18) <> '' " +
-        "order by netp.a71 desc"
+            "order by netp.a71 desc"
     )
     List<NhiExtendTreatmentProcedureTable> findDoctorOperationForPatientWithOnceWholeLifeLimitation(
         @Param("disposalId") Long disposalId,
@@ -108,4 +108,6 @@ public interface DisposalRepository extends JpaRepository<Disposal, Long>, JpaSp
     Optional<DisposalTable> findFirstByRegistration_Appointment_Patient_IdOrderByDateTime(Long id);
 
     Optional<DisposalTable> findFirstByRegistration_Appointment_Patient_IdOrderByDateTimeDesc(Long id);
+
+    Optional<Disposal> findFirstByOrderByDateTime();
 }

@@ -165,3 +165,4 @@ queue:
 
 gcp:
     timeout: 300000
+    gcs-base-url: https://storage.googleapis.com

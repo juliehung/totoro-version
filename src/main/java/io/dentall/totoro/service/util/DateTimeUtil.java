@@ -5,6 +5,7 @@ import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 
 import javax.validation.constraints.NotNull;
 import java.time.*;
+import java.time.chrono.MinguoChronology;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
@@ -71,6 +72,11 @@ public final class DateTimeUtil {
             return lastMonth;
         }
     }
+<<<<<<< HEAD
+=======
+
+    ;
+>>>>>>> milestone-1.32
 
     public static final Period NHI_0_DAY = Period.ofDays(0);
 
@@ -150,7 +156,7 @@ public final class DateTimeUtil {
 
         if (
             a71 != null &&
-            a71.length() > 11
+                a71.length() > 11
         ) {
             result = result.concat(a71.substring(0, 3))
                 .concat("/")
@@ -168,6 +174,18 @@ public final class DateTimeUtil {
 
     public static String transformA71ToDisplay(String a71) {
         return String.format("%s/%s/%s", a71.substring(0, 3), a71.substring(3, 5), a71.substring(5, 7));
+    }
+
+    public static String formatToMinguoDate(YearMonth yearMonth, String format) {
+        return DateTimeFormatter.ofPattern(format).withChronology(MinguoChronology.INSTANCE).format(yearMonth.atDay(1));
+    }
+
+    public static String formatToMinguoDate(LocalDate localDate, String format) {
+        return DateTimeFormatter.ofPattern(format).withChronology(MinguoChronology.INSTANCE).format(localDate);
+    }
+
+    public static String formatToMinguoDate(OffsetDateTime localDateTime, String format) {
+        return DateTimeFormatter.ofPattern(format).withChronology(MinguoChronology.INSTANCE).format(localDateTime);
     }
 
     public static String transformLocalDateToRocDateForDisplay(LocalDate dateTime) {
@@ -361,7 +379,7 @@ public final class DateTimeUtil {
             YearMonth ym = YearMonth.parse(yearMonth);
             begin = ym.atDay(1).atStartOfDay().toInstant(TimeConfig.ZONE_OFF_SET);
             end = ym.atEndOfMonth().atTime(LocalTime.MAX).toInstant(TimeConfig.ZONE_OFF_SET);
-        } catch(Exception e) {
+        } catch (Exception e) {
             begin = Instant.now();
             end = Instant.now();
         }
@@ -428,5 +446,9 @@ public final class DateTimeUtil {
                 "yyyy-MM"
             )
         );
+    }
+
+    public static LocalDateTime convertToTaipeiTime(Instant instant) {
+        return instant.atOffset(TimeConfig.ZONE_OFF_SET).toLocalDateTime();
     }
 }

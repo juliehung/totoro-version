@@ -1,10 +1,8 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.google.api.Http;
 import io.dentall.totoro.domain.Disposal;
 import io.dentall.totoro.config.TimeConfig;
-import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.PlainDisposalType;
 import io.dentall.totoro.message.MessageSender;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
@@ -36,7 +34,11 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
-import java.util.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -270,5 +272,10 @@ public class DisposalResource {
             .ok()
             .headers(PaginationUtil.generatePaginationHttpHeaders(p, "/api/disposals/plain"))
             .body(p.getContent());
+    }
+
+    @GetMapping("/disposals/first-disposal-date")
+    public ResponseEntity<LocalDate> getFistDisposalDate() {
+        return ResponseEntity.ok(disposalService.getFistDisposalDate());
     }
 }

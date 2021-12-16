@@ -299,6 +299,8 @@ public class NhiRuleCheckStepDefinition extends AbstractStepDefinition {
         checkResult(resultActions, passOrNot, message);
     }
 
+    // 2021-11-24: 醫管發現後統一應由 D1_3 作為回覆，此項將不應再被使用
+    @Deprecated
     @Then("任意時間點未曾申報過指定代碼 {word}，確認結果是否為 {passOrNot}")
     public void checkNoTreatment(String treatmentNhiCode, Boolean passOrNot) throws Exception {
         String nhiCode = nhiRuleCheckTestInfoHolder.getNhiCode();

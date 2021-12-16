@@ -367,22 +367,12 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
 
     // POI
-    implementation group: 'org.apache.poi', name: 'poi', version: '5.0.0'
-    testCompile group: 'org.apache.poi', name: 'poi', version: '5.0.0'
+    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '5.0.0'
+    testCompile group: 'org.apache.poi', name: 'poi-ooxml', version: '5.0.0'
 
     // TestContainer
     testCompile "org.testcontainers:postgresql:1.16.2"
     testCompile "org.testcontainers:junit-jupiter:1.16.2"
-}
-
-task pathingJar(type: Jar) {
-    classifier 'pathing'
-    doFirst {
-        manifest {
-            attributes 'Class-Path': configurations.cucumberRuntime.files.collect { project.uri(it) }.join(' ')
-        }
-    }
-    dependsOn configurations.cucumberRuntime
 }
 
 task cucumber_nhi_rule() {
