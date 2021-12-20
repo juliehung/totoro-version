@@ -67,6 +67,8 @@ public class SubjectMonthlyNhiVo {
 
         private YearMonth disposalMonth;
 
+        private String doctorName;
+
         private long procedureId;
 
         private String procedureCode;
@@ -79,6 +81,7 @@ public class SubjectMonthlyNhiVo {
 
         public Summary(NhiVo vo) {
             this.disposalMonth = YearMonth.from(vo.getDisposalDate());
+            this.doctorName = vo.getDoctorName();
             this.procedureId = vo.getProcedureId();
             this.procedureCode = vo.getProcedureCode();
         }
@@ -89,6 +92,14 @@ public class SubjectMonthlyNhiVo {
 
         public void setDisposalMonth(YearMonth disposalMonth) {
             this.disposalMonth = disposalMonth;
+        }
+
+        public String getDoctorName() {
+            return doctorName;
+        }
+
+        public void setDoctorName(String doctorName) {
+            this.doctorName = doctorName;
         }
 
         public long getProcedureId() {

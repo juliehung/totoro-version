@@ -30,6 +30,7 @@ public class MonthlyNhiSheet extends ExcelSheet {
                 Row row = sheet.createRow(rowCounter.get());
                 Counter cellCounter = new Counter();
                 row.createCell(cellCounter.get()).setCellValue(displayDisposalDate(summary.getDisposalMonth()));
+                row.createCell(cellCounter.get()).setCellValue(summary.getDoctorName());
                 row.createCell(cellCounter.get()).setCellValue(summary.getProcedureCode());
                 row.createCell(cellCounter.get()).setCellValue(summary.getProcedureCount());
                 row.createCell(cellCounter.get()).setCellValue(summary.getProcedurePoint());
@@ -59,6 +60,9 @@ public class MonthlyNhiSheet extends ExcelSheet {
         Counter cellCounter = new Counter();
         Cell cell = header.createCell(cellCounter.get());
         cell.setCellValue("治療月份");
+        cell.setCellStyle(cellStyle);
+        cell = header.createCell(cellCounter.get());
+        cell.setCellValue("醫師名稱");
         cell.setCellStyle(cellStyle);
         cell = header.createCell(cellCounter.get());
         cell.setCellValue("健保處置");
