@@ -1,0 +1,36 @@
+name: "Combine web and server"
+
+on:
+    push:
+        branches:
+            - new-cicd
+    pull_request:
+
+env:
+    VERSION_REPOSITORY: dentallio/totoro-version
+
+jobs:
+    Combine-Web-And-Server:
+        runs-on: ubuntu-18.04
+        container: openjdk:8-jdk-stretch
+        steps:
+            - name: "Install Tool"
+              run: apt-get update -y && apt-get install unzip -y
+            - name: "Set up Cloud SDK"
+              uses: google-github-actions/setup-gcloud@master
+              with:
+                project_id: ${{ secrets.HIS_GCP_PROJECT_ID }}
+                service_account_key: ${{ secrets.HIS_GCP_SERVICE_KEY }}
+                export_default_credentials: true
+            - name: "Check milestone existence"
+              run: checkResult =`gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}`
+            - name: "Download latest web zip of current milestone from google storage"
+              run: gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/web | sed '$d' | tail -n 1 | awk '{print $3}' | xargs -I {} gsutil cp {} .
+            - name: "Download latest war of current milestone from google storage"
+              run: gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/war | sed '$d' | tail -n 1 | awk '{print $3}' | xargs -I {} gsutil cp {} .
+            - name: "Unzip web and Rename to WEB-INFO "
+              run: ls *zip | xargs unzip -d WEB-INFO/classes/public
+            - name: "Add web to war file"
+              run: ls *war | xargs -I {} jar uf {} -c WEB-INFO/classes/public
+            - name: "Push download war to bucket in milestone*/final"
+              run: ls *war | xargs -I {} gsutil {} gs://totoro-admin-build/${{ inputs.milestone }}/final

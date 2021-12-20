@@ -1,0 +1,13 @@
+name: "Test workflow"
+
+on:
+    push:
+        branches:
+            - new-cicd
+    pull_request:
+
+jobs:
+    STEP1:
+        uses: totoro-admin/.github/workflows/scripts/combine-web-and-server.yml
+        with:
+            milestone: milestone-1.32
