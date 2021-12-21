@@ -67,6 +67,8 @@ public class SubjectMonthlyDrugVo {
 
         private YearMonth disposalMonth;
 
+        private String doctorName;
+
         private long drugId;
 
         private String drugName;
@@ -79,6 +81,7 @@ public class SubjectMonthlyDrugVo {
 
         public Summary(DrugVo vo) {
             this.disposalMonth = YearMonth.from(vo.getDisposalDate());
+            this.doctorName = vo.getDoctorName();
             this.drugId = vo.getDrugId();
             this.drugName = vo.getDrugName();
             this.drugNhiCode = vo.getDrugNhiCode();
@@ -90,6 +93,14 @@ public class SubjectMonthlyDrugVo {
 
         public void setDisposalMonth(YearMonth disposalMonth) {
             this.disposalMonth = disposalMonth;
+        }
+
+        public String getDoctorName() {
+            return doctorName;
+        }
+
+        public void setDoctorName(String doctorName) {
+            this.doctorName = doctorName;
         }
 
         public long getDrugId() {
