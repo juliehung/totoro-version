@@ -21,6 +21,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 @Profile("img-gcs")
 @Service
 public class ImageGcsBusinessService extends ImageBusinessService {
@@ -119,8 +121,15 @@ public class ImageGcsBusinessService extends ImageBusinessService {
         storage.create(blobInfo, content);
     }
 
-    public void deleteFile(String remoteFilePath, String remoteFileName) throws Exception {
-        BlobId blobId = BlobId.of(BUCKET_NAME, remoteFilePath.concat(remoteFileName));
+    @Override
+    public void deleteFile(String remotePath, String remoteFileName) {
+        if (isBlank(remotePath)) {
+            throw new IllegalArgumentException("remote path is blank");
+        }
+        if (isBlank(remoteFileName)) {
+            throw new IllegalArgumentException("remote file name is blank");
+        }
+        BlobId blobId = BlobId.of(BUCKET_NAME, remotePath.concat(remoteFileName));
         storage.delete(blobId);
     }
 

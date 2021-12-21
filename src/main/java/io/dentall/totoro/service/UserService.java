@@ -410,6 +410,10 @@ public class UserService {
                 extendUser.setQualification(updateExtendUser.getQualification());
             }
 
+            if (updateExtendUser.getSettings() != null) {
+                extendUser.setSettings(updateExtendUser.getSettings());
+            }
+
             log.debug("Changed Information for ExtendUser: {}", extendUser);
         }
     }

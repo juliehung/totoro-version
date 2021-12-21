@@ -34,6 +34,10 @@ import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 
+/**
+ * 2021.12.02 改使用 {@link PatientDocumentResource} 進行檔案操作
+ */
+@Deprecated
 @Profile({"img-host", "img-gcs"})
 @RestController
 @RequestMapping("/api")
@@ -60,6 +64,14 @@ public class ImageResource {
         this.imageQueryService = imageQueryService;
     }
 
+    /**
+     * 2021.12.02 改使用 {@link PatientDocumentResource#createDocument(Long, Long, MultipartFile)} 進行檔案上傳
+     *
+     * @param patientId
+     * @param file
+     * @return
+     */
+    @Deprecated
     @PostMapping("/images/patients/{patientId}")
     public DeferredResult<ResponseEntity<Image>> uploadImage(
         @PathVariable("patientId") Long patientId,
@@ -110,14 +122,14 @@ public class ImageResource {
     ) {
         Page<Image> page = imageQueryService.findByCriteria(imageCriteria, pageable);
         List<ImageVM> content = page.map(image -> {
-            ImageVM vm = new ImageVM();
-            Map<String, String> urls = imageBusinessService.getImageThumbnailsBySize(host, image.getId(), "original");
+                ImageVM vm = new ImageVM();
+                Map<String, String> urls = imageBusinessService.getImageThumbnailsBySize(host, image.getId(), "original");
 
-            vm.setImage(image);
-            vm.setUrl(urls.getOrDefault("original", ""));
+                vm.setImage(image);
+                vm.setUrl(urls.getOrDefault("original", ""));
 
-            return vm;
-        })
+                return vm;
+            })
             .stream().collect(Collectors.toList());
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/images");
         return ResponseEntity.ok().headers(headers).body(content);

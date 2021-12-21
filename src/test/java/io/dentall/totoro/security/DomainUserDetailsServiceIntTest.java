@@ -3,7 +3,6 @@ package io.dentall.totoro.security;
 import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.UserRepository;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +50,7 @@ public class DomainUserDetailsServiceIntTest {
     public void init() {
         userOne = new User();
         userOne.setLogin(USER_ONE_LOGIN);
-        userOne.setPassword(RandomStringUtils.random(60));
+        userOne.setPassword(RandomStringUtils.randomAlphabetic(60));
         userOne.setActivated(true);
         userOne.setEmail(USER_ONE_EMAIL);
         userOne.setFirstName("userOne");
@@ -61,7 +60,7 @@ public class DomainUserDetailsServiceIntTest {
 
         userTwo = new User();
         userTwo.setLogin(USER_TWO_LOGIN);
-        userTwo.setPassword(RandomStringUtils.random(60));
+        userTwo.setPassword(RandomStringUtils.randomAlphabetic(60));
         userTwo.setActivated(true);
         userTwo.setEmail(USER_TWO_EMAIL);
         userTwo.setFirstName("userTwo");
@@ -71,7 +70,7 @@ public class DomainUserDetailsServiceIntTest {
 
         userThree = new User();
         userThree.setLogin(USER_THREE_LOGIN);
-        userThree.setPassword(RandomStringUtils.random(60));
+        userThree.setPassword(RandomStringUtils.randomAlphabetic(60));
         userThree.setActivated(false);
         userThree.setEmail(USER_THREE_EMAIL);
         userThree.setFirstName("userThree");
