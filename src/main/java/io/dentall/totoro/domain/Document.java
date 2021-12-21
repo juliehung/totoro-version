@@ -55,15 +55,19 @@ public class Document extends AbstractAuditingEntity {
     @Type(type = "string-array")
     private String[] hashtags = new String[0];
 
+    // 提供給前端使用的最後更新使用者
     @Column(name = "upload_user")
     private String uploadUser;
 
+    // 提供給前端使用的上傳者
     @Column(name = "upload_time", nullable = false)
     private Instant uploadTime;
 
+    // 提供給前端使用的最後上傳者
     @Column(name = "modified_user")
     private String modifiedUser;
 
+    // 提供給前端使用的最後更新時間
     @Column(name = "modified_time", nullable = false)
     private Instant modifiedTime;
 
