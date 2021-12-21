@@ -15,22 +15,42 @@ jobs:
         container: openjdk:8-jdk-stretch
         steps:
             - name: "Install Tool"
-              run: apt-get update -y && apt-get install unzip -y
+              run: apt-get update -y && apt-get install unzip jq -y
             - name: "Set up Cloud SDK"
               uses: google-github-actions/setup-gcloud@master
               with:
-                project_id: ${{ secrets.HIS_GCP_PROJECT_ID }}
-                service_account_key: ${{ secrets.HIS_GCP_SERVICE_KEY }}
-                export_default_credentials: true
+                  project_id: ${{ secrets.HIS_GCP_PROJECT_ID }}
+                  service_account_key: ${{ secrets.HIS_GCP_SERVICE_KEY }}
+                  export_default_credentials: true
             - name: "Check milestone existence"
               run: checkResult =`gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}`
             - name: "Download latest web zip of current milestone from google storage"
-              run: gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/web | sed '$d' | tail -n 1 | awk '{print $3}' | xargs -I {} gsutil cp {} .
+              run: gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/web | sed '$d' | tail -n 1 | awk '{ print $3 }' | xargs -I {} gsutil cp {} .
             - name: "Download latest war of current milestone from google storage"
-              run: gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/war | sed '$d' | tail -n 1 | awk '{print $3}' | xargs -I {} gsutil cp {} .
+              run: gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/server | sed '$d' | tail -n 1 | awk '{ print $3 }' | xargs -I {} gsutil cp {} .
+            - name: "Create combination version file"
+              run: |
+                  echo 'version=' > totoro.properties && \
+                  ls *.war| awk '{ gsub(/\.war/, "", $1); split($1, a, "-"); split(a[2], b, "."); print b[length(b)]; }' >> totoro.properties && \
+                  ls *.zip | awk '{ gsub(/\.zip/, "", $1); split($1, a, "-"); split(a[2], b, "."); print b[length(b)]; }' >> totoro.properties && \
+                  cat totoro.properties
             - name: "Unzip web and Rename to WEB-INFO "
               run: ls *zip | xargs unzip -d WEB-INFO/classes/public
+            - name: "Move totoro properties into WEB-INFO/classes"
+              run: mv totoro.properties WEB-INFO/classes
             - name: "Add web to war file"
-              run: ls *war | xargs -I {} jar uf {} -c WEB-INFO/classes/public
+              run: ls *war | xargs -I {} jar uf {} -c WEB-INFO/classes
             - name: "Push download war to bucket in milestone*/final"
               run: ls *war | xargs -I {} gsutil {} gs://totoro-admin-build/${{ inputs.milestone }}/final
+            - name: "Update version"
+              run: |
+                  jq \
+                  --arg serverVersion `ls *.war`\
+                  --arg webVersion `ls *.zip`\
+                  --arg finalVersion `cat totoro.properties | awk { split($1 , a, "="); print a[2] }` \
+                  --arg timestamp `date "+%Y-%m-%dT%H:%M:%SZ"`\
+                  '.history + {"serverVersion": $serverVersion, "webVersion": $webVersion, "finalVersion": $finalVersion, "timestamp": $timestamp}' \
+                  > tmp
+            - name: "Overwrite history version"
+              run: |
+                  gsutil cp tmp gs://totoro-admin-build/${{ inputs.milestone }}/final/records.json
