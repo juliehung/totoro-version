@@ -10,4 +10,7 @@ jobs:
     STEP1:
         uses: totoro-admin/.github/workflows/scripts/combine-web-and-server.yml@main
         with:
-            milestone: milestone-1.32
+            milestone: "milestone-1.32"
+        secrets:
+            HIS_GCP_PROJECT_ID: ${{ secrets.HIS_GCP_PROJECT_ID }}
+            HIS_GCP_SERVICE_KEY: ${{ secrets.HIS_GCP_SERVICE_KEY }}
