@@ -13,7 +13,7 @@ public class FakeImageGCSService extends ImageGcsBusinessService {
     }
 
     @Override
-    public void uploadFile(String remotePath, String remoteFileName, byte[] content, String contentType) throws IOException {
+    public void uploadFile(String remotePath, String remoteFileName, byte[] content, String contentType) {
         // do nothing
     }
 
