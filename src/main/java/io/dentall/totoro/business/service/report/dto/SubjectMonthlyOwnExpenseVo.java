@@ -67,6 +67,8 @@ public class SubjectMonthlyOwnExpenseVo {
 
         private YearMonth disposalMonth;
 
+        private String doctorName;
+
         private long procedureId;
 
         private String procedureName;
@@ -81,6 +83,7 @@ public class SubjectMonthlyOwnExpenseVo {
 
         public Summary(OwnExpenseVo vo) {
             this.disposalMonth = YearMonth.from(vo.getDisposalDate());
+            this.doctorName = vo.getDoctorName();
             this.procedureId = vo.getProcedureId();
             this.procedureName = vo.getProcedureName();
             this.procedureMinorType = vo.getProcedureMinorType();
@@ -92,6 +95,14 @@ public class SubjectMonthlyOwnExpenseVo {
 
         public void setDisposalMonth(YearMonth disposalMonth) {
             this.disposalMonth = disposalMonth;
+        }
+
+        public String getDoctorName() {
+            return doctorName;
+        }
+
+        public void setDoctorName(String doctorName) {
+            this.doctorName = doctorName;
         }
 
         public long getProcedureId() {
