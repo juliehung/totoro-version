@@ -8,6 +8,6 @@ on:
 
 jobs:
     STEP1:
-        uses: totoro-admin/.github/workflows/scripts/combine-web-and-server.yml
+        uses: totoro-admin/.github/workflows/scripts/combine-web-and-server.yml@main
         with:
             milestone: milestone-1.32
