@@ -10,9 +10,11 @@ import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.vm.PatientDocumentVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +24,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
+import static io.dentall.totoro.web.rest.util.PaginationUtil.generatePaginationHttpHeaders;
 import static java.util.stream.Collectors.toList;
 
 @RestController
-@RequestMapping("/api/patient-document")
+@RequestMapping(PatientDocumentResource.apiLocation)
 public class PatientDocumentResource {
+
+    public final static String apiLocation = "/api/patient-document";
 
     private final static Logger log = LoggerFactory.getLogger(PatientDocumentResource.class);
 
@@ -77,14 +82,13 @@ public class PatientDocumentResource {
         @PathVariable("patientId") Long patientId,
         @RequestParam(value = "disposalId", required = false) Long disposalId,
         @RequestParam(value = "search", required = false) String search,
-        @PageableDefault(size = 10000)
+        @PageableDefault(size = 50)
         @SortDefault.SortDefaults({@SortDefault(sort = "document.title")}) Pageable pageable
     ) {
         log.debug("REST request to get Patient's documents by patient id : {}, disposal id: {}", patientId, disposalId);
-        return ResponseEntity.ok(
-            patientDocumentService.findDocument(patientId, disposalId, search, pageable)
-                .stream().map(patientDocumentMapper::mapToPatientDocumentVM)
-                .collect(toList()));
+        Page<PatientDocument> page = patientDocumentService.findDocument(patientId, disposalId, search, pageable);
+        HttpHeaders headers = generatePaginationHttpHeaders(page, apiLocation);
+        return ResponseEntity.ok().headers(headers).body(page.getContent().stream().map(patientDocumentMapper::mapToPatientDocumentVM).collect(toList()));
     }
 
     @PutMapping("/{patientId}")
