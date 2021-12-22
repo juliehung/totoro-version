@@ -9,6 +9,7 @@ import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.dto.table.DisposalTable;
 import io.dentall.totoro.service.mapper.PatientDocumentMapper;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 
 import static io.dentall.totoro.service.util.FileNameUtil.getExtension;
@@ -135,9 +135,9 @@ public class PatientDocumentService {
     }
 
     @Transactional(readOnly = true)
-    public List<PatientDocument> findDocument(Long patientId, Long disposalId, String search, Pageable pageable) {
+    public Page<PatientDocument> findDocument(Long patientId, Long disposalId, String search, Pageable pageable) {
         boolean searchForTag = !isBlank(search) && hashtagRepository.existsPatientDocumentTagByTagName(search);
-        return patientDocumentRepository.findAll(patientDocumentRepository.specification(patientId, disposalId, search, searchForTag), pageable).getContent();
+        return patientDocumentRepository.findAll(patientDocumentRepository.specification(patientId, disposalId, search, searchForTag), pageable);
     }
 
     public PatientDocument updateDocument(Long patientId, PatientDocument patientDocumentModified) {
