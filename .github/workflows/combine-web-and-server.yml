@@ -35,9 +35,13 @@ jobs:
               run: ls -a
             - name: "Create combination version file"
               run: |
-                  echo -n 'version=milestone-${{ inputs.milestone }}-' >> totoro.properties && \
-                  ls *.war | awk '{ gsub(/\.war/, "", $1); split($1, a, "-"); split(a[3], b, "."); printf "%s.", b[length(b)]; }' >> totoro.properties && \
-                  ls *.zip | awk '{ gsub(/\.zip/, "", $1); split($1, a, "-"); split(a[2], b, "."); printf "%s", b[length(b)]; }' >> totoro.properties && \
+                  ls *.war && \
+                  ls *.zip && \
+                  echo -n 'version=${{ inputs.milestone }}-' >> totoro.properties && \
+                  ls *.war | awk '{ split($1, a, "-"); print a[3]; }' >> totoro.properties && \
+                  ls *.war | awk '{ split($1, a, "-"); print a[3]; split(a[3], b, "."); print b[1]; }' >> totoro.properties && \
+                  ls *.war | awk '{ split($1, a, "-"); print a[3]; split(a[3], b, "."); print b[1]; printf "s%s.", b[length(b)]; }' >> totoro.properties && \
+                  ls *.zip | awk '{ split($1, a, "-"); print a[2]; split(a[2], b, "."); print b[1]; printf "s%s.", b[length(b)]; }' >> totoro.properties && \
                   cat totoro.properties
             - name: "Unzip web and Rename to WEB-INFO "
               run: ls *zip | xargs unzip -d WEB-INFO/classes/public
