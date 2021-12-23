@@ -38,11 +38,13 @@ jobs:
                   ls *.war && \
                   ls *.zip && \
                   echo -n 'version=${{ inputs.milestone }}-' >> totoro.properties && \
-                  ls *.war | awk '{ gsub(/.*\.war/, "", $1); split($1, a, "-"); n=split(a[3], b, "."); printf "s%s\.", b[n]; }' >> totoro.properties && \
-                  ls *.zip | awk '{ gsub(/.*\.zip/, "", $1); split($1, a, "-"); n=split(a[2], b, "."); printf "w%s\.", b[n]; }' >> totoro.properties && \
+                  ls *.war | awk '{ gsub(/.*\.war/, "", $1); split($1, a, "-"); n=split(a[3], b, "."); printf "s%d.", b[n]; }' >> totoro.properties && \
+                  ls *.zip | awk '{ gsub(/.*\.zip/, "", $1); split($1, a, "-"); n=split(a[2], b, "."); printf "w%d", b[n]; }' >> totoro.properties && \
                   cat totoro.properties
             - name: "Unzip web and Rename to WEB-INFO "
-              run: ls *zip | xargs unzip -d WEB-INFO/classes/public
+              run: |
+                mkdir -p WEB-INFO/classes/public && \
+                ls *zip | xargs unzip -d WEB-INFO/classes/public
             - name: "Move totoro properties into WEB-INFO/classes"
               run: mv totoro.properties WEB-INFO/classes
             - name: "Add web to war file"
