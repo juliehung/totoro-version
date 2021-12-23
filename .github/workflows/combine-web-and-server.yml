@@ -26,6 +26,8 @@ jobs:
               run: gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/web | sed '$d' | tail -n 1 | awk '{ print $3 }' | xargs -I {} gsutil cp {} .
             - name: "Download latest war of current milestone from google storage"
               run: gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/server | sed '$d' | tail -n 1 | awk '{ print $3 }' | xargs -I {} gsutil cp {} .
+            - name: "Check file is downloaded"
+              run: ls
             - name: "Create combination version file"
               run: |
                   echo 'version=' > totoro.properties && \
