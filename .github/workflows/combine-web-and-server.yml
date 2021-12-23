@@ -43,8 +43,9 @@ jobs:
                   cat totoro.properties
             - name: "Unzip web and Rename to WEB-INF "
               run: |
-                mkdir -p WEB-INF/classes/public && \
-                ls *zip | xargs unzip -d WEB-INF/classes/public
+                mkdir -p WEB-INF/classes/ && \
+                ls *zip | xargs unzip -d WEB-INF/classes/ && \
+                mv WEB-INF/classes/build WEB-INF/classes/public
             - name: "Move totoro properties into WEB-INF/classes"
               run: mv totoro.properties WEB-INF/classes
             - name: "Add web to war file"
