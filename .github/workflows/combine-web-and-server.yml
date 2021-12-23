@@ -43,7 +43,7 @@ jobs:
                   cat totoro.properties
             - name: "Unzip web and Rename to WEB-INF "
               run: |
-                mkdir -p WEB-INF/classes/public && ImageGcsBusinessService.java\
+                mkdir -p WEB-INF/classes/public && \
                 ls *zip | xargs unzip -d WEB-INF/classes/public
             - name: "Move totoro properties into WEB-INF/classes"
               run: mv totoro.properties WEB-INF/classes
