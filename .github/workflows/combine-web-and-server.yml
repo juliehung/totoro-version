@@ -55,14 +55,14 @@ jobs:
               run: ls *.war | xargs -I {} gsutil cp {} gs://totoro-admin-build/${{ inputs.milestone }}/final
             - name: "Update version"
               run: |
-                  echo -n {} > tmp && \
+                  echo '{}' > tmp && \
                   jq \
                   --arg serverFileName $(ls *.war) \
                   --arg webFileName $(ls *.zip) \
                   --arg finalFileName $(cat WEB-INFO/classes/totoro.properties | awk '{ split($1 , a, "="); print a[2] }') \
-                  --arg timestamp `date "+%Y-%m-%dT%H:%M:%SZ"`\
+                  --arg timestamp `date "+%Y-%m-%dT%H:%M:%SZ"` \
                   '.history + [{"serverFileName": $serverFileName, "webFileName": $webFileName, "finalFileName": $finalFileName, "timestamp": $timestamp}]' \
-                  tmp > tmp2 &&
+                  tmp > tmp2 && \
                   cat tmp2
             - name: "Overwrite history version"
               run: |
