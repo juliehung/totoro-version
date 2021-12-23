@@ -35,9 +35,9 @@ jobs:
               run: ls -a
             - name: "Create combination version file"
               run: |
-                  echo 'version=' > totoro.properties && \
-                  ls *.war| awk '{ gsub(/\.war/, "", $1); split($1, a, "-"); split(a[2], b, "."); print b[length(b)]; }' >> totoro.properties && \
-                  ls *.zip | awk '{ gsub(/\.zip/, "", $1); split($1, a, "-"); split(a[2], b, "."); print b[length(b)]; }' >> totoro.properties && \
+                  echo -n 'version=milestone-${{ inputs.milestone }}-' >> totoro.properties && \
+                  ls *.war | awk '{ gsub(/\.war/, "", $1); split($1, a, "-"); split(a[3], b, "."); printf "%s.", b[length(b)]; }' >> totoro.properties && \
+                  ls *.zip | awk '{ gsub(/\.zip/, "", $1); split($1, a, "-"); split(a[2], b, "."); printf "%s", b[length(b)]; }' >> totoro.properties && \
                   cat totoro.properties
             - name: "Unzip web and Rename to WEB-INFO "
               run: ls *zip | xargs unzip -d WEB-INFO/classes/public
@@ -45,17 +45,21 @@ jobs:
               run: mv totoro.properties WEB-INFO/classes
             - name: "Add web to war file"
               run: ls *war | xargs -I {} jar uf {} -c WEB-INFO/classes
+            - name: "Rename war file"
+              run: mv *war totoro-$(cat totoro.properties | awk '{ split($1 , a, "="); print a[2] }').war
             - name: "Push download war to bucket in milestone*/final"
               run: ls *war | xargs -I {} gsutil {} gs://totoro-admin-build/${{ inputs.milestone }}/final
             - name: "Update version"
               run: |
+                  echo -n {} > tmp && \
                   jq \
-                  --arg serverVersion `ls *.war`\
-                  --arg webVersion `ls *.zip`\
-                  --arg finalVersion `cat totoro.properties | awk { split($1 , a, "="); print a[2] }` \
+                  --arg serverFileName $(ls *.war) \
+                  --arg webFileName $(ls *.zip) \
+                  --arg finalFileName $(cat totoro.properties | awk '{ split($1 , a, "="); print a[2] }') \
                   --arg timestamp `date "+%Y-%m-%dT%H:%M:%SZ"`\
-                  '.history + {"serverVersion": $serverVersion, "webVersion": $webVersion, "finalVersion": $finalVersion, "timestamp": $timestamp}' \
-                  > tmp
+                  '.history + [{"serverFileName": $serverFileName, "webFileName": $webFileName, "finalFileName": $finalFileName, "timestamp": $timestamp}]' \
+                  tmp > tmp2 &&
+                  cat tmp2
             - name: "Overwrite history version"
               run: |
-                  gsutil cp tmp gs://totoro-admin-build/${{ inputs.milestone }}/final/records.json
+                  gsutil cp tmp2 gs://totoro-admin-build/${{ inputs.milestone }}/final/records.json
