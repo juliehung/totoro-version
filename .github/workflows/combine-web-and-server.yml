@@ -1,11 +1,16 @@
 name: "Combine web and server"
 
 on:
-    push:
-        branches:
-            - new-cicd
-    pull_request:
-
+    workflow_call:
+        inputs:
+            milestone:
+                required: true
+                type: string
+        secrets:
+            HIS_GCP_PROJECT_ID:
+                required: true
+            HIS_GCP_SERVICE_KEY:
+                required: true
 env:
     VERSION_REPOSITORY: dentallio/totoro-version
 
@@ -27,7 +32,7 @@ jobs:
             - name: "Download latest war of current milestone from google storage"
               run: gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/server | sed '$d' | tail -n 1 | awk '{ print $3 }' | xargs -I {} gsutil cp {} .
             - name: "Check file is downloaded"
-              run: ls
+              run: ls -a
             - name: "Create combination version file"
               run: |
                   echo 'version=' > totoro.properties && \
