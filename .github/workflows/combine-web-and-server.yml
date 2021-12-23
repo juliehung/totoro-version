@@ -50,7 +50,7 @@ jobs:
             - name: "Add web to war file"
               run: ls *.war | xargs -I {} jar uf {} ./WEB-INFO
             - name: "Rename war file"
-              run: mv *.war totoro-`cat totoro.properties | awk '{ split($1 , a, "="); print a[2] }'`.war && ls
+              run: cat totoro.properties | awk '{ split($1 , a, "="); printf "totoro-%s.war", a[2] }' | xargs mv *.war && ls
             - name: "Push download war to bucket in milestone*/final"
               run: ls *.war | xargs -I {} gsutil {} gs://totoro-admin-build/${{ inputs.milestone }}/final
             - name: "Update version"
