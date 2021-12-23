@@ -38,17 +38,20 @@ jobs:
                   ls *.war && \
                   ls *.zip && \
                   echo -n 'version=${{ inputs.milestone }}-' >> totoro.properties && \
+                  ls *.war | awk '{ gsub(/.*\.war/, "", $1); split($1, a, "-"); for (idx in a) print a[idx] }' && \
+                  ls *.war | awk '{ gsub(/.*\.war/, "", $1); split($1, a, "-"); n=split(a[3], b, "."); print n; for (idx in b) print b[idx] }' && \
                   ls *.war | awk '{ gsub(/.*\.war/, "", $1); split($1, a, "-"); n=split(a[3], b, "."); printf "s%d.", b[n]; }' >> totoro.properties && \
                   ls *.zip | awk '{ gsub(/.*\.zip/, "", $1); split($1, a, "-"); n=split(a[2], b, "."); printf "w%d", b[n]; }' >> totoro.properties && \
                   cat totoro.properties
             - name: "Unzip web and Rename to WEB-INFO "
               run: |
                 mkdir -p WEB-INFO/classes/public && \
-                ls *zip | xargs unzip -d WEB-INFO/classes/public
+                ls *zip | xargs unzip -d WEB-INFO/classes/public |
+                ls
             - name: "Move totoro properties into WEB-INFO/classes"
               run: mv totoro.properties WEB-INFO/classes
             - name: "Add web to war file"
-              run: ls *war | xargs -I {} jar uf {} -c WEB-INFO/classes
+              run: ls *war | xargs -I {} jar uf {} -c ./WEB-INFO/classes
             - name: "Rename war file"
               run: mv *war totoro-$(cat totoro.properties | awk '{ split($1 , a, "="); print a[2] }').war
             - name: "Push download war to bucket in milestone*/final"
