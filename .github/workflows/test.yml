@@ -8,9 +8,18 @@ on:
 
 jobs:
     STEP1:
-        uses: dentallio/totoro-admin/.github/workflows/combine-web-and-server.yml@new-cicd
+        uses: dentallio/totoro-admin/.github/workflows/combine-web-and-server.yml@master
         with:
             milestone: "milestone-1.32"
         secrets:
-            HIS_GCP_PROJECT_ID: ${{ secrets.HIS_GCP_PROJECT_ID }}
-            HIS_GCP_SERVICE_KEY: ${{ secrets.HIS_GCP_SERVICE_KEY }}
+            hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
+            hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
+
+    STEP2:
+        needs: [ STEP1 ]
+        uses: dentallio/totoro-version/.github/workflows/send-slack-notification.yml@master
+        with:
+            content: "{\"text\": \"Test reusable workflow\"}"
+        secrets:
+            slackQaChannelHook: ${{ secrets.SLACK_QA_CHANNEL_HOOK }}
+
