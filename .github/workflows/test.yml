@@ -7,19 +7,19 @@ on:
     pull_request:
 
 jobs:
-    STEP1:
-        uses: dentallio/totoro-version/.github/workflows/combine-web-and-server.yml@master
-        with:
-            milestone: "milestone-1.32"
-        secrets:
-            hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
-            hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
+#    STEP1:
+#        uses: dentallio/totoro-version/.github/workflows/combine-web-and-server.yml@master
+#        with:
+#            milestone: "milestone-1.32"
+#        secrets:
+#            hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
+#            hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
 
     STEP2:
-        needs: [ STEP1 ]
+#        needs: [ STEP1 ]
         uses: dentallio/totoro-version/.github/workflows/send-slack-notification.yml@master
         with:
-            content: "{\"text\": \"Test reusable workflow c\"}"
+            content: '{"text": "Test reusable workflow c"}'
         secrets:
             slackQaChannelHook: ${{ secrets.SLACK_QA_CHANNEL_HOOK }}
 
