@@ -225,15 +225,15 @@ public class TreatmentReportService implements ReportService, ApplicationContext
     private String getItemNameAttr(TreatmentBookSetting bookSetting, Set<String> includeNhiProcedureCodes) {
         String itemName = "全部項目";
         if (nonNull(bookSetting.getDailyNhiReportSetting())) {
-            itemName = "全健保代碼";
+            itemName = "全部代碼";
         } else if (nonNull(bookSetting.getDailyOwnExpenseReportSetting())) {
-            itemName = "全自費項目";
+            itemName = "全部自費";
         } else if (nonNull(bookSetting.getDailyDrugReportSetting())) {
             itemName = "全部藥品";
         } else if (nonNull(bookSetting.getMonthlyNhiReportSetting())) {
-            itemName = "全健保代碼";
+            itemName = "全部代碼";
         } else if (nonNull(bookSetting.getMonthlyOwnExpenseReportSetting())) {
-            itemName = "全自費項目";
+            itemName = "全部自費";
         } else if (nonNull(bookSetting.getMonthlyDrugReportSetting())) {
             itemName = "全部藥品";
         }
