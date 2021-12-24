@@ -1,0 +1,45 @@
+name: "Run war on dev machine"
+
+on:
+    workflow_call:
+        inputs:
+            url:
+                required: true
+                type: string
+            stopTime:
+                required: true
+                type: number
+            warFileName:
+                required: true
+                type: string
+        secrets:
+            hisGcpProjectId:
+                required: true
+            hisGcpServiceKey:
+                required: true
+jobs:
+    Cp-War-To-Dev-Machine:
+        runs-on: ubuntu-18.04
+        steps:
+            - name: "Blank"
+              run: echo Hello wf
+
+    Restart-Dev-Machine:
+        needs: [ Cp-War-To-Dev-Machine ]
+        runs-on: ubuntu-18.04
+        steps:
+            - name: "Stop target port machine"
+              run: |
+                curl --location --request POST \
+                ${{ inputs.url }} \
+                --header "Content-Type:application/json" \
+                --data-raw '{"operation": "stop"}'
+            - name: "Wait awhile"
+              run: sleep ${{ inputs.stopTime }}
+            - name: "Start target port machine"
+              run: |
+                curl --location --request POST \
+                ${{ inputs.url }} \
+                --header "Content-Type:application/json" \
+                --data-raw '{"warVersion":"${{ inputs.warFileName }}, "operation": "start"}'
+
