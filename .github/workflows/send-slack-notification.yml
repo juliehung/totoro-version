@@ -15,4 +15,4 @@ jobs:
         runs-on: ubuntu-18.04
         steps:
             - name: "Notify to Slack"
-              run: curl --location --request POST "${{ secrets.slackQaChannelHook }}" --header "Content-Type:application/json" --data-raw '{\"text\":\"${{ inputs.content }}\"}'
+              run: curl --location --request POST "${{ secrets.slackQaChannelHook }}" --header "Content-Type:application/json" --data-raw '{"text":"${{ inputs.content }}"}'
