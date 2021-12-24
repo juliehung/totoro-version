@@ -15,11 +15,26 @@ jobs:
 #            hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
 #            hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
 
-    STEP2:
+#    STEP2:
 #        needs: [ STEP1 ]
-        uses: dentallio/totoro-version/.github/workflows/send-slack-notification.yml@master
-        with:
-            content: Test reusable workflow complex content
-        secrets:
-            slackQaChannelHook: ${{ secrets.SLACK_QA_CHANNEL_HOOK }}
+#        uses: dentallio/totoro-version/.github/workflows/send-slack-notification.yml@master
+#        with:
+#            content: Test reusable workflow complex content
+#        secrets:
+#            slackQaChannelHook: ${{ secrets.SLACK_QA_CHANNEL_HOOK }}
 
+#    STEP3:
+#        uses: dentallio/totoro-version/.github/workflows/send-slack-notification.yml@master
+#        with:
+#            content: Test reusable workflow complex content
+#            url: "http://dev.dentall.site:8001/servers/8083/operation"
+#            warFileName: ""
+#        secrets:
+#            slackQaChannelHook: ${{ secrets.SLACK_QA_CHANNEL_HOOK }}
+
+    STEP4:
+        uses: dentallio/totoro-version/.github/workflows/test.yml@master
+        with:
+            milestone: milestone-1.32
+            hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
+            hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
