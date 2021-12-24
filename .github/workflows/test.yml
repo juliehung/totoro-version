@@ -35,6 +35,7 @@ jobs:
     STEP4:
         uses: dentallio/totoro-version/.github/workflows/test.yml@master
         with:
-            milestone: milestone-1.32
+            milestone: "milestone-1.32"
+        secrets:
             hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
             hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
