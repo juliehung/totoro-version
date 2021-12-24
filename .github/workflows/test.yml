@@ -19,7 +19,7 @@ jobs:
         needs: [ STEP1 ]
         uses: dentallio/totoro-version/.github/workflows/send-slack-notification.yml@master
         with:
-            content: "{\"text\": \"Test reusable workflow\"}"
+            content: "{\"text\": \"Test reusable workflow c\"}"
         secrets:
             slackQaChannelHook: ${{ secrets.SLACK_QA_CHANNEL_HOOK }}
 
