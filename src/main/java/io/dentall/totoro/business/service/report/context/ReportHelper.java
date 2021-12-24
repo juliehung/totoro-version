@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.YearMonth;
@@ -170,5 +172,17 @@ public class ReportHelper {
 
     public static boolean isNumericCardNumber(String cardNumber) {
         return isNumeric(cardNumber);
+    }
+
+    /**
+     *
+     * @param pixels 一個字寬佔多少pixels，例字體「Calibri」的「0」佔「7 pixels」相當excel font size「11」
+     * @param visibleCharacters 可見字數，中文字的話，visibleCharacters需乘以兩倍
+     * @return 得出可填入sheet.setColumnWidth的with數字
+     */
+    public static int calculateColumnWith(int pixels, int visibleCharacters) {
+        BigDecimal a = new BigDecimal(visibleCharacters * pixels + 5);
+        BigDecimal b = new BigDecimal(pixels);
+        return a.divide(b, RoundingMode.CEILING).intValue() * 256;
     }
 }

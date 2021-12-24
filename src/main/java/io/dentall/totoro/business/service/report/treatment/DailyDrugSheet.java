@@ -22,33 +22,89 @@ public class DailyDrugSheet extends ExcelSheet {
     @Override
     public void write() {
         Sheet sheet = getReport().getBook().getWorkbook().createSheet("藥品");
-        createHeader(sheet);
+        Font defaultFont = sheet.getWorkbook().createFont();
+        defaultFont.setFontHeightInPoints((short) 11);
+        defaultFont.setFontName("Calibri");
+        createHeader(sheet, defaultFont);
+        CellStyle dataCellStyle = sheet.getWorkbook().createCellStyle();
+        dataCellStyle.setFont(defaultFont);
         List<DrugVo> data = getReport().getData();
+        Cell cell;
+
         for (DrugVo vo : data) {
             Row row = sheet.createRow(rowCounter.get());
             Counter cellCounter = new Counter();
-            row.createCell(cellCounter.get()).setCellValue(displayDisposalDate(vo.getDisposalDate()));
-            row.createCell(cellCounter.get()).setCellValue(vo.getDoctorName());
-            row.createCell(cellCounter.get()).setCellValue(vo.getPatientName());
-            row.createCell(cellCounter.get()).setCellValue(displayBirthAge(vo.getPatientBirth(), displayAge(vo.getPatientAge())));
-            row.createCell(cellCounter.get()).setCellValue(vo.getDrugName());
-            row.createCell(cellCounter.get()).setCellValue(vo.getDrugNhiCode());
-            row.createCell(cellCounter.get()).setCellValue(vo.getDrugDay());
-            row.createCell(cellCounter.get()).setCellValue(vo.getDrugWay());
-            row.createCell(cellCounter.get()).setCellValue(vo.getDrugFrequency());
-            row.createCell(cellCounter.get()).setCellValue(displayFutureAppointmentMemo(vo.getFutureAppointmentList()));
-            row.createCell(cellCounter.get()).setCellValue(vo.getPatientPhone());
-            row.createCell(cellCounter.get()).setCellValue(vo.getPatientNote());
+
+            cell = row.createCell(cellCounter.get());
+            cell.setCellValue(displayDisposalDate(vo.getDisposalDate()));
+            cell.setCellStyle(dataCellStyle);
+
+            cell = row.createCell(cellCounter.get());
+            cell.setCellValue(vo.getDoctorName());
+            cell.setCellStyle(dataCellStyle);
+
+            cell = row.createCell(cellCounter.get());
+            cell.setCellValue(vo.getPatientName());
+            cell.setCellStyle(dataCellStyle);
+
+            cell = row.createCell(cellCounter.get());
+            cell.setCellValue(displayBirthAge(vo.getPatientBirth(), displayAge(vo.getPatientAge())));
+            cell.setCellStyle(dataCellStyle);
+
+            cell = row.createCell(cellCounter.get());
+            cell.setCellValue(vo.getDrugName());
+            cell.setCellStyle(dataCellStyle);
+
+            cell = row.createCell(cellCounter.get());
+            cell.setCellValue(vo.getDrugNhiCode());
+            cell.setCellStyle(dataCellStyle);
+
+            cell = row.createCell(cellCounter.get());
+            cell.setCellValue(vo.getDrugDay());
+            cell.setCellStyle(dataCellStyle);
+
+            cell = row.createCell(cellCounter.get());
+            cell.setCellValue(vo.getDrugWay());
+            cell.setCellStyle(dataCellStyle);
+
+            cell = row.createCell(cellCounter.get());
+            cell.setCellValue(vo.getDrugFrequency());
+            cell.setCellStyle(dataCellStyle);
+
+            cell = row.createCell(cellCounter.get());
+            cell.setCellValue(displayFutureAppointmentMemo(vo.getFutureAppointmentList()));
+            cell.setCellStyle(dataCellStyle);
+
+            cell = row.createCell(cellCounter.get());
+            cell.setCellValue(vo.getPatientPhone());
+            cell.setCellStyle(dataCellStyle);
+
+            cell = row.createCell(cellCounter.get());
+            cell.setCellValue(vo.getPatientNote());
+            cell.setCellStyle(dataCellStyle);
         }
     }
 
-    private void createHeader(Sheet sheet) {
+    private void createHeader(Sheet sheet, Font font) {
+        sheet.setColumnWidth(0, calculateColumnWith(7, 10));
+        sheet.setColumnWidth(1, calculateColumnWith(7, 12));
+        sheet.setColumnWidth(2, calculateColumnWith(7, 12));
+        sheet.setColumnWidth(3, calculateColumnWith(7, 18));
+        sheet.setColumnWidth(4, calculateColumnWith(7, 20));
+        sheet.setColumnWidth(5, calculateColumnWith(7, 12));
+        sheet.setColumnWidth(6, calculateColumnWith(7, 8));
+        sheet.setColumnWidth(7, calculateColumnWith(7, 8));
+        sheet.setColumnWidth(8, calculateColumnWith(7, 8));
+        sheet.setColumnWidth(9, calculateColumnWith(7, 40));
+        sheet.setColumnWidth(10, calculateColumnWith(7, 12));
+        sheet.setColumnWidth(11, calculateColumnWith(7, 80));
+
         Row header = sheet.createRow(rowCounter.get());
-        sheet.getWorkbook().createCellStyle();
         XSSFColor cellColor = new XSSFColor(new byte[]{(byte) 243, (byte) 243, (byte) 243}, new DefaultIndexedColorMap());
         CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
         ((XSSFCellStyle) cellStyle).setFillForegroundColor(cellColor);
         cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        cellStyle.setFont(font);
 
         XSSFColor borderColor = new XSSFColor(new byte[]{(byte) 222, (byte) 223, (byte) 223}, new DefaultIndexedColorMap());
         cellStyle.setBorderTop(BorderStyle.THIN);
