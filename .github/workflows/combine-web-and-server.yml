@@ -1,0 +1,70 @@
+name: "Combine web and server"
+
+on:
+    workflow_call:
+        inputs:
+            milestone:
+                required: true
+                type: string
+        secrets:
+            hisGcpProjectId:
+                required: true
+            hisGcpServiceKey:
+                required: true
+env:
+    VERSION_REPOSITORY: dentallio/totoro-version
+
+jobs:
+    Combine-Web-And-Server:
+        runs-on: ubuntu-18.04
+        container: openjdk:8-jdk-stretch
+        steps:
+            - name: "Install Tool"
+              run: apt-get update -y && apt-get install unzip jq -y
+            - name: "Set up Cloud SDK"
+              uses: google-github-actions/setup-gcloud@master
+              with:
+                  project_id: ${{ secrets.hisGcpProjectId }}
+                  service_account_key: ${{ secrets.hisGcpServiceKey }}
+                  export_default_credentials: true
+            - name: "Download latest web zip of current milestone from google storage"
+              run: gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/web | sed '$d' | tail -n 1 | awk '{ print $3 }' | xargs -I {} gsutil cp {} .
+            - name: "Download latest war of current milestone from google storage"
+              run: gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/server | sed '$d' | tail -n 1 | awk '{ print $3 }' | xargs -I {} gsutil cp {} .
+            - name: "Check file is downloaded"
+              run: ls -a
+            - name: "Create combination version file"
+              run: |
+                  ls *.war && \
+                  ls *.zip && \
+                  echo -n 'version=${{ inputs.milestone }}-' >> totoro.properties && \
+                  ls *.war | awk '{ gsub(/.war/, "", $1); split($1, a, "-"); n=split(a[3], b, "."); printf "s%d.", b[n]; }' >> totoro.properties && \
+                  ls *.zip | awk '{ gsub(/.zip/, "", $1); split($1, a, "-"); n=split(a[2], b, "."); printf "w%d", b[n]; }' >> totoro.properties && \
+                  cat totoro.properties
+            - name: "Unzip web and Rename to WEB-INF "
+              run: |
+                mkdir -p WEB-INF/classes/ && \
+                ls *zip | xargs unzip -d WEB-INF/classes/ && \
+                mv WEB-INF/classes/build WEB-INF/classes/public
+            - name: "Move totoro properties into WEB-INF/classes"
+              run: mv totoro.properties WEB-INF/classes
+            - name: "Add web to war file"
+              run: ls *.war | xargs -I {} jar uf {} ./WEB-INF
+            - name: "Rename war file"
+              run: cat WEB-INF/classes/totoro.properties | awk '{ split($1 , a, "="); printf "totoro-%s.war", a[2] }' | xargs -I {} mv *.war {} && ls
+            - name: "Push download war to bucket in milestone*/final"
+              run: ls *.war | xargs -I {} gsutil cp {} gs://totoro-admin-build/${{ inputs.milestone }}/final
+            - name: "Update version"
+              run: |
+                  echo '{}' > tmp && \
+                  jq \
+                  --arg serverFileName $(ls *.war) \
+                  --arg webFileName $(ls *.zip) \
+                  --arg finalFileName $(cat WEB-INF/classes/totoro.properties | awk '{ split($1 , a, "="); print a[2] }') \
+                  --arg timestamp `date "+%Y-%m-%dT%H:%M:%SZ"` \
+                  '.history + [{"serverFileName": $serverFileName, "webFileName": $webFileName, "finalFileName": $finalFileName, "timestamp": $timestamp}]' \
+                  tmp > tmp2 && \
+                  cat tmp2
+            - name: "Overwrite history version"
+              run: |
+                  gsutil cp tmp2 gs://totoro-admin-build/${{ inputs.milestone }}/final/records.json
