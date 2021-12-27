@@ -18,6 +18,6 @@ jobs:
             - uses: ${GITHUB_WORKSPACE}/.github/actions/test.yml@master
               with:
                 bucketName: totoro-admin-build
-                path: ${{ milestone }}/web
+                path: ${{ inputs.milestone }}/web
                 hisGcpProjectId: ${{ secrets.hisGcpProjectId }}
                 hisGcpServiceKey: ${{ secrets.hisGcpServiceKey }}
