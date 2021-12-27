@@ -50,7 +50,7 @@ jobs:
     Copy-Latest-Server-From-Depended-Mileston-To-Google-Storage:
         runs-on: ubuntu-18.04
         needs: [ Check-Current-Milestone-Server-Init ]
-        if: ${{ always() && needs.Check-Current-Milestone-Server-Init.result == 'failure' }}
+        if: ${{ failure() }}
         steps:
             - name: "Test"
               if: ${{ env.doCopyServer }}
