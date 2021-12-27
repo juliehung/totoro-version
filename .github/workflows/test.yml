@@ -32,7 +32,17 @@ jobs:
 #        secrets:
 #            slackQaChannelHook: ${{ secrets.SLACK_QA_CHANNEL_HOOK }}
 #
-    STEP4:
+    STEP4COPY:
+        uses: dentallio/totoro-version/.github/workflows/init-milestone.yml@master
+        with:
+            content: "test content"
+            currentMilestone: "milestone-1.31"
+            dependedMilestone: "milestone-1.31"
+        secrets:
+            hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
+            hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
+
+    STEP4NoCOPY:
         uses: dentallio/totoro-version/.github/workflows/init-milestone.yml@master
         with:
             content: "test content"
