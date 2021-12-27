@@ -50,7 +50,7 @@ jobs:
                 tmpContent=$(cat tmp) && \
                 echo op2 && \
                 echo $tmpContent && \
-                if [[ ${#tmpContent} -eq 0 ]]
+                if ${#tmpContent} -eq 0
                 then
                     echo doCopyServer=true >> $GITHUB_ENV
                 else
