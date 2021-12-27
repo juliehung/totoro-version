@@ -49,30 +49,15 @@ jobs:
                 gsutil ls -l gs://totoro-admin-build/${{ inputs.currentMilestone }}/server 
 
     Copy-Server:
-        description: "Copy indicated milestone latest server file to current milestone"
         runs-on: ubuntu-18.04
         needs: [ Check-Milestone-Server-Init ]
         if: ${{ failure() }}
         steps:
-            - name: "Test"
-              run:
-                echo do copy
-            # - name: "Download latest web zip of current milestone from google storage"
-            #   if: ${{ env.existServer }}
-            #   run: |
-            #   gsutil ls -l gs://totoro-admin-build/${{ inputs.dependedMilestone }}/server | \
-            #   sed '$d' | \
-            #   tail -n 1 | \
-            #   awk '{ printf ${{ inputs.currentMilestone }}, " ", ${{ inputs.dependedMilestone }} }' | \
-            #   xargs -I {} gsutil cp {}
-
-    # Copy-Latest-Web-From-Depended-Mileston-To-Google-Storage:
-    #     runs-on: ubuntu-18.04
-    #     steps:
-    #         - name: "Download latest web zip of current milestone from google storage"
-    #           run: |
-    #           gsutil ls -l gs://totoro-admin-build/${{ inputs.dependedMilestone }}/web | \
-    #           sed '$d' | \
-    #           tail -n 1 | \
-    #           awk '{ printf ${{ inputs.currentMilestone }}, " ", ${{ inputs.dependedMilestone }} }' | \
-    #           xargs -I {} gsutil cp {}
+            - name: "Download latest web zip of current milestone from google storage"
+              if: ${{ env.existServer }}
+              run: |
+              gsutil ls -l gs://totoro-admin-build/${{ inputs.dependedMilestone }}/server | \
+              sed '$d' | \
+              tail -n 1 | \
+              awk '{ printf ${{ inputs.dependedMilestone }}, " ", ${{ inputs.currentMilestone }} }' | \
+              xargs -I {} gsutil cp {}
