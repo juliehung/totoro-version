@@ -45,8 +45,7 @@ jobs:
                   export_default_credentials: true
             - name: "Check current milestone server folder on google storage"
               run: |
-                touch tmp && \
-                gsutil ls -l gs://totoro-admin-build/${{ inputs.currentMilestone }}/server > tmp  && \
+                gsutil ls -l gs://totoro-admin-build/${{ inputs.currentMilestone }}/server > tmp 2> tmp && \
                 tmpContent=$(cat tmp) && \
                 if [[ ${#tmpContent} -eq 0 ]]
                 then
