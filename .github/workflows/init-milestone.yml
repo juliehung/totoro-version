@@ -25,7 +25,7 @@ jobs:
             - name: "Check out totoro version"
               uses: actions/checkout@v2
               with:
-                repository: 'totoro-version'
+                repository: 'dentallio/totoro-version'
                 ref: master
                 token: ${{ secrets.TOTORO_VERSION_ACCESS }}
                 path: totoro-version
