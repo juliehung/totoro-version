@@ -189,6 +189,15 @@ public final class DateTimeUtil {
             .substring(1);
     }
 
+    public static String transformLocalDateToRocDateTimeForFileName(LocalDate dateTime) {
+        return dateTime
+            .minus(1911, ChronoUnit.YEARS)
+            .format(
+                DateTimeFormatter.ofPattern("yyyyMMdd")
+            )
+            .substring(1);
+    }
+
     public static String transformLocalDateToRocDateForDisplay(Instant dateTime) {
         return dateTime
             .atOffset(TimeConfig.ZONE_OFF_SET)
