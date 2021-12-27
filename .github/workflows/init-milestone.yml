@@ -51,7 +51,6 @@ jobs:
         needs: [ Check-Current-Milestone-Server-Init ]
         steps:
             - name: "Test"
-              needs: [ Check-Current-Milestone-Server-Init ]
               if: ${{ env.doCopyServer }}
               run:
                 echo do copy
