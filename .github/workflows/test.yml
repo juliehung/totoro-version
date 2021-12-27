@@ -15,7 +15,7 @@ jobs:
     Test:
         runs-on: ubuntu-18.04
         steps:
-            - use: ${GITHUB_WORKSPACE}/.github/actions/test.yml@master
+            - uses: ${GITHUB_WORKSPACE}/.github/actions/test.yml@master
               with:
                 bucketName: totoro-admin-build
                 path: ${{ milestone }}/web
