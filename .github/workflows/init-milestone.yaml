@@ -29,6 +29,8 @@ jobs:
                 ref: master
                 token: ${{ secrets.TOTORO_VERSION_ACCESS }}
                 path: totoro-version
+            - name: "check files"
+              run: ls
 
     Copy-Latest-Server-From-Depended-Mileston-To-Google-Storage:
         runs-on: ubuntu-18.04
