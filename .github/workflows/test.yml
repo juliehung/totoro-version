@@ -41,6 +41,7 @@ jobs:
         secrets:
             hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
             hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
+            totoroVersionAccessToken: ${{ secrets.TOTORO_VERSION_ACCESS }}
 
     STEP4NoCOPY:
         uses: dentallio/totoro-version/.github/workflows/init-milestone.yml@master
