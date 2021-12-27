@@ -11,6 +11,7 @@ import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.service.*;
 import io.dentall.totoro.service.dto.LedgerCriteria;
 import io.dentall.totoro.service.mapper.LedgerGroupMapper;
+import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
@@ -35,6 +36,7 @@ import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -366,15 +368,14 @@ public class LedgerResource {
             .concat("/")
             .concat(patient.getId().toString())
             .concat("/");
-        String fileName = "收支紀錄"
+        String fileName = "收據"
             .concat("_")
             .concat(patient.getName())
-            .concat(patient.getBirth().toString())
+            .concat(DateTimeUtil.transformLocalDateToRocDateTimeForFileName(patient.getBirth()))
             .concat("_")
             .concat(ledgerReceipt.getLedgerGroup().getProjectCode())
-            .concat(ledgerReceipt.getLedgerGroup().getDisplayName())
             .concat("_")
-            .concat(Instant.now().atOffset(TimeConfig.ZONE_OFF_SET).toString())
+            .concat(String.valueOf(Instant.now().getEpochSecond()))
             .concat(".pdf");
 
         imageGcsBusinessService.uploadFile(
