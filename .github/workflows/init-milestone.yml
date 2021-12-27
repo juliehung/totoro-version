@@ -45,7 +45,7 @@ jobs:
                   export_default_credentials: true
             - name: "Check current milestone server folder on google storage"
               run: |
-                tmp=$(gsutil ls -l gs://totoro-admin-build/${{ inputs.currentMilestone }}/server) && \
+                tmp=$(gsutil ls -l gs://totoro-admin-build/${{ inputs.currentMilestone }}/server) 2> /dev/null && \
                 if [[ -n ${#tmp} ]]
                 then
                     echo doCopyServer=true >> $GITHUB_ENV
