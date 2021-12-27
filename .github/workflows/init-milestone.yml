@@ -46,7 +46,10 @@ jobs:
             - name: "Check current milestone server folder on google storage"
               run: |
                 gsutil ls -l gs://totoro-admin-build/${{ inputs.currentMilestone }}/server > tmp 2> tmp && \
+                echo op1 && \
                 tmpContent=$(cat tmp) && \
+                echo op2 && \
+                echo $tmpContent && \
                 if [[ ${#tmpContent} -eq 0 ]]
                 then
                     echo doCopyServer=true >> $GITHUB_ENV
