@@ -21,20 +21,21 @@ on:
                 required: true
 
 jobs:
-    # Create-Milestone-History:
-    #     runs-on: ubuntu-18.04
-    #     steps:
-    #         - name: "Check out totoro version"
-    #           uses: actions/checkout@v2
-    #           with:
-    #             repository: 'dentallio/totoro-version'
-    #             ref: master
-    #             token: ${{ secrets.totoroVersionAccessToken }}
-    #             path: totoro-version
-    #         - name: "check files"
-    #           run: ls
+    Check-Milestone-History:
+        runs-on: ubuntu-18.04
+        steps:
+            - name: "Check out totoro version"
+              uses: actions/checkout@v2
+              with:
+                repository: 'dentallio/totoro-version'
+                ref: master
+                token: ${{ secrets.totoroVersionAccessToken }}
+                path: totoro-version
+            - name: "check files"
+              run: |
+                ls ${{ inputs.currentMilestone }}
 
-    Check-Current-Milestone-Server-Init:
+    Check-Milestone-Server-Init:
         runs-on: ubuntu-18.04
         steps:
             - name: "Set up Cloud SDK"
@@ -47,13 +48,13 @@ jobs:
               run: |
                 gsutil ls -l gs://totoro-admin-build/${{ inputs.currentMilestone }}/server 
 
-    Copy-Latest-Server-From-Depended-Mileston-To-Google-Storage:
+    Copy-Server:
+        description: "Copy indicated milestone latest server file to current milestone"
         runs-on: ubuntu-18.04
-        needs: [ Check-Current-Milestone-Server-Init ]
+        needs: [ Check-Milestone-Server-Init ]
         if: ${{ failure() }}
         steps:
             - name: "Test"
-              if: ${{ env.doCopyServer }}
               run:
                 echo do copy
             # - name: "Download latest web zip of current milestone from google storage"
