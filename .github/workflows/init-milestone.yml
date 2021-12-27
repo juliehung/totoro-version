@@ -47,7 +47,7 @@ jobs:
               run: |
                 touch tmp && \
                 gsutil ls -l gs://totoro-admin-build/${{ inputs.currentMilestone }}/server > tmp  && \
-                tmpContent=$(cat tmp)
+                tmpContent=$(cat tmp) && \
                 if [[ ${#tmpContent} -eq 0 ]]
                 then
                     echo doCopyServer=true >> $GITHUB_ENV
