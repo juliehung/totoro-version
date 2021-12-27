@@ -4,8 +4,6 @@ import io.dentall.totoro.business.service.ImageGcsBusinessService;
 import io.dentall.totoro.repository.ImageRepository;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-
 @Service
 public class FakeImageGCSService extends ImageGcsBusinessService {
     public FakeImageGCSService(ImageRepository imageRepository) {

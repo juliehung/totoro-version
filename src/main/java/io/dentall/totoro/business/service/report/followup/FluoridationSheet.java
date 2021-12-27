@@ -27,19 +27,46 @@ public class FluoridationSheet extends ExcelSheet {
     @Override
     public void write() {
         Sheet sheet = getReport().getBook().getWorkbook().createSheet(setting.getSheetName());
+        Font defaultFont = sheet.getWorkbook().createFont();
+        defaultFont.setFontHeightInPoints((short) 11);
+        defaultFont.setFontName("Calibri");
+        CellStyle dataCellStyle = sheet.getWorkbook().createCellStyle();
+        dataCellStyle.setFont(defaultFont);
         createNote(sheet);
-        createHeader(sheet);
+        createHeader(sheet, defaultFont);
         List<FluoridationVo> data = getReport().getData();
+        Cell cell;
+
         for (FluoridationVo vo : data) {
             Row row = sheet.createRow(rowCounter.get());
             Counter cellCounter = new Counter();
-            row.createCell(cellCounter.get()).setCellValue(vo.getDoctorName());
-            row.createCell(cellCounter.get()).setCellValue(vo.getPatientName());
-            row.createCell(cellCounter.get()).setCellValue(displayBirthAge(vo.getPatientBirth(), displayAge(vo.getPatientAge())));
-            row.createCell(cellCounter.get()).setCellValue(displayNextAvailableTreatmentDate(vo.getNextAvailableTreatmentDate()));
-            row.createCell(cellCounter.get()).setCellValue(displayFutureAppointmentMemo(vo.getFutureAppointmentList()));
-            row.createCell(cellCounter.get()).setCellValue(vo.getPatientPhone());
-            row.createCell(cellCounter.get()).setCellValue(vo.getPatientNote());
+            cell = row.createCell(cellCounter.get());
+            cell.setCellValue(vo.getDoctorName());
+            cell.setCellStyle(dataCellStyle);
+
+            cell = row.createCell(cellCounter.get());
+            cell.setCellValue(vo.getPatientName());
+            cell.setCellStyle(dataCellStyle);
+
+            cell = row.createCell(cellCounter.get());
+            cell.setCellValue(displayBirthAge(vo.getPatientBirth(), displayAge(vo.getPatientAge())));
+            cell.setCellStyle(dataCellStyle);
+
+            cell = row.createCell(cellCounter.get());
+            cell.setCellValue(displayNextAvailableTreatmentDate(vo.getNextAvailableTreatmentDate()));
+            cell.setCellStyle(dataCellStyle);
+
+            cell = row.createCell(cellCounter.get());
+            cell.setCellValue(displayFutureAppointmentMemo(vo.getFutureAppointmentList()));
+            cell.setCellStyle(dataCellStyle);
+
+            cell = row.createCell(cellCounter.get());
+            cell.setCellValue(vo.getPatientPhone());
+            cell.setCellStyle(dataCellStyle);
+
+            cell = row.createCell(cellCounter.get());
+            cell.setCellValue(vo.getPatientNote());
+            cell.setCellStyle(dataCellStyle);
         }
     }
 
@@ -47,6 +74,7 @@ public class FluoridationSheet extends ExcelSheet {
         String note1 = "追蹤日期：" + displayDisposalDate(setting.getBeginDate()) + "~" + displayDisposalDate(setting.getEndDate()) + "\n";
         Font normalFont = sheet.getWorkbook().createFont();
         normalFont.setColor(Font.COLOR_NORMAL);
+        normalFont.setFontName("Calibri");
         XSSFRichTextString richTextString = new XSSFRichTextString();
         richTextString.setString(note1);
         richTextString.applyFont(0, note1.length(), normalFont);
@@ -57,13 +85,21 @@ public class FluoridationSheet extends ExcelSheet {
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
     }
 
-    private void createHeader(Sheet sheet) {
+    private void createHeader(Sheet sheet, Font font) {
+        sheet.setColumnWidth(0, calculateColumnWith(7, 12));
+        sheet.setColumnWidth(1, calculateColumnWith(7, 12));
+        sheet.setColumnWidth(2, calculateColumnWith(7, 18));
+        sheet.setColumnWidth(3, calculateColumnWith(7, 20));
+        sheet.setColumnWidth(4, calculateColumnWith(7, 40));
+        sheet.setColumnWidth(5, calculateColumnWith(7, 12));
+        sheet.setColumnWidth(6, calculateColumnWith(7, 80));
+
         Row header = sheet.createRow(rowCounter.get());
-        sheet.getWorkbook().createCellStyle();
         XSSFColor cellColor = new XSSFColor(new byte[]{(byte) 243, (byte) 243, (byte) 243}, new DefaultIndexedColorMap());
         CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
         ((XSSFCellStyle) cellStyle).setFillForegroundColor(cellColor);
         cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        cellStyle.setFont(font);
 
         XSSFColor borderColor = new XSSFColor(new byte[]{(byte) 222, (byte) 223, (byte) 223}, new DefaultIndexedColorMap());
         cellStyle.setBorderTop(BorderStyle.THIN);

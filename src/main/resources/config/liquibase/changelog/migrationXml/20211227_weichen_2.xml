@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20211227-weichen-2" author="WeiChen">
+        <sql>
+            update nhi_procedure set  expiration_time = '2029-12-30T15:59:59Z'  where code in ('P6701C', 'P6702C', 'P6703C', 'P6704C', 'P6705C') ;
+        </sql>
+    </changeSet>
+</databaseChangeLog>
