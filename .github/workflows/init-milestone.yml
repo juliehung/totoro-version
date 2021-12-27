@@ -56,8 +56,8 @@ jobs:
             - name: "Download latest web zip of current milestone from google storage"
               if: ${{ env.existServer }}
               run: |
-              gsutil ls -l gs://totoro-admin-build/${{ inputs.dependedMilestone }}/server | \
-              sed '$d' | \
-              tail -n 1 | \
-              awk '{ printf ${{ inputs.dependedMilestone }}, " ", ${{ inputs.currentMilestone }} }' | \
-              xargs -I {} gsutil cp {}
+                gsutil ls -l gs://totoro-admin-build/${{ inputs.dependedMilestone }}/server | \
+                sed '$d' | \
+                tail -n 1 | \
+                awk '{ printf ${{ inputs.dependedMilestone }}, " ", ${{ inputs.currentMilestone }} }' | \
+                xargs -I {} gsutil cp {}
