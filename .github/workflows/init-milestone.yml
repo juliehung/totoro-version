@@ -17,29 +17,60 @@ on:
                 required: true
             hisGcpServiceKey:
                 required: true
+            totoroVersionAccessToken:
+                required: true
 
 jobs:
-    Create-Milestone-History:
+    # Create-Milestone-History:
+    #     runs-on: ubuntu-18.04
+    #     steps:
+    #         - name: "Check out totoro version"
+    #           uses: actions/checkout@v2
+    #           with:
+    #             repository: 'dentallio/totoro-version'
+    #             ref: master
+    #             token: ${{ secrets.totoroVersionAccessToken }}
+    #             path: totoro-version
+    #         - name: "check files"
+    #           run: ls
+
+    Check-Current-Milestone-Server-Init:
         runs-on: ubuntu-18.04
         steps:
-            - name: "Check out totoro version"
-              uses: actions/checkout@v2
-              with:
-                repository: 'dentallio/totoro-version'
-                ref: master
-                token: ${{ secrets.TOTORO_VERSION_ACCESS }}
-                path: totoro-version
-            - name: "check files"
-              run: ls
+            - name: "Check current milestone server folder on google storage"
+              run: |
+                if [[ ${#$(gsutil ls -l gs://totoro-admin-build/milestone-1.32/server)} -eq 0 ]]
+                then
+                    echo doCopyServer=true >> $GITHUB_ENV
+                else
+                    echo doCopyServer=false >> $GITHUB_ENV
+                fi
 
     Copy-Latest-Server-From-Depended-Mileston-To-Google-Storage:
         runs-on: ubuntu-18.04
+        needs: [ Check-Current-Milestone-Server-Init ]
         steps:
-            - name: "Just echo"
-              run: echo copy server
+            - name: "Test"
+              needs: [ Check-Current-Milestone-Server-Init ]
+              if: ${{ env.doCopyServer }}
+              run:
+                echo do copy
+            # - name: "Download latest web zip of current milestone from google storage"
+            #   if: ${{ env.existServer }}
+            #   run: |
+            #   gsutil ls -l gs://totoro-admin-build/${{ inputs.dependedMilestone }}/server | \
+            #   sed '$d' | \
+            #   tail -n 1 | \
+            #   awk '{ printf ${{ inputs.currentMilestone }}, " ", ${{ inputs.dependedMilestone }} }' | \
+            #   xargs -I {} gsutil cp {}
 
-    Copy-Latest-Web-From-Depended-Mileston-To-Google-Storage:
-        runs-on: ubuntu-18.04
-        steps:
-            - name: "Just echo"
-              run: echo copy web
+    # Copy-Latest-Web-From-Depended-Mileston-To-Google-Storage:
+    #     runs-on: ubuntu-18.04
+    #     steps:
+    #         - name: "Download latest web zip of current milestone from google storage"
+    #           run: |
+    #           gsutil ls -l gs://totoro-admin-build/${{ inputs.dependedMilestone }}/web | \
+    #           sed '$d' | \
+    #           tail -n 1 | \
+    #           awk '{ printf ${{ inputs.currentMilestone }}, " ", ${{ inputs.dependedMilestone }} }' | \
+    #           xargs -I {} gsutil cp {}
