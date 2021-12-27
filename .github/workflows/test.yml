@@ -1,0 +1,23 @@
+name: "Test"
+
+on:
+    workflow_call:
+        inputs:
+            milestone:
+                required: true
+                type: string
+        secrets:
+            hisGcpProjectId:
+                required: true
+            hisGcpServiceKey:
+                required: true
+jobs:
+    Test:
+        runs-on: ubuntu-18.04
+        steps:
+            - use: ${GITHUB_WORKSPACE}/.github/actions/test.yml@master
+              with:
+                bucketName: totoro-admin-build
+                path: ${{ milestone }}/web
+                hisGcpProjectId: ${{ secrets.hisGcpProjectId }}
+                hisGcpServiceKey: ${{ secrets.hisGcpServiceKey }}
