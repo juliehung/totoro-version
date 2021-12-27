@@ -15,7 +15,7 @@ jobs:
     Test:
         runs-on: ubuntu-18.04
         steps:
-            - uses: ${GITHUB_WORKSPACE}/.github/actions/test.yml@master
+            - uses: dentallio/totoro-version/.github/actions/test.yml@master
               with:
                 bucketName: totoro-admin-build
                 path: ${{ inputs.milestone }}/web
