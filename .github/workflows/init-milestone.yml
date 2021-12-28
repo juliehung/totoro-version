@@ -33,7 +33,16 @@ jobs:
                 path: totoro-version
             - name: "check files"
               run: |
+                ls && \
                 ls ${{ inputs.currentMilestone }}
+
+    Create-Milestone-History:
+        runs-on: ubuntu-18.04
+        needs: [ Check-Milestone-History ]
+        if: ${{ failure() }}
+        steps:
+            - name: "Do"
+              run: echo OK!
 
     Check-Milestone-Server-Init:
         runs-on: ubuntu-18.04
