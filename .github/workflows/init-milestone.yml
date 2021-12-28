@@ -40,8 +40,16 @@ jobs:
         needs: [ History-Checking ]
         if: ${{ failure() }}
         steps:
+            - name: "Check out totoro version"
+              uses: actions/checkout@v2
+              with:
+                repository: 'dentallio/totoro-version'
+                ref: master
+                token: ${{ secrets.totoroVersionAccessToken }}
+                path: totoro-version
             - name: "Create empty json history"
-              run: echo '{}' > totoro-version/${{ inputs.currentMilestone }}
+              run: |
+                echo '{}' > totoro-version/${{ inputs.currentMilestone }}.json
 
     Server-Checking:
         runs-on: ubuntu-18.04
