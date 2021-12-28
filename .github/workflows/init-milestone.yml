@@ -33,8 +33,7 @@ jobs:
                 path: totoro-version
             - name: "check files"
               run: |
-                ls && \
-                ls ${{ inputs.currentMilestone }}
+                ls totoro-version/${{ inputs.currentMilestone }}
 
     Create-Milestone-History:
         runs-on: ubuntu-18.04
