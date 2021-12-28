@@ -37,7 +37,7 @@ jobs:
 
     History-Creation:
         runs-on: ubuntu-18.04
-        needs: [ Check-Milestone-History ]
+        needs: [ History-Checking ]
         if: ${{ failure() }}
         steps:
             - name: "Create empty json history"
@@ -58,7 +58,7 @@ jobs:
 
     Server-Copy:
         runs-on: ubuntu-18.04
-        needs: [ Check-Milestone-Server-Init ]
+        needs: [ Server-Checking ]
         if: ${{ failure() }}
         steps:
             - name: "Set up Cloud SDK"
