@@ -21,7 +21,7 @@ on:
                 required: true
 
 jobs:
-    Check-Milestone-History:
+    History-Checking:
         runs-on: ubuntu-18.04
         steps:
             - name: "Check out totoro version"
@@ -35,15 +35,15 @@ jobs:
               run: |
                 ls totoro-version/${{ inputs.currentMilestone }}
 
-    Create-Milestone-History:
+    History-Creation:
         runs-on: ubuntu-18.04
         needs: [ Check-Milestone-History ]
         if: ${{ failure() }}
         steps:
-            - name: "Do"
-              run: echo OK!
+            - name: "Create empty json history"
+              run: echo '{}' > totoro-version/${{ inputs.currentMilestone }}
 
-    Check-Milestone-Server-Init:
+    Server-Checking:
         runs-on: ubuntu-18.04
         steps:
             - name: "Set up Cloud SDK"
@@ -56,24 +56,22 @@ jobs:
               run: |
                 gsutil ls -l gs://totoro-admin-build/${{ inputs.currentMilestone }}/server 
 
-    Copy-Server:
+    Server-Copy:
         runs-on: ubuntu-18.04
         needs: [ Check-Milestone-Server-Init ]
         if: ${{ failure() }}
         steps:
-            - name: "Correct branch"
-              run: echo OK!
-            # - name: "Set up Cloud SDK"
-            #   uses: google-github-actions/setup-gcloud@master
-            #   with:
-            #       project_id: ${{ secrets.hisGcpProjectId }}
-            #       service_account_key: ${{ secrets.hisGcpServiceKey }}
-            #       export_default_credentials: true
-            # - name: "Download latest web zip of current milestone from google storage"
-            #   if: ${{ env.existServer }}
-            #   run: |
-            #     gsutil ls -l gs://totoro-admin-build/${{ inputs.dependedMilestone }}/server | \
-            #     sed '$d' | \
-            #     tail -n 1 | \
-            #     awk '{ printf ${{ inputs.dependedMilestone }}, " ", ${{ inputs.currentMilestone }} }' | \
-            #     xargs -I {} gsutil cp {}
+            - name: "Set up Cloud SDK"
+              uses: google-github-actions/setup-gcloud@master
+              with:
+                  project_id: ${{ secrets.hisGcpProjectId }}
+                  service_account_key: ${{ secrets.hisGcpServiceKey }}
+                  export_default_credentials: true
+            - name: "Copy server"
+              run: |
+                gsutil ls -l \
+                gs://totoro-admin-build/${{ inputs.dependedMilestone }}/server | \
+                sed '$d' | \
+                tail -n 1 | \
+                awk '{ printf $3  }' | \
+                xargs -I {} gsutil cp {} gs://totoro-admin-build/${{ inputs.currentMilestone }}/server/
