@@ -16,8 +16,12 @@ on:
 jobs:
     Combine-Web-And-Server:
         runs-on: ubuntu-18.04
-        container: openjdk:8-jdk-stretch
         steps:
+            - name: Set up JDK 8
+              uses: actions/setup-java@v2
+              with:
+                java-version: '8'
+                distribution: 'adopt-openj9'
             - name: "Install Tool"
               run: apt-get update -y && apt-get install unzip jq -y
             - name: "Set up Cloud SDK"
