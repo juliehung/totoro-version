@@ -45,14 +45,14 @@ jobs:
 #
     STEP52:
         uses: dentallio/totoro-version/.github/workflows/copy-file-to-remote-machine.yml@master
-          with:
-            remoteHost: dev.dentall.site
-            remoteUser: dentallio
-            remotePath: /home/dentallio
-            sourcePath: ./test
-          secrets:
-            remoteMachineToken: ${{ secrets.HIS_LOCAL_DEV_MACHINE_KEY }}
-        steps:
-            - name: test
-              run: echo ok!
+        with:
+          remoteHost: dev.dentall.site
+          remoteUser: dentallio
+          remotePath: /home/dentallio
+          googleStoragePath: totoro-admin-build/milestone-1.32/final
+          googleStorageFileName: records.json
+        secrets:
+          remoteMachineToken: ${{ secrets.HIS_LOCAL_DEV_MACHINE_KEY }}
+          hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
+          hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
 
