@@ -6,12 +6,12 @@ on:
             milestone:
                 required: true
                 type: string
+            hisGcpRegistry:
+                required: true
         secrets:
             hisGcpProjectId:
                 required: true
             hisGcpServiceKey:
-                required: true
-            hisGcpRegistry:
                 required: true
             totoroVersionAccessToken:
                 required: true
@@ -131,14 +131,14 @@ jobs:
               gcloud --quiet auth configure-docker
           - name: "Build image"
             run: |
-              docker pull asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ hisGcpRegistry }}:cache || true
+              docker pull asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ inputs.hisGcpRegistry }}:cache || true
               docker build \
-              --cache-from asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ hisGcpRegistry }}:cache \
-              -t asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ hisGcpRegistry }}:${{ needs.Combine-Web-And-Server.steps.final-war.outputs.version }} \
-              -t asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ hisGcpRegistry }}:cache \
+              --cache-from asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ inputs.hisGcpRegistry }}:cache \
+              -t asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ inputs.hisGcpRegistry }}:${{ needs.Combine-Web-And-Server.steps.final-war.outputs.version }} \
+              -t asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ inputs.hisGcpRegistry }}:cache \
               -f src/main/docker/Dockerfile \
               src/main/docker
           - name: "Publish image"
             run: |
-              docker push asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ hisGcpRegistry }}:${{ needs.Combine-Web-And-Server.steps.final-war.outputs.version }}
-              docker push asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ hisGcpRegistry }}:cache
+              docker push asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ inputs.hisGcpRegistry }}:${{ needs.Combine-Web-And-Server.steps.final-war.outputs.version }}
+              docker push asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ inputs.hisGcpRegistry }}:cache
