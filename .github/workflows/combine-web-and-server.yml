@@ -17,11 +17,6 @@ jobs:
         runs-on: ubuntu-18.04
         container: openjdk:8-jdk-stretch
         steps:
-            - name: "Check out totoro version"
-              uses: actions/checkout@v2
-              with:
-                ref: master
-                path: totoro-version
             - name: "Install Tool"
               run: apt-get update -y && apt-get install unzip jq -y
             - name: "Set up Cloud SDK"
@@ -30,12 +25,14 @@ jobs:
                   project_id: ${{ secrets.hisGcpProjectId }}
                   service_account_key: ${{ secrets.hisGcpServiceKey }}
                   export_default_credentials: true
+            # Download web zip and server war
             - name: "Download latest web zip of current milestone from google storage"
               run: gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/web | sed '$d' | tail -n 1 | awk '{ print $3 }' | xargs -I {} gsutil cp {} .
             - name: "Download latest war of current milestone from google storage"
               run: gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/server | sed '$d' | tail -n 1 | awk '{ print $3 }' | xargs -I {} gsutil cp {} .
             - name: "Check file is downloaded"
               run: ls -a
+            # Add web zip into server war
             - name: "Create combination version file"
               run: |
                   ls *.war && \
@@ -55,36 +52,30 @@ jobs:
               run: ls *.war | xargs -I {} jar uf {} ./WEB-INF
             - name: "Rename war file"
               run: cat WEB-INF/classes/totoro.properties | awk '{ split($1 , a, "="); printf "totoro-%s.war", a[2] }' | xargs -I {} mv *.war {} && ls
+            # Push war to final
             - name: "Push download war to bucket in milestone*/final"
               run: ls *.war | xargs -I {} gsutil cp {} gs://totoro-admin-build/${{ inputs.milestone }}/final
-            - name: "Update version"
+            # Update totoro version
+            - name: "Check out totoro version"
+              uses: actions/checkout@v2
+              with:
+                ref: master
+                path: totoro-version
+            - name: "Generate history content"
+              id: generate-history-content
               run: |
-                  echo '{}' > tmp && \
                   jq \
                   --arg serverFileName $(ls *.war) \
                   --arg webFileName $(ls *.zip) \
                   --arg finalFileName $(cat WEB-INF/classes/totoro.properties | awk '{ split($1 , a, "="); print a[2] }') \
                   --arg timestamp `date "+%Y-%m-%dT%H:%M:%SZ"` \
                   '.history + [{"serverFileName": $serverFileName, "webFileName": $webFileName, "finalFileName": $finalFileName, "timestamp": $timestamp}]' \
-                  ${{ inputs.milestone }}.json > tmp && \
-                  cat tmp
-
-    Update-Version:
-      needs: [ Combine-Web-And-Server ]
-      env:
-        TOTORO_ADMIN_VERSION: test
-        TOTORO_WEB_VERSION: test
-      steps:
-        - name: "Check out totoro version"
-          uses: actions/checkout@v2
-          with:
-            ref: master
-            path: totoro-version
-        - name: "Overwrite with tmp file"
-          run: mv tmp ${{ inputs.milestone }}.json
-        - name: "Commit totoro version"
-          run: |
-              git config --global user.email "github-auto@dentall.io"
-              git config --global user.name "github-auto"
-              git commit -am "Update history with totoro admin version ${{ env.TOTORO_ADMIN_VERSION }}, totoro web version ${{ env.TOTORO_WEB_VERSION }}"
-              git push
+                  totoro-version/${{ inputs.milestone }}.json > tmp
+            - name: "Overwrite with tmp file"
+              run: mv tmp totoro-version/${{ inputs.milestone }}.json
+            - name: "Commit totoro version"
+              run: |
+                  git config --global user.email "github-auto@dentall.io"
+                  git config --global user.name "github-auto"
+                  git commit -am "Update history with totoro admin version ${{ env.TOTORO_ADMIN_VERSION }}, totoro web version ${{ env.TOTORO_WEB_VERSION }}"
+                  git push
