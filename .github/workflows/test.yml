@@ -45,7 +45,7 @@ jobs:
     STEP51:
         runs-on: ubuntu-18.04
         steps:
-            - name: "test
+            - name: test
               run: echo hello world > test
 
     STEP52:
