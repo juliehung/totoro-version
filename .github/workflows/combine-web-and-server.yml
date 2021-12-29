@@ -60,6 +60,7 @@ jobs:
               uses: actions/checkout@v2
               with:
                 ref: master
+                repository: totoro-version
                 path: totoro-version
             - name: "Generate history content"
               id: generate-history-content
