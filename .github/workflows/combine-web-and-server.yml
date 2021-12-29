@@ -11,6 +11,8 @@ on:
                 required: true
             hisGcpServiceKey:
                 required: true
+            hisGcpRegistry:
+                required: true
             totoroVersionAccessToken:
                 required: true
 jobs:
@@ -61,7 +63,16 @@ jobs:
               run: cat WEB-INF/classes/totoro.properties | awk '{ split($1 , a, "="); printf "totoro-%s.war", a[2] }' | xargs -I {} mv *.war {} && ls
             # Push war to final
             - name: "Push download war to bucket in milestone*/final"
-              run: ls *.war | xargs -I {} gsutil cp {} gs://totoro-admin-build/${{ inputs.milestone }}/final
+              id: final-war
+              run: |
+                ls *.war | xargs -I {} gsutil cp {} gs://totoro-admin-build/${{ inputs.milestone }}/final
+                ls *.war | xargs -I echo ::set-output name=name::{}
+                ls *.war | awk '{ gsub(/.war/, "", $1); gsub(/totoro-/, "", $1); print $1;} | xargs -I echo ::set-output name=version::{}
+            - name: "Upload his war"
+              uses: actions/upload-artifact@v2
+              with:
+                name: ${{ steps.final-war.outputs.name }}
+                path: ${{ steps.final-war.outputs.name }}
             # Update totoro version
             - name: "Check out totoro version"
               uses: actions/checkout@v2
@@ -91,3 +102,43 @@ jobs:
                 git config --global user.name "github-auto"
                 git commit -am "Update history with totoro admin version test, totoro web version test"
                 git push
+            - name: "Upload his war"
+              uses: actions/upload-artifact@v2
+              with:
+                name: ${{ env.ARTIFACT_NAME }}
+                path: build/libs/${{ env.WAR_NAME }}
+
+    Containerize-And-Push-To-Registry:
+        needs: [ Combine-Web-And-Server ]
+        runs-on: ubuntu-18.04
+        steps:
+          - name: "Check out totoro admin"
+            uses: actions/checkout@v2
+          - name: "Download his war"
+            uses: actions/download-artifact@v2
+            with:
+              name: ${{ needs.Combine-Web-And-Server.steps.final-war.outputs.name }}
+          - name: "Move war to docker folder"
+            run: mv ${{ needs.Combine-Web-And-Server.steps.final-war.outputs.name }} src/main/docker/app.war
+          - name: "Set up Cloud SDK"
+            uses: google-github-actions/setup-gcloud@master
+            with:
+              project_id: ${{ secrets.hisGcpProjectId }}
+              service_account_key: ${{ secrets.hisGcpServiceKey }}
+              export_default_credentials: true
+          - name: "Configure docker to use the gcloud command-line tool as a credential helper"
+            run: |
+              gcloud --quiet auth configure-docker
+          - name: "Build image"
+            run: |
+              docker pull asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ hisGcpRegistry }}:cache || true
+              docker build \
+              --cache-from asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ hisGcpRegistry }}:cache \
+              -t asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ hisGcpRegistry }}:${{ needs.Combine-Web-And-Server.steps.final-war.outputs.version }} \
+              -t asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ hisGcpRegistry }}:cache \
+              -f src/main/docker/Dockerfile \
+              src/main/docker
+          - name: "Publish image"
+            run: |
+              docker push asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ hisGcpRegistry }}:${{ needs.Combine-Web-And-Server.steps.final-war.outputs.version }}
+              docker push asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ hisGcpRegistry }}:cache
