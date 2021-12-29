@@ -49,7 +49,7 @@ jobs:
           remoteHost: dev.dentall.site
           remoteUser: dentallio
           remotePath: /home/dentallio
-          googleStoragePath: totoro-admin-build/milestone-1.32/final
+          googleStoragePath: totoro-admin-build/milestone-1.32/final/
           googleStorageFileName: records.json
         secrets:
           remoteMachineToken: ${{ secrets.HIS_LOCAL_DEV_MACHINE_KEY }}
