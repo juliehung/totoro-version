@@ -60,7 +60,8 @@ jobs:
               uses: actions/checkout@v2
               with:
                 ref: master
-                repository: totoro-version
+                repository: 'dentallio/totoro-version'
+                token: ${{ secrets.totoroVersionAccessToken }}
                 path: totoro-version
             - name: "Generate history content"
               id: generate-history-content
