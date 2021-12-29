@@ -8,7 +8,7 @@ on:
                 type: string          
             remoteUser:
                 required: true
-                type: number
+                type: string
             remotePath:
                 required: true
                 type: string
