@@ -11,7 +11,8 @@ on:
                 required: true
             hisGcpServiceKey:
                 required: true
-
+            totoroVersionAccessToken:
+                required: true
 jobs:
     Combine-Web-And-Server:
         runs-on: ubuntu-18.04
