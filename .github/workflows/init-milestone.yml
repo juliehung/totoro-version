@@ -49,6 +49,7 @@ jobs:
                 path: totoro-version
             - name: "Create empty json history"
               run: |
+                cd totoro-version
                 git config --global user.email "github-auto@dentall.io"
                 git config --global user.name "github-auto"
                 git add .
