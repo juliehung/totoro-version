@@ -36,7 +36,7 @@ jobs:
             service_account_key: ${{ secrets.hisGcpServiceKey }}
             export_default_credentials: true
       - name: "Copy file from google storage"
-        run: gsutil cp ${{ inputs.googleStoragePath }}${{ inputs.googleStorageFileName }} .
+        run: gsutil cp gs://${{ inputs.googleStoragePath }}${{ inputs.googleStorageFileName }} .
       - name: "Init ssh"
         run: |
           which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
@@ -48,4 +48,4 @@ jobs:
           ssh-keyscan "${{ inputs.remoteHost }}" >> "${GITHUB_WORKSPACE}"/.ssh/known_hosts
           chmod 644 "${GITHUB_WORKSPACE}"/.ssh/known_hosts
           scp -i "${GITHUB_WORKSPACE}"/key -o UserKnownHostsFile="${GITHUB_WORKSPACE}"/.ssh/known_hosts "${{ inputs.googleStorageFileName }}" "${{ inputs.remoteUser }}"@"${{ inputs.remoteHost }}":"${{ inputs.remotePath }}"
-        
+
