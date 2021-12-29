@@ -64,8 +64,7 @@ jobs:
             - name: "Generate history content"
               id: generate-history-content
               run: |
-                ls
-                ls totoro-version
+                ls totoro-version && \
                 jq \
                 --arg serverFileName $(ls *.war) \
                 --arg webFileName $(ls *.zip) \
