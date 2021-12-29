@@ -19,15 +19,15 @@ on:
             remoteMachineToken:
                 required: true
 jobs:
-	Init-Ssh:
-        runs-on: ubuntu-18.04
-        steps:
-    			which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
-    			eval $(ssh-agent -s)
-    			mkdir -p "${GITHUB_WORKSPACE}"/.ssh
-    			chmod 700 "${GITHUB_WORKSPACE}"/.ssh
-    			echo "${{ secrets.remoteMachineToken }}" > "${GITHUB_WORKSPACE}"/key
-    			chmod 700 "${GITHUB_WORKSPACE}"/key
-    			ssh-keyscan "${{ inputs.remoteHost }}" >> "${GITHUB_WORKSPACE}"/.ssh/known_hosts
-    			chmod 644 "${GITHUB_WORKSPACE}"/.ssh/known_hosts
-    			scp -i "${GITHUB_WORKSPACE}"/key -o UserKnownHostsFile="${GITHUB_WORKSPACE}"/.ssh/known_hosts "${{ inputs.sourcePath }}" "${{ inputs.remoteUser }}"@"${{ inputs.remoteHost }}":"${{ inputs.remotePath }}"
+  Init-Ssh:
+    runs-on: ubuntu-18.04
+    steps:
+			which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
+			eval $(ssh-agent -s)
+			mkdir -p "${GITHUB_WORKSPACE}"/.ssh
+			chmod 700 "${GITHUB_WORKSPACE}"/.ssh
+			echo "${{ secrets.remoteMachineToken }}" > "${GITHUB_WORKSPACE}"/key
+			chmod 700 "${GITHUB_WORKSPACE}"/key
+			ssh-keyscan "${{ inputs.remoteHost }}" >> "${GITHUB_WORKSPACE}"/.ssh/known_hosts
+			chmod 644 "${GITHUB_WORKSPACE}"/.ssh/known_hosts
+			scp -i "${GITHUB_WORKSPACE}"/key -o UserKnownHostsFile="${GITHUB_WORKSPACE}"/.ssh/known_hosts "${{ inputs.sourcePath }}" "${{ inputs.remoteUser }}"@"${{ inputs.remoteHost }}":"${{ inputs.remotePath }}"

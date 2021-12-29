@@ -42,4 +42,3 @@ jobs:
                 ${{ inputs.url }} \
                 --header "Content-Type:application/json" \
                 --data-raw '{"warVersion":"${{ inputs.warFileName }}, "operation": "start"}'
-
