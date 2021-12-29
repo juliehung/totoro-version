@@ -17,11 +17,6 @@ jobs:
     Combine-Web-And-Server:
         runs-on: ubuntu-18.04
         steps:
-            - name: Set up JDK 8
-              uses: actions/setup-java@v2
-              with:
-                java-version: '8'
-                distribution: 'adopt-openj9'
             - name: "Install Tool"
               run: apt-get update -y && apt-get install unzip jq -y
             - name: "Set up Cloud SDK"
@@ -30,6 +25,11 @@ jobs:
                   project_id: ${{ secrets.hisGcpProjectId }}
                   service_account_key: ${{ secrets.hisGcpServiceKey }}
                   export_default_credentials: true
+            - name: Set up JDK 8
+              uses: actions/setup-java@v2
+              with:
+                java-version: '8'
+                distribution: 'adopt-openj9'
             # Download web zip and server war
             - name: "Download latest web zip of current milestone from google storage"
               run: gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/web | sed '$d' | tail -n 1 | awk '{ print $3 }' | xargs -I {} gsutil cp {} .
