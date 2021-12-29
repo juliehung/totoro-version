@@ -18,7 +18,9 @@ jobs:
         runs-on: ubuntu-18.04
         steps:
             - name: "Install Tool"
-              run: sudo apt-get update -y && apt-get install unzip jq -y
+              run: |
+              sudo apt-get update -y && \
+              sudo apt-get install unzip jq -y
             - name: "Set up Cloud SDK"
               uses: google-github-actions/setup-gcloud@master
               with:
