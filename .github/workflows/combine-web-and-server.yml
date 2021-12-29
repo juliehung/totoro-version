@@ -79,8 +79,9 @@ jobs:
               run: mv tmp totoro-version/${{ inputs.milestone }}.json
             - name: "Commit totoro version"
               run: |
-                cd totoro-version
+                cd totoro-version && \
+                ls -al && \
                 git config --global user.email "github-auto@dentall.io"
                 git config --global user.name "github-auto"
-                git commit -am "Update history with totoro admin version ${{ env.TOTORO_ADMIN_VERSION }}, totoro web version ${{ env.TOTORO_WEB_VERSION }}"
+                git commit -am "Update history with totoro admin version test, totoro web version test"
                 git push
