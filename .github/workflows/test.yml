@@ -23,6 +23,7 @@ jobs:
         uses: dentallio/totoro-version/.github/workflows/combine-web-and-server.yml@master
         with:
             milestone: "milestone-1.32"
+            hisGcpRegistry: totoro-admin-dev
         secrets:
             hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
             hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
