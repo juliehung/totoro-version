@@ -49,7 +49,11 @@ jobs:
                 path: totoro-version
             - name: "Create empty json history"
               run: |
-                echo '{}' > totoro-version/${{ inputs.currentMilestone }}.json
+                git config --global user.email "github-auto@dentall.io"
+                git config --global user.name "github-auto"
+                git add .
+                git commit -am "Create history file for ${{ inputs.currentMilestone }}"
+                git push
 
     Server-Checking:
         runs-on: ubuntu-18.04
