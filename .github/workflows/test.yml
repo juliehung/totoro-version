@@ -32,13 +32,29 @@ jobs:
 #        secrets:
 #            slackQaChannelHook: ${{ secrets.SLACK_QA_CHANNEL_HOOK }}
 
-    STEP4COPY:
-        uses: dentallio/totoro-version/.github/workflows/init-milestone.yml@master
+#    STEP4COPY:
+#        uses: dentallio/totoro-version/.github/workflows/init-milestone.yml@master
+#        with:
+#            content: "test content"
+#            currentMilestone: "milestone-1.33"
+#            dependedMilestone: "milestone-1.32"
+#        secrets:
+#            hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
+#            hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
+#            totoroVersionAccessToken: ${{ secrets.TOTORO_VERSION_ACCESS }}
+    STEP51:
+        runs-on: ubuntu-18.04
+        steps:
+            echo hello world > test
+
+    STEP52:
+        needs: [ STEP51 ]
+        uses: dentallio/totoro-version/.github/workflows/copy-file-to-remote-machine.yml@master
         with:
-            content: "test content"
-            currentMilestone: "milestone-1.33"
-            dependedMilestone: "milestone-1.32"
+            remoteHost: dev.dentall.site
+            remoteUser: dentallio
+            remotePath: /home/dentallio
+            sourcePath: ./test
         secrets:
-            hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
-            hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
-            totoroVersionAccessToken: ${{ secrets.TOTORO_VERSION_ACCESS }}
+            remoteMachineToken: ${{ secrets.HIS_LOCAL_DEV_MACHINE_KEY }}
+
