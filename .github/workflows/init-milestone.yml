@@ -3,9 +3,6 @@ name: "Init milestone"
 on:
     workflow_call:
         inputs:
-            content:
-                required: true
-                type: string
             currentMilestone:
                 required: true
                 type: string
