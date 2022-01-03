@@ -53,8 +53,10 @@ jobs:
 
     Calculate-Previous-Milestone:
       runs-on: ubuntu-18.04
+      outputs:
+        dependedMilestone: ${{ steps.calculate.outputs.milestone }}
       steps:
-        - id: depended
+        - id: calculate
           run: |
             echo ${{ github.ref_name }} | \
             awk '{ split($1, a, "-"); n=split(a[2], b, "."); printf "milestone-%s.%s", b[1], b[2]-1; }' | \
@@ -87,7 +89,7 @@ jobs:
             - name: "Copy server"
               run: |
                 gsutil ls -l \
-                gs://totoro-admin-build/${{ needs.Calculate-Previous-Milestone.depended.milestone }}/server | \
+                gs://totoro-admin-build/${{ needs.Calculate-Previous-Milestone.outputs.dependedMilestone }}/server | \
                 sed '$d' | \
                 tail -n 1 | \
                 awk '{ printf $3  }' | \
@@ -120,7 +122,7 @@ jobs:
             - name: "Copy server"
               run: |
                 gsutil ls -l \
-                gs://totoro-admin-build/${{ needs.Calculate-Previous-Milestone.depended.milestone }}/server | \
+                gs://totoro-admin-build/${{ needs.Calculate-Previous-Milestone.outputs.dependedMilestone }}/server | \
                 sed '$d' | \
                 tail -n 1 | \
                 awk '{ printf $3  }' | \
