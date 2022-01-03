@@ -67,7 +67,7 @@ jobs:
               id: final-war
               run: |
                 ls *.war | xargs -I {} gsutil cp {} gs://totoro-admin-build/${{ inputs.milestone }}/final
-                ls *.war | xargs -I echo ::set-output name=name::{}
+                ls *.war | xargs -I echo "::set-output name=name::{}"
                 ls *.war | awk '{ gsub(/.war/, "", $1); gsub(/totoro-/, "", $1); print $1;} | xargs -I echo ::set-output name=version::{}
             - name: "Upload his war"
               uses: actions/upload-artifact@v2
