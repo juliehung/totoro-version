@@ -19,7 +19,7 @@ on:
 jobs:
     Combine-Web-And-Server:
         runs-on: ubuntu-18.04
-        outpus:
+        outputs:
           name: ${{ steps.final-war.outputs.name }}
           version: ${{ steps.final-war.outputs.version }}
         steps:
