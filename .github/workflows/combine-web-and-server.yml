@@ -94,7 +94,7 @@ jobs:
                 --arg webFileName $(ls *.zip) \
                 --arg finalFileName $(cat WEB-INF/classes/totoro.properties | awk '{ split($1 , a, "="); print a[2] }') \
                 --arg timestamp `date "+%Y-%m-%dT%H:%M:%SZ"` \
-                '.history + [{"serverFileName": $serverFileName, "webFileName": $webFileName, "finalFileName": $finalFileName, "timestamp": $timestamp}]' \
+                '.history += [{"serverFileName": $serverFileName, "webFileName": $webFileName, "finalFileName": $finalFileName, "timestamp": $timestamp}]' \
                 totoro-version/${{ inputs.milestone }}.json > tmp
             - name: "Overwrite with version file"
               run: mv tmp totoro-version/${{ inputs.milestone }}.json
