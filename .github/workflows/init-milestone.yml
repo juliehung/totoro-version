@@ -75,7 +75,7 @@ jobs:
 
     Server-Copy:
         runs-on: ubuntu-18.04
-        needs: [ Server-Checking ]
+        needs: [ Calculate-Previous-Milestone, Server-Checking ]
         if: ${{ failure() }}
         steps:
             - name: "Set up Cloud SDK"
@@ -87,7 +87,7 @@ jobs:
             - name: "Copy server"
               run: |
                 gsutil ls -l \
-                gs://totoro-admin-build/${{ steps.Calculate-Previous-Milestone.depended.milestone }}/server | \
+                gs://totoro-admin-build/${{ needs.Calculate-Previous-Milestone.depended.milestone }}/server | \
                 sed '$d' | \
                 tail -n 1 | \
                 awk '{ printf $3  }' | \
@@ -108,7 +108,7 @@ jobs:
 
     Web-Copy:
         runs-on: ubuntu-18.04
-        needs: [ Web-Checking ]
+        needs: [ Calculate-Previous-Milestone, Web-Checking ]
         if: ${{ failure() }}
         steps:
             - name: "Set up Cloud SDK"
@@ -120,7 +120,7 @@ jobs:
             - name: "Copy server"
               run: |
                 gsutil ls -l \
-                gs://totoro-admin-build/${{ steps.Calculate-Previous-Milestone.depended.milestone }}/server | \
+                gs://totoro-admin-build/${{ needs.Calculate-Previous-Milestone.depended.milestone }}/server | \
                 sed '$d' | \
                 tail -n 1 | \
                 awk '{ printf $3  }' | \
