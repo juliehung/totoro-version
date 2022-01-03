@@ -1,0 +1,53 @@
+name: "Run test"
+on: [ workflow_call ]
+jobs:
+    Regular-Test:
+        runs-on: ubuntu-18.04
+        container: openjdk:8-jdk-stretch
+        services:
+            postgres:
+                image: postgres
+                env:
+                    POSTGRES_DB: totoro
+                    POSTGRES_USER: totoro
+                    POSTGRES_PASSWORD: totoro
+        steps:
+            -   name: "Check out totoro admin"
+                uses: actions/checkout@v2
+            -   uses: actions/cache@v2
+                with:
+                    path: |
+                        ~/.gradle/caches
+                        ~/.gradle/wrapper
+                    key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+                    restore-keys: |
+                        ${{ runner.os }}-gradle-
+            -   name: "Grant execute permission for gradlew"
+                run: chmod +x gradlew
+            -   name: "Run test"
+                run: ./gradlew test --no-daemon
+                env:
+                    SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/totoro
+
+    Metric-Test:
+        runs-on: ubuntu-18.04
+        steps:
+            -   name: "Check out totoro admin"
+                uses: actions/checkout@v2
+            -   name: Set up JDK 1.8
+                uses: actions/setup-java@v2
+                with:
+                    java-version: '8'
+                    distribution: 'adopt-openj9'
+            -   uses: actions/cache@v2
+                with:
+                    path: |
+                        ~/.gradle/caches
+                        ~/.gradle/wrapper
+                    key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+                    restore-keys: |
+                        ${{ runner.os }}-gradle-
+            -   name: "Grant execute permission for gradlew"
+                run: chmod +x gradlew
+            -   name: "Run Metric test"
+                run: ./gradlew cucumber_metric --no-daemon

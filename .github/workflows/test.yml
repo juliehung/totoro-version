@@ -1,12 +1,14 @@
-#name: "Test workflow"
-#
-#on:
-#    push:
-#        branches:
-#            - new-cicd
-#    pull_request:
-#
-#jobs:
+name: "Test workflow"
+
+on:
+    push:
+        branches:
+            - new-cicd
+    pull_request:
+
+jobs:
+    Test:
+        uses: dentallio/totoro-admin/.github/workflows/run-test.yml@new-cicd
 #    STEP1:
 #        uses: dentallio/totoro-version/.github/workflows/init-milestone.yml@master
 #        with:
