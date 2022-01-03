@@ -1,0 +1,15 @@
+name: "Init milestone"
+on:
+    create:
+        branches:
+            - milestone.*
+
+jobs:
+    Init-Google-Storage-Folder:
+        uses: dentallio/totoro-version/.github/workflows/init-milestone.yml@master
+        with:
+            milestone: ${{ github.ref_name }}
+        secrets:
+            hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
+            hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
+            totoroVersionAccessToken: ${{ secrets.TOTORO_VERSION_ACCESS }}
