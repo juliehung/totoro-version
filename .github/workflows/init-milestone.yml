@@ -122,8 +122,8 @@ jobs:
             - name: "Copy server"
               run: |
                 gsutil ls -l \
-                gs://totoro-admin-build/${{ needs.Calculate-Previous-Milestone.outputs.dependedMilestone }}/server | \
+                gs://totoro-admin-build/${{ needs.Calculate-Previous-Milestone.outputs.dependedMilestone }}/web | \
                 sed '$d' | \
                 tail -n 1 | \
                 awk '{ printf $3  }' | \
-                xargs -I {} gsutil cp {} gs://totoro-admin-build/${{ inputs.milestone }}/server/
+                xargs -I {} gsutil cp {} gs://totoro-admin-build/${{ inputs.milestone }}/web/
