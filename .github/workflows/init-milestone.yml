@@ -3,10 +3,7 @@ name: "Init milestone"
 on:
     workflow_call:
         inputs:
-            currentMilestone:
-                required: true
-                type: string
-            dependedMilestone:
+            milestone:
                 required: true
                 type: string
         secrets:
@@ -30,7 +27,7 @@ jobs:
                 path: totoro-version
             - name: "check files"
               run: |
-                ls totoro-version/${{ inputs.currentMilestone }}.json
+                ls totoro-version/${{ inputs.milestone }}.json
 
     History-Creation:
         runs-on: ubuntu-18.04
@@ -47,12 +44,21 @@ jobs:
             - name: "Create empty json history"
               run: |
                 cd totoro-version
-                echo '{"history":[]}' > ${{ inputs.currentMilestone }}.json
+                echo '{"history":[]}' > ${{ inputs.milestone }}.json
                 git config --global user.email "github-auto@dentall.io"
                 git config --global user.name "github-auto"
                 git add .
-                git commit -am "Create history file for ${{ inputs.currentMilestone }}"
+                git commit -am "Create history file for ${{ inputs.milestone }}"
                 git push
+
+    Calculate-Previous-Milestone:
+      runs-on: ubuntu-18.04
+      steps:
+        - id: depended
+          runs: |
+            echo ${{ github.ref_name }} | \
+            awk '{ split($1, a, "-"); n=split(a[2], b, "."); printf "milestone-%s.%s", b[1], b[2]-1; }' | \
+            echo -I {} "::set-output name=milestone::{}"
 
     Server-Checking:
         runs-on: ubuntu-18.04
@@ -65,7 +71,7 @@ jobs:
                   export_default_credentials: true
             - name: "Check current milestone server folder on google storage"
               run: |
-                gsutil ls -l gs://totoro-admin-build/${{ inputs.currentMilestone }}/server 
+                gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/server 
 
     Server-Copy:
         runs-on: ubuntu-18.04
@@ -81,11 +87,11 @@ jobs:
             - name: "Copy server"
               run: |
                 gsutil ls -l \
-                gs://totoro-admin-build/${{ inputs.dependedMilestone }}/server | \
+                gs://totoro-admin-build/${{ steps.Calculate-Previous-Milestone.depended.milestone }}/server | \
                 sed '$d' | \
                 tail -n 1 | \
                 awk '{ printf $3  }' | \
-                xargs -I {} gsutil cp {} gs://totoro-admin-build/${{ inputs.currentMilestone }}/server/
+                xargs -I {} gsutil cp {} gs://totoro-admin-build/${{ inputs.milestone }}/server/
 
     Web-Checking:
         runs-on: ubuntu-18.04
@@ -98,7 +104,7 @@ jobs:
                   export_default_credentials: true
             - name: "Check current milestone server folder on google storage"
               run: |
-                gsutil ls -l gs://totoro-admin-build/${{ inputs.currentMilestone }}/web 
+                gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/web 
 
     Web-Copy:
         runs-on: ubuntu-18.04
@@ -114,8 +120,8 @@ jobs:
             - name: "Copy server"
               run: |
                 gsutil ls -l \
-                gs://totoro-admin-build/${{ inputs.dependedMilestone }}/server | \
+                gs://totoro-admin-build/${{ steps.Calculate-Previous-Milestone.depended.milestone }}/server | \
                 sed '$d' | \
                 tail -n 1 | \
                 awk '{ printf $3  }' | \
-                xargs -I {} gsutil cp {} gs://totoro-admin-build/${{ inputs.currentMilestone }}/server/
+                xargs -I {} gsutil cp {} gs://totoro-admin-build/${{ inputs.milestone }}/server/
