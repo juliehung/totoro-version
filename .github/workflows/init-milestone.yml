@@ -55,7 +55,7 @@ jobs:
       runs-on: ubuntu-18.04
       steps:
         - id: depended
-          runs: |
+          run: |
             echo ${{ github.ref_name }} | \
             awk '{ split($1, a, "-"); n=split(a[2], b, "."); printf "milestone-%s.%s", b[1], b[2]-1; }' | \
             echo -I {} "::set-output name=milestone::{}"
