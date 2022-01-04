@@ -2,8 +2,8 @@ name: "Push to dev"
 
 on:
     push:
-        branches:
-            - develop
+        tags:
+            - 'milestone-[0-9]+.[0-9]+-[0-9]+.[0-9]+.[0-9]+-*'
 jobs:
     Run-Test:
         uses: dentallio/totoro-admin/.github/workflows/run-test.yml@new-cicd
@@ -22,6 +22,8 @@ jobs:
             gcp-release: ${{ steps.setup-props-value.outputs.gcp-release }}
             firebase-release: ${{ steps.setup-props-value.outputs.firebase-release }}
             run-nhi-rule-test: ${{ steps.setup-props-value.outputs.run-nhi-rule-test }}
+            milestone: ${{ steps.setup-props-value.outputs.milestone }}
+            version: ${{ steps.setup-props-value.outputs.version }}
         steps:
             -   name: "Check out totoro admin"
                 uses: actions/checkout@v2
@@ -91,51 +93,52 @@ jobs:
                     name: ${{ env.ARTIFACT_NAME }}
                     path: build/libs/${{ env.WAR_NAME }}
 
-    Release-To-Dev-Machine:
+    Upload-War-To-Google-Storage:
         runs-on: ubuntu-18.04
         needs: [ Build-War, Props ]
-        if: ${{ startsWith(github.ref, 'refs/heads/') || startsWith(github.ref, 'refs/tags/') }}
-        env:
-            WAR_NAME: ${{ needs.Props.outputs.war-name }}
         steps:
-            -   name: "Check out totoro admin"
-                uses: actions/checkout@v2
-            -   name: "Download his war"
+            -   name: "Set up Cloud SDK"
+                uses: google-github-actions/setup-gcloud@master
+                with:
+                    project_id: ${{ secrets.hisGcpProjectId }}
+                    service_account_key: ${{ secrets.hisGcpServiceKey }}
+                    export_default_credentials: true
+            -   name: "Download artifact war"
                 uses: actions/download-artifact@v2
                 with:
                     name: ${{ env.ARTIFACT_NAME }}
-            -   name: "Deliver his war"
-                run: ${GITHUB_WORKSPACE}/.github/workflows/scripts/scp.sh
-                shell: bash
-                env:
-                    SECRET: ${{ secrets.HIS_LOCAL_DEV_MACHINE_KEY }}
-                    SOURCE_PATH: ${{ github.workspace }}/${{ env.WAR_NAME }}
-                    TARGET_HOST: dev.dentall.site
-                    TARGET_USER: dentallio
-                    TARGET_PATH: /home/dentallio/Dentall/dora-monitor/storage/wars/
+            -   name: "Upload war to google storage"
+                run: gsutil cp ./${{ env.ARTIFACT_NAME }} gs://totoro-admin-build/${{ needs.Props.outputs.milestone }}/server/${{ needs.Props.outputs.version }}.war
 
-    Deploy-To-Dentall-Dev:
-        runs-on: ubuntu-18.04
-        needs: [ Release-To-Dev-Machine, Props ]
-        if: ${{ needs.Props.outputs.dev-deploy == 'true' }}
-        env:
-            WAR_NAME: ${{ needs.Props.outputs.war-name }}
-            DORA_MANAGERED_SERVER_PORT: ${{ needs.Props.outputs.deploy-port }}
-        steps:
-            -   name: "Setup Common"
-                run: |
-                    echo "CURL_CONTENT_TYPE=Content-Type: application/json" >> $GITHUB_ENV
-                    echo "CURL_DATA_FOR_STOP={\"operation\": \"stop\", \"warVersion\": \"${WAR_NAME}\"}" >> $GITHUB_ENV
-                    echo "CURL_DATA_FOR_START={\"operation\": \"start\", \"warVersion\": \"${WAR_NAME}\"}" >> $GITHUB_ENV
-                env:
-                    WAR_NAME: ${{ env.WAR_NAME }}
-            -   name: "Deploy And Restart"
-                run: |
-                    curl -X POST http://dev.dentall.site:8001/servers/${DORA_MANAGERED_SERVER_PORT}/operation -H "${CURL_CONTENT_TYPE}" -d "${CURL_DATA_FOR_STOP}"
-                    sleep 1
-                    curl -X POST http://dev.dentall.site:8001/servers/${DORA_MANAGERED_SERVER_PORT}/operation -H "${CURL_CONTENT_TYPE}" -d "${CURL_DATA_FOR_START}"
-                env:
-                    DORA_MANAGERED_SERVER_PORT: ${{ env.DORA_MANAGERED_SERVER_PORT }}
-                    CURL_CONTENT_TYPE: ${{ env.CURL_CONTENT_TYPE }}
-                    CURL_DATA_FOR_STOP: ${{ env.CURL_DATA_FOR_STOP }}
-                    CURL_DATA_FOR_START: ${{ env.CURL_DATA_FOR_START }}
+    Combine:
+        needs: [ Upload-War-To-Google-Storage, Props ]
+        uses: dentallio/totoro-version/.github/workflows/combine-web-and-server.yml@master
+        with:
+            milestone: ${{ needs.Props.outputs.mileston }}
+            hisGcpRegistry: totoro-admin-dev
+        secrets:
+            hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
+            hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
+            totoroVersionAccessToken: ${{ secrets.TOTORO_VERSION_ACCESS }}
+
+    Upload-Final:
+        needs: [ Combine ]
+        uses: dentallio/totoro-version/.github/workflows/copy-file-to-remote-machine.yml@master
+        with:
+            remoteHost: dev.dentall.site
+            remoteUser: dentallio
+            remotePath: /home/dentallio
+            googleStoragePath: totoro-admin-build/${{ needs.Props.outputs.milestone }}/final/
+            googleStorageFileName: ${{ needs.Props.outputs.version }}.war
+        secrets:
+            remoteMachineToken: ${{ secrets.HIS_LOCAL_DEV_MACHINE_KEY }}
+            hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
+            hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
+
+    Notify:
+        needs: [ Copy ]
+        uses: dentallio/totoro-version/.github/workflows/send-slack-notification.yml@master
+        with:
+            content: Done full new cicd
+        secrets:
+            slackQaChannelHook: ${{ secrets.SLACK_QA_CHANNEL_HOOK }}
