@@ -9,6 +9,10 @@ on:
             hisGcpRegistry:
                 type: string
                 required: true
+        outputs:
+            finalFileName:
+                description: "The first job output"
+                value: ${{ jobs.Combine-Web-And-Server.name }}
         secrets:
             hisGcpProjectId:
                 required: true
@@ -52,7 +56,7 @@ jobs:
                   ls *.zip && \
                   echo -n 'version=${{ inputs.milestone }}-' >> totoro.properties && \
                   ls *.war | awk '{ gsub(/.war/, "", $1); split($1, a, "-"); n=split(a[3], b, "."); printf "s%d.", b[n]; }' >> totoro.properties && \
-                  ls *.zip | awk '{ gsub(/.zip/, "", $1); split($1, a, "-"); n=split(a[2], b, "."); printf "w%d", b[n]; }' >> totoro.properties && \
+                  ls *.zip | awk '{ gsub(/.zip/, "", $1); split($1, a, "-"); n=split(a[3], b, "."); printf "w%d", b[n]; }' >> totoro.properties && \
                   cat totoro.properties
             - name: "Unzip web and Rename to WEB-INF "
               run: |
@@ -64,14 +68,14 @@ jobs:
             - name: "Add web to war file"
               run: ls *.war | xargs -I {} jar uf {} ./WEB-INF
             - name: "Rename war file"
-              run: cat WEB-INF/classes/totoro.properties | awk '{ split($1 , a, "="); printf "totoro-%s.war", a[2] }' | xargs -I {} mv *.war {} && ls
+              run: cat WEB-INF/classes/totoro.properties | awk '{ split($1 , a, "="); printf "%s.war", a[2] }' | xargs -I {} mv *.war {} && ls
             # Push war to final
             - name: "Push download war to bucket in milestone*/final"
               id: final-war
               run: |
                 ls *.war | xargs -I {} gsutil cp {} gs://totoro-admin-build/${{ inputs.milestone }}/final
                 ls *.war | xargs -I {} echo "::set-output name=name::{}"
-                ls *.war | awk '{ gsub(/.war/, "", $1); gsub(/totoro-/, "", $1); print $1;}' | xargs -I {} echo "::set-output name=version::{}"
+                ls *.war | awk '{ gsub(/.war/, "", $1); print $1;}' | xargs -I {} echo "::set-output name=version::{}"
             - name: "Upload his war"
               uses: actions/upload-artifact@v2
               with:
@@ -106,11 +110,6 @@ jobs:
                 git config --global user.name "github-auto"
                 git commit -am "Update history with totoro admin version test, totoro web version test"
                 git push
-            - name: "Upload his war"
-              uses: actions/upload-artifact@v2
-              with:
-                name: ${{ env.ARTIFACT_NAME }}
-                path: build/libs/${{ env.WAR_NAME }}
 
     Containerize-And-Push-To-Registry:
         needs: [ Combine-Web-And-Server ]
