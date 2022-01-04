@@ -38,7 +38,7 @@ jobs:
     Build-War:
         runs-on: ubuntu-18.04
         container: openjdk:8-jdk-stretch
-        needs: [ Run-Test, Props ]
+        needs: [ Props ]
         if: ${{ startsWith(github.ref, 'refs/heads/') || startsWith(github.ref, 'refs/tags/') }}
         env:
             WAR_NAME: ${{ needs.Props.outputs.war-name }}
