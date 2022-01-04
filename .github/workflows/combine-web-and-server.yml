@@ -12,7 +12,7 @@ on:
         outputs:
             finalFileName:
                 description: "The first job output"
-                value: ${{ jobs.Combine-Web-And-Server.name }}
+                value: ${{ jobs.Combine-Web-And-Server.outputs.name }}
         secrets:
             hisGcpProjectId:
                 required: true
