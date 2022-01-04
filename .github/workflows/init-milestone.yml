@@ -2,8 +2,8 @@ name: "Init milestone"
 on:
     create:
         branches:
-            - milestone-[0-9]+.[0-9]+
-
+#            - milestone-[0-9]+.[0-9]+
+            - hello
 jobs:
     Init-Google-Storage-Folder:
         uses: dentallio/totoro-version/.github/workflows/init-milestone.yml@master

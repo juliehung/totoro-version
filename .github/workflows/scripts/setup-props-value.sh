@@ -40,7 +40,6 @@ else
     exit 1
 fi
 
-milestone=$(echo ${TagName} | awk '{split($1, a, "-"); printf "%s-%s", a[1], a[2];}')
 echo "::set-output name=tag-name::${TagName}"
 echo "::set-output name=tag-timestamp::${TagTimestamp}"
 echo "::set-output name=war-name::${WarName}"
@@ -52,4 +51,3 @@ echo "::set-output name=gcp-release::${GcpRelease}"
 echo "::set-output name=firebase-release::${FirebaseRelease}"
 echo "::set-output name=run-nhi-rule-test::${RunNhiRuleTest}"
 echo "::set-output name=bucket-name::${BucketName}"
-echo "::set-output name=milestone::${milestone}"
