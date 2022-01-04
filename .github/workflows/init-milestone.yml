@@ -2,8 +2,7 @@ name: "Init milestone"
 on:
     create:
         branches:
-#            - milestone-[0-9]+.[0-9]+
-            - hello
+            - 'milestone-*-*'
 jobs:
     Cut-Tag:
         runs-on: ubuntu-18.04

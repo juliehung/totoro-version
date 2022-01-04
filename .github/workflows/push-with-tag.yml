@@ -5,8 +5,8 @@ on:
         tags:
             - 'milestone-*-*'
 jobs:
-#    Run-Test:
-#        uses: dentallio/totoro-admin/.github/workflows/run-test.yml@new-cicd
+    Run-Test:
+        uses: dentallio/totoro-admin/.github/workflows/run-test.yml@new-cicd
 
     Props:
         runs-on: ubuntu-18.04
