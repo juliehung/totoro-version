@@ -90,7 +90,7 @@ jobs:
         with:
             remoteHost: dev.dentall.site
             remoteUser: dentallio
-            remotePath: /home/dentallio
+            remotePath: /home/dentallio/Dentall/dora-monitor/storage/wars
             googleStoragePath: totoro-admin-build/${{ needs.Props.outputs.milestone }}/final/
             googleStorageFileName: ${{ needs.Combine.outputs.finalFileName }}
         secrets:
