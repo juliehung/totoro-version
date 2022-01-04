@@ -7,20 +7,24 @@ on:
     pull_request:
 
 jobs:
-    STEP2:
-        uses: dentallio/totoro-version/.github/workflows/combine-web-and-server.yml@master
-        with:
-            milestone: "milestone-1.32"
-            hisGcpRegistry: totoro-admin-dev
-        secrets:
-            hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
-            hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
-            totoroVersionAccessToken: ${{ secrets.TOTORO_VERSION_ACCESS }}
-    Test2:
-        needs: [ STEP2 ]
+    Echo:
         runs-on: ubuntu-18.04
         steps:
-            - run: echo ${{ needs.STEP2.outputs.finalFileName }}
+            -   run: echo a
+#    STEP2:
+#        uses: dentallio/totoro-version/.github/workflows/combine-web-and-server.yml@master
+#        with:
+#            milestone: "milestone-1.32"
+#            hisGcpRegistry: totoro-admin-dev
+#        secrets:
+#            hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
+#            hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
+#            totoroVersionAccessToken: ${{ secrets.TOTORO_VERSION_ACCESS }}
+#    Test2:
+#        needs: [ STEP2 ]
+#        runs-on: ubuntu-18.04
+#        steps:
+#            - run: echo ${{ needs.STEP2.outputs.finalFileName }}
 #    Test:
 #        uses: dentallio/totoro-admin/.github/workflows/run-test.yml@new-cicd
 #    STEP1:
