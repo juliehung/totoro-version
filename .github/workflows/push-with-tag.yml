@@ -85,7 +85,7 @@ jobs:
             totoroVersionAccessToken: ${{ secrets.TOTORO_VERSION_ACCESS }}
 
     Upload-Final:
-        needs: [ Combine ]
+        needs: [ Combine, Props ]
         uses: dentallio/totoro-version/.github/workflows/copy-file-to-remote-machine.yml@master
         with:
             remoteHost: dev.dentall.site
