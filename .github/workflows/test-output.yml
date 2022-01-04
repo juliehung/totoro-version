@@ -10,4 +10,4 @@ jobs:
     J1:
         runs-on: ubuntu-18.04
         steps:
-            - echo hello world
+            - run: echo hello world
