@@ -129,14 +129,14 @@ jobs:
             remoteUser: dentallio
             remotePath: /home/dentallio
             googleStoragePath: totoro-admin-build/${{ needs.Props.outputs.milestone }}/final/
-            googleStorageFileName: ${{ needs.Props.outputs.version }}.war
+            googleStorageFileName: ${{ needs.Combine.outputs.name }}
         secrets:
             remoteMachineToken: ${{ secrets.HIS_LOCAL_DEV_MACHINE_KEY }}
             hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
             hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
 
     Notify:
-        needs: [ Copy ]
+        needs: [ Upload-Final ]
         uses: dentallio/totoro-version/.github/workflows/send-slack-notification.yml@master
         with:
             content: Done full new cicd
