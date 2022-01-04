@@ -7,6 +7,14 @@ on:
     pull_request:
 
 jobs:
+    Test:
+        uses: dentallio/totoro-version/.github/workflows/test-output.yml@master
+    Test2:
+        needs: [ Test ]
+        runs-on: ubuntu-18.04
+        steps:
+            - run: echo ${{ needs.Test.outputs.hello }}
+
 #    Test:
 #        uses: dentallio/totoro-admin/.github/workflows/run-test.yml@new-cicd
 #    STEP1:
