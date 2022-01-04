@@ -77,7 +77,7 @@ jobs:
         needs: [ Build-War, Props ]
         uses: dentallio/totoro-version/.github/workflows/combine-web-and-server.yml@master
         with:
-            milestone: ${{ needs.Props.outputs.mileston }}
+            milestone: ${{ needs.Props.outputs.milestone }}
             hisGcpRegistry: totoro-admin-dev
         secrets:
             hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
