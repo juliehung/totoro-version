@@ -2,11 +2,11 @@ name: "Push to dev"
 
 on:
     push:
-#        tags:
-#            - 'milestone-[0-9]+.[0-9]+-[0-9]+.[0-9]+.[0-9]+-*'
+        tags:
+            - 'milestone-*-*'
 jobs:
-    Run-Test:
-        uses: dentallio/totoro-admin/.github/workflows/run-test.yml@new-cicd
+#    Run-Test:
+#        uses: dentallio/totoro-admin/.github/workflows/run-test.yml@new-cicd
 
     Props:
         runs-on: ubuntu-18.04
@@ -108,7 +108,7 @@ jobs:
                 with:
                     name: ${{ env.ARTIFACT_NAME }}
             -   name: "Upload war to google storage"
-                run: gsutil cp ./${{ env.ARTIFACT_NAME }} gs://totoro-admin-build/${{ needs.Props.outputs.milestone }}/server/${{ needs.Props.outputs.version }}.war
+                run: gsutil cp ./${{ env.ARTIFACT_NAME }} gs://totoro-admin-build/${{ needs.Props.outputs.milestone }}/server/${{ github.ref_name }}.war
 
     Combine:
         needs: [ Upload-War-To-Google-Storage, Props ]
