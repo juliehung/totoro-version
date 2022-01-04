@@ -5,10 +5,22 @@ on:
 #            - milestone-[0-9]+.[0-9]+
             - hello
 jobs:
+    Cut-Tag:
+        runs-on: ubuntu-18.04
+        outputs:
+            milestone: ${{ steps.result.outputs.milestone }}
+        steps:
+            - id: result
+              run: |
+                echo ${{ github.ref_name }} | \
+                awk '{ split($1, a, "-"; printf "%s-%s", a[1], a[2] }' | \
+                xargs -I {} echo '::set-output name=milestone::{}'
+
     Init-Google-Storage-Folder:
+        needs: [ Cut-Tag ]
         uses: dentallio/totoro-version/.github/workflows/init-milestone.yml@master
         with:
-            milestone: ${{ github.ref_name }}
+            milestone: ${{ needs.Cut-Tag.outputs.milestone }}
         secrets:
             hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
             hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
