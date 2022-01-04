@@ -50,22 +50,6 @@ jobs:
                     apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
             -   name: "Check out totoro admin"
                 uses: actions/checkout@v1
-            -   name: "Check out totoro version"
-                uses: actions/checkout@v2
-                with:
-                    repository: ${{ env.VERSION_REPOSITORY }}
-                    ref: master
-                    token: ${{ secrets.TOTORO_VERSION_ACCESS }}
-                    path: totoro-version
-            -   name: "Download web artifact"
-                id: download-web-artifact
-                run: ${GITHUB_WORKSPACE}/.github/workflows/scripts/retrieve-web-artifact.sh
-                shell: bash
-                env:
-                    TOKEN: ${{ secrets.TOTORO_VERSION_ACCESS }}
-                    WEB_REPOSITORY: ${{ env.WEB_REPOSITORY }}
-                    VERSION_FILE: ${{ env.VERSION_FILE }}
-                working-directory: ./totoro-version
             -   uses: actions/cache@v2
                 with:
                     path: |
@@ -80,12 +64,6 @@ jobs:
                 run: |
                     ./gradlew bootWar -Pprod -x check --no-daemon
                     ls ${GITHUB_WORKSPACE}/build/libs/
-            -   name: "Change war name By develop"
-                if: ${{ startsWith(env.TAG_NAME, 'dev') }}
-                run: ls totoro*.war | xargs -I {} mv {} ${WAR_NAME}
-                env:
-                    WAR_NAME: ${{ env.WAR_NAME }}
-                working-directory: ./build/libs/
             -   name: "Upload his war"
                 uses: actions/upload-artifact@v2
                 with:
