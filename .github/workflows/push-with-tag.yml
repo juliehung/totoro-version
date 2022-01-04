@@ -68,7 +68,7 @@ jobs:
                 run: gsutil cp ${GITHUB_WORKSPACE}/build/libs/${{ env.WAR_NAME }} gs://totoro-admin-build/${{ needs.Props.outputs.milestone }}/server/${{ github.ref_name }}.war
 
     Combine:
-        needs: [ Upload-War-To-Google-Storage, Props ]
+        needs: [ Build-War, Props ]
         uses: dentallio/totoro-version/.github/workflows/combine-web-and-server.yml@master
         with:
             milestone: ${{ needs.Props.outputs.mileston }}
