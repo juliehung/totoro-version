@@ -1,4 +1,4 @@
-name: "Push to dev"
+name: "Push with tag"
 
 on:
     push:
@@ -92,7 +92,7 @@ jobs:
             remoteUser: dentallio
             remotePath: /home/dentallio
             googleStoragePath: totoro-admin-build/${{ needs.Props.outputs.milestone }}/final/
-            googleStorageFileName: ${{ needs.Combine.outputs.name }}
+            googleStorageFileName: ${{ needs.Combine.outputs.finalFileName }}
         secrets:
             remoteMachineToken: ${{ secrets.HIS_LOCAL_DEV_MACHINE_KEY }}
             hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
