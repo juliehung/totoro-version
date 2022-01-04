@@ -1,0 +1,13 @@
+name: "Test output"
+
+on:
+    workflow_call:
+        outputs:
+            hello:
+                description: true
+                value: world 
+jobs:
+    J1:
+        runs-on: ubuntu-18.04
+        steps:
+            - echo hello world
