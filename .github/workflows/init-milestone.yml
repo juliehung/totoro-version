@@ -11,7 +11,7 @@ on:
                 required: true
             hisGcpServiceKey:
                 required: true
-            totoroVersionAccessToken:
+            totoroVersionToken:
                 required: true
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
               with:
                 repository: 'dentallio/totoro-version'
                 ref: master
-                token: ${{ secrets.totoroVersionAccessToken }}
+                token: ${{ secrets.totoroVersionToken }}
                 path: totoro-version
             - name: "check files"
               run: |
@@ -39,7 +39,7 @@ jobs:
               with:
                 repository: 'dentallio/totoro-version'
                 ref: master
-                token: ${{ secrets.totoroVersionAccessToken }}
+                token: ${{ secrets.totoroVersionToken }}
                 path: totoro-version
             - name: "Create empty json history"
               run: |

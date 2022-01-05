@@ -18,7 +18,7 @@ on:
                 required: true
             hisGcpServiceKey:
                 required: true
-            totoroVersionAccessToken:
+            totoroVersionToken:
                 required: true
             totoroAdminToken:
                 required: true
@@ -89,7 +89,7 @@ jobs:
               with:
                 ref: master
                 repository: 'dentallio/totoro-version'
-                token: ${{ secrets.totoroVersionAccessToken }}
+                token: ${{ secrets.totoroVersionToken }}
                 path: totoro-version
             - name: "Generate history content"
               id: generate-history-content
