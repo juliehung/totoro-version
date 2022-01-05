@@ -20,6 +20,8 @@ on:
                 required: true
             totoroVersionAccessToken:
                 required: true
+            totoroAdminToken:
+                required: true
 jobs:
     Combine-Web-And-Server:
         runs-on: ubuntu-18.04
@@ -117,12 +119,17 @@ jobs:
         steps:
           - name: "Check out totoro admin"
             uses: actions/checkout@v2
+            with:
+              repository: 'dentallio/totoro-admin'
+              ref: release
+              token: ${{ secrets.totoroAdminToken }}
+              path: totoro-admin
           - name: "Download his war"
             uses: actions/download-artifact@v2
             with:
               name: ${{ needs.Combine-Web-And-Server.outputs.name }}
           - name: "Move war to docker folder"
-            run: mv ${{ needs.Combine-Web-And-Server.outputs.name }} src/main/docker/app.war
+            run: mv ${{ needs.Combine-Web-And-Server.outputs.name }} totoro-admin/src/main/docker/app.war
           - name: "Set up Cloud SDK"
             uses: google-github-actions/setup-gcloud@master
             with:
