@@ -40,6 +40,18 @@ public class LedgerVM {
 
     Long doctorId;
 
+    /**
+     * Only be used by UWP remove when UWP is deprecated and web not use it.
+     * This will be use in LedgerGroupMapper.convertLedgerFromDomainToVM and resource return type(API)
+     */
+    private String lastModifiedBy;
+
+    /**
+     * Only be used by UWP remove when UWP is deprecated and web not use it
+     * This will be use in LedgerGroupMapper.convertLedgerFromDomainToVM and resource return type(API)
+     */
+    private Instant createdDate;
+
     public LedgerVM() {
 
     }
@@ -170,5 +182,21 @@ public class LedgerVM {
 
     public void setPatient(Patient patient) {
         this.patient = patient;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
     }
 }
