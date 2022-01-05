@@ -146,8 +146,8 @@ jobs:
               --cache-from asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ inputs.hisGcpRegistry }}:cache \
               -t asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ inputs.hisGcpRegistry }}:${{ needs.Combine-Web-And-Server.outputs.version }} \
               -t asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ inputs.hisGcpRegistry }}:cache \
-              -f src/main/docker/Dockerfile \
-              src/main/docker
+              -f totoro-admin/src/main/docker/Dockerfile \
+              totoro-admin/src/main/docker
           - name: "Publish image"
             run: |
               docker push asia.gcr.io/${{ secrets.hisGcpProjectId }}/${{ inputs.hisGcpRegistry }}:${{ needs.Combine-Web-And-Server.outputs.version }}
