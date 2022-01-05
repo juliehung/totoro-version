@@ -47,6 +47,12 @@
       "webFileName": "milestone-1.32-web5.zip",
       "finalFileName": "milestone-1.32-s3.w0",
       "timestamp": "2022-01-05T07:24:06Z"
+    },
+    {
+      "serverFileName": "milestone-1.32-s3.w0.war",
+      "webFileName": "milestone-1.32-web5.zip",
+      "finalFileName": "milestone-1.32-s3.w0",
+      "timestamp": "2022-01-05T07:36:46Z"
     }
   ]
 }
