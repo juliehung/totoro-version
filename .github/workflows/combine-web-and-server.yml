@@ -44,9 +44,9 @@ jobs:
                 distribution: 'adopt-openj9'
             # Download web zip and server war
             - name: "Download latest web zip of current milestone from google storage"
-              run: gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/web | sed '$d' | tail -n 1 | awk '{ print $3 }' | xargs -I {} gsutil cp {} .
+              run: gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/web | sed '$d' | sort -k2 | tail -n 1 | awk '{ print $3 }' | xargs -I {} gsutil cp {} .
             - name: "Download latest war of current milestone from google storage"
-              run: gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/server | sed '$d' | tail -n 1 | awk '{ print $3 }' | xargs -I {} gsutil cp {} .
+              run: gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/server | sed '$d' | sort -k2 | tail -n 1 | awk '{ print $3 }' | xargs -I {} gsutil cp {} .
             - name: "Check file is downloaded"
               run: ls -a
             # Add web zip into server war
