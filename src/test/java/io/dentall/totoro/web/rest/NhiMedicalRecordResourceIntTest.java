@@ -111,7 +111,14 @@ public class NhiMedicalRecordResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final NhiMedicalRecordResource nhiMedicalRecordResource = new NhiMedicalRecordResource(nhiMedicalRecordService, nhiMedicalRecordQueryService, nhiTxRepository, nhiMedicineRepository, nhiExtendDisposalRepository, null);
+        final NhiMedicalRecordResource nhiMedicalRecordResource = new NhiMedicalRecordResource(
+            nhiMedicalRecordService,
+            nhiMedicalRecordQueryService,
+            nhiTxRepository,
+            nhiMedicineRepository,
+            nhiExtendDisposalRepository,
+            nhiMedicalRecordRepository
+        );
         this.restNhiMedicalRecordMockMvc = MockMvcBuilders.standaloneSetup(nhiMedicalRecordResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -574,30 +581,6 @@ public class NhiMedicalRecordResourceIntTest {
 
         // Get all the nhiMedicalRecordList where nhiExtendPatient equals to nhiExtendPatientId + 1
         defaultNhiMedicalRecordShouldNotBeFound("nhiExtendPatientId.equals=" + (nhiExtendPatientId + 1));
-    }
-
-    /**
-     * Executes the search, and checks that the default entity is returned
-     */
-    private void defaultNhiMedicalRecordShouldBeFound(String filter) throws Exception {
-        restNhiMedicalRecordMockMvc.perform(get("/api/nhi-medical-records?sort=id,desc&" + filter))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(nhiMedicalRecord.getId().intValue())))
-            .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
-            .andExpect(jsonPath("$.[*].nhiCategory").value(hasItem(DEFAULT_NHI_CATEGORY.toString())))
-            .andExpect(jsonPath("$.[*].nhiCode").value(hasItem(DEFAULT_NHI_CODE.toString())))
-            .andExpect(jsonPath("$.[*].part").value(hasItem(DEFAULT_PART.toString())))
-            .andExpect(jsonPath("$.[*].usage").value(hasItem(DEFAULT_USAGE.toString())))
-            .andExpect(jsonPath("$.[*].total").value(hasItem(DEFAULT_TOTAL.toString())))
-            .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
-            .andExpect(jsonPath("$.[*].days").value(hasItem(DEFAULT_DAYS.toString())));
-
-        // Check, that the count call also returns 1
-        restNhiMedicalRecordMockMvc.perform(get("/api/nhi-medical-records/count?sort=id,desc&" + filter))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(content().string("1"));
     }
 
     /**
