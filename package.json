@@ -1,7 +1,7 @@
 {
-  "name": "totoro",
+  "name": "totoro-admin",
   "version": "0.0.0",
-  "description": "Description for totoro",
+  "description": "Description for totoro-admin",
   "private": true,
   "license": "UNLICENSED",
   "cacheDirectories": [

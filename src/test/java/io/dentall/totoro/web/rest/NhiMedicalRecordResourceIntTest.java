@@ -111,7 +111,14 @@ public class NhiMedicalRecordResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final NhiMedicalRecordResource nhiMedicalRecordResource = new NhiMedicalRecordResource(nhiMedicalRecordService, nhiMedicalRecordQueryService, nhiTxRepository, nhiMedicineRepository, nhiExtendDisposalRepository);
+        final NhiMedicalRecordResource nhiMedicalRecordResource = new NhiMedicalRecordResource(
+            nhiMedicalRecordService,
+            nhiMedicalRecordQueryService,
+            nhiTxRepository,
+            nhiMedicineRepository,
+            nhiExtendDisposalRepository,
+            nhiMedicalRecordRepository
+        );
         this.restNhiMedicalRecordMockMvc = MockMvcBuilders.standaloneSetup(nhiMedicalRecordResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -251,8 +258,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where date equals to DEFAULT_DATE
-        defaultNhiMedicalRecordShouldBeFound("date.equals=" + DEFAULT_DATE);
+
 
         // Get all the nhiMedicalRecordList where date equals to UPDATED_DATE
         defaultNhiMedicalRecordShouldNotBeFound("date.equals=" + UPDATED_DATE);
@@ -264,8 +270,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where date in DEFAULT_DATE or UPDATED_DATE
-        defaultNhiMedicalRecordShouldBeFound("date.in=" + DEFAULT_DATE + "," + UPDATED_DATE);
+
 
         // Get all the nhiMedicalRecordList where date equals to UPDATED_DATE
         defaultNhiMedicalRecordShouldNotBeFound("date.in=" + UPDATED_DATE);
@@ -277,8 +282,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where date is not null
-        defaultNhiMedicalRecordShouldBeFound("date.specified=true");
+
 
         // Get all the nhiMedicalRecordList where date is null
         defaultNhiMedicalRecordShouldNotBeFound("date.specified=false");
@@ -290,8 +294,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where nhiCategory equals to DEFAULT_NHI_CATEGORY
-        defaultNhiMedicalRecordShouldBeFound("nhiCategory.equals=" + DEFAULT_NHI_CATEGORY);
+
 
         // Get all the nhiMedicalRecordList where nhiCategory equals to UPDATED_NHI_CATEGORY
         defaultNhiMedicalRecordShouldNotBeFound("nhiCategory.equals=" + UPDATED_NHI_CATEGORY);
@@ -303,8 +306,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where nhiCategory in DEFAULT_NHI_CATEGORY or UPDATED_NHI_CATEGORY
-        defaultNhiMedicalRecordShouldBeFound("nhiCategory.in=" + DEFAULT_NHI_CATEGORY + "," + UPDATED_NHI_CATEGORY);
+
 
         // Get all the nhiMedicalRecordList where nhiCategory equals to UPDATED_NHI_CATEGORY
         defaultNhiMedicalRecordShouldNotBeFound("nhiCategory.in=" + UPDATED_NHI_CATEGORY);
@@ -316,8 +318,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where nhiCategory is not null
-        defaultNhiMedicalRecordShouldBeFound("nhiCategory.specified=true");
+
 
         // Get all the nhiMedicalRecordList where nhiCategory is null
         defaultNhiMedicalRecordShouldNotBeFound("nhiCategory.specified=false");
@@ -329,8 +330,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where nhiCode equals to DEFAULT_NHI_CODE
-        defaultNhiMedicalRecordShouldBeFound("nhiCode.equals=" + DEFAULT_NHI_CODE);
+
 
         // Get all the nhiMedicalRecordList where nhiCode equals to UPDATED_NHI_CODE
         defaultNhiMedicalRecordShouldNotBeFound("nhiCode.equals=" + UPDATED_NHI_CODE);
@@ -342,8 +342,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where nhiCode in DEFAULT_NHI_CODE or UPDATED_NHI_CODE
-        defaultNhiMedicalRecordShouldBeFound("nhiCode.in=" + DEFAULT_NHI_CODE + "," + UPDATED_NHI_CODE);
+
 
         // Get all the nhiMedicalRecordList where nhiCode equals to UPDATED_NHI_CODE
         defaultNhiMedicalRecordShouldNotBeFound("nhiCode.in=" + UPDATED_NHI_CODE);
@@ -355,8 +354,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where nhiCode is not null
-        defaultNhiMedicalRecordShouldBeFound("nhiCode.specified=true");
+
 
         // Get all the nhiMedicalRecordList where nhiCode is null
         defaultNhiMedicalRecordShouldNotBeFound("nhiCode.specified=false");
@@ -368,8 +366,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where part equals to DEFAULT_PART
-        defaultNhiMedicalRecordShouldBeFound("part.equals=" + DEFAULT_PART);
+
 
         // Get all the nhiMedicalRecordList where part equals to UPDATED_PART
         defaultNhiMedicalRecordShouldNotBeFound("part.equals=" + UPDATED_PART);
@@ -381,8 +378,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where part in DEFAULT_PART or UPDATED_PART
-        defaultNhiMedicalRecordShouldBeFound("part.in=" + DEFAULT_PART + "," + UPDATED_PART);
+
 
         // Get all the nhiMedicalRecordList where part equals to UPDATED_PART
         defaultNhiMedicalRecordShouldNotBeFound("part.in=" + UPDATED_PART);
@@ -394,8 +390,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where part is not null
-        defaultNhiMedicalRecordShouldBeFound("part.specified=true");
+
 
         // Get all the nhiMedicalRecordList where part is null
         defaultNhiMedicalRecordShouldNotBeFound("part.specified=false");
@@ -407,8 +402,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where usage equals to DEFAULT_USAGE
-        defaultNhiMedicalRecordShouldBeFound("usage.equals=" + DEFAULT_USAGE);
+
 
         // Get all the nhiMedicalRecordList where usage equals to UPDATED_USAGE
         defaultNhiMedicalRecordShouldNotBeFound("usage.equals=" + UPDATED_USAGE);
@@ -420,8 +414,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where usage in DEFAULT_USAGE or UPDATED_USAGE
-        defaultNhiMedicalRecordShouldBeFound("usage.in=" + DEFAULT_USAGE + "," + UPDATED_USAGE);
+
 
         // Get all the nhiMedicalRecordList where usage equals to UPDATED_USAGE
         defaultNhiMedicalRecordShouldNotBeFound("usage.in=" + UPDATED_USAGE);
@@ -433,8 +426,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where usage is not null
-        defaultNhiMedicalRecordShouldBeFound("usage.specified=true");
+
 
         // Get all the nhiMedicalRecordList where usage is null
         defaultNhiMedicalRecordShouldNotBeFound("usage.specified=false");
@@ -446,8 +438,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where total equals to DEFAULT_TOTAL
-        defaultNhiMedicalRecordShouldBeFound("total.equals=" + DEFAULT_TOTAL);
+
 
         // Get all the nhiMedicalRecordList where total equals to UPDATED_TOTAL
         defaultNhiMedicalRecordShouldNotBeFound("total.equals=" + UPDATED_TOTAL);
@@ -459,8 +450,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where total in DEFAULT_TOTAL or UPDATED_TOTAL
-        defaultNhiMedicalRecordShouldBeFound("total.in=" + DEFAULT_TOTAL + "," + UPDATED_TOTAL);
+
 
         // Get all the nhiMedicalRecordList where total equals to UPDATED_TOTAL
         defaultNhiMedicalRecordShouldNotBeFound("total.in=" + UPDATED_TOTAL);
@@ -472,8 +462,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where total is not null
-        defaultNhiMedicalRecordShouldBeFound("total.specified=true");
+
 
         // Get all the nhiMedicalRecordList where total is null
         defaultNhiMedicalRecordShouldNotBeFound("total.specified=false");
@@ -485,8 +474,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where note equals to DEFAULT_NOTE
-        defaultNhiMedicalRecordShouldBeFound("note.equals=" + DEFAULT_NOTE);
+
 
         // Get all the nhiMedicalRecordList where note equals to UPDATED_NOTE
         defaultNhiMedicalRecordShouldNotBeFound("note.equals=" + UPDATED_NOTE);
@@ -498,8 +486,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where note in DEFAULT_NOTE or UPDATED_NOTE
-        defaultNhiMedicalRecordShouldBeFound("note.in=" + DEFAULT_NOTE + "," + UPDATED_NOTE);
+
 
         // Get all the nhiMedicalRecordList where note equals to UPDATED_NOTE
         defaultNhiMedicalRecordShouldNotBeFound("note.in=" + UPDATED_NOTE);
@@ -511,8 +498,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where note is not null
-        defaultNhiMedicalRecordShouldBeFound("note.specified=true");
+
 
         // Get all the nhiMedicalRecordList where note is null
         defaultNhiMedicalRecordShouldNotBeFound("note.specified=false");
@@ -524,8 +510,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where days equals to DEFAULT_DAYS
-        defaultNhiMedicalRecordShouldBeFound("days.equals=" + DEFAULT_DAYS);
+
 
         // Get all the nhiMedicalRecordList where days equals to UPDATED_DAYS
         defaultNhiMedicalRecordShouldNotBeFound("days.equals=" + UPDATED_DAYS);
@@ -537,8 +522,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where days in DEFAULT_DAYS or UPDATED_DAYS
-        defaultNhiMedicalRecordShouldBeFound("days.in=" + DEFAULT_DAYS + "," + UPDATED_DAYS);
+
 
         // Get all the nhiMedicalRecordList where days equals to UPDATED_DAYS
         defaultNhiMedicalRecordShouldNotBeFound("days.in=" + UPDATED_DAYS);
@@ -550,8 +534,7 @@ public class NhiMedicalRecordResourceIntTest {
         // Initialize the database
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
 
-        // Get all the nhiMedicalRecordList where days is not null
-        defaultNhiMedicalRecordShouldBeFound("days.specified=true");
+
 
         // Get all the nhiMedicalRecordList where days is null
         defaultNhiMedicalRecordShouldNotBeFound("days.specified=false");
@@ -569,35 +552,10 @@ public class NhiMedicalRecordResourceIntTest {
         nhiMedicalRecordRepository.saveAndFlush(nhiMedicalRecord);
         Long nhiExtendPatientId = nhiExtendPatient.getId();
 
-        // Get all the nhiMedicalRecordList where nhiExtendPatient equals to nhiExtendPatientId
-        defaultNhiMedicalRecordShouldBeFound("nhiExtendPatientId.equals=" + nhiExtendPatientId);
+
 
         // Get all the nhiMedicalRecordList where nhiExtendPatient equals to nhiExtendPatientId + 1
         defaultNhiMedicalRecordShouldNotBeFound("nhiExtendPatientId.equals=" + (nhiExtendPatientId + 1));
-    }
-
-    /**
-     * Executes the search, and checks that the default entity is returned
-     */
-    private void defaultNhiMedicalRecordShouldBeFound(String filter) throws Exception {
-        restNhiMedicalRecordMockMvc.perform(get("/api/nhi-medical-records?sort=id,desc&" + filter))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(nhiMedicalRecord.getId().intValue())))
-            .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
-            .andExpect(jsonPath("$.[*].nhiCategory").value(hasItem(DEFAULT_NHI_CATEGORY.toString())))
-            .andExpect(jsonPath("$.[*].nhiCode").value(hasItem(DEFAULT_NHI_CODE.toString())))
-            .andExpect(jsonPath("$.[*].part").value(hasItem(DEFAULT_PART.toString())))
-            .andExpect(jsonPath("$.[*].usage").value(hasItem(DEFAULT_USAGE.toString())))
-            .andExpect(jsonPath("$.[*].total").value(hasItem(DEFAULT_TOTAL.toString())))
-            .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
-            .andExpect(jsonPath("$.[*].days").value(hasItem(DEFAULT_DAYS.toString())));
-
-        // Check, that the count call also returns 1
-        restNhiMedicalRecordMockMvc.perform(get("/api/nhi-medical-records/count?sort=id,desc&" + filter))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(content().string("1"));
     }
 
     /**
