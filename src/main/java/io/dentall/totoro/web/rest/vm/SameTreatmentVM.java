@@ -6,23 +6,23 @@ import java.time.Instant;
 
 public interface SameTreatmentVM {
     @JsonProperty(value = "id")
-    Long getTreatmentProcedures_NhiExtendTreatmentProcedure_TreatmentProcedure_Id();
+    Long getId();
 
     @JsonProperty(value = "a18")
-    String getNhiExtendDisposals_a18();
+    String getA18();
 
     @JsonProperty(value = "a23")
-    String getNhiExtendDisposals_a23();
+    String getA23();
 
     @JsonProperty(value = "a74")
-    String getTreatmentProcedures_NhiExtendTreatmentProcedure_a74();
+    String getA74();
 
     @JsonProperty(value = "completedDate")
-    Instant getTreatmentProcedures_completedDate();
+    Instant getCompletedDate();
 
     @JsonProperty(value = "code")
-    String getTreatmentProcedures_NhiProcedure_code();
+    String getCode();
 
     @JsonProperty(value = "name")
-    String getTreatmentProcedures_NhiProcedure_name();
+    String getName();
 }

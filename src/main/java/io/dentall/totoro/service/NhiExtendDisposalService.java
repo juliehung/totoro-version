@@ -311,7 +311,14 @@ public class NhiExtendDisposalService {
                     .collect(Collectors.toSet());
 
                 // Assembel througth disposal
-                Disposal d = new Disposal().treatmentProcedures(treatmentProcedures);
+                // Assemble disposal begin, end time
+                Disposal d = new Disposal();
+                Optional<DisposalTable> optionalDisposalTable = disposalRepository.findDisposalById(nhiExtendDisposalTable.getDisposal_Id());
+                if (optionalDisposalTable.isPresent()) {
+                    d.setDateTime(optionalDisposalTable.get().getDateTime());
+                    d.setDateTimeEnd(optionalDisposalTable.get().getDateTimeEnd());
+                }
+                d.treatmentProcedures(treatmentProcedures);
                 d.setId(disposalId);
 
                 // Assemble treatment drug

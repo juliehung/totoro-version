@@ -9,13 +9,12 @@ on:
         branches:
             - '**nhi-rule**'
     pull_request:
-        branches:
-            - '**nhi-rule**'
 
 jobs:
     Nhi-Rule-Test:
         runs-on: [ self-hosted, dentall-his-runner ]
         strategy:
+            fail-fast: false
             matrix:
                 tag: [ "@nhi-34-series", "@nhi-8-series and @part1", "@nhi-8-series and @part2", "@nhi-89-series and @part1", "@nhi-89-series and @part2", "@nhi-89-series and @part3", "@nhi-89-series and @part4", "@nhi-89-series and @part5", "@nhi-90-series and @part1", "@nhi-90-series and @part2", "@nhi-90-series and @part3", "@nhi-91-series and @part1", "@nhi-91-series and @part2", "@nhi-91-series and @part3", "@nhi-92-series and @part1", "@nhi-92-series and @part2", "@nhi and (not @nhi-34-series and not @nhi-8-series and not @nhi-89-series and not @nhi-90-series and not @nhi-91-series and not @nhi-92-series)" ]
         steps:
