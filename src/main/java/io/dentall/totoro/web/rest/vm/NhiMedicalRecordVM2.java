@@ -21,6 +21,8 @@ public interface NhiMedicalRecordVM2 {
 
     String getDays();
 
+    String getTotal();
+
     String getMandarin();
 
 }

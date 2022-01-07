@@ -91,6 +91,7 @@ public interface NhiMedicalRecordRepository extends JpaRepository<NhiMedicalReco
             "    nmr.jhi_usage as usage, " +
             "    nmr.days, " +
             "    nmr.part, " +
+            "    nmr.total, " +
             "    nmr.nhi_category as nhiCategory " +
             "from nhi_medical_record nmr " +
             "left join system_record sr on nmr.jhi_date = sr.recordDateTime " +
@@ -131,6 +132,7 @@ public interface NhiMedicalRecordRepository extends JpaRepository<NhiMedicalReco
             "    nmr.jhi_usage as usage, " +
             "    nmr.days, " +
             "    nmr.part, " +
+            "    nmr.total, " +
             "    nmr.nhi_category as nhiCategory " +
             "from nhi_medical_record nmr " +
             "left join nhi_tx nt on nmr.nhi_code = nt.nhi_code " +

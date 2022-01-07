@@ -26,6 +26,7 @@ public interface NhiMedicalRecordMapper {
     @Mapping(target = "nhiMedicalRecord.usage", source = "usage")
     @Mapping(target = "nhiMedicalRecord.note", source = "note")
     @Mapping(target = "nhiMedicalRecord.days", source = "days")
+    @Mapping(target = "nhiMedicalRecord.total", source = "total")
     @Mapping(target = "mandarin", source = "mandarin")
     NhiMedicalRecordVM nhiMedicalRecordVM2ToNhiMedicalRecordVM(NhiMedicalRecordVM2 nhiMedicalRecordVM2);
 
