@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20220107-shihfeng" author="ShihFeng">
+        <sql>
+            alter table disposal
+            alter column chief_complaint type varchar(12750) using chief_complaint::varchar(12750);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
