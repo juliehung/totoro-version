@@ -116,6 +116,9 @@ public class DisposalStepDefinition extends AbstractStepDefinition {
     @Autowired
     private RegistrationStepDefinition registrationStepDefinition;
 
+    @Autowired
+    private NhiMedicalRecordRepository nhiMedicalRecordRepository;
+
     private String disposalApiPath = "/api/disposals";
 
     private String nhiExtendsDisposalApiPath = "/api/nhi-extend-disposals";
@@ -134,7 +137,14 @@ public class DisposalStepDefinition extends AbstractStepDefinition {
         final DisposalResource resource1 = new DisposalResource(disposalService, disposalQueryService, nhiService, nhiExtendDisposalRepository, userRepository, null);
         final NhiExtendDisposalResource resource2 = new NhiExtendDisposalResource(nhiExtendDisposalService, disposalService);
         final TreatmentProcedureResource resource3 = new TreatmentProcedureResource(treatmentProcedureService, treatmentProcedureQueryService);
-        final NhiMedicalRecordResource resource4 = new NhiMedicalRecordResource(nhiMedicalRecordService, nhiMedicalRecordQueryService, nhiTxRepository, nhiMedicineRepository, nhiExtendDisposalRepository);
+        final NhiMedicalRecordResource resource4 = new NhiMedicalRecordResource(
+            nhiMedicalRecordService,
+            nhiMedicalRecordQueryService,
+            nhiTxRepository,
+            nhiMedicineRepository,
+            nhiExtendDisposalRepository,
+            nhiMedicalRecordRepository
+        );
         final NhiProcedureResource resource5 = new NhiProcedureResource(nhiProcedureService, nhiProcedureRepository);
         this.mvc = MockMvcBuilders.standaloneSetup(resource1, resource2, resource3, resource4, resource5)
             .setCustomArgumentResolvers(pageableArgumentResolver)

@@ -5,22 +5,23 @@ import io.dentall.totoro.business.service.NhiRuleCheckSourceType;
 import io.dentall.totoro.business.service.nhi.NhiHybridRecord;
 import io.dentall.totoro.domain.NhiMedicalRecord;
 import io.dentall.totoro.repository.NhiExtendDisposalRepository;
+import io.dentall.totoro.repository.NhiMedicalRecordRepository;
 import io.dentall.totoro.repository.NhiMedicineRepository;
 import io.dentall.totoro.repository.NhiTxRepository;
 import io.dentall.totoro.service.NhiMedicalRecordQueryService;
 import io.dentall.totoro.service.NhiMedicalRecordService;
 import io.dentall.totoro.service.dto.NhiMedicalRecordCriteria;
+import io.dentall.totoro.service.mapper.NhiMedicalRecordMapper;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
 import io.dentall.totoro.web.rest.vm.NhiMedicalRecordVM;
+import io.dentall.totoro.web.rest.vm.NhiMedicalRecordVM2;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,18 +55,22 @@ public class NhiMedicalRecordResource {
 
     private final NhiMedicineRepository nhiMedicineRepository;
 
+    private final NhiMedicalRecordRepository nhiMedicalRecordRepository;
+
     public NhiMedicalRecordResource(
         NhiMedicalRecordService nhiMedicalRecordService,
         NhiMedicalRecordQueryService nhiMedicalRecordQueryService,
         NhiTxRepository nhiTxRepository,
         NhiMedicineRepository nhiMedicineRepository,
-        NhiExtendDisposalRepository nhiExtendDisposalRepository
+        NhiExtendDisposalRepository nhiExtendDisposalRepository,
+        NhiMedicalRecordRepository nhiMedicalRecordRepository
     ) {
         this.nhiMedicalRecordService = nhiMedicalRecordService;
         this.nhiMedicalRecordQueryService = nhiMedicalRecordQueryService;
         this.nhiTxRepository = nhiTxRepository;
         this.nhiMedicineRepository = nhiMedicineRepository;
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
+        this.nhiMedicalRecordRepository = nhiMedicalRecordRepository;
     }
 
     /**
@@ -131,31 +136,40 @@ public class NhiMedicalRecordResource {
     @Timed
     public ResponseEntity<List<NhiMedicalRecordVM>> getAllNhiMedicalRecords(NhiMedicalRecordCriteria criteria, Pageable pageable) {
         log.debug("REST request to get NhiMedicalRecords by criteria: {}", criteria);
-        // TODO: This method has some bug. Sometime it will found no data. If there has chance to integrate all ui to
-        // one api. Then remove this one and ensure all ui using the same interface
-        Page<NhiMedicalRecordVM> entityList = new PageImpl<>(new ArrayList<>());
         List<NhiMedicalRecordVM> contents = new ArrayList<>();
-        if (NhiRuleCheckSourceType.SYSTEM_RECORD.equals(criteria.getIgnoreSourceType()) &&
-            criteria.getNhiExtendPatientId() != null &&
+        HttpHeaders headers = null;
+        PageRequest pageRequest = PageRequest.of(
+            pageable.getPageNumber(),
+            pageable.getPageSize(),
+            Sort.by(Sort.Direction.DESC, "jhi_date")
+        );
+
+        if (criteria.getNhiExtendPatientId() != null &&
             criteria.getNhiExtendPatientId().getEquals() != null
         ) {
-            entityList = nhiMedicalRecordQueryService.findVmByCriteria(criteria);
-            List<String> recordDateList = nhiExtendDisposalRepository.findNhiHybridRecord(
-               criteria.getNhiExtendPatientId().getEquals().longValue(),
-               Arrays.asList(0L)
-           ).stream()
-               .filter(d -> "SYS".equals(d.getRecordSource()))
-               .map(NhiHybridRecord::getRecordDateTime)
-               .collect(Collectors.toList());
+            if (NhiRuleCheckSourceType.SYSTEM_RECORD.equals(criteria.getIgnoreSourceType())) {
+                Page<NhiMedicalRecordVM2> nhiMedicalRecords = nhiMedicalRecordRepository.findNoneCancelledAndNotInSystem(
+                    criteria.getNhiExtendPatientId().getEquals(),
+                    pageRequest
+                );
+                contents = nhiMedicalRecords.map(NhiMedicalRecordMapper.INSTANCE::nhiMedicalRecordVM2ToNhiMedicalRecordVM).stream().collect(Collectors.toList());
 
-           contents = entityList.stream()
-               .filter(e -> !recordDateList.contains(e.getNhiMedicalRecord().getDate()))
-               .collect(Collectors.toList());
+                headers = PaginationUtil.generatePaginationHttpHeaders(nhiMedicalRecords, "/api/nhi-medical-records");
+            } else {
+                Page<NhiMedicalRecordVM2> nhiMedicalRecords = nhiMedicalRecordRepository.findNoneCancelled(
+                    criteria.getNhiExtendPatientId().getEquals(),
+                    pageRequest
+                );
+                contents = nhiMedicalRecords.map(NhiMedicalRecordMapper.INSTANCE::nhiMedicalRecordVM2ToNhiMedicalRecordVM).stream().collect(Collectors.toList());
+
+                headers = PaginationUtil.generatePaginationHttpHeaders(nhiMedicalRecords, "/api/nhi-medical-records");
+            }
         } else {
-            entityList = nhiMedicalRecordQueryService.findVmByCriteria(criteria, pageable);
+            Page<NhiMedicalRecordVM> entityList = nhiMedicalRecordQueryService.findVmByCriteria(criteria, pageable);
             contents = entityList.getContent();
+
+            headers = PaginationUtil.generatePaginationHttpHeaders(entityList, "/api/nhi-medical-records");
         }
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(entityList, "/api/nhi-medical-records");
         return ResponseEntity.ok().headers(headers).body(contents);
     }
 
