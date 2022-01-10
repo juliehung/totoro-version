@@ -3,10 +3,10 @@ name: "Push with tag"
 on:
     push:
         tags:
-            - '[0-9]+.[0-9]+.[0-9]+.test'
+            - '[0-9]+.[0-9]+.[0-9]+'
 jobs:
-#    Run-Test:
-#        uses: dentallio/totoro-admin/.github/workflows/run-test.yml@new-cicd
+    Run-Test:
+        uses: dentallio/totoro-admin/.github/workflows/run-test.yml@new-cicd
 
     Props:
         runs-on: ubuntu-18.04
@@ -100,9 +100,9 @@ jobs:
             hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
 
     Notify:
-        needs: [ Upload-Final ]
+        needs: [ Combine, Upload-Final ]
         uses: dentallio/totoro-version/.github/workflows/send-slack-notification.yml@master
         with:
-            content: Done full new cicd
+            content: "${{ needs.Combine.outputs.finalFileName }} is released now. !here"
         secrets:
             slackQaChannelHook: ${{ secrets.SLACK_QA_CHANNEL_HOOK }}
