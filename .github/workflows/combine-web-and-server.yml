@@ -71,7 +71,7 @@ jobs:
             - name: "Add web to war file"
               run: ls *.war | xargs -I {} jar uf {} ./WEB-INF
             - name: "Rename war file"
-              run: mv *.war ${{ steps.generate-version.outputs.version }}
+              run: mv *.war ${{ steps.generate-version.outputs.version }}.war
             # Push war to final
             - name: "Push download war to bucket in milestone*/final"
               run: gsutil cp ${{ steps.generate-version.outputs.finalWarName }} gs://totoro-admin-build/${{ inputs.milestone }}/final/ 
