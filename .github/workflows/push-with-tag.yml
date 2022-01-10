@@ -3,7 +3,7 @@ name: "Push with tag"
 on:
     push:
         tags:
-            - 'milestone-*-*'
+            - '[0-9]+.[0-9]+.[0-9]+.test'
 jobs:
     Run-Test:
         uses: dentallio/totoro-admin/.github/workflows/run-test.yml@new-cicd

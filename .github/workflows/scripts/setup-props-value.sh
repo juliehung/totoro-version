@@ -37,13 +37,8 @@ elif [[ "${TagName}" =~ ^[0-9]+.[0-9]+.[0-9]+.*$ ]]; then
     FirebaseRelease=true
     RunNhiRuleTest=true
 fi
-# tag should be like milestone-1.33-wat_ever_you_want_except_hypen
-# e.g.
-# O - milestone-1.33-1234.12334.41
-# O - milestone-1.33-1234
-# O - milestone-1.33-abcd123.123
-# x - milestone-1.33-123-ab
-milestone=$(echo ${TagName} | awk '{split($1, a, "-"); printf "%s-%s", a[1], a[2];}')
+
+milestone=$(echo ${TagName} | awk '{split($1, a, "."); printf "%d.%d", a[1], a[2]; }')
 echo "::set-output name=tag-name::${TagName}"
 echo "::set-output name=tag-timestamp::${TagTimestamp}"
 echo "::set-output name=war-name::${WarName}"

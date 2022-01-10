@@ -3,14 +3,7 @@ name: "Push then release"
 on:
     push:
         tags:
-            - 'rel*'
-            - 'stg*'
-            - 'dev*'
-            - 'nhi*'
-            - 'ms*'
-            - '[0-9]+.[0-9]+.[0-9]+*'
-        branches:
-            - develop
+            - 'old-cicd-*'
     pull_request:
 
 env:
