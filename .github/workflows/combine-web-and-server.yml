@@ -74,7 +74,7 @@ jobs:
               run: mv *.war ${{ steps.generate-version.outputs.version }}
             # Push war to final
             - name: "Push download war to bucket in milestone*/final"
-              run: gsutil cp ${{ steps.generate-version.outputs.finalWarName }} gs://totoro-admin-build/${{ inputs.milestone }}/final/${{ steps.generate-version.outputs.finalWarName }}
+              run: gsutil cp ${{ steps.generate-version.outputs.finalWarName }} gs://totoro-admin-build/${{ inputs.milestone }}/final/ 
             - name: "Upload his war"
               uses: actions/upload-artifact@v2
               with:
