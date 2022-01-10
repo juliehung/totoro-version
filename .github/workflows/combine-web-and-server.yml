@@ -54,13 +54,12 @@ jobs:
             - name: "Output file name to "
               id: version-cutting
               run: |
-                ls *.war | awk '{ gsub(/.war/, "", $1); split($1, a, "."); printf "%d.%d", a[1], a[2]; }' | xargs -I {} echo "::set-output name=milestone::{}"
                 ls *.war | awk '{ gsub(/.war/, "", $1); split($1, a, "."); print a[3]; }' | xargs -I {} echo "::set-output name=serverSequence::{}"
                 ls *.war | awk '{ gsub(/.ls/, "", $1); split($1, a, "."); print a[3]; }' | xargs -I {} echo "::set-output name=webSequence::{}"
             # Add web zip into server war
             - name: "Create combination version file"
               run: |
-                echo 'version=${{ steps.version-cutting.outputs.milestone }}.${{ steps.version-cutting.outputs.webSequence }}.${{ steps.version-cutting.outputs.serverSequence }}' > totoro.properties
+                echo 'version=${{ inputs.milestone }}.${{ steps.version-cutting.outputs.webSequence }}.${{ steps.version-cutting.outputs.serverSequence }}' > totoro.properties
                 cat totoro.properties
             - name: "Unzip web and Rename to WEB-INF "
               run: |
