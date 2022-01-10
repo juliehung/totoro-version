@@ -4,7 +4,6 @@ on:
     push:
         tags:
             - 'old-cicd-*'
-    pull_request:
 
 env:
     VERSION_REPOSITORY: dentallio/totoro-version
