@@ -6,7 +6,7 @@ on:
             - '[0-9]+.[0-9]+.[0-9]+'
 jobs:
     Run-Test:
-        uses: dentallio/totoro-admin/.github/workflows/run-test.yml@new-cicd
+        uses: dentallio/totoro-admin/.github/workflows/run-test.yml@release
 
     Props:
         runs-on: ubuntu-18.04
@@ -78,7 +78,7 @@ jobs:
         uses: dentallio/totoro-version/.github/workflows/combine-web-and-server.yml@master
         with:
             milestone: ${{ needs.Props.outputs.milestone }}
-            hisGcpRegistry: totoro-admin-dev
+            hisGcpRegistry: totoro-admin
         secrets:
             hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
             hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}

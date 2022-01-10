@@ -6,7 +6,7 @@ on:
             - develop
 jobs:
     Run-Test:
-        uses: dentallio/totoro-admin/.github/workflows/run-test.yml@new-cicd
+        uses: dentallio/totoro-admin/.github/workflows/run-test.yml@release
 
     Props:
         runs-on: ubuntu-18.04
