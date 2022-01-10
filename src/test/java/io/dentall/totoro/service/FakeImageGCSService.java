@@ -1,5 +1,6 @@
 package io.dentall.totoro.service;
 
+import com.google.cloud.storage.Blob;
 import io.dentall.totoro.business.service.ImageGcsBusinessService;
 import io.dentall.totoro.repository.ImageRepository;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,8 @@ public class FakeImageGCSService extends ImageGcsBusinessService {
     }
 
     @Override
-    public void uploadFile(String remotePath, String remoteFileName, byte[] content, String contentType) throws IOException {
-        // do nothing
+    public Blob uploadFile(String remotePath, String remoteFileName, byte[] content, String contentType) throws IOException {
+        return null;
     }
 
     @Override

@@ -1,11 +1,17 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import io.dentall.totoro.business.service.ImageGcsBusinessService;
+import io.dentall.totoro.business.service.ThumbnailsService;
+import io.dentall.totoro.domain.Document;
 import io.dentall.totoro.domain.PatientDocument;
 import io.dentall.totoro.domain.User;
 import io.dentall.totoro.service.PatientDocumentService;
 import io.dentall.totoro.service.UserService;
 import io.dentall.totoro.service.mapper.PatientDocumentMapper;
+import io.dentall.totoro.thumbnails.PatientDocumentThumbnailsGenerator;
+import io.dentall.totoro.thumbnails.Thumbnails;
+import io.dentall.totoro.thumbnails.ThumbnailsParam;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.vm.PatientDocumentVM;
 import org.slf4j.Logger;
@@ -22,10 +28,12 @@ import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collectors;
 
+import static io.dentall.totoro.thumbnails.ThumbnailsHelper.parseParamListStr;
 import static io.dentall.totoro.web.rest.util.PaginationUtil.generatePaginationHttpHeaders;
-import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping(PatientDocumentResource.apiLocation)
@@ -43,10 +51,22 @@ public class PatientDocumentResource {
 
     private final PatientDocumentMapper patientDocumentMapper;
 
-    public PatientDocumentResource(UserService userService, PatientDocumentService patientDocumentService, PatientDocumentMapper patientDocumentMapper) {
+    private final ThumbnailsService thumbnailsService;
+
+    private final Optional<ImageGcsBusinessService> imageGcsBusinessServiceOptional;
+
+    public PatientDocumentResource(
+        UserService userService,
+        PatientDocumentService patientDocumentService,
+        PatientDocumentMapper patientDocumentMapper,
+        ThumbnailsService thumbnailsService,
+        Optional<ImageGcsBusinessService> imageGcsBusinessServiceOptional) {
+
         this.userService = userService;
         this.patientDocumentService = patientDocumentService;
         this.patientDocumentMapper = patientDocumentMapper;
+        this.thumbnailsService = thumbnailsService;
+        this.imageGcsBusinessServiceOptional = imageGcsBusinessServiceOptional;
     }
 
     @PostMapping("/{patientId}")
@@ -64,7 +84,12 @@ public class PatientDocumentResource {
         ForkJoinPool.commonPool().submit(() -> {
             try {
                 PatientDocument patientDocument = patientDocumentService.createDocument(patientId, disposalId, file, userName);
-                result.setResult(ResponseEntity.ok(patientDocumentMapper.mapToPatientDocumentVM(patientDocument)));
+                PatientDocumentThumbnailsGenerator patientDocumentThumbnailsGenerator =
+                    new PatientDocumentThumbnailsGenerator(patientId, thumbnailsService, imageGcsBusinessServiceOptional);
+                List<Thumbnails> thumbnailsList = patientDocumentThumbnailsGenerator.generateDefaultThumbnails(patientDocument.getDocument(), file);
+                PatientDocumentVM patientDocumentVM = patientDocumentMapper.mapToPatientDocumentVM(patientDocument);
+                patientDocumentVM.setThumbnailsList(thumbnailsList);
+                result.setResult(ResponseEntity.ok(patientDocumentVM));
             } catch (BadRequestAlertException b) {
                 result.setErrorResult(b);
             } catch (Exception e) {
@@ -82,13 +107,28 @@ public class PatientDocumentResource {
         @PathVariable("patientId") Long patientId,
         @RequestParam(value = "disposalId", required = false) Long disposalId,
         @RequestParam(value = "search", required = false) String search,
+        @RequestParam(value = "thumbnails-params", required = false, defaultValue = "(width:350;height:350);(width:50;height:50)") String thumbnailsParamsListStr,
         @PageableDefault(size = 50)
         @SortDefault.SortDefaults({@SortDefault(sort = "document.title")}) Pageable pageable
     ) {
         log.debug("REST request to get Patient's documents by patient id : {}, disposal id: {}", patientId, disposalId);
         Page<PatientDocument> page = patientDocumentService.findDocument(patientId, disposalId, search, pageable);
+        List<ThumbnailsParam> thumbnailsParams = parseParamListStr(thumbnailsParamsListStr);
+        PatientDocumentThumbnailsGenerator patientDocumentThumbnailsGenerator =
+            new PatientDocumentThumbnailsGenerator(patientId, thumbnailsService, imageGcsBusinessServiceOptional);
+
+        List<PatientDocumentVM> patientDocumentVMList = page.getContent().stream()
+            .map(patientDocument -> {
+                Document document = patientDocument.getDocument();
+                List<Thumbnails> thumbnailsList = patientDocumentThumbnailsGenerator.generateThumbnails(document, thumbnailsParams);
+                PatientDocumentVM patientDocumentVM = patientDocumentMapper.mapToPatientDocumentVM(patientDocument);
+                patientDocumentVM.setThumbnailsList(thumbnailsList);
+                return patientDocumentVM;
+            })
+            .collect(Collectors.toList());
+
         HttpHeaders headers = generatePaginationHttpHeaders(page, apiLocation);
-        return ResponseEntity.ok().headers(headers).body(page.getContent().stream().map(patientDocumentMapper::mapToPatientDocumentVM).collect(toList()));
+        return ResponseEntity.ok().headers(headers).body(patientDocumentVMList);
     }
 
     @PutMapping("/{patientId}")

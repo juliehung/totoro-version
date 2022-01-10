@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 @Deprecated
 @Profile({"img-host", "img-gcs"})
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/deprecated")
 public class ImageResource {
 
     private final Logger logger = LoggerFactory.getLogger(ImageResource.class);
