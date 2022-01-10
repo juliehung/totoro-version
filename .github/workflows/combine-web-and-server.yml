@@ -51,17 +51,17 @@ jobs:
               run: gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/server | sed '$d' | sort -k2 | tail -n 1 | awk '{ print $3 }' | xargs -I {} gsutil cp {} .
             - name: "Check file is downloaded"
               run: ls -a
+            - name: "Output file name to "
+              id: version-cutting
+              run: |
+                ls *.war | awk '{ gsub(/.war/, "", $1); split($1, a, "."); printf "%d.%d", a[1], a[2]; }' | xargs -I {} echo "::set-output name=milestone::{}"
+                ls *.war | awk '{ gsub(/.war/, "", $1); split($1, a, "."); print a[3]; }' | xargs -I {} echo "::set-output name=serverSequence::{}"
+                ls *.war | awk '{ gsub(/.ls/, "", $1); split($1, a, "."); print a[3]; }' | xargs -I {} echo "::set-output name=webSequence::{}"
             # Add web zip into server war
             - name: "Create combination version file"
               run: |
-                  ls *.war && \
-                  ls *.zip && \
-                  echo -n 'version=${{ inputs.milestone }}' >> totoro.properties && \
-                  echo "-s" >> totoro.properties && \
-                  ls *.war | awk '{ gsub(/.war/, "", $1); split($1, a, "-"); print a[3]; }' >> totoro.properties && \
-                  echo "-w" >> totoro.properties && \
-                  ls *.zip | awk '{ gsub(/.zip/, "", $1); split($1, a, "-"); print a[3]; }' >> totoro.properties && \
-                  cat totoro.properties
+                echo 'version=${{ steps.version-cutting.outputs.milestone }}.${{ steps.version-cutting.outputs.webSequence }}.${{ steps.version-cutting.outputs.serverSequence }}' > totoro.properties
+                cat totoro.properties
             - name: "Unzip web and Rename to WEB-INF "
               run: |
                 mkdir -p WEB-INF/classes/ && \
