@@ -26,8 +26,8 @@ jobs:
     Combine-Web-And-Server:
         runs-on: ubuntu-18.04
         outputs:
-          name: ${{ steps.final-war.outputs.name }}
-          version: ${{ steps.final-war.outputs.version }}
+          name: ${{ steps.generate-version.outputs.finalWarName}}
+          version: ${{ steps.generate-version.outputs.version }}
         steps:
             - name: "Install Tool"
               run: |
@@ -51,16 +51,16 @@ jobs:
               run: gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/server | sed '$d' | sort -k2 | tail -n 1 | awk '{ print $3 }' | xargs -I {} gsutil cp {} .
             - name: "Check file is downloaded"
               run: ls -a
-            - name: "Output file name to "
-              id: version-cutting
+            - name: "Generate version"
+              id: generate-version
               run: |
-                ls *.war | awk '{ gsub(/.war/, "", $1); split($1, a, "."); print a[3]; }' | xargs -I {} echo "::set-output name=serverSequence::{}"
-                ls *.war | awk '{ gsub(/.ls/, "", $1); split($1, a, "."); print a[3]; }' | xargs -I {} echo "::set-output name=webSequence::{}"
+                serverSequence=$(ls *.war | awk '{ gsub(/.war/, "", $1); split($1, a, "."); print a[3]; }')
+                webSequence=$(ls *.zip | awk '{ gsub(/.ls/, "", $1); split($1, a, "."); print a[3]; }')
+                finalVersion=${{ inputs.milestone }}.$webSequence.$serverSequence
+                echo $finalVersion > totoro.properties
+                echo "::set-output name=version::$finalVersion" 
+                echo "::set-output name=finalWarName::$finalVersion.war" 
             # Add web zip into server war
-            - name: "Create combination version file"
-              run: |
-                echo 'version=${{ inputs.milestone }}.${{ steps.version-cutting.outputs.webSequence }}.${{ steps.version-cutting.outputs.serverSequence }}' > totoro.properties
-                cat totoro.properties
             - name: "Unzip web and Rename to WEB-INF "
               run: |
                 mkdir -p WEB-INF/classes/ && \
@@ -71,19 +71,15 @@ jobs:
             - name: "Add web to war file"
               run: ls *.war | xargs -I {} jar uf {} ./WEB-INF
             - name: "Rename war file"
-              run: cat WEB-INF/classes/totoro.properties | awk '{ split($1 , a, "="); printf "%s.war", a[2] }' | xargs -I {} mv *.war {} && ls
+              run: mv *.war ${{ steps.generate-version.outputs.version }}
             # Push war to final
             - name: "Push download war to bucket in milestone*/final"
-              id: final-war
-              run: |
-                ls *.war | xargs -I {} gsutil cp {} gs://totoro-admin-build/${{ inputs.milestone }}/final
-                ls *.war | xargs -I {} echo "::set-output name=name::{}"
-                ls *.war | awk '{ gsub(/.war/, "", $1); print $1;}' | xargs -I {} echo "::set-output name=version::{}"
+              run: gsutil cp ${{ steps.generate-version.outputs.finalWarName }} gs://totoro-admin-build/${{ inputs.milestone }}/final/${{ steps.generate-version.outputs.finalWarName }}
             - name: "Upload his war"
               uses: actions/upload-artifact@v2
               with:
-                name: ${{ steps.final-war.outputs.name }}
-                path: ${{ steps.final-war.outputs.name }}
+                name: ${{ steps.generate-version.outputs.finalWarName }}
+                path: ${{ steps.generate-version.outputs.finalWarName }}
             # Update totoro version
             - name: "Check out totoro version"
               uses: actions/checkout@v2
@@ -99,7 +95,7 @@ jobs:
                 jq \
                 --arg serverFileName $(ls *.war) \
                 --arg webFileName $(ls *.zip) \
-                --arg finalFileName $(cat WEB-INF/classes/totoro.properties | awk '{ split($1 , a, "="); print a[2] }') \
+                --arg finalFileName ${{ steps.generate-version.outputs.finalWarName }} \
                 --arg timestamp `date "+%Y-%m-%dT%H:%M:%SZ"` \
                 '.history += [{"serverFileName": $serverFileName, "webFileName": $webFileName, "finalFileName": $finalFileName, "timestamp": $timestamp}]' \
                 totoro-version/${{ inputs.milestone }}.json > tmp
