@@ -148,6 +148,9 @@ public class PatientDocumentResource {
         @RequestParam("patientDocumentId") Long patientDocumentId
     ) {
         log.debug("REST request to delete Patient's documents by patient id : {}, patient document id: {}", patientId, patientDocumentId);
-        return ResponseEntity.ok(patientDocumentMapper.mapToPatientDocumentVM(patientDocumentService.deleteDocument(patientId, patientDocumentId)));
+        PatientDocument patientDocument = patientDocumentService.deleteDocument(patientId, patientDocumentId);
+        thumbnailsService.deleteThumbnails(String.valueOf(patientId), String.valueOf(patientDocument.getDocument().getId()));
+
+        return ResponseEntity.ok(patientDocumentMapper.mapToPatientDocumentVM(patientDocument));
     }
 }

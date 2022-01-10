@@ -84,10 +84,29 @@ public class ThumbnailsService {
         return list;
     }
 
+    public List<Blob> listThumbnails(String path, String name) {
+        if (!imageGcsBusinessServiceOptional.isPresent()) {
+            return emptyList();
+        }
+        Page<Blob> blobs = imageGcsBusinessServiceOptional.get().listFileByPrefix(String.format("%s/%s/%s/%s", CLINIC_NAME, path, THUMBNAILS_NAME, name));
+        List<Blob> list = new ArrayList<>();
+        for (Blob blob : blobs.iterateAll()) {
+            list.add(blob);
+        }
+        return list;
+    }
+
     public List<Blob> listThumbnails(String path, List<ThumbnailsParam> params) {
         Set<String> appendixes = params.stream().map(ThumbnailsParam::toAppendix).filter(Objects::nonNull).collect(Collectors.toSet());
         List<Blob> list = listThumbnails(path);
         return list.stream().filter(blob -> appendixes.stream().anyMatch(blob.getName()::endsWith)).collect(toList());
+    }
+
+    public void deleteThumbnails(String path, String name) {
+        if (!imageGcsBusinessServiceOptional.isPresent()) {
+            return;
+        }
+        listThumbnails(path, name).forEach(Blob::delete);
     }
 
 }
