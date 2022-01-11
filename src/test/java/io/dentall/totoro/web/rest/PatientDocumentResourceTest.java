@@ -415,37 +415,6 @@ public class PatientDocumentResourceTest {
     }
 
     @Test
-    public void testUpdateDocumentForDisposalEmpty() throws Exception {
-        long patientId = -1L;
-
-        PatientDocument patientDocument = new PatientDocument();
-        patientDocument.setId(-1L);
-
-        MockHttpServletRequestBuilder requestBuilder = put("/api/patient-document/" + patientId)
-            .contentType(APPLICATION_JSON)
-            .content(objectMapper.writeValueAsBytes(patientDocument));
-
-        ResultActions resultActions = mockMvc.perform(requestBuilder);
-        resultActions.andExpect(jsonPath("$.title").value(equalTo("disposal is not provided")));
-    }
-
-    @Test
-    public void testUpdateDocumentForDisposalIdEmpty() throws Exception {
-        long patientId = -1L;
-
-        PatientDocument patientDocument = new PatientDocument();
-        patientDocument.setId(-1L);
-        patientDocument.setDisposal(new PatientDocumentDisposal());
-
-        MockHttpServletRequestBuilder requestBuilder = put("/api/patient-document/" + patientId)
-            .contentType(APPLICATION_JSON)
-            .content(objectMapper.writeValueAsBytes(patientDocument));
-
-        ResultActions resultActions = mockMvc.perform(requestBuilder);
-        resultActions.andExpect(jsonPath("$.title").value(equalTo("disposal id is not provided")));
-    }
-
-    @Test
     public void testUpdateDocumentForPatientDocumentNotExist() throws Exception {
         long patientId = -1L;
 
@@ -532,6 +501,47 @@ public class PatientDocumentResourceTest {
         resultActions.andExpect(jsonPath("$.id").value(equalTo(patientDocumentVM.getId().intValue())));
         resultActions.andExpect(jsonPath("$.patientId").value(equalTo(patientDocumentVM.getPatientId().intValue())));
         resultActions.andExpect(jsonPath("$.disposal.id").value(equalTo(disposal2.getId().intValue())));
+        resultActions.andExpect(jsonPath("$.document.id").value(equalTo(patientDocumentVM.getDocument().getId().intValue())));
+        resultActions.andExpect(jsonPath("$.document.filePath").value(equalTo(patientDocumentVM.getDocument().getFilePath())));
+        resultActions.andExpect(jsonPath("$.document.fileName").value(endsWith(patientDocumentVM.getDocument().getFileName())));
+        resultActions.andExpect(jsonPath("$.document.fileRealName").value(equalTo(patientDocumentVM.getDocument().getFileRealName())));
+        resultActions.andExpect(jsonPath("$.document.fileExtension").value(equalTo(patientDocumentVM.getDocument().getFileExtension())));
+        resultActions.andExpect(jsonPath("$.document.fileSize").value(equalTo(patientDocumentVM.getDocument().getFileSize().intValue())));
+        resultActions.andExpect(jsonPath("$.document.url").value(equalTo(patientDocumentVM.getDocument().getUrl())));
+        resultActions.andExpect(jsonPath("$.document.title").value(equalTo(document.getTitle())));
+        resultActions.andExpect(jsonPath("$.document.description").value(equalTo(document.getDescription())));
+        resultActions.andExpect(jsonPath("$.document.hashtags").value(hasItems(document.getHashtags())));
+    }
+
+    @Test
+    public void testUpdateDocumentWhenRemoveDisposal() throws Exception {
+        Patient patient = TestUtil.createPatient2(user, em, patientRepository);
+        Disposal disposal1 = TestUtil.createDisposal(user, patient, em, registrationRepository, appointmentRepository, disposalRepository);
+        Long patientId = disposal1.getRegistration().getAppointment().getPatient().getId();
+        Long disposalId = disposal1.getId();
+
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", disposalId + ".txt", "text/plain", "hi".getBytes(StandardCharsets.UTF_8));
+        PatientDocumentVM patientDocumentVM = uploadDocument(patientId, disposalId, mockMultipartFile);
+
+        Document document = new Document();
+        // allow modified
+        document.setTitle("NewTitle");
+        document.setDescription("dot dot dot #dot");
+        document.setHashtags(new String[]{"#dot"});
+        // not allow modified
+        document.setId(-1L);
+        document.setFileName("newFileName");
+        document.setFileRealName("newFileRealName");
+        document.setFilePath("newFilePath");
+        document.setUploadUser("newUploadUser");
+        document.setUploadTime(Instant.now());
+        document.setFileSize(0L);
+        document.setFileExtension("newFileExtension");
+
+        ResultActions resultActions = updateDocument(patientDocumentVM, null, document);
+        resultActions.andExpect(jsonPath("$.id").value(equalTo(patientDocumentVM.getId().intValue())));
+        resultActions.andExpect(jsonPath("$.patientId").value(equalTo(patientDocumentVM.getPatientId().intValue())));
+        resultActions.andExpect(jsonPath("$.disposal").value(nullValue()));
         resultActions.andExpect(jsonPath("$.document.id").value(equalTo(patientDocumentVM.getDocument().getId().intValue())));
         resultActions.andExpect(jsonPath("$.document.filePath").value(equalTo(patientDocumentVM.getDocument().getFilePath())));
         resultActions.andExpect(jsonPath("$.document.fileName").value(endsWith(patientDocumentVM.getDocument().getFileName())));
@@ -798,12 +808,17 @@ public class PatientDocumentResourceTest {
     }
 
     private ResultActions updateDocument(PatientDocumentVM patientDocumentVM, Long disposalId, Document document) throws Exception {
-        PatientDocumentDisposal patientDocumentDisposal = new PatientDocumentDisposal();
-        patientDocumentDisposal.setId(disposalId);
-
         PatientDocument patientDocument = new PatientDocument();
         patientDocument.setId(patientDocumentVM.getId());
-        patientDocument.setDisposal(patientDocumentDisposal);
+
+        if (disposalId == null) {
+            patientDocument.setDisposal(null);
+        } else {
+            PatientDocumentDisposal patientDocumentDisposal = new PatientDocumentDisposal();
+            patientDocumentDisposal.setId(disposalId);
+            patientDocument.setDisposal(patientDocumentDisposal);
+        }
+
         patientDocument.setDocument(document);
 
         MockHttpServletRequestBuilder requestBuilder = put("/api/patient-document/" + patientDocumentVM.getPatientId())

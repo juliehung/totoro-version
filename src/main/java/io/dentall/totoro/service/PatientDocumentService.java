@@ -162,6 +162,8 @@ public class PatientDocumentService {
                 throw new BadRequestAlertException("disposal is not found or disposal is not belong to patient", ENTITY_NAME, "disposal.not.found");
             }
             patientDocumentOrigin.setDisposal(patientDocumentMapper.mapToPatientDocumentDisposal(disposalTableOptional.get()));
+        } else {
+            patientDocumentOrigin.setDisposal(null);
         }
 
         String userName = userService.getUserWithAuthorities()
