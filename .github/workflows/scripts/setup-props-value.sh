@@ -9,6 +9,7 @@ DevDeploy=true
 GcpRelease=false
 FirebaseRelease=false
 RunNhiRuleTest=false
+BucketName="totoro-admin-build"
 if [[ "${TagName}" =~ ^stg.+$ ]]; then
     VersionFile=stg.version.json
     DeployPort=8085
@@ -35,9 +36,9 @@ elif [[ "${TagName}" =~ ^[0-9]+.[0-9]+.[0-9]+.*$ ]]; then
     GcpRelease=true
     FirebaseRelease=true
     RunNhiRuleTest=true
-else
-    exit 1
 fi
+
+milestone=$(echo ${TagName} | awk '{split($1, a, "."); printf "%d.%d", a[1], a[2]; }')
 echo "::set-output name=tag-name::${TagName}"
 echo "::set-output name=tag-timestamp::${TagTimestamp}"
 echo "::set-output name=war-name::${WarName}"
@@ -48,3 +49,5 @@ echo "::set-output name=dev-deploy::${DevDeploy}"
 echo "::set-output name=gcp-release::${GcpRelease}"
 echo "::set-output name=firebase-release::${FirebaseRelease}"
 echo "::set-output name=run-nhi-rule-test::${RunNhiRuleTest}"
+echo "::set-output name=bucket-name::${BucketName}"
+echo "::set-output name=milestone::${milestone}"

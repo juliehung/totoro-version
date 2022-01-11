@@ -1,0 +1,26 @@
+name: "Init milestone"
+on:
+    create:
+        branches:
+            - 'milestone-[0-9]+.[0-9]+'
+jobs:
+    Cut-Tag:
+        runs-on: ubuntu-18.04
+        outputs:
+            milestone: ${{ steps.result.outputs.milestone }}
+        steps:
+            - id: result
+              run: |
+                echo ${{ github.ref_name }} | \
+                awk '{ split($1, a, "."); printf "%d.%d", a[1], a[2] }' | \
+                xargs -I {} echo '::set-output name=milestone::{}'
+
+    Init:
+        needs: [ Cut-Tag ]
+        uses: dentallio/totoro-version/.github/workflows/init-milestone.yml@master
+        with:
+            milestone: ${{ needs.Cut-Tag.outputs.milestone }}
+        secrets:
+            hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
+            hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
+            totoroVersionToken: ${{ secrets.TOTORO_VERSION_ACCESS }}

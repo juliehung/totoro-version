@@ -1,0 +1,141 @@
+name: "Push to dev"
+
+on:
+    push:
+        branches:
+            - develop
+jobs:
+    Run-Test:
+        uses: dentallio/totoro-admin/.github/workflows/run-test.yml@release
+
+    Props:
+        runs-on: ubuntu-18.04
+        if: ${{ startsWith(github.ref, 'refs/heads/') || startsWith(github.ref, 'refs/tags/') }}
+        outputs:
+            tag-name: ${{ steps.setup-props-value.outputs.tag-name }}
+            tag-timestamp: ${{ steps.setup-props-value.outputs.tag-timestamp }}
+            war-name: ${{ steps.setup-props-value.outputs.war-name }}
+            version-file: ${{ steps.setup-props-value.outputs.version-file }}
+            deploy-port: ${{ steps.setup-props-value.outputs.deploy-port }}
+            notify: ${{ steps.setup-props-value.outputs.notify }}
+            dev-deploy: ${{ steps.setup-props-value.outputs.dev-deploy }}
+            gcp-release: ${{ steps.setup-props-value.outputs.gcp-release }}
+            firebase-release: ${{ steps.setup-props-value.outputs.firebase-release }}
+            run-nhi-rule-test: ${{ steps.setup-props-value.outputs.run-nhi-rule-test }}
+        steps:
+            -   name: "Check out totoro admin"
+                uses: actions/checkout@v2
+            -   name: "Setup Props Value"
+                id: setup-props-value
+                run: ${GITHUB_WORKSPACE}/.github/workflows/scripts/setup-props-value.sh
+                shell: bash
+                env:
+                    GITHUB_REF: ${{ github.ref }}
+                    GITHUB_SHA: ${{ github.sha }}
+
+    Build-War:
+        runs-on: ubuntu-18.04
+        container: openjdk:8-jdk-stretch
+        needs: [ Run-Test, Props ]
+        if: ${{ startsWith(github.ref, 'refs/heads/') || startsWith(github.ref, 'refs/tags/') }}
+        env:
+            WAR_NAME: ${{ needs.Props.outputs.war-name }}
+            TAG_NAME: ${{ needs.Props.outputs.tag-name }}
+            VERSION_FILE: ${{ needs.Props.outputs.version-file }}
+        steps:
+            -   name: "Install Tool"
+                run: |
+                    apt-get update -y && apt-get install jq curl unzip git -y
+                    apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated gcc make libpng-dev
+            -   name: "Check out totoro admin"
+                uses: actions/checkout@v1
+            -   name: "Check out totoro version"
+                uses: actions/checkout@v2
+                with:
+                    repository: ${{ env.VERSION_REPOSITORY }}
+                    ref: master
+                    token: ${{ secrets.TOTORO_VERSION_ACCESS }}
+                    path: totoro-version
+            -   name: "Download web artifact"
+                id: download-web-artifact
+                run: ${GITHUB_WORKSPACE}/.github/workflows/scripts/retrieve-web-artifact.sh
+                shell: bash
+                env:
+                    TOKEN: ${{ secrets.TOTORO_VERSION_ACCESS }}
+                    WEB_REPOSITORY: ${{ env.WEB_REPOSITORY }}
+                    VERSION_FILE: ${{ env.VERSION_FILE }}
+                working-directory: ./totoro-version
+            -   uses: actions/cache@v2
+                with:
+                    path: |
+                        ~/.gradle/caches
+                        ~/.gradle/wrapper
+                    key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+                    restore-keys: |
+                        ${{ runner.os }}-gradle-
+            -   name: "Grant execute permission for gradlew"
+                run: chmod +x gradlew
+            -   name: "Build"
+                run: |
+                    ./gradlew bootWar -Pprod -x check --no-daemon
+                    ls ${GITHUB_WORKSPACE}/build/libs/
+            -   name: "Change war name By develop"
+                if: ${{ startsWith(env.TAG_NAME, 'dev') }}
+                run: ls totoro*.war | xargs -I {} mv {} ${WAR_NAME}
+                env:
+                    WAR_NAME: ${{ env.WAR_NAME }}
+                working-directory: ./build/libs/
+            -   name: "Upload his war"
+                uses: actions/upload-artifact@v2
+                with:
+                    name: ${{ env.ARTIFACT_NAME }}
+                    path: build/libs/${{ env.WAR_NAME }}
+
+    Release-To-Dev-Machine:
+        runs-on: ubuntu-18.04
+        needs: [ Build-War, Props ]
+        if: ${{ startsWith(github.ref, 'refs/heads/') || startsWith(github.ref, 'refs/tags/') }}
+        env:
+            WAR_NAME: ${{ needs.Props.outputs.war-name }}
+        steps:
+            -   name: "Check out totoro admin"
+                uses: actions/checkout@v2
+            -   name: "Download his war"
+                uses: actions/download-artifact@v2
+                with:
+                    name: ${{ env.ARTIFACT_NAME }}
+            -   name: "Deliver his war"
+                run: ${GITHUB_WORKSPACE}/.github/workflows/scripts/scp.sh
+                shell: bash
+                env:
+                    SECRET: ${{ secrets.HIS_LOCAL_DEV_MACHINE_KEY }}
+                    SOURCE_PATH: ${{ github.workspace }}/${{ env.WAR_NAME }}
+                    TARGET_HOST: dev.dentall.site
+                    TARGET_USER: dentallio
+                    TARGET_PATH: /home/dentallio/Dentall/dora-monitor/storage/wars/
+
+    Deploy-To-Dentall-Dev:
+        runs-on: ubuntu-18.04
+        needs: [ Release-To-Dev-Machine, Props ]
+        if: ${{ needs.Props.outputs.dev-deploy == 'true' }}
+        env:
+            WAR_NAME: ${{ needs.Props.outputs.war-name }}
+            DORA_MANAGERED_SERVER_PORT: ${{ needs.Props.outputs.deploy-port }}
+        steps:
+            -   name: "Setup Common"
+                run: |
+                    echo "CURL_CONTENT_TYPE=Content-Type: application/json" >> $GITHUB_ENV
+                    echo "CURL_DATA_FOR_STOP={\"operation\": \"stop\", \"warVersion\": \"${WAR_NAME}\"}" >> $GITHUB_ENV
+                    echo "CURL_DATA_FOR_START={\"operation\": \"start\", \"warVersion\": \"${WAR_NAME}\"}" >> $GITHUB_ENV
+                env:
+                    WAR_NAME: ${{ env.WAR_NAME }}
+            -   name: "Deploy And Restart"
+                run: |
+                    curl -X POST http://dev.dentall.site:8001/servers/${DORA_MANAGERED_SERVER_PORT}/operation -H "${CURL_CONTENT_TYPE}" -d "${CURL_DATA_FOR_STOP}"
+                    sleep 1
+                    curl -X POST http://dev.dentall.site:8001/servers/${DORA_MANAGERED_SERVER_PORT}/operation -H "${CURL_CONTENT_TYPE}" -d "${CURL_DATA_FOR_START}"
+                env:
+                    DORA_MANAGERED_SERVER_PORT: ${{ env.DORA_MANAGERED_SERVER_PORT }}
+                    CURL_CONTENT_TYPE: ${{ env.CURL_CONTENT_TYPE }}
+                    CURL_DATA_FOR_STOP: ${{ env.CURL_DATA_FOR_STOP }}
+                    CURL_DATA_FOR_START: ${{ env.CURL_DATA_FOR_START }}
