@@ -10,14 +10,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static io.dentall.totoro.thumbnails.ThumbnailsHelper.*;
 import static java.lang.String.valueOf;
 import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.maxBy;
+import static java.util.Objects.isNull;
+import static java.util.stream.Collectors.*;
 import static org.apache.commons.io.IOUtils.toByteArray;
 
 public class PatientDocumentThumbnailsGenerator {
@@ -44,12 +43,12 @@ public class PatientDocumentThumbnailsGenerator {
      * 產生 350*350、50*50 的縮圖
      */
     public List<Thumbnails> generateDefaultThumbnails(Document document, MultipartFile file) throws IOException {
-        if (!isSupported(document.getFileExtension())) {
+        if (isNull(document) || !isSupported(document.getFileExtension())) {
             return emptyList();
         }
 
         final byte[] bytes = toByteArray(file.getInputStream());
-        List<ThumbnailsParam> thumbnailsParamList = defaultThumbnailsWidth.stream().map(width -> new ThumbnailsParam(width, width)).collect(Collectors.toList());
+        List<ThumbnailsParam> thumbnailsParamList = defaultThumbnailsWidth.stream().map(width -> new ThumbnailsParam(width, width)).collect(toList());
         return thumbnailsService.createThumbnailsList(
             valueOf(patientId),
             valueOf(document.getId()),
@@ -62,7 +61,7 @@ public class PatientDocumentThumbnailsGenerator {
      * 針對有支援縮圖格式的圖片，檢查是否已經有產生符合條件的縮圖，沒有的話就直接產生縮圖
      */
     public List<Thumbnails> generateThumbnails(Document document, List<ThumbnailsParam> thumbnailsParams) {
-        if (!isSupported(document.getFileExtension()) || thumbnailsParams.size() == 0 || !imageGcsBusinessServiceOptional.isPresent()) {
+        if (isNull(document) || !isSupported(document.getFileExtension()) || thumbnailsParams.size() == 0 || !imageGcsBusinessServiceOptional.isPresent()) {
             return emptyList();
         }
 
