@@ -96,10 +96,11 @@ public class PatientDocumentThumbnailsGenerator {
                     blobOriginOptional = blobOriginOptional.isPresent() ? blobOriginOptional : Optional.ofNullable(service.getFile(fileName));
                     if (!blobOriginOptional.isPresent()) {
                         log.warn("Unable to create thumbnails, because " + fileName + " not found. patientId=" + patientId);
+                        break;
                     } else {
                         Blob blob = blobOriginOptional.get();
-                        String url = service.getUrlForDownload() + document.getFilePath() + document.getFileName();
-                        thumbnailsOptional = thumbnailsService.createThumbnails(valueOf(patientId), valueOf(document.getId()), url, blob.getContentType(), param);
+                        byte[] blobBytes =  blob.getContent();
+                        thumbnailsOptional = thumbnailsService.createThumbnails(valueOf(patientId), valueOf(document.getId()), blobBytes, blob.getContentType(), param);
                     }
                 } catch (IOException e) {
                     log.error("create thumbnails fails. patientId=" + patientId, e);
