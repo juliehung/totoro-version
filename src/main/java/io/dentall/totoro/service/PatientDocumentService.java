@@ -24,6 +24,7 @@ import static io.dentall.totoro.service.util.FileNameUtil.getExtension;
 import static io.dentall.totoro.service.util.FileNameUtil.normalizeFileName;
 import static java.util.Arrays.asList;
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -77,10 +78,6 @@ public class PatientDocumentService {
             throw new BadRequestAlertException("patientId does not provided", ENTITY_NAME, "patient.id.not.provided");
         }
 
-        if (isNull(disposalId)) {
-            throw new BadRequestAlertException("disposalId does not provided", ENTITY_NAME, "disposal.id.not.provided");
-        }
-
         if (isNull(file) || file.isEmpty() || file.getSize() <= 0) {
             throw new BadRequestAlertException("Upload not include file or it is empty", ENTITY_NAME, "file.not.provided");
         }
@@ -89,12 +86,6 @@ public class PatientDocumentService {
 
         if (!patientOptional.isPresent()) {
             throw new BadRequestAlertException("patient does not found", ENTITY_NAME, "patient.not.found");
-        }
-
-        Optional<DisposalTable> disposalTableOptional = disposalRepository.findDisposalByIdAndRegistration_Appointment_Patient_Id(disposalId, patientId);
-
-        if (!disposalTableOptional.isPresent()) {
-            throw new BadRequestAlertException("disposal is not found or disposal is not belong to patient", ENTITY_NAME, "disposal.not.found");
         }
 
         Instant now = Instant.now();
@@ -113,8 +104,15 @@ public class PatientDocumentService {
         document = documentRepository.save(document);
         PatientDocument patientDocument = new PatientDocument();
         patientDocument.setPatientId(patientId);
-        patientDocument.setDisposal(patientDocumentMapper.mapToPatientDocumentDisposal(disposalTableOptional.get()));
         patientDocument.setDocument(document);
+
+        if(nonNull(disposalId)) {
+            Optional<DisposalTable> disposalTableOptional = disposalRepository.findDisposalByIdAndRegistration_Appointment_Patient_Id(disposalId, patientId);
+            if (!disposalTableOptional.isPresent()) {
+                throw new BadRequestAlertException("disposal is not found or disposal is not belong to patient", ENTITY_NAME, "disposal.not.found");
+            }
+            disposalTableOptional.ifPresent(disposalTable -> patientDocument.setDisposal(patientDocumentMapper.mapToPatientDocumentDisposal(disposalTable)));
+        }
 
         uploadFile(document, file);
 
@@ -145,14 +143,6 @@ public class PatientDocumentService {
             throw new BadRequestAlertException("patient document id is not provided", ENTITY_NAME, "patientDocumentId.not.provided");
         }
 
-        if (isNull(patientDocumentModified.getDisposal())) {
-            throw new BadRequestAlertException("disposal is not provided", ENTITY_NAME, "disposal.not.provided");
-        }
-
-        if (isNull(patientDocumentModified.getDisposal().getId())) {
-            throw new BadRequestAlertException("disposal id is not provided", ENTITY_NAME, "disposalId.not.provided");
-        }
-
         Optional<PatientDocument> patientDocumentOptional = patientDocumentRepository.findById(patientDocumentModified.getId());
 
         if (!patientDocumentOptional.isPresent()) {
@@ -166,10 +156,14 @@ public class PatientDocumentService {
             throw new BadRequestAlertException("patient id is not match", ENTITY_NAME, "patientId.not.match");
         }
 
-        Optional<DisposalTable> disposalTable = disposalRepository.findDisposalByIdAndRegistration_Appointment_Patient_Id(patientDocumentModified.getDisposal().getId(), patientId);
-
-        if (!disposalTable.isPresent()) {
-            throw new BadRequestAlertException("disposal is not found or disposal is not belong to patient", ENTITY_NAME, "disposal.not.found");
+        if (nonNull(patientDocumentModified.getDisposal()) && nonNull(patientDocumentModified.getDisposal().getId())) {
+            Optional<DisposalTable> disposalTableOptional = disposalRepository.findDisposalByIdAndRegistration_Appointment_Patient_Id(patientDocumentModified.getDisposal().getId(), patientId);
+            if (!disposalTableOptional.isPresent()) {
+                throw new BadRequestAlertException("disposal is not found or disposal is not belong to patient", ENTITY_NAME, "disposal.not.found");
+            }
+            patientDocumentOrigin.setDisposal(patientDocumentMapper.mapToPatientDocumentDisposal(disposalTableOptional.get()));
+        } else {
+            patientDocumentOrigin.setDisposal(null);
         }
 
         String userName = userService.getUserWithAuthorities()
@@ -177,7 +171,6 @@ public class PatientDocumentService {
             .orElseThrow(() -> new BadRequestAlertException("user id is not found", ENTITY_NAME, "userId.not.found"));
 
         // update PatientDocument
-        patientDocumentOrigin.setDisposal(patientDocumentMapper.mapToPatientDocumentDisposal(disposalTable.get()));
         patientDocumentOrigin.setLastModifiedDate(Instant.now());
 
         // update Document
