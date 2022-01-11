@@ -53,7 +53,7 @@ public class PatientDocumentResource {
     @Timed
     public DeferredResult<ResponseEntity<PatientDocumentVM>> createDocument(
         @PathVariable("patientId") Long patientId,
-        @RequestParam("disposalId") Long disposalId,
+        @RequestParam(value = "disposalId", required = false) Long disposalId,
         @RequestParam("file") MultipartFile file
     ) {
         log.debug("REST request to create Patient's documents by patient id : {}, disposal id: {}", patientId, disposalId);
@@ -68,7 +68,7 @@ public class PatientDocumentResource {
             } catch (BadRequestAlertException b) {
                 result.setErrorResult(b);
             } catch (Exception e) {
-                log.error("create document error: {}", e.toString());
+                log.error(String.format("create document error: %s", e.toString()), e);
                 result.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.toString()));
             }
         });

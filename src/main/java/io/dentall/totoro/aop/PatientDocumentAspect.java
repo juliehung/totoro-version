@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.joining;
 
 @Aspect
@@ -60,13 +61,17 @@ public class PatientDocumentAspect {
         String remoteFileName = patientDocument.getDocument().getFileName();
         Image image = imageBusinessService.createImage(patientId, remotePath, remoteFileName);
 
-        ImageRelation imageRelation = new ImageRelation();
-        imageRelation.setImage(image);
-        imageRelation.setDomain(ImageRelationDomain.DISPOSAL);
-        imageRelation.setDomainId(patientDocument.getDisposal().getId());
-        imageRelation = imageRelationBusinessService.createImageRelation(imageRelation);
         log.debug(image.toString());
-        log.debug(imageRelation.toString());
+
+        // 2022.01.11 新版檔案管理，允許檔案可以只綁定病人，所以當沒有disposalId時，就不回寫image_relation資料表
+        if (nonNull(patientDocument.getDisposal()) && nonNull(patientDocument.getDisposal().getId())) {
+            ImageRelation imageRelation = new ImageRelation();
+            imageRelation.setImage(image);
+            imageRelation.setDomain(ImageRelationDomain.DISPOSAL);
+            imageRelation.setDomainId(patientDocument.getDisposal().getId());
+            imageRelation = imageRelationBusinessService.createImageRelation(imageRelation);
+            log.debug(imageRelation.toString());
+        }
     }
 
     /**
@@ -77,7 +82,7 @@ public class PatientDocumentAspect {
     public void deleteImageRelation(PatientDocument patientDocument) {
         log.debug(patientDocument.toString());
         Long patientId = patientDocument.getPatientId();
-        Long disposalId = patientDocument.getDisposal().getId();
+
         String remotePath = patientDocument.getDocument().getFilePath();
         String remoteFileName = patientDocument.getDocument().getFileName();
         List<Image> images = imageRepository.findImagesByPatientIdAndFilePathAndFileName(patientId, remotePath, remoteFileName);
@@ -86,18 +91,22 @@ public class PatientDocumentAspect {
         if (images.size() == 1) {
             Image image = images.get(0);
 
-            List<ImageRelation> imageRelations =
-                imageRelationRepository.findImageRelationsByDomainAndDomainIdAndImage_IdAndImage_Patient_Id(ImageRelationDomain.DISPOSAL, disposalId, image.getId(), patientId);
+            // 2022.01.11 新版檔案管理，允許檔案可以只綁定病人，所以當沒有disposalId時，就不用一併刪除image_relation相關資料
+            if (nonNull(patientDocument.getDisposal()) && nonNull(patientDocument.getDisposal().getId())) {
+                Long disposalId = patientDocument.getDisposal().getId();
+                List<ImageRelation> imageRelations =
+                    imageRelationRepository.findImageRelationsByDomainAndDomainIdAndImage_IdAndImage_Patient_Id(ImageRelationDomain.DISPOSAL, disposalId, image.getId(), patientId);
 
-            if (imageRelations.size() == 1) {
-                ImageRelation imageRelation = imageRelations.get(0);
-                log.debug(imageRelation.toString());
-                log.debug(image.toString());
-                imageRelationRepository.delete(imageRelation);
-                imageRepository.delete(image);
-            } else if (imageRelations.size() > 1) {
-                String idList = imageRelations.stream().map(ImageRelation::getId).map(String::valueOf).collect(joining(","));
-                log.warn("Multi ImageRelation record found, ids : {}", idList);
+                if (imageRelations.size() == 1) {
+                    ImageRelation imageRelation = imageRelations.get(0);
+                    log.debug(imageRelation.toString());
+                    log.debug(image.toString());
+                    imageRelationRepository.delete(imageRelation);
+                    imageRepository.delete(image);
+                } else if (imageRelations.size() > 1) {
+                    String idList = imageRelations.stream().map(ImageRelation::getId).map(String::valueOf).collect(joining(","));
+                    log.warn("Multi ImageRelation record found, ids : {}", idList);
+                }
             }
         } else if (images.size() > 1) {
             String idList = images.stream().map(Image::getId).map(String::valueOf).collect(joining(","));
