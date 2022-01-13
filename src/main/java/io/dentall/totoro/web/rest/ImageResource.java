@@ -36,11 +36,12 @@ import java.util.stream.Collectors;
 
 /**
  * 2021.12.02 改使用 {@link PatientDocumentResource} 進行檔案操作
+ * 2022.01.13 將api調整成「/api/deprecated」，讓前端無法呼叫，避免資料再寫入舊資料表
  */
 @Deprecated
 @Profile({"img-host", "img-gcs"})
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/deprecated")
 public class ImageResource {
 
     private final Logger logger = LoggerFactory.getLogger(ImageResource.class);

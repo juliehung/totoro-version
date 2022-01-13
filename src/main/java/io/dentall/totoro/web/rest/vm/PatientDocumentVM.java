@@ -1,5 +1,8 @@
 package io.dentall.totoro.web.rest.vm;
 
+import io.dentall.totoro.thumbnails.Thumbnails;
+
+import java.util.List;
 import java.util.Objects;
 
 public class PatientDocumentVM {
@@ -11,6 +14,8 @@ public class PatientDocumentVM {
     private PatientDocumentDisposalVM disposal;
 
     private DocumentVM document;
+
+    private List<Thumbnails> thumbnailsList;
 
     public void setId(Long id) {
         this.id = id;
@@ -42,6 +47,14 @@ public class PatientDocumentVM {
 
     public void setDocument(DocumentVM document) {
         this.document = document;
+    }
+
+    public List<Thumbnails> getThumbnailsList() {
+        return thumbnailsList;
+    }
+
+    public void setThumbnailsList(List<Thumbnails> thumbnailsList) {
+        this.thumbnailsList = thumbnailsList;
     }
 
     @Override
