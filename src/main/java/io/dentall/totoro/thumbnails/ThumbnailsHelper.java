@@ -44,7 +44,8 @@ public final class ThumbnailsHelper {
     }
 
     public static List<ThumbnailsParam> parseParamListStr(String paramListStr) {
-        return Arrays.stream(paramListStr.split("(?<=\\));(?=\\()"))
+        // example: 350x350,50x50
+        return Arrays.stream(paramListStr.split(","))
             .map(ThumbnailsHelper::parseParamStr)
             .filter(Optional::isPresent)
             .map(Optional::get)
@@ -56,31 +57,18 @@ public final class ThumbnailsHelper {
             return Optional.empty();
         }
 
-        if (!paramStr.startsWith("(") || !paramStr.endsWith(")")) {
-            return Optional.empty();
-        }
-
         try {
-            // (width:300;height:3000)
-            // remove "(" and ")"
-            paramStr = paramStr.substring(1, paramStr.length() - 1);
-            String[] params = paramStr.split(";");
+            // example 350x350 (第一個數字為寬度、第二個數字為長度)
+            String[] params = paramStr.split("x");
             ThumbnailsParam thumbnailsParam = new ThumbnailsParam();
 
-            for (String param : params) {
-                String[] keyAndValue = param.split(":");
-                String key = keyAndValue[0];
-                String value = keyAndValue[1];
+            Field fieldWidth = ThumbnailsParam.class.getDeclaredField("width");
+            Field fieldHeight = ThumbnailsParam.class.getDeclaredField("height");
 
-                Field field = ThumbnailsParam.class.getDeclaredField(key);
-
-                if (Integer.class.isAssignableFrom(field.getType()) || int.class.isAssignableFrom(field.getType())) {
-                    field.setAccessible(true);
-                    field.set(thumbnailsParam, Integer.parseInt(value));
-                } else {
-                    throw new UnsupportedOperationException();
-                }
-            }
+            fieldWidth.setAccessible(true);
+            fieldWidth.set(thumbnailsParam, Integer.parseInt(params[0]));
+            fieldHeight.setAccessible(true);
+            fieldHeight.set(thumbnailsParam, Integer.parseInt(params[1]));
 
             return Optional.of(thumbnailsParam);
         } catch (Exception e) {

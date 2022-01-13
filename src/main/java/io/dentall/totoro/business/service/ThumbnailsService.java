@@ -71,7 +71,7 @@ public class ThumbnailsService {
         }
         String fullThumbnailName = fullThumbnailsName(path, thumbnailsName(name, param));
         if (imageGcsBusinessServiceOptional.isPresent()) {
-            Blob blob = imageGcsBusinessServiceOptional.get().uploadFile("", fullThumbnailName, content, contentType);
+            Blob blob = imageGcsBusinessServiceOptional.get().uploadFile(fullThumbnailName, content, contentType);
             Thumbnails thumbnails = new Thumbnails();
             thumbnails.setWidth(param.getWidth());
             thumbnails.setHeight(param.getHeight());

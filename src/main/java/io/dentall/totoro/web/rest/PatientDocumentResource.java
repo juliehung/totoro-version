@@ -107,7 +107,7 @@ public class PatientDocumentResource {
         @PathVariable("patientId") Long patientId,
         @RequestParam(value = "disposalId", required = false) Long disposalId,
         @RequestParam(value = "search", required = false) String search,
-        @RequestParam(value = "thumbnails-params", required = false, defaultValue = "(width:350;height:350);(width:50;height:50)") String thumbnailsParamsListStr,
+        @RequestParam(value = "thumbnails-params", required = false, defaultValue = "350x350,50x50") String thumbnailsParamsListStr,
         @PageableDefault(size = 50)
         @SortDefault.SortDefaults({@SortDefault(sort = "document.title")}) Pageable pageable
     ) {

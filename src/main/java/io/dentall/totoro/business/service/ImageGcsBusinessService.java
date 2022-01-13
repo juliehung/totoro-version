@@ -123,6 +123,16 @@ public class ImageGcsBusinessService extends ImageBusinessService {
         return storage.create(blobInfo, content);
     }
 
+    public Blob uploadFile(String remoteFileName, byte[] content, String contentType) throws IOException {
+        BlobId blobId = BlobId.of(BUCKET_NAME, remoteFileName);
+        BlobInfo blobInfo = BlobInfo
+            .newBuilder(blobId)
+            .setContentType(contentType)
+            .setAcl(Collections.singletonList(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER)))
+            .build();
+        return storage.create(blobInfo, content);
+    }
+
     @Override
     public void deleteFile(String remotePath, String remoteFileName) {
         if (isBlank(remotePath)) {

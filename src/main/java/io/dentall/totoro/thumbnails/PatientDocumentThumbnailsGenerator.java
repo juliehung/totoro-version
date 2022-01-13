@@ -4,6 +4,7 @@ import com.google.cloud.storage.Blob;
 import io.dentall.totoro.business.service.ImageGcsBusinessService;
 import io.dentall.totoro.business.service.ThumbnailsService;
 import io.dentall.totoro.domain.Document;
+import io.dentall.totoro.service.util.FileNameUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -68,6 +69,7 @@ public class PatientDocumentThumbnailsGenerator {
         // 找出符合條件的縮圖
         List<Blob> thumbnailsExist = findThumbnails(thumbnailsParams);
         // 拿檔名當做map的key  /bucket/clinic/patientId/thumbnails/documentId.350x350 -> documentId.350x350
+        // blob的generation在gcs上是唯一值，如果使用同檔名覆蓋舊檔，generation會重新產生。可參考 https://cloud.google.com/storage/docs/metadata#generation-number
         Map<String, Optional<Blob>> thumbnailsExistNamesMap =
             thumbnailsExist.stream().collect(groupingBy(blob -> blob.getName().substring(blob.getName().lastIndexOf("/") + 1), maxBy(comparing(Blob::getGeneration))));
 
@@ -99,8 +101,9 @@ public class PatientDocumentThumbnailsGenerator {
                         break;
                     } else {
                         Blob blob = blobOriginOptional.get();
-                        byte[] blobBytes =  blob.getContent();
-                        thumbnailsOptional = thumbnailsService.createThumbnails(valueOf(patientId), valueOf(document.getId()), blobBytes, blob.getContentType(), param);
+                        byte[] blobBytes = blob.getContent();
+                        String contentType = blob.getContentType() == null ? "image/" + FileNameUtil.getExtension(fileName) : blob.getContentType();
+                        thumbnailsOptional = thumbnailsService.createThumbnails(valueOf(patientId), valueOf(document.getId()), blobBytes, contentType, param);
                     }
                 } catch (IOException e) {
                     log.error("create thumbnails fails. patientId=" + patientId, e);
