@@ -1,9 +1,11 @@
 package io.dentall.totoro.web.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dentall.totoro.TotoroApp;
 import io.dentall.totoro.domain.Authority;
 import io.dentall.totoro.domain.ExtendUser;
 import io.dentall.totoro.domain.User;
+import io.dentall.totoro.preference.UserSetting;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.security.AuthoritiesConstants;
 import io.dentall.totoro.service.MailService;
@@ -19,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Profile;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -32,11 +34,14 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -86,6 +91,9 @@ public class UserResourceIntTest {
     private UserMapper userMapper;
 
     @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -100,6 +108,9 @@ public class UserResourceIntTest {
     @Autowired
     private WebApplicationContext context;
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
     private MockMvc restUserMockMvc;
 
     private MockMvc restIntegrationUserMockMvc;
@@ -108,7 +119,7 @@ public class UserResourceIntTest {
 
     @Before
     public void setup() {
-        UserResource userResource = new UserResource(userService, userRepository, mailService, null, userMapper);
+        UserResource userResource = new UserResource(userService, userRepository, mailService, applicationContext, userMapper);
 
         this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -123,14 +134,14 @@ public class UserResourceIntTest {
 
     /**
      * Create a User.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which has a required relationship to the User entity.
      */
     public static User createEntity(EntityManager em) {
         User user = new User();
         user.setLogin(DEFAULT_LOGIN + RandomStringUtils.randomAlphabetic(5));
-        user.setPassword(RandomStringUtils.random(60));
+        user.setPassword(RandomStringUtils.randomAlphabetic(60));
         user.setActivated(true);
         user.setEmail(RandomStringUtils.randomAlphabetic(5) + DEFAULT_EMAIL);
         user.setFirstName(DEFAULT_FIRSTNAME);
@@ -170,8 +181,8 @@ public class UserResourceIntTest {
         managedUserVM.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
         restUserMockMvc.perform(post("/api/users")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
             .andExpect(status().isCreated());
 
         // Validate the User in the database
@@ -205,8 +216,8 @@ public class UserResourceIntTest {
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restUserMockMvc.perform(post("/api/users")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
             .andExpect(status().isBadRequest());
 
         // Validate the User in the database
@@ -234,8 +245,8 @@ public class UserResourceIntTest {
 
         // Create the User
         restUserMockMvc.perform(post("/api/users")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
             .andExpect(status().isBadRequest());
 
         // Validate the User in the database
@@ -263,13 +274,33 @@ public class UserResourceIntTest {
 
         // Create the User
         restUserMockMvc.perform(post("/api/users")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
             .andExpect(status().isBadRequest());
 
         // Validate the User in the database
         List<User> userList = userRepository.findAll();
         assertThat(userList).hasSize(databaseSizeBeforeCreate);
+    }
+
+    @Test
+    @Transactional
+    @Ignore
+    public void getAllUsers() throws Exception {
+        // Initialize the database
+        userRepository.saveAndFlush(user);
+
+        // Get all the users
+        restUserMockMvc.perform(get("/api/users?sort=id,desc")
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].login").value(hasItem(DEFAULT_LOGIN)))
+            .andExpect(jsonPath("$.[*].firstName").value(hasItem(DEFAULT_FIRSTNAME)))
+            .andExpect(jsonPath("$.[*].lastName").value(hasItem(DEFAULT_LASTNAME)))
+            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
+            .andExpect(jsonPath("$.[*].imageUrl").value(hasItem(DEFAULT_IMAGEURL)))
+            .andExpect(jsonPath("$.[*].langKey").value(hasItem(DEFAULT_LANGKEY)));
     }
 
     @Test
@@ -326,8 +357,8 @@ public class UserResourceIntTest {
         managedUserVM.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
         restUserMockMvc.perform(put("/api/users")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
             .andExpect(status().isOk());
 
         // Validate the User in the database
@@ -368,8 +399,8 @@ public class UserResourceIntTest {
         managedUserVM.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
         restUserMockMvc.perform(put("/api/users")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
             .andExpect(status().isOk());
 
         // Validate the User in the database
@@ -392,7 +423,7 @@ public class UserResourceIntTest {
 
         User anotherUser = new User();
         anotherUser.setLogin("jhipster");
-        anotherUser.setPassword(RandomStringUtils.random(60));
+        anotherUser.setPassword(RandomStringUtils.randomAlphabetic(60));
         anotherUser.setActivated(true);
         anotherUser.setEmail("jhipster@localhost");
         anotherUser.setFirstName("java");
@@ -421,8 +452,8 @@ public class UserResourceIntTest {
         managedUserVM.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
         restUserMockMvc.perform(put("/api/users")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
             .andExpect(status().isBadRequest());
     }
 
@@ -434,7 +465,7 @@ public class UserResourceIntTest {
 
         User anotherUser = new User();
         anotherUser.setLogin("jhipster");
-        anotherUser.setPassword(RandomStringUtils.random(60));
+        anotherUser.setPassword(RandomStringUtils.randomAlphabetic(60));
         anotherUser.setActivated(true);
         anotherUser.setEmail("jhipster@localhost");
         anotherUser.setFirstName("java");
@@ -463,8 +494,8 @@ public class UserResourceIntTest {
         managedUserVM.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
         restUserMockMvc.perform(put("/api/users")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
             .andExpect(status().isBadRequest());
     }
 
@@ -477,7 +508,7 @@ public class UserResourceIntTest {
 
         // Delete the user
         restUserMockMvc.perform(delete("/api/users/{login}", user.getLogin())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+                .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
         // Validate the database is empty
@@ -489,8 +520,8 @@ public class UserResourceIntTest {
     @Transactional
     public void getAllAuthorities() throws Exception {
         restUserMockMvc.perform(get("/api/users/authorities")
-            .accept(TestUtil.APPLICATION_JSON_UTF8)
-            .contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .accept(TestUtil.APPLICATION_JSON_UTF8)
+                .contentType(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$").isArray())
@@ -501,8 +532,8 @@ public class UserResourceIntTest {
     @Transactional
     public void getAllAuthoritiesWithUnauthorizedUser() throws Exception {
         restIntegrationUserMockMvc.perform(get("/api/users/authorities")
-            .accept(TestUtil.APPLICATION_JSON_UTF8)
-            .contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .accept(TestUtil.APPLICATION_JSON_UTF8)
+                .contentType(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isUnauthorized());
     }
 
@@ -511,8 +542,8 @@ public class UserResourceIntTest {
     @WithMockUser
     public void getAllAuthoritiesWithForbiddenUser() throws Exception {
         restIntegrationUserMockMvc.perform(get("/api/users/authorities")
-            .accept(TestUtil.APPLICATION_JSON_UTF8)
-            .contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .accept(TestUtil.APPLICATION_JSON_UTF8)
+                .contentType(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isForbidden());
     }
 
@@ -521,8 +552,8 @@ public class UserResourceIntTest {
     @WithMockUser(authorities = AuthoritiesConstants.MANAGER)
     public void getAllAuthoritiesWithManager() throws Exception {
         restIntegrationUserMockMvc.perform(get("/api/users/authorities")
-            .accept(TestUtil.APPLICATION_JSON_UTF8)
-            .contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .accept(TestUtil.APPLICATION_JSON_UTF8)
+                .contentType(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
     }
 
@@ -646,4 +677,122 @@ public class UserResourceIntTest {
         User updatedUser = userRepository.findOneByLogin(user.getLogin()).orElse(null);
         assertThat(updatedUser.getExtendUser().isFirstLogin()).isTrue();
     }
+
+
+    /**
+     * 新增使用者後可以查詢到使用者偏好設定
+     *
+     * @throws Exception
+     */
+    @Test
+    @Transactional
+    public void testUserSetting1() throws Exception {
+        ManagedUserVM managedUserVM = new ManagedUserVM();
+        managedUserVM.setLogin(DEFAULT_LOGIN);
+        managedUserVM.setPassword(DEFAULT_PASSWORD);
+        managedUserVM.setFirstName(DEFAULT_FIRSTNAME);
+        managedUserVM.setLastName(DEFAULT_LASTNAME);
+        managedUserVM.setEmail(DEFAULT_EMAIL);
+        managedUserVM.setActivated(true);
+        managedUserVM.setImageUrl(DEFAULT_IMAGEURL);
+        managedUserVM.setLangKey(DEFAULT_LANGKEY);
+        managedUserVM.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+
+        String contentString = restUserMockMvc
+            .perform(post("/api/users")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
+            .andExpect(status().isCreated())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+
+        User user = objectMapper.readValue(contentString, User.class);
+        UserSetting userSetting = user.getExtendUser().getSettings();
+        assertThat(userSetting).isNotNull();
+        assertThat(userSetting.getPatientDashboard().getDocumentManagement().getDisplayType()).isEqualTo(UserSetting.DisplayType.List);
+
+        contentString = restUserMockMvc
+            .perform(get("/api/users/" + managedUserVM.getLogin())
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+
+        user = objectMapper.readValue(contentString, User.class);
+        userSetting = user.getExtendUser().getSettings();
+        assertThat(userSetting).isNotNull();
+        assertThat(userSetting.getPatientDashboard().getDocumentManagement().getDisplayType()).isEqualTo(UserSetting.DisplayType.List);
+    }
+
+    /**
+     * 確認可查詢到編輯過的使用者偏好設定
+     *
+     * @throws Exception
+     */
+    @Test
+    @Transactional
+    public void testUserSetting2() throws Exception {
+        ManagedUserVM managedUserVM = new ManagedUserVM();
+        managedUserVM.setLogin(DEFAULT_LOGIN);
+        managedUserVM.setPassword(DEFAULT_PASSWORD);
+        managedUserVM.setFirstName(DEFAULT_FIRSTNAME);
+        managedUserVM.setLastName(DEFAULT_LASTNAME);
+        managedUserVM.setEmail(DEFAULT_EMAIL);
+        managedUserVM.setActivated(true);
+        managedUserVM.setImageUrl(DEFAULT_IMAGEURL);
+        managedUserVM.setLangKey(DEFAULT_LANGKEY);
+        managedUserVM.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+
+        String contentString = restUserMockMvc
+            .perform(post("/api/users")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
+            .andExpect(status().isCreated())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+
+        User user = objectMapper.readValue(contentString, User.class);
+        UserSetting userSetting = user.getExtendUser().getSettings();
+        assertThat(userSetting).isNotNull();
+        assertThat(userSetting.getPatientDashboard().getDocumentManagement().getDisplayType()).isEqualTo(UserSetting.DisplayType.List);
+
+        user.getExtendUser().getSettings().getPatientDashboard().getDocumentManagement().setDisplayType(UserSetting.DisplayType.Column);
+
+        managedUserVM = new ManagedUserVM();
+        managedUserVM.setId(user.getId());
+        managedUserVM.setLogin(user.getLogin());
+        managedUserVM.setEmail(user.getEmail());
+        managedUserVM.setExtendUser(user.getExtendUser());
+
+        contentString = restUserMockMvc
+            .perform(put("/api/users")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+
+        user = objectMapper.readValue(contentString, User.class);
+        userSetting = user.getExtendUser().getSettings();
+        assertThat(userSetting).isNotNull();
+        assertThat(userSetting.getPatientDashboard().getDocumentManagement().getDisplayType()).isEqualTo(UserSetting.DisplayType.Column);
+
+        contentString = restUserMockMvc
+            .perform(get("/api/users/" + managedUserVM.getLogin())
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+
+        user = objectMapper.readValue(contentString, User.class);
+        userSetting = user.getExtendUser().getSettings();
+        assertThat(userSetting).isNotNull();
+        assertThat(userSetting.getPatientDashboard().getDocumentManagement().getDisplayType()).isEqualTo(UserSetting.DisplayType.Column);
+    }
+
 }

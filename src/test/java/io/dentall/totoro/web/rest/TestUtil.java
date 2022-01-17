@@ -7,9 +7,7 @@ import com.fasterxml.jackson.databind.introspect.Annotated;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.dentall.totoro.domain.*;
-import io.dentall.totoro.repository.PatientRepository;
-import io.dentall.totoro.repository.TagRepository;
-import io.dentall.totoro.repository.UserRepository;
+import io.dentall.totoro.repository.*;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
@@ -30,21 +28,22 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class TestUtil {
 
-    /** MediaType for JSON UTF8 */
+    /**
+     * MediaType for JSON UTF8
+     */
     public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(
-            MediaType.APPLICATION_JSON.getType(),
-            MediaType.APPLICATION_JSON.getSubtype(), StandardCharsets.UTF_8);
+        MediaType.APPLICATION_JSON.getType(),
+        MediaType.APPLICATION_JSON.getSubtype(), StandardCharsets.UTF_8);
 
     /**
      * Convert an object to JSON byte array.
      *
-     * @param object
-     *            the object to convert
+     * @param object the object to convert
      * @return the JSON byte array
      * @throws IOException
      */
     public static byte[] convertObjectToJsonBytes(Object object)
-            throws IOException {
+        throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         mapper.setAnnotationIntrospector(new IgnoreJacksonWriteOnlyAccess());
@@ -105,6 +104,7 @@ public class TestUtil {
 
     /**
      * Creates a matcher that matches when the examined string reprensents the same instant as the reference datetime
+     *
      * @param date the reference datetime against which the examined string is checked
      */
     public static ZonedDateTimeMatcher sameInstant(ZonedDateTime date) {
@@ -132,10 +132,11 @@ public class TestUtil {
 
     /**
      * Create a FormattingConversionService which use ISO date format, instead of the localized one.
+     *
      * @return the FormattingConversionService
      */
     public static FormattingConversionService createFormattingConversionService() {
-        DefaultFormattingConversionService dfcs = new DefaultFormattingConversionService ();
+        DefaultFormattingConversionService dfcs = new DefaultFormattingConversionService();
         DateTimeFormatterRegistrar registrar = new DateTimeFormatterRegistrar();
         registrar.setUseIsoFormat(true);
         registrar.registerFormatters(dfcs);
@@ -164,6 +165,24 @@ public class TestUtil {
         return patientRepository.save(patient);
     }
 
+    public static User createUser(EntityManager em, UserRepository userRepository) {
+        User user = UserResourceIntTest.createEntity(em);
+        return userRepository.save(user);
+    }
+
+    public static Patient createPatient2(
+        User user,
+        EntityManager em,
+        PatientRepository patientRepository) {
+        Patient patient = PatientResourceIntTest.createEntity(em);
+
+        ExtendUser extendUser = user.getExtendUser();
+        patient.setLastDoctor(extendUser);
+        patient.setFirstDoctor(extendUser);
+
+        return patientRepository.saveAndFlush(patient);
+    }
+
     // https://stackoverflow.com/a/55064740
     private static class IgnoreJacksonWriteOnlyAccess extends JacksonAnnotationIntrospector {
 
@@ -175,5 +194,55 @@ public class TestUtil {
             }
             return access;
         }
+    }
+
+    private static Appointment createAppointment(User user,
+                                                 Patient patient,
+                                                 EntityManager em,
+                                                 RegistrationRepository registrationRepository,
+                                                 AppointmentRepository appointmentRepository) {
+        Appointment appointment = AppointmentResourceIntTest.createEntity(em);
+        appointment.setPatient(patient);
+        appointment.setDoctor(user.getExtendUser());
+
+        Registration registration = registrationRepository.save(RegistrationResourceIntTest.createEntity(em));
+        appointment.setRegistration(registration);
+        registration.setAppointment(appointment);
+
+        return appointmentRepository.saveAndFlush(appointment);
+    }
+
+    public static Disposal createDisposal(User user,
+                                          EntityManager em,
+                                          RegistrationRepository registrationRepository,
+                                          AppointmentRepository appointmentRepository,
+                                          DisposalRepository disposalRepository,
+                                          PatientRepository patientRepository) {
+        Patient patient = createPatient2(user, em, patientRepository);
+        return createDisposal(user, patient, em, registrationRepository, appointmentRepository, disposalRepository);
+    }
+
+    public static Disposal createDisposal(User user,
+                                          Patient patient,
+                                          EntityManager em,
+                                          RegistrationRepository registrationRepository,
+                                          AppointmentRepository appointmentRepository,
+                                          DisposalRepository disposalRepository) {
+        Disposal disposal = DisposalResourceIntTest.createEntity(em);
+
+        return createDisposal(user, patient, disposal, em, registrationRepository, appointmentRepository, disposalRepository);
+    }
+
+    public static Disposal createDisposal(User user,
+                                          Patient patient,
+                                          Disposal disposal,
+                                          EntityManager em,
+                                          RegistrationRepository registrationRepository,
+                                          AppointmentRepository appointmentRepository,
+                                          DisposalRepository disposalRepository) {
+        Appointment appointment = createAppointment(user, patient, em, registrationRepository, appointmentRepository);
+        disposal.setRegistration(appointment.getRegistration());
+
+        return disposalRepository.saveAndFlush(disposal);
     }
 }

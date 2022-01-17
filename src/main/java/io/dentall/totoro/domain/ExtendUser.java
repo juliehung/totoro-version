@@ -3,6 +3,7 @@ package io.dentall.totoro.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import io.dentall.totoro.preference.UserSetting;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -11,6 +12,10 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * A ExtendUser.
@@ -18,6 +23,7 @@ import java.util.*;
 @Entity
 @Table(name = "extend_user")
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
+@TypeDef(name = "json", typeClass = JsonBinaryType.class)
 public class ExtendUser implements Serializable, Avatar {
 
     private static final long serialVersionUID = 1L;
@@ -61,6 +67,10 @@ public class ExtendUser implements Serializable, Avatar {
 
     @Column(name = "file_name")
     private String fileName;
+
+    @Type(type = "json")
+    @Column(name = "settings", columnDefinition = "json")
+    private UserSetting settings = new UserSetting();
 
     @OneToOne
     @MapsId
@@ -434,6 +444,16 @@ public class ExtendUser implements Serializable, Avatar {
         this.qualification = qualification;
     }
 
+    public UserSetting getSettings() {
+        return settings == null ? new UserSetting() : settings;
+    }
+
+    public void setSettings(UserSetting settings) {
+        if (settings != null) {
+            this.settings = settings;
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -465,6 +485,7 @@ public class ExtendUser implements Serializable, Avatar {
             ", licenseNo='" + licenseNo + '\'' +
             ", practiceDate=" + practiceDate +
             ", qualification=" + qualification +
-            '}';
+            ", settings='" + settings + "'" +
+            "}";
     }
 }

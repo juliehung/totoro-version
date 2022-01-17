@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20211201-shihfeng" author="ShihFeng">
+        <createTable tableName="hashtag">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="tag_name" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tag_type" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reference_count" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="hashtag" unique="true" indexName="uk_hashtag_tag_name_tag_type">
+            <column name="tag_name"/>
+            <column name="tag_type"/>
+        </createIndex>
+
+        <createTable tableName="document">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="title" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text"/>
+            <column name="file_path" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_name" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_real_name" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_extension" type="varchar(128)"/>
+            <column name="file_size" type="bigint"/>
+            <column name="hashtags" type="varchar[]">
+                <constraints nullable="false"/>
+            </column>
+            <column name="upload_user" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="upload_time" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_user" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_time" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="patient_document">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="patient_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="disposal_id" type="bigint"/>
+            <column name="document_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="patient_document" indexName="idx_patient_document">
+            <column name="patient_id"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseTableName="patient_document" baseColumnNames="disposal_id" constraintName="fk_patient_document_disposal_id" referencedTableName="disposal"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="patient_document" baseColumnNames="document_id" constraintName="fk_patient_document_document_id" referencedTableName="document"
+                                 referencedColumnNames="id"/>
+
+        <addColumn tableName="extend_user">
+            <column name="settings" type="json"/>
+        </addColumn>
+
+        <createSequence sequenceName="hashtag_seq"/>
+        <createSequence sequenceName="document_seq"/>
+        <createSequence sequenceName="patient_document_seq"/>
+
+        <sql>
+            -- 設定seq val
+            select setval('document_seq', (SELECT MAX(id) FROM image));
+            select setval('patient_document_seq', (SELECT MAX(id) FROM image_relation));
+        </sql>
+
+        <sql>
+            -- 延用image.id當做document_id
+            insert into document(id, title, description, file_path, file_name, file_real_name, file_extension, file_size, hashtags,
+                                 upload_user, upload_time, modified_user, modified_time, created_by, created_date, last_modified_by, last_modified_date)
+            select i.id                                    as id,
+                   p.name || coalesce('_' || suck_roc_birth_to_char(cast(d.date_time as date)) || '_' ||
+                                      to_char(d.date_time at time zone 'utc' at time zone 'Asia/Taipei', 'HH24MI'),
+                                      '')                  as title,
+                   null                                    as description,
+                   i.file_path,
+                   i.file_name,
+                   i.file_name                             as file_real_name,
+                   substring(i.file_name from '.*\.(.+)$') as file_extension,
+                   null                                    as file_size,
+                   '{}'                                    as hashtags,
+                   coalesce(ju.first_name, '-')            as upload_user,
+                   i.last_modified_date                    as upload_time,
+                   coalesce(ju.first_name, '-')            as modified_user,
+                   i.last_modified_date                    as modified_time,
+                   i.created_by,
+                   i.created_date,
+                   i.last_modified_by,
+                   i.last_modified_date
+            from image i
+                     left join image_relation ir on ir.image_id = i.id and ir.domain = 'DISPOSAL'
+                     left join patient p on p.id = i.patient_id
+                     left join disposal d on d.id = ir.domain_id
+                     left join jhi_user ju on ir.created_by = ju.login;
+        </sql>
+
+        <sql>
+            -- 產生病人與文件的關連(不使用left join，讓資料乾淨)
+            -- 延用image_relation.id當做patient_document_id
+            insert into patient_document(id, patient_id, disposal_id, document_id, created_by, created_date, last_modified_by, last_modified_date)
+            select ir.id as id,
+                   p.id  as patient_id,
+                   d.id  as disposal_id,
+                   i.id  as document_id,
+                   ir.created_by,
+                   ir.created_date,
+                   ir.last_modified_by,
+                   ir.last_modified_date
+            from image_relation ir
+                     join image i on i.id = ir.image_id
+                     join patient p on p.id = i.patient_id
+                     join disposal d on d.id = ir.domain_id
+            where ir.domain = 'DISPOSAL';
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>

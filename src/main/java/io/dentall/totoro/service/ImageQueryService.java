@@ -1,7 +1,11 @@
 package io.dentall.totoro.service;
 
-import java.util.List;
-
+import io.dentall.totoro.domain.Image;
+import io.dentall.totoro.domain.Image_;
+import io.dentall.totoro.domain.Patient_;
+import io.dentall.totoro.repository.ImageRepository;
+import io.dentall.totoro.service.dto.ImageCriteria;
+import io.github.jhipster.service.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -10,21 +14,18 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.github.jhipster.service.QueryService;
-
-import io.dentall.totoro.domain.Image;
-import io.dentall.totoro.domain.*; // for static metamodels
-import io.dentall.totoro.repository.ImageRepository;
-import io.dentall.totoro.service.dto.ImageCriteria;
-
 import javax.persistence.criteria.JoinType;
+import java.util.List;
 
 /**
+ * 2021.12.02 改使用 {@link PatientDocumentService}
+ * <p>
  * Service for executing complex queries for Image entities in the database.
  * The main input is a {@link ImageCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
  * It returns a {@link List} of {@link Image} or a {@link Page} of {@link Image} which fulfills the criteria.
  */
+@Deprecated
 @Service
 @Transactional(readOnly = true)
 public class ImageQueryService extends QueryService<Image> {
@@ -42,6 +43,7 @@ public class ImageQueryService extends QueryService<Image> {
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching entities.
      */
+    @Deprecated
     @Transactional(readOnly = true)
     public List<Image> findByCriteria(ImageCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
@@ -55,6 +57,7 @@ public class ImageQueryService extends QueryService<Image> {
      * @param page The page, which should be returned.
      * @return the matching entities.
      */
+    @Deprecated
     @Transactional(readOnly = true)
     public Page<Image> findByCriteria(ImageCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
@@ -67,6 +70,7 @@ public class ImageQueryService extends QueryService<Image> {
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the number of matching entities.
      */
+    @Deprecated
     @Transactional(readOnly = true)
     public long countByCriteria(ImageCriteria criteria) {
         log.debug("count by criteria : {}", criteria);

@@ -41,6 +41,8 @@ public abstract class ImageBusinessService {
 
     public abstract void uploadFile(String remotePath, String remoteFileName, InputStream inputStream, String contentType) throws IOException;
 
+    public abstract void deleteFile(String remotePath, String remoteFileName);
+
     public abstract int disconnect();
 
     public String createImagePath(Long patientId) {

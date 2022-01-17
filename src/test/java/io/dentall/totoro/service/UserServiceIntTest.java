@@ -6,7 +6,6 @@ import io.dentall.totoro.domain.User;
 import io.dentall.totoro.repository.UserRepository;
 import io.dentall.totoro.service.dto.UserDTO;
 import io.dentall.totoro.service.util.RandomUtil;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,13 +21,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 /**
@@ -59,7 +57,7 @@ public class UserServiceIntTest {
     public void init() {
         user = new User();
         user.setLogin("johndoe");
-        user.setPassword(RandomStringUtils.random(60));
+        user.setPassword(RandomStringUtils.randomAlphabetic(60));
         user.setActivated(true);
         user.setEmail("johndoe@localhost");
         user.setFirstName("john");

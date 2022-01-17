@@ -1,5 +1,6 @@
 package io.dentall.totoro.business.service;
 
+import com.google.api.gax.paging.Page;
 import com.google.cloud.storage.*;
 import io.dentall.totoro.domain.Image;
 import io.dentall.totoro.repository.ImageRepository;
@@ -20,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Profile("img-gcs")
 @Service
@@ -66,10 +69,11 @@ public class ImageGcsBusinessService extends ImageBusinessService {
      * e.g.
      * size = "median,giant"
      * {
-     *     "original": "https://his.dentall.some.gcp.storage/cp/123/hello.png",
+     * "original": "https://his.dentall.some.gcp.storage/cp/123/hello.png",
      * }
+     *
      * @param host 保持 null, img-host 專用
-     * @param id image id
+     * @param id   image id
      * @param size 保持 null, img-host 專用
      */
     @Override
@@ -109,18 +113,35 @@ public class ImageGcsBusinessService extends ImageBusinessService {
         storage.create(blobInfo, IOUtils.toByteArray(inputStream));
     }
 
-    public void uploadFile(String remotePath, String remoteFileName, byte[] content, String contentType) {
+    public Blob uploadFile(String remotePath, String remoteFileName, byte[] content, String contentType) throws IOException {
         BlobId blobId = BlobId.of(BUCKET_NAME, remotePath.concat(remoteFileName));
         BlobInfo blobInfo = BlobInfo
             .newBuilder(blobId)
             .setContentType(contentType)
             .setAcl(Collections.singletonList(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER)))
             .build();
-        storage.create(blobInfo, content);
+        return storage.create(blobInfo, content);
     }
 
-    public void deleteFile(String remoteFilePath, String remoteFileName) throws Exception {
-        BlobId blobId = BlobId.of(BUCKET_NAME, remoteFilePath.concat(remoteFileName));
+    public Blob uploadFile(String remoteFileName, byte[] content, String contentType) throws IOException {
+        BlobId blobId = BlobId.of(BUCKET_NAME, remoteFileName);
+        BlobInfo blobInfo = BlobInfo
+            .newBuilder(blobId)
+            .setContentType(contentType)
+            .setAcl(Collections.singletonList(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER)))
+            .build();
+        return storage.create(blobInfo, content);
+    }
+
+    @Override
+    public void deleteFile(String remotePath, String remoteFileName) {
+        if (isBlank(remotePath)) {
+            throw new IllegalArgumentException("remote path is blank");
+        }
+        if (isBlank(remoteFileName)) {
+            throw new IllegalArgumentException("remote file name is blank");
+        }
+        BlobId blobId = BlobId.of(BUCKET_NAME, remotePath.concat(remoteFileName));
         storage.delete(blobId);
     }
 
@@ -176,4 +197,15 @@ public class ImageGcsBusinessService extends ImageBusinessService {
     public String getAvatarFileName() {
         return "avatar_".concat(Instant.now().toString()).concat(".png");
     }
+
+    public Page<Blob> listFileByPrefix(String prefix) {
+        return storage.list(BUCKET_NAME, Storage.BlobListOption.prefix(prefix),
+            Storage.BlobListOption.fields(Storage.BlobField.ID, Storage.BlobField.NAME, Storage.BlobField.CONTENT_TYPE, Storage.BlobField.GENERATION));
+    }
+
+    public Blob getFile(String name) {
+        return storage.get(BlobId.of(BUCKET_NAME, name),
+            Storage.BlobGetOption.fields(Storage.BlobField.ID, Storage.BlobField.NAME, Storage.BlobField.CONTENT_TYPE, Storage.BlobField.GENERATION));
+    }
+
 }

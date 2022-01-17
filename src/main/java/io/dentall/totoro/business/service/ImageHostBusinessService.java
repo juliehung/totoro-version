@@ -99,6 +99,11 @@ public class ImageHostBusinessService extends ImageBusinessService {
     }
 
     @Override
+    public void deleteFile(String remotePath, String remoteFileName) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public int disconnect() {
         return 200;
     }
