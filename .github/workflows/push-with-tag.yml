@@ -109,6 +109,7 @@ jobs:
 
     NotifyWhenFail:
         needs: [ Run-Test, Props, Build-War, Combine, Upload-Final ]
+        if: ${{ failure() }}
         uses: dentallio/totoro-version/.github/workflows/send-slack-notification.yml@master
         with:
             content: "Fail to release totoro admin running on totoro-admin workflow action. <!here>"
