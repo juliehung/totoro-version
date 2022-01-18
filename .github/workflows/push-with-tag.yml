@@ -103,6 +103,14 @@ jobs:
         needs: [ Combine, Upload-Final ]
         uses: dentallio/totoro-version/.github/workflows/send-slack-notification.yml@master
         with:
-            content: "${{ needs.Combine.outputs.finalFileName }} is released now. !here"
+            content: "${{ needs.Combine.outputs.finalFileName }} is released now. <!here>"
+        secrets:
+            slackQaChannelHook: ${{ secrets.SLACK_QA_CHANNEL_HOOK }}
+
+    NotifyWhenFail:
+        needs: [ Run-Test, Props, Build-War, Combine, Upload-Final ]
+        uses: dentallio/totoro-version/.github/workflows/send-slack-notification.yml@master
+        with:
+            content: "Fail to release totoro admin running on totoro-admin workflow action. <!here>"
         secrets:
             slackQaChannelHook: ${{ secrets.SLACK_QA_CHANNEL_HOOK }}
