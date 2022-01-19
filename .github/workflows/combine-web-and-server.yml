@@ -57,7 +57,7 @@ jobs:
                 serverSequence=$(ls *.war | awk '{ gsub(/.war/, "", $1); split($1, a, "."); print a[3]; }')
                 webSequence=$(ls *.zip | awk '{ gsub(/.ls/, "", $1); split($1, a, "."); print a[3]; }')
                 finalVersion=${{ inputs.milestone }}.$webSequence.$serverSequence
-                echo $finalVersion > totoro.properties
+                echo version=$finalVersion > totoro.properties
                 echo "::set-output name=version::$finalVersion" 
                 echo "::set-output name=finalWarName::$finalVersion.war" 
             # Add web zip into server war
