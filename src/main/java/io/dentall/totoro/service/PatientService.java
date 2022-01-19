@@ -7,6 +7,7 @@ import io.dentall.totoro.business.vm.nhi.NhiRuleCheckBody;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckResultVM;
 import io.dentall.totoro.business.vm.nhi.NhiRuleCheckTxSnapshot;
 import io.dentall.totoro.domain.*;
+import io.dentall.totoro.domain.enumeration.PatientRelationshipType;
 import io.dentall.totoro.domain.enumeration.TreatmentType;
 import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.dto.PatientCriteria;
@@ -510,7 +511,8 @@ public class PatientService extends QueryService<Patient> {
         Long mainId,
         Long subId,
         String mainRelationshipSetter,
-        String subRelationshipSetter
+        String subRelationshipSetter,
+        PatientRelationshipType type
     ) {
         try {
             Optional<Patient> optMainP = patientRepository.findById(mainId);
@@ -523,10 +525,21 @@ public class PatientService extends QueryService<Patient> {
             Patient mainP = optMainP.get();
             Patient subP = optSubP.get();
 
-            HashSet<Patient> mainS = new HashSet<>();
-            HashSet<Patient> subS = new HashSet<>();
-            mainS.add(mainP);
-            subS.add(subP);
+            Set<Patient> mainS = new HashSet<>();
+            Set<Patient> subS = new HashSet<>();
+            if (PatientRelationshipType.PARENTS.equals(type)) {
+                if (mainP.getParents().size() > 0) {
+                    Optional<Patient> tmpP = mainP.getParents().stream().findFirst();
+                    if (tmpP.isPresent()) {
+                        subS.add(tmpP.get());
+                    }
+                }
+                mainS.add(mainP);
+                subS.add(subP);
+            } else {
+                mainS.add(mainP);
+                subS.add(subP);
+            }
 
             Method mainM = Patient.class.getMethod(mainRelationshipSetter,Set.class);
             Method subM = Patient.class.getMethod(subRelationshipSetter, Set.class);
