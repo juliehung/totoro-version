@@ -269,9 +269,9 @@ public class PatientResource {
             relationshipType.equals(PatientRelationshipType.SPOUSE1S) ||
                 relationshipType.equals(PatientRelationshipType.SPOUSE2S)
         ) {
-            return ResponseEntity.ok().body(patientService.deletePatientRelationship(subId, mainId, relationshipType.getMainSetterName(), relationshipType.getSubSetterName()));
+            return ResponseEntity.ok().body(patientService.deletePatientRelationship(subId, mainId, relationshipType.getMainSetterName(), relationshipType.getSubSetterName(), relationshipType));
         } else {
-            return ResponseEntity.ok().body(patientService.deletePatientRelationship(mainId, subId, relationshipType.getMainSetterName(), relationshipType.getSubSetterName()));
+            return ResponseEntity.ok().body(patientService.deletePatientRelationship(mainId, subId, relationshipType.getMainSetterName(), relationshipType.getSubSetterName(), relationshipType));
         }
     }
 

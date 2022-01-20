@@ -26,17 +26,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.criteria.*;
 import java.lang.reflect.Method;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Service class for managing patients.
@@ -102,8 +101,9 @@ public class PatientService extends QueryService<Patient> {
 
     /**
      * Return a {@link Page} of {@link Patient} which matches the criteria from the database
+     *
      * @param criteria The object which holds all the filters, which the entities should match.
-     * @param page The page, which should be returned.
+     * @param page     The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
@@ -299,12 +299,12 @@ public class PatientService extends QueryService<Patient> {
                 // teeth
                 if (updatePatient.getTeeth() != null) {
                     log.debug("Update teeth({}) of Patient(id: {})", updatePatient.getTeeth(), updatePatient.getId());
-                    Set<Long> updateIds = updatePatient.getTeeth().stream().map(Tooth::getId).collect(Collectors.toSet());
+                    Set<Long> updateIds = updatePatient.getTeeth().stream().map(Tooth::getId).collect(toSet());
                     relationshipService.deleteTeeth(
                         StreamUtil.asStream(patient.getTeeth())
                             .filter(tooth -> !updateIds.contains(tooth.getId()))
                             .map(tooth -> tooth.patient(null))
-                            .collect(Collectors.toSet())
+                            .collect(toSet())
                     );
                     relationshipService.addRelationshipWithTeeth(patient.teeth(updatePatient.getTeeth()));
                 }
@@ -528,20 +528,24 @@ public class PatientService extends QueryService<Patient> {
             Set<Patient> mainS = new HashSet<>();
             Set<Patient> subS = new HashSet<>();
             if (PatientRelationshipType.PARENTS.equals(type)) {
-                if (mainP.getParents().size() > 0) {
-                    Optional<Patient> tmpP = mainP.getParents().stream().findFirst();
-                    if (tmpP.isPresent()) {
-                        subS.add(tmpP.get());
-                    }
-                }
                 mainS.add(mainP);
                 subS.add(subP);
-            } else {
+                subS.addAll(mainP.getParents());
+            } else if (PatientRelationshipType.CHILDREN.equals(type)) {
+                mainS.add(mainP);
+                mainS.addAll(subP.getParents());
+                subS.add(subP);
+            } else if (PatientRelationshipType.SPOUSE1S.equals(type)) {
+                mainS.add(mainP);
+                mainS.addAll(subP.getSpouse1S());
+                subS.add(subP);
+            } else if (PatientRelationshipType.SPOUSE2S.equals(type)) {
                 mainS.add(mainP);
                 subS.add(subP);
+                subS.addAll(mainP.getSpouse1S());
             }
 
-            Method mainM = Patient.class.getMethod(mainRelationshipSetter,Set.class);
+            Method mainM = Patient.class.getMethod(mainRelationshipSetter, Set.class);
             Method subM = Patient.class.getMethod(subRelationshipSetter, Set.class);
 
             mainM.invoke(optSubP.get(), mainS);
@@ -558,7 +562,8 @@ public class PatientService extends QueryService<Patient> {
         Long mainId,
         Long subId,
         String mainRelationshipSetter,
-        String subRelationshipSetter
+        String subRelationshipSetter,
+        PatientRelationshipType type
     ) {
         try {
             Optional<Patient> optMainP = patientRepository.findById(mainId);
@@ -568,13 +573,26 @@ public class PatientService extends QueryService<Patient> {
                 throw new BadRequestAlertException("Can not found by mainId or subId", ENTITY_NAME, "patient.not.found");
             }
 
-            HashSet<Patient> es = new HashSet<>();
+            Patient mainP = optMainP.get();
+            Patient subP = optSubP.get();
+
+            Set<Patient> mainS = new HashSet<>();
+            Set<Patient> subS = new HashSet<>();
+            if (PatientRelationshipType.PARENTS.equals(type)) {
+                subS.addAll(mainP.getParents().stream().filter(p -> !p.getId().equals(subP.getId())).collect(toSet()));
+            } else if (PatientRelationshipType.CHILDREN.equals(type)) {
+                mainS.addAll(subP.getParents().stream().filter(p -> !p.getId().equals(mainP.getId())).collect(toSet()));
+            } else if (PatientRelationshipType.SPOUSE1S.equals(type)) {
+                mainS.addAll(subP.getSpouse1S().stream().filter(p -> !p.getId().equals(mainP.getId())).collect(toSet()));
+            } else if (PatientRelationshipType.SPOUSE2S.equals(type)) {
+                subS.addAll(mainP.getSpouse1S().stream().filter(p -> !p.getId().equals(subP.getId())).collect(toSet()));
+            }
 
             Method mainM = Patient.class.getMethod(mainRelationshipSetter, Set.class);
             Method subM = Patient.class.getMethod(subRelationshipSetter, Set.class);
 
-            mainM.invoke(optSubP.get(), es);
-            subM.invoke(optMainP.get(), es);
+            mainM.invoke(optSubP.get(), mainS);
+            subM.invoke(optMainP.get(), subS);
         } catch (Exception e) {
             log.error(e.toString());
         }
@@ -621,7 +639,7 @@ public class PatientService extends QueryService<Patient> {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
         snapshot.setTargetTx(true);
 
-        switch(code) {
+        switch (code) {
             case "81":
                 // 檢查 81
                 snapshot.setNhiCode("81");
