@@ -1184,6 +1184,11 @@ public class NhiRuleCheckUtil {
             sourceData,
             noOtherTxDuration
         ).stream()
+            .filter(d -> onlySystemDataWhenLatestSelfCheck == null ||
+                onlySystemDataWhenLatestSelfCheck != null &&
+                    onlySystemDataWhenLatestSelfCheck.equals(NhiRuleCheckSourceType.SYSTEM_RECORD) &&
+                    "SYS".equals(d.getRecordSource())
+            )
             .filter(d -> !this.getCurrentTxNhiCode(dto).equals(d.getCode()))
             .collect(Collectors.toList());
 
