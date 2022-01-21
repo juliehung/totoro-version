@@ -37,7 +37,9 @@ public class OdReportBuilderService implements ReportBuilderService {
     private final AppointmentRepository appointmentRepository;
 
     public static final Set<String> CodesByOd = Stream.of(
-        "89001C", "89002C", "89003C", "89004C", "89005C", "89008C", "89009C", "89010C", "89011C", "89012C"
+        "89001C", "89002C", "89003C", "89004C", "89005C", "89006C", "89007C", "89008C", "89009C", "89010C",
+        "89011C", "89012C", "89013C", "89014C", "89015C", "89088C", "89101C", "89102C", "89103C", "89104C",
+        "89105C", "89108C", "89109C", "89110C", "89111C", "89112C", "89113C", "89114C", "89115C"
     ).collect(toSet());
 
     public OdReportBuilderService(ReportDataRepository reportDataRepository, AppointmentRepository appointmentRepository) {
