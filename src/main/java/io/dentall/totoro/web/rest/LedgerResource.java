@@ -371,7 +371,7 @@ public class LedgerResource {
         String fileName = "收據"
             .concat("_")
             .concat(patient.getName())
-            .concat(DateTimeUtil.transformLocalDateToRocDateTimeForFileName(patient.getBirth()))
+            .concat(patient.getMedicalId())
             .concat("_")
             .concat(ledgerReceipt.getLedgerGroup().getProjectCode())
             .concat("_")
