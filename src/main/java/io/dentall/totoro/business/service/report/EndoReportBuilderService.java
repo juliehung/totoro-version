@@ -54,7 +54,7 @@ public class EndoReportBuilderService implements ReportBuilderService {
             int gapMonths = setting.getFollowupGapMonths();
 
             // 選定時間區間內有根管的病人，其區間內最後一次的根管治療
-            Map<Long, Optional<NhiVo>> candidateList = getCandidateList(setting);
+            Map<Long, List<NhiVo>> candidateList = getCandidateList(setting);
             // 取得gapMonths月內未回診的病人
             List<NhiVo> availableList = getAvailableList(setting, candidateList);
             // 三個月內未回診的病人id
@@ -83,23 +83,29 @@ public class EndoReportBuilderService implements ReportBuilderService {
         };
     }
 
-    private Map<Long, Optional<NhiVo>> getCandidateList(EndoReportSetting setting) {
+    private Map<Long, List<NhiVo>> getCandidateList(EndoReportSetting setting) {
         List<String> codes = asList("90001C", "90002C", "90003C", "90015C", "90016C", "90018C", "90019C", "90020C");
         Set<Long> includeDoctorIds = ofNullable(setting.getIncludeDoctorIds()).orElse(emptySet());
         return reportDataRepository.findNhiVoBetweenAndCode(setting.getBeginDate(), setting.getEndDate(), codes)
             .stream()
             .parallel()
             .filter(vo -> includeDoctorIds.isEmpty() || includeDoctorIds.contains(vo.getDoctorId()))
-            .collect(groupingBy(NhiVo::getPatientId, maxBy(comparing(NhiVo::getDisposalDate))));
+            .collect(groupingBy(NhiVo::getPatientId, collectingAndThen(toList(), list -> {
+                List<NhiVo> result = new ArrayList<>(0);
+                Optional<NhiVo> max = list.stream().max(comparing(NhiVo::getDisposalDate));
+                if (max.isPresent()) {
+                    result = list.stream().filter(data -> data.getDisposalId().equals(max.get().getDisposalId())).collect(toList());
+                }
+                return result;
+            })));
     }
 
-    private List<NhiVo> getAvailableList(EndoReportSetting setting, Map<Long, Optional<NhiVo>> candidateList) {
+    private List<NhiVo> getAvailableList(EndoReportSetting setting, Map<Long, List<NhiVo>> candidateList) {
         int gapMonths = setting.getFollowupGapMonths();
         return candidateList
             .values()
             .stream()
-            .filter(Optional::isPresent)
-            .map(Optional::get)
+            .flatMap(Collection::stream)
             .filter(hasNoFollowupDisposalInGapMonths(
                 setting.getBeginDate(),
                 setting.getEndDate().plusMonths(gapMonths),
