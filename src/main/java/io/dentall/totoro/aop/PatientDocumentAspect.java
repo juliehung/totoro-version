@@ -2,14 +2,12 @@ package io.dentall.totoro.aop;
 
 import io.dentall.totoro.business.service.ImageBusinessService;
 import io.dentall.totoro.business.service.ImageRelationBusinessService;
-import io.dentall.totoro.domain.Image;
-import io.dentall.totoro.domain.ImageRelation;
-import io.dentall.totoro.domain.PatientDocument;
-import io.dentall.totoro.domain.PatientDocumentDisposal;
+import io.dentall.totoro.domain.*;
 import io.dentall.totoro.domain.enumeration.ImageRelationDomain;
 import io.dentall.totoro.repository.ImageRelationRepository;
 import io.dentall.totoro.repository.ImageRepository;
 import io.dentall.totoro.repository.PatientDocumentRepository;
+import io.dentall.totoro.service.ConfigurationMapService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
@@ -17,14 +15,18 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Long.parseLong;
+import static java.lang.String.valueOf;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.joining;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Aspect
 public class PatientDocumentAspect {
@@ -41,12 +43,17 @@ public class PatientDocumentAspect {
 
     private final PatientDocumentRepository patientDocumentRepository;
 
-    public PatientDocumentAspect(ImageRelationBusinessService imageRelationBusinessService, ImageBusinessService imageBusinessService, ImageRepository imageRepository, ImageRelationRepository imageRelationRepository, PatientDocumentRepository patientDocumentRepository) {
+    private final ConfigurationMapService configurationMapService;
+
+    private final String ClinicStorageUsedSizeKey = "clinic.storage.used-size";
+
+    public PatientDocumentAspect(ImageRelationBusinessService imageRelationBusinessService, ImageBusinessService imageBusinessService, ImageRepository imageRepository, ImageRelationRepository imageRelationRepository, PatientDocumentRepository patientDocumentRepository, ConfigurationMapService configurationMapService) {
         this.imageRelationBusinessService = imageRelationBusinessService;
         this.imageBusinessService = imageBusinessService;
         this.imageRepository = imageRepository;
         this.imageRelationRepository = imageRelationRepository;
         this.patientDocumentRepository = patientDocumentRepository;
+        this.configurationMapService = configurationMapService;
     }
 
     @Pointcut("execution(public io.dentall.totoro.domain.PatientDocument io.dentall.totoro.service.PatientDocumentService.createDocument(..))")
@@ -59,6 +66,53 @@ public class PatientDocumentAspect {
 
     @Pointcut("execution(public io.dentall.totoro.domain.PatientDocument io.dentall.totoro.service.PatientDocumentService.updateDocument(..)) && args(patientId,patientDocumentModified)")
     public void updateDocument(Long patientId, PatientDocument patientDocumentModified) {
+    }
+
+    @AfterReturning(pointcut = "createDocument()", returning = "patientDocument")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void createDocumentPostProcess(PatientDocument patientDocument) {
+        log.debug(patientDocument.toString());
+        try {
+            ConfigurationMap clinicStorageUsedSize = configurationMapService.findByKeyOrCreated(ClinicStorageUsedSizeKey);
+            String oldSizeStr = clinicStorageUsedSize.getConfigValue();
+            long fileSize = patientDocument.getDocument().getFileSize();
+            long newSize = 0;
+
+            if (isNull(oldSizeStr) || isBlank(oldSizeStr)) {
+                newSize = fileSize;
+            } else {
+                newSize = parseLong(oldSizeStr) + fileSize;
+            }
+
+            clinicStorageUsedSize.setConfigValue(valueOf(newSize));
+            configurationMapService.save(clinicStorageUsedSize);
+        } catch (Exception e) {
+            log.error("Calculate clinic storage size fails", e);
+        }
+    }
+
+    @AfterReturning(pointcut = "deleteDocument()", returning = "patientDocument")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void deleteDocumentPostProcess(PatientDocument patientDocument){
+        log.debug(patientDocument.toString());
+        try {
+            ConfigurationMap clinicStorageUsedSize = configurationMapService.findByKeyOrCreated(ClinicStorageUsedSizeKey);
+            String oldSizeStr = clinicStorageUsedSize.getConfigValue();
+            long fileSize = patientDocument.getDocument().getFileSize();
+            long newSize = 0;
+
+            if (!isNull(oldSizeStr) && !isBlank(oldSizeStr)) {
+                long oldSize = parseLong(oldSizeStr);
+                if (oldSize >= fileSize) {
+                    newSize = oldSize - fileSize;
+                }
+            }
+
+            clinicStorageUsedSize.setConfigValue(valueOf(newSize));
+            configurationMapService.save(clinicStorageUsedSize);
+        } catch (Exception e) {
+            log.error("Calculate clinic storage size fails", e);
+        }
     }
 
     /**
