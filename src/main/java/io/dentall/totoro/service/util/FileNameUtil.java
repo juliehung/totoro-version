@@ -6,7 +6,7 @@ import org.apache.commons.io.FilenameUtils;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 
-import static java.util.Objects.isNull;
+import static java.util.UUID.randomUUID;
 
 public class FileNameUtil {
 
@@ -15,9 +15,8 @@ public class FileNameUtil {
     private FileNameUtil() {
     }
 
-    public static String normalizeFileName(String fileName) {
-        String remoteFileName = dateTimeFormatter.format(Instant.now());
-        return isNull(fileName) ? remoteFileName : remoteFileName.concat("_").concat(fileName.replace(" ", "+"));
+    public static String normalizeFileName() {
+        return dateTimeFormatter.format(Instant.now()).concat("-").concat(randomUUID().toString().replace("-", ""));
     }
 
     public static String getExtension(String fileName) {
