@@ -9,6 +9,7 @@ import io.dentall.totoro.business.service.ImageRelationBusinessService;
 import io.dentall.totoro.repository.ImageRelationRepository;
 import io.dentall.totoro.repository.ImageRepository;
 import io.dentall.totoro.repository.PatientDocumentRepository;
+import io.dentall.totoro.service.ConfigurationMapService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -29,8 +30,15 @@ public class AopConfiguration {
         ImageBusinessService imageBusinessService,
         ImageRepository imageRepository,
         ImageRelationRepository imageRelationRepository,
-        PatientDocumentRepository patientDocumentRepository) {
-        return new PatientDocumentAspect(imageRelationBusinessService, imageBusinessService, imageRepository, imageRelationRepository, patientDocumentRepository);
+        PatientDocumentRepository patientDocumentRepository,
+        ConfigurationMapService configurationMapService) {
+        return new PatientDocumentAspect(
+            imageRelationBusinessService,
+            imageBusinessService,
+            imageRepository,
+            imageRelationRepository,
+            patientDocumentRepository,
+            configurationMapService);
     }
 
 }

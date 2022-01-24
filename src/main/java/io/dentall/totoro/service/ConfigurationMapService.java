@@ -140,7 +140,6 @@ public class ConfigurationMapService {
     }
 
 
-
     /**
      * Save a configurationMap.
      *
@@ -184,4 +183,16 @@ public class ConfigurationMapService {
         log.debug("Request to delete ConfigurationMap : {}", id);
         configurationMapRepository.deleteById(id);
     }
+
+    public ConfigurationMap findByKeyOrCreated(String key) {
+        Optional<ConfigurationMap> configurationMapOptional = configurationMapRepository.findByConfigKey(key);
+        if (!configurationMapOptional.isPresent()) {
+            ConfigurationMap newOne = new ConfigurationMap();
+            newOne.setConfigKey(key);
+            return save(newOne);
+        } else {
+            return configurationMapOptional.get();
+        }
+    }
+
 }
