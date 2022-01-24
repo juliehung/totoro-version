@@ -159,7 +159,7 @@ public class PatientDocumentResourceTest {
         resultActions.andExpect(jsonPath("$.document.id").value(notNullValue()));
         resultActions.andExpect(jsonPath("$.document.title").value(equalTo(mockMultipartFile.getOriginalFilename())));
         resultActions.andExpect(jsonPath("$.document.filePath").value(equalTo(getFilePath(patientId))));
-        resultActions.andExpect(jsonPath("$.document.fileName").value(endsWith(mockMultipartFile.getOriginalFilename())));
+        // $.document.fileName 因file name是timestamp + uuid，所以不需要特地驗證
         resultActions.andExpect(jsonPath("$.document.fileRealName").value(equalTo(mockMultipartFile.getOriginalFilename())));
         resultActions.andExpect(jsonPath("$.document.fileExtension").value(equalTo(getExtension(mockMultipartFile.getOriginalFilename()))));
         resultActions.andExpect(jsonPath("$.document.fileSize").value(equalTo((int) mockMultipartFile.getSize())));

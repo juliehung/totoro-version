@@ -92,7 +92,7 @@ public class PatientDocumentService {
         Document document = new Document();
         document.setTitle(file.getOriginalFilename());
         document.setFilePath(getFilePath(patientId));
-        document.setFileName(normalizeFileName(file.getOriginalFilename()));
+        document.setFileName(normalizeFileName());
         document.setFileRealName(file.getOriginalFilename());
         document.setFileExtension(getExtension(file.getOriginalFilename()));
         document.setFileSize(file.getSize());
@@ -106,7 +106,7 @@ public class PatientDocumentService {
         patientDocument.setPatientId(patientId);
         patientDocument.setDocument(document);
 
-        if(nonNull(disposalId)) {
+        if (nonNull(disposalId)) {
             Optional<DisposalTable> disposalTableOptional = disposalRepository.findDisposalByIdAndRegistration_Appointment_Patient_Id(disposalId, patientId);
             if (!disposalTableOptional.isPresent()) {
                 throw new BadRequestAlertException("disposal is not found or disposal is not belong to patient", ENTITY_NAME, "disposal.not.found");
