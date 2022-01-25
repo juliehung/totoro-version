@@ -99,6 +99,14 @@ jobs:
             hisGcpProjectId: ${{ secrets.HIS_GCP_PROJECT_ID }}
             hisGcpServiceKey: ${{ secrets.HIS_GCP_SERVICE_KEY }}
 
+    Run-On-8085:
+        needs: [ Combine, Upload-Final ]
+        uses: dentallio/totoro-version/.github/workflows/run-war-on-dev-machine.yml@master
+        with:
+            url: "http://dev.dentall.site:8001/servers/8085/operation"
+            sleepTime: 10
+            warFileName: ${{ needs.Combine.outputs.finalFileName }}
+
     Notify:
         needs: [ Combine, Upload-Final ]
         uses: dentallio/totoro-version/.github/workflows/send-slack-notification.yml@master
