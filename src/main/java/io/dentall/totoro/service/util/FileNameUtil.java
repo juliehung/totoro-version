@@ -7,6 +7,7 @@ import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 
 import static java.util.UUID.randomUUID;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class FileNameUtil {
 
@@ -15,8 +16,12 @@ public class FileNameUtil {
     private FileNameUtil() {
     }
 
-    public static String normalizeFileName() {
-        return dateTimeFormatter.format(Instant.now()).concat("-").concat(randomUUID().toString().replace("-", ""));
+    public static String normalizeFileName(String extension) {
+        String name = dateTimeFormatter.format(Instant.now()).concat("-").concat(randomUUID().toString().replace("-", ""));
+        if (isNotBlank(extension)) {
+            name = name.concat(".").concat(extension);
+        }
+        return name;
     }
 
     public static String getExtension(String fileName) {
