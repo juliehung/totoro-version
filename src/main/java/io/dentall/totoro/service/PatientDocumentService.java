@@ -92,7 +92,7 @@ public class PatientDocumentService {
         Document document = new Document();
         document.setTitle(file.getOriginalFilename());
         document.setFilePath(getFilePath(patientId));
-        document.setFileName(normalizeFileName());
+        document.setFileName(normalizeFileName(getExtension(file.getOriginalFilename())));
         document.setFileRealName(file.getOriginalFilename());
         document.setFileExtension(getExtension(file.getOriginalFilename()));
         document.setFileSize(file.getSize());
