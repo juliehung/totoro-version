@@ -22,6 +22,7 @@ import io.dentall.totoro.web.rest.util.AvatarUtil;
 import io.dentall.totoro.web.rest.util.HeaderUtil;
 import io.dentall.totoro.web.rest.util.PaginationUtil;
 import io.dentall.totoro.web.rest.vm.AvatarVM;
+import io.dentall.totoro.web.rest.vm.PatientDueDateVM;
 import io.dentall.totoro.web.rest.vm.PatientFirstLatestVisitDateVM;
 import io.dentall.totoro.web.rest.vm.PatientNationalIdValidationVM;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -36,6 +37,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
@@ -141,6 +143,36 @@ public class PatientResource {
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+
+    /**
+     * 由於原先應由 put 來進行 field 為 null 做清洗動作，但 put 被佔用，且其行為為 patch 。
+     * 因此特別產生該 field 對應的清除用 api
+     * @param id
+     * @param patientDueDateVM
+     * @return
+     */
+    @PutMapping("/patients/{id}/due-date")
+    @Timed
+    @Transactional
+    public ResponseEntity<Patient> updatePatientDueDate(
+        @PathVariable Long id,
+        @RequestBody PatientDueDateVM patientDueDateVM
+    ) {
+        Optional<Patient> patientOptional = patientRepository.findById(id);
+
+        if (!patientOptional.isPresent()) {
+            throw new BadRequestAlertException("Can not found patient by id", ENTITY_NAME, "notfound");
+        }
+
+        if (patientDueDateVM.getDueDate() == null) {
+            patientOptional.get().setDueDate(null);
+        } else {
+            patientOptional.get().setDueDate(patientDueDateVM.getDueDate());
+        }
+
+        return ResponseEntity.ok(patientOptional.get());
+
     }
 
     /**
