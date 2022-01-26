@@ -28,7 +28,7 @@
     "node": ">=8.9.0"
   },
   "scripts": {
-    "start": "echo hello!'",
+    "start": "echo hello'",
     "swagger": "serve -s swagger-ui",
     "prettier": "prettier web/src",
     "format": "npm run prettier -- --write",
