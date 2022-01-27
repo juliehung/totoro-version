@@ -41,4 +41,4 @@ jobs:
             curl --location --request POST \
             ${{ inputs.url }} \
             --header "Content-Type:application/json" \
-            --data-raw '{"warVersion":"${{ inputs.warFileName }}, "operation": "start"}'
+            --data-raw '{"warVersion":"${{ inputs.warFileName }}", "operation": "start"}'
