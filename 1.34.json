@@ -17,6 +17,36 @@
       "webFileName": "1.34.1.zip",
       "finalFileName": "1.34.1.0.war",
       "timestamp": "2022-01-20T05:04:18Z"
+    },
+    {
+      "serverFileName": "1.34.1.0.war",
+      "webFileName": "1.34.1.zip",
+      "finalFileName": "1.34.1.0.war",
+      "timestamp": "2022-01-21T06:38:25Z"
+    },
+    {
+      "serverFileName": "1.34.2.0.war",
+      "webFileName": "1.34.2.zip",
+      "finalFileName": "1.34.2.0.war",
+      "timestamp": "2022-01-25T02:06:25Z"
+    },
+    {
+      "serverFileName": "1.34.2.1.war",
+      "webFileName": "1.34.2.zip",
+      "finalFileName": "1.34.2.1.war",
+      "timestamp": "2022-01-25T02:18:40Z"
+    },
+    {
+      "serverFileName": "1.34.3.1.war",
+      "webFileName": "1.34.3.zip",
+      "finalFileName": "1.34.3.1.war",
+      "timestamp": "2022-01-26T13:54:21Z"
+    },
+    {
+      "serverFileName": "1.34.3.1.war",
+      "webFileName": "1.34.3.zip",
+      "finalFileName": "1.34.3.1.war",
+      "timestamp": "2022-01-27T00:46:47Z"
     }
   ]
 }
