@@ -12,13 +12,10 @@ on:
             warFileName:
                 required: true
                 type: string
-        secrets:
-            hisGcpProjectId:
-                required: true
-            hisGcpServiceKey:
-                required: true
+
 jobs:
     Stop-Dev-Machine:
+        runs-on: ubuntu-18.04
         steps:
         - name: "Stop target port machine"
           run: |
@@ -26,15 +23,18 @@ jobs:
             ${{ inputs.url }} \
             --header "Content-Type:application/json" \
             --data-raw '{"operation": "stop"}'
+
     Pause-A-While:
+        runs-on: ubuntu-18.04
         needs: [ Stop-Dev-Machine ]
         if: ${{ always() }}
         steps:
         - name: sleep
           run: sleep ${{ inputs.sleepTime }}
+
     Start-Dev-Machine:
-        needs: [ Stop-Dev-Machine, Pause-A-While ]
         runs-on: ubuntu-18.04
+        needs: [ Stop-Dev-Machine, Pause-A-While ]
         steps:
         - name: "Start target port machine"
           run: |
