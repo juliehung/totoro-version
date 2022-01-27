@@ -48,7 +48,7 @@ public class CloudFunctionService {
 
     private final String BUCKET_NAME;
 
-    private String smsFunction = CLOUD_FUNCTION_BASE_URL + "smsDev";
+    private String smsFunction = CLOUD_FUNCTION_BASE_URL + "sms";
 
     public CloudFunctionService(
         ObjectMapper mapper,
@@ -62,9 +62,6 @@ public class CloudFunctionService {
             .build();
         BUCKET_NAME = bucketName;
         Collection<String> activeProfiles = Arrays.asList(env.getActiveProfiles());
-        if (activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_PRODUCTION)) {
-            smsFunction = CLOUD_FUNCTION_BASE_URL + "sms";
-        }
     }
 
     public String executeSmsEvent(String clinic, String eventId) throws IOException, ThrowableProblem {
