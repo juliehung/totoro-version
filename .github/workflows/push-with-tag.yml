@@ -108,7 +108,7 @@ jobs:
             warFileName: ${{ needs.Combine.outputs.finalFileName }}
 
     Notify:
-        needs: [ Combine, Upload-Final ]
+        needs: [ Combine, Run-On-8085 ]
         uses: dentallio/totoro-version/.github/workflows/send-slack-notification.yml@master
         with:
             content: "${{ needs.Combine.outputs.finalFileName }} is released now. <!here>"
