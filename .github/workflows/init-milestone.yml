@@ -59,7 +59,7 @@ jobs:
         - id: calculate
           run: |
             echo ${{ github.ref_name }} | \
-            awk '{ split($1, a, "-"); printf "%s", a[2]; }' | \
+            awk '{ split($1, a, "-"); split(a[2], b, "."); printf "%d.%d", b[1], b[2]-1; }' | \
             xargs -I {} echo "::set-output name=milestone::{}"
 
     Server-Checking:
