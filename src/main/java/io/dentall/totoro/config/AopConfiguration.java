@@ -25,6 +25,7 @@ public class AopConfiguration {
         return new ReportAspect(imageGcsBusinessServiceOptional, reportRecordRepository);
     }
 
+    @Bean
     public PatientDocumentAspect patientDocumentAspect(
         ImageRelationBusinessService imageRelationBusinessService,
         ImageBusinessService imageBusinessService,
