@@ -12,7 +12,7 @@ jobs:
             - id: result
               run: |
                 echo ${{ github.ref_name }} | \
-                awk '{ split($1, a, "."); printf "%d.%d", a[1], a[2] }' | \
+                awk '{ split($1, a, "-"); printf "%s", a[2] }' | \
                 xargs -I {} echo '::set-output name=milestone::{}'
 
     Init:
