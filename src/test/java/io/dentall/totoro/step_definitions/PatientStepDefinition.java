@@ -77,7 +77,10 @@ public class PatientStepDefinition extends AbstractStepDefinition {
         Patient patientReturn = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsByteArray(), Patient.class);
 
         Patient saved = patientRepository.findById(patientReturn.getId()).get();
+
         patientTestInfoHolder.setPatient(saved);
+        patientTestInfoHolder.getPatients().add(saved);
+        patientTestInfoHolder.getPatientMap().put(saved.getName(), saved);
     }
 
 }

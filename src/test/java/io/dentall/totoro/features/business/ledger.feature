@@ -1,3 +1,4 @@
+@business @ledger
 Feature: 收支邏輯
     Scenario: 簡單收支成功案例
         Given 建立醫師

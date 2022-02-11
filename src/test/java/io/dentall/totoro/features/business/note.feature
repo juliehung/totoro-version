@@ -1,0 +1,79 @@
+Feature: 筆記邏輯
+    Background:
+        Given 建立 Alice 醫師
+        Given 建立 Bob 醫師
+        Given 建立 Goose 醫師
+        Given Cathy 24 歲病人
+        Given Duke 24 歲病人
+        Given Ema 24 歲病人
+        Given Faker 24 歲病人
+        Given Hank 24 歲病人
+
+    Scenario: 簡單建立病患筆記
+        Given 建立筆記
+            | type | content | doctorName | patientName |
+            | DOCTOR | content_Alice_Cathy  | Alice | Cathy |
+            | DOCTOR | content_Alice_Duke  | Alice | Duke |
+            | DOCTOR | content_Alice_Ema  | Alice | Ema |
+            | DOCTOR | content_Alice_Duke  | Bob | Cathy |
+            | DOCTOR | content_Alice_Duke  | Bob | Duke |
+            | SHARED | shared_content | Null | Hank |
+            | SERVICE | service_content | Null | Hank |
+        Then 查詢醫生 Alice 的筆記
+        Then 查詢有關病患 Cathy 的筆記
+        Then 查詢有關病患 Hank 的筆記
+
+    Scenario: 查無病患筆記
+        Then 應當查無病患 Faker 的筆記
+
+    Scenario: 查無醫師筆記
+        Then 應當查無醫師 Goose 的筆記
+
+    Scenario: 產生一筆不存在病患的筆記
+        Then 建立筆記失敗
+            | type | content | doctorName | patientName |
+            | DOCTOR | content_Alice_NotExist  | Alice | NotExist |
+
+    Scenario: 產生一筆不存在醫師的筆記
+        Then 建立筆記失敗
+            | type | content | doctorName | patientName |
+            | DOCTOR | content_NotExist_Cathy  | NotExist | Cathy |
+
+    Scenario: 更新筆記內容
+        Given 建立筆記
+            | type | content | doctorName | patientName |
+            | SERVICE | service | Null | Cathy |
+            | SHARED | share | Null | Cathy |
+            | DOCTOR  | content_Alice_Cathy  | Alice | Cathy |
+        Then 更改內容
+            | type | content | doctorName | patientName |
+            | SERVICE | modified_service | Null | Cathy |
+            | SHARED | modified_share | Null | Cathy |
+            | DOCTOR  | modified_content_Alice_Cathy  | Alice | Cathy |
+        Then 查詢醫生 Alice 的筆記
+
+    Scenario: 禁止在同一個病患生成複數個 service note
+        Given 建立筆記
+            | type | content | doctorName | patientName |
+            | SERVICE | service | Null | Cathy |
+        Then 建立筆記失敗
+            | type | content | doctorName | patientName |
+            | SERVICE | service | Null | Cathy |
+            | SERVICE | service | Null | Cathy |
+            | SERVICE | service | Null | Cathy |
+            | SERVICE | service | Null | Cathy |
+
+
+    Scenario: 禁止在同一個病患生成複數個 shared note
+        Given 建立筆記
+            | type | content | doctorName | patientName |
+            | SHARED | share | Null | Cathy |
+        Then 建立筆記失敗
+            | type | content | doctorName | patientName |
+            | SHARED | share | Null | Cathy |
+
+    Scenario: service or shared note 使用者必須為空
+        Then 建立筆記失敗
+            | type | content | doctorName | patientName |
+            | SHARED | service | Alice | Cathy |
+            | SHARED | share | Alice | Cathy |

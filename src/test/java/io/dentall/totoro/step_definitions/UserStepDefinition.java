@@ -10,6 +10,7 @@ import io.dentall.totoro.service.UserService;
 import io.dentall.totoro.step_definitions.holders.UserTestInfoHolder;
 import io.dentall.totoro.web.rest.UserResource;
 import io.dentall.totoro.web.rest.vm.ManagedUserVM;
+import org.apache.commons.lang.StringUtils;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
@@ -18,6 +19,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static io.dentall.totoro.web.rest.TestUtil.createFormattingConversionService;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -52,13 +54,28 @@ public class UserStepDefinition extends AbstractStepDefinition {
 
     @Given("建立醫師")
     public void createUser() throws Exception {
+        generateUserDomain(null);
+    }
+
+    @Given("建立 {word} 醫師")
+    public void createUser(String userName) throws Exception {
+        generateUserDomain(userName);
+    }
+
+    @Given("確認醫師建立成功")
+    public void checkUser() {
+        User user = userTestInfoHolder.getUser();
+        assertThat(user.getId()).isNotNull();
+    }
+
+    private User generateUserDomain(String userName) throws Exception {
         ExtendUser extendUser = new ExtendUser();
         extendUser.setNationalId(randomAlphabetic(10));
         ManagedUserVM newUser = new ManagedUserVM();
         newUser.setActivated(true);
         newUser.setEmail(randomAlphabetic(10) + "@dentall.io");
-        newUser.setFirstName("firstname");
-        newUser.setLastName("lastname");
+        newUser.setFirstName(StringUtils.isBlank(userName) ? randomAlphabetic(10) : userName);
+        newUser.setLastName(StringUtils.isBlank(userName) ? randomAlphabetic(10) : userName);
         newUser.setLogin(randomAlphabetic(10));
         newUser.setPassword(randomAlphabetic(10));
         newUser.setExtendUser(extendUser);
@@ -69,13 +86,11 @@ public class UserStepDefinition extends AbstractStepDefinition {
 
         ResultActions resultActions = this.mvc.perform(requestBuilder);
         User user = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsByteArray(), User.class);
+
         userTestInfoHolder.setUser(user);
-    }
+        userTestInfoHolder.getUserMap().put(userName, user);
+        userTestInfoHolder.getUsers().add(user);
 
-    @Given("確認醫師建立成功")
-    public void checkUser() {
-        User user = userTestInfoHolder.getUser();
-        assertThat(user.getId()).isNotNull();
+        return user;
     }
-
 }
