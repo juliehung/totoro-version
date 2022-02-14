@@ -52,6 +52,17 @@ public class LedgerGroup extends AbstractAuditingEntity implements Serializable 
     @Column(name = "jhi_date")
     private Instant date;
 
+    @Column(name = "note")
+    private String note;
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
     public Long getId() {
         return id;
     }
