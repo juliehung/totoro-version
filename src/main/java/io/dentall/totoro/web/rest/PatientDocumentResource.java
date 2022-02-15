@@ -16,6 +16,7 @@ import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
 import io.dentall.totoro.web.rest.vm.PatientDocumentVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -54,6 +55,9 @@ public class PatientDocumentResource {
     private final ThumbnailsService thumbnailsService;
 
     private final Optional<ImageGcsBusinessService> imageGcsBusinessServiceOptional;
+
+    @Value("${gcp.bucket-name}")
+    private String bucketName;
 
     public PatientDocumentResource(
         UserService userService,
@@ -120,7 +124,7 @@ public class PatientDocumentResource {
         List<PatientDocumentVM> patientDocumentVMList = page.getContent().stream()
             .map(patientDocument -> {
                 Document document = patientDocument.getDocument();
-                List<Thumbnails> thumbnailsList = patientDocumentThumbnailsGenerator.generateThumbnails(document, thumbnailsParams);
+                List<Thumbnails> thumbnailsList = patientDocumentThumbnailsGenerator.generateThumbnails(document, thumbnailsParams, bucketName);
                 PatientDocumentVM patientDocumentVM = patientDocumentMapper.mapToPatientDocumentVM(patientDocument);
                 patientDocumentVM.setThumbnailsList(thumbnailsList);
                 return patientDocumentVM;

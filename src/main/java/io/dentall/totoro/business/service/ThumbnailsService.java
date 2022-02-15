@@ -5,6 +5,7 @@ import com.google.cloud.storage.Blob;
 import io.dentall.totoro.thumbnails.Thumbnails;
 import io.dentall.totoro.thumbnails.ThumbnailsHelper;
 import io.dentall.totoro.thumbnails.ThumbnailsParam;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -24,6 +25,9 @@ public class ThumbnailsService {
     private final Optional<ImageGcsBusinessService> imageGcsBusinessServiceOptional;
 
     private final String CLINIC_NAME;
+
+    @Value("${gcp.bucket-name}")
+    private String bucketName;
 
     private final String THUMBNAILS_NAME = "thumbnails";
 
@@ -75,7 +79,7 @@ public class ThumbnailsService {
             Thumbnails thumbnails = new Thumbnails();
             thumbnails.setWidth(param.getWidth());
             thumbnails.setHeight(param.getHeight());
-            thumbnails.setUrl(getUrl(blob));
+            thumbnails.setUrl(getUrl(bucketName, blob));
             return Optional.of(thumbnails);
         } else {
             return Optional.empty();
