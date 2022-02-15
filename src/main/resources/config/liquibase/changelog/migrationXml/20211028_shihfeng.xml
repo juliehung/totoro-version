@@ -23,9 +23,6 @@
                 last_modified_date timestamp   not null
             );
 
-            alter table report_record
-                owner to totoro;
-
             create index report_record_attrs_index
                 on report_record using gin (attrs);
 
