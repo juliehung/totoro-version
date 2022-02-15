@@ -628,18 +628,35 @@ public class PatientService extends QueryService<Patient> {
         String code,
         Long patientId
     ) {
+        Optional<Patient> patientOpt = patientRepository.findById(patientId);
+        if (patientOpt.isPresent()) {
+            throw new BadRequestAlertException("Can not found patient by id", ENTITY_NAME, "notfound");
+        }
+
+        Patient p = patientOpt.get();
+
         NhiRuleCheckDTO dto = this.createNhiRuleCheckDto(patientId, code);
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         switch (code) {
-            case "81":
+            case NHI_STATUS_81:
                 vm = this.calculateNhiStatus81(dto);
                 break;
-            case "91004C":
+            case NHI_STATUS_91004C:
                 vm = this.calculateNhiStatus91004C(dto);
                 break;
             default:
                 break;
+        }
+
+        if (vm.getMessages() != null &&
+            vm.getMessages().size() > 0
+        ) {
+            if (NHI_STATUS_81.equals(code)) {
+                p.setNhiStatus81(vm.getMessages().get(0));
+            } else if (NHI_STATUS_91004C.equals(code)) {
+                p.setNhiStatus91004C(vm.getMessages().get(0));
+            }
         }
 
         return vm;
