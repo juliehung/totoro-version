@@ -336,6 +336,14 @@ public class PatientService extends QueryService<Patient> {
                     patient.setDisabled(updatePatient.getDisabled());
                 }
 
+                if (updatePatient.getNhiStatus81() != null) {
+                    patient.setNhiStatus81(updatePatient.getNhiStatus81());
+                }
+
+                if (updatePatient.getNhiStatus91004C() != null) {
+                    patient.setNhiStatus91004C(updatePatient.getNhiStatus91004C());
+                }
+
                 return patient;
             })
             .get();
@@ -629,7 +637,7 @@ public class PatientService extends QueryService<Patient> {
         Long patientId
     ) {
         Optional<Patient> patientOpt = patientRepository.findById(patientId);
-        if (patientOpt.isPresent()) {
+        if (!patientOpt.isPresent()) {
             throw new BadRequestAlertException("Can not found patient by id", ENTITY_NAME, "notfound");
         }
 
@@ -803,6 +811,29 @@ public class PatientService extends QueryService<Patient> {
         }
 
         return vm;
+    }
+
+    public void updatePatientNhiStatus(
+        Patient patient,
+        NhiRuleCheckResultVM vm,
+        String code
+    ) {
+        if (vm != null &&
+            vm.getMessages() != null &&
+            vm.getMessages().size() > 0
+        ) {
+            String message = vm.getMessages().get(0);
+           switch (code) {
+               case NHI_STATUS_81:
+                   patient.setNhiStatus81(message);
+                   break;
+               case NHI_STATUS_91004C:
+                   patient.setNhiStatus91004C(message);
+                   break;
+               default:
+                   break;
+           }
+        }
     }
 
 }
