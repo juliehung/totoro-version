@@ -90,6 +90,10 @@ public final class ThumbnailsHelper {
         }
     }
 
+    public static String getUrl(String bucketName, Blob blob) {
+        return "https://storage.googleapis.com/" + bucketName +"/" + blob.getName();
+    }
+
     public static String getUrl(Blob blob) {
         return blob.signUrl(1, TimeUnit.DAYS, Storage.SignUrlOption.withVirtualHostedStyle()).toString();
     }
