@@ -766,14 +766,16 @@ public class NhiRuleCheckUtil {
         nhiExtendDisposalRepository.findNhiHybridRecord(
             patientId,
             codes,
-            excludeDisposalIds
+            Arrays.asList(0L)
         ).stream()
             .forEach(d -> {
-                result.add(
-                    NhiHybridRecordDTOMapper.INSTANCE.transformFromNhiHybridRecord(
-                        d
-                    )
-                );
+                if (!excludeDisposalIds.contains(d.getDisposalId())) {
+                    result.add(
+                        NhiHybridRecordDTOMapper.INSTANCE.transformFromNhiHybridRecord(
+                            d
+                        )
+                    );
+                }
                 clientDisposalDate.add(d.getRecordDateTime());
             });
 
@@ -802,14 +804,16 @@ public class NhiRuleCheckUtil {
 
         nhiExtendDisposalRepository.findNhiHybridRecord(
                 patientId,
-                excludeDisposalIds
+                Arrays.asList(0L)
             ).stream()
             .forEach(d -> {
-                result.add(
-                    NhiHybridRecordDTOMapper.INSTANCE.transformFromNhiHybridRecord(
-                        d
-                    )
-                );
+                if (!excludeDisposalIds.contains(d.getDisposalId())) {
+                    result.add(
+                        NhiHybridRecordDTOMapper.INSTANCE.transformFromNhiHybridRecord(
+                            d
+                        )
+                    );
+                }
                 clientDisposalDate.add(d.getRecordDateTime());
             });
 
