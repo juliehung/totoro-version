@@ -7,6 +7,7 @@ import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -32,24 +33,20 @@ public class PatientNhiStatusAspect {
         this.patientService = patientService;
     }
 
-    @After("@annotation(updatePatientNhiStatus) && @annotation(requestMapping) && args(appointment)")
+    @After("@annotation(updatePatientNhiStatus) && @annotation(postMapping) && args(appointment)")
     public void updatePatientNhiStatusAtAppointment(
         UpdatePatientNhiStatus updatePatientNhiStatus,
-        RequestMapping requestMapping,
+        PostMapping postMapping,
         Appointment appointment
     ) {
-        if (requestMapping.method().length > 0 &&
-            RequestMethod.POST.equals(requestMapping.method()[0])
+        if (appointment != null &&
+            appointment.getPatient() != null &&
+            appointment.getPatient().getId() != null
         ) {
-            if (appointment != null &&
-                appointment.getPatient() != null &&
-                appointment.getPatient().getId() != null
-            ) {
-                updatePatientNhiStatus(
-                    Trigger.APPOINTMENT_POST,
-                    appointment.getPatient().getId()
-                );
-            }
+            updatePatientNhiStatus(
+                Trigger.APPOINTMENT_POST,
+                appointment.getPatient().getId()
+            );
         }
     }
 
