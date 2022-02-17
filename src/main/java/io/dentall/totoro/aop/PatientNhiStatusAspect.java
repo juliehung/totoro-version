@@ -3,14 +3,18 @@ package io.dentall.totoro.aop;
 import io.dentall.totoro.business.service.UpdatePatientNhiStatus;
 import io.dentall.totoro.domain.*;
 import io.dentall.totoro.service.PatientService;
+import org.apache.poi.poifs.filesystem.POIFSStream;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Optional;
 
 @Aspect
@@ -50,50 +54,58 @@ public class PatientNhiStatusAspect {
         }
     }
 
-    @After("@annotation(updatePatientNhiStatus) && @annotation(requestMapping) && args(nhiExtendPatients)")
+    @After("@annotation(updatePatientNhiStatus) && @annotation(putMapping) && args(nhiExtendPatients)")
     public void updatePatientNhiStatusAtNhiExtendPatient(
         UpdatePatientNhiStatus updatePatientNhiStatus,
-        RequestMapping requestMapping,
+        PutMapping putMapping,
         NhiExtendPatient nhiExtendPatients
     ) {
-        if (requestMapping.method().length > 0 &&
-            RequestMethod.PUT.equals(requestMapping.method()[0])
+        if (nhiExtendPatients != null &&
+            nhiExtendPatients.getPatient() != null &&
+            nhiExtendPatients.getPatient().getId() != null
         ) {
-            if (nhiExtendPatients != null &&
-                nhiExtendPatients.getPatient() != null &&
-                nhiExtendPatients.getPatient().getId() != null
-            ) {
-                updatePatientNhiStatus(
-                    Trigger.NHI_EXTEND_PATIENT_PUT,
-                    nhiExtendPatients.getPatient().getId()
-                );
-            }
+            updatePatientNhiStatus(
+                Trigger.NHI_EXTEND_PATIENT_PUT,
+                nhiExtendPatients.getPatient().getId()
+            );
         }
     }
 
-    @After("@annotation(updatePatientNhiStatus) && @annotation(requestMapping) && args(disposal)")
+    @After("@annotation(updatePatientNhiStatus) && @annotation(postMapping) && args(disposal)")
     public void updatePatientNhiStatusAtDisposal(
         UpdatePatientNhiStatus updatePatientNhiStatus,
-        RequestMapping requestMapping,
+        PostMapping postMapping,
         Disposal disposal
     ) {
-        if (requestMapping.method().length > 0 &&
-            RequestMethod.POST.equals(requestMapping.method()[0]) ||
-            RequestMethod.PUT.equals(requestMapping.method()[0])
+        if (disposal != null &&
+            disposal.getRegistration() != null &&
+            disposal.getRegistration().getAppointment() != null &&
+            disposal.getRegistration().getAppointment().getPatient() != null &&
+            disposal.getRegistration().getAppointment().getPatient().getId() != null
         ) {
-            if (disposal != null &&
-                disposal.getRegistration() != null &&
-                disposal.getRegistration().getAppointment() != null &&
-                disposal.getRegistration().getAppointment().getPatient() != null &&
-                disposal.getRegistration().getAppointment().getPatient().getId() != null
-            ) {
-                updatePatientNhiStatus(
-                    RequestMethod.POST.equals(requestMapping.method()[0])
-                        ? Trigger.DISPOSAL_POST
-                        : Trigger.DISPOSAL_PUT,
-                    disposal.getRegistration().getAppointment().getPatient().getId()
-                );
-            }
+            updatePatientNhiStatus(
+                Trigger.DISPOSAL_POST,
+                disposal.getRegistration().getAppointment().getPatient().getId()
+            );
+        }
+    }
+
+    @After("@annotation(updatePatientNhiStatus) && @annotation(putMapping) && args(disposal)")
+    public void updatePatientNhiStatusAtDisposal(
+        UpdatePatientNhiStatus updatePatientNhiStatus,
+        PutMapping putMapping,
+        Disposal disposal
+    ) {
+        if (disposal != null &&
+            disposal.getRegistration() != null &&
+            disposal.getRegistration().getAppointment() != null &&
+            disposal.getRegistration().getAppointment().getPatient() != null &&
+            disposal.getRegistration().getAppointment().getPatient().getId() != null
+        ) {
+            updatePatientNhiStatus(
+                Trigger.DISPOSAL_PUT,
+                disposal.getRegistration().getAppointment().getPatient().getId()
+            );
         }
     }
 
@@ -106,16 +118,31 @@ public class PatientNhiStatusAspect {
 
             Patient p = patientOpt.get();
 
-            patientService.updatePatientNhiStatus(
-                p,
-                patientService.calculateNhiStatus81(patientService.createNhiRuleCheckDto(pid, PatientService.NHI_STATUS_81)),
-                PatientService.NHI_STATUS_81
+            Period age = Period.between(
+                p.getBirth(),
+                LocalDate.now()
             );
-            patientService.updatePatientNhiStatus(
-                p,
-                patientService.calculateNhiStatus91004C(patientService.createNhiRuleCheckDto(pid, PatientService.NHI_STATUS_91004C)),
-                PatientService.NHI_STATUS_91004C
-            );
+
+
+            if (age.getYears() <= 6) {
+                patientService.updatePatientNhiStatus(
+                    p,
+                    patientService.calculateNhiStatus81(patientService.createNhiRuleCheckDto(pid, PatientService.NHI_STATUS_81)),
+                    PatientService.NHI_STATUS_81
+                );
+            } else {
+                p.setNhiStatus81("");
+            }
+
+            if (age.getYears() >= 12) {
+                patientService.updatePatientNhiStatus(
+                    p,
+                    patientService.calculateNhiStatus91004C(patientService.createNhiRuleCheckDto(pid, PatientService.NHI_STATUS_91004C)),
+                    PatientService.NHI_STATUS_91004C
+                );
+            } else {
+                p.setNhiStatus91004C("");
+            }
 
             patientService.update(p);
         } catch (Exception e) {
