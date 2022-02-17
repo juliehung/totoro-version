@@ -755,6 +755,7 @@ public class NhiRuleCheckUtil {
     }
 
     // 找該病患所有混合資料，並排除指定 codes, disposal id
+    // netp, nmr 分開查詢根據各自排除條件過濾後，合併且回傳
     public List<NhiHybridRecordDTO> findNhiHypeRecordsDTO(
         Long patientId,
         List<String> codes,
@@ -763,6 +764,9 @@ public class NhiRuleCheckUtil {
         List<NhiHybridRecordDTO> result = new ArrayList<>();
         HashSet<String> clientDisposalDate = new HashSet<>();
 
+        // 查詢 netp 資料
+        // 將過去資料加入 result list 並排除 exclude disposal id
+        // 但仍要將 exclude disposal id 內的 netp.a71 記錄於 set 當中，以利查詢 nmr 時可以排除診所內部產生的健保卡紀錄
         nhiExtendDisposalRepository.findNhiHybridRecord(
             patientId,
             codes,
@@ -779,6 +783,9 @@ public class NhiRuleCheckUtil {
                 clientDisposalDate.add(d.getRecordDateTime());
             });
 
+        // 查詢 nmr
+        // 排除 nmr.date 等同於 set 的資料(排除診所內部產生的健保卡紀錄)
+        // 排除 cancelled 健保卡紀錄
         nhiMedicalRecordService.ignoreCancelledRecord(
             nhiMedicalRecordService.findByPatientIdAndNhiCodes(patientId, codes).stream()
                 .filter(d -> !clientDisposalDate.contains(d.getDate()))
@@ -795,6 +802,7 @@ public class NhiRuleCheckUtil {
     }
 
     // 找該病患所有混合資料，並排除指定 disposal id
+    // netp, nmr 分開查詢根據各自排除條件過濾後，合併且回傳
     public List<NhiHybridRecordDTO> findNhiHypeRecordsDTO(
         Long patientId,
         List<Long> excludeDisposalIds
@@ -802,6 +810,9 @@ public class NhiRuleCheckUtil {
         List<NhiHybridRecordDTO> result = new ArrayList<>();
         HashSet<String> clientDisposalDate = new HashSet<>();
 
+        // 查詢 netp 資料
+        // 將過去資料加入 result list 並排除 exclude disposal id
+        // 但仍要將 exclude disposal id 內的 netp.a71 記錄於 set 當中，以利查詢 nmr 時可以排除診所內部產生的健保卡紀錄
         nhiExtendDisposalRepository.findNhiHybridRecord(
                 patientId,
                 Arrays.asList(0L)
@@ -817,6 +828,9 @@ public class NhiRuleCheckUtil {
                 clientDisposalDate.add(d.getRecordDateTime());
             });
 
+        // 查詢 nmr
+        // 排除 nmr.date 等同於 set 的資料(排除診所內部產生的健保卡紀錄)
+        // 排除 cancelled 健保卡紀錄
         nhiMedicalRecordService.ignoreCancelledRecord(
             nhiMedicalRecordService.findByPatientId(patientId).stream()
                 .filter(d -> !clientDisposalDate.contains(d.getDate()))
