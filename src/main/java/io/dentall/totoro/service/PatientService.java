@@ -773,9 +773,12 @@ public class PatientService extends QueryService<Patient> {
         return vm;
     }
 
-    public void updatePatientNhiStatus(
+    public NhiRuleCheckResultVM updatePatientNhiStatus(
         Patient patient
     ) {
+        // Only been used by patient resource
+        NhiRuleCheckResultVM result = new NhiRuleCheckResultVM();
+
         if (patient == null ||
             patient.getBirth() == null
         ) {
@@ -794,6 +797,7 @@ public class PatientService extends QueryService<Patient> {
             ) {
                 patient.setNhiStatus81(vm.getMessages().get(0));
             }
+            result = vm;
         }
 
         if (age.getYears() >= 12) {
@@ -804,7 +808,10 @@ public class PatientService extends QueryService<Patient> {
             ) {
                 patient.setNhiStatus91004C(vm.getMessages().get(0));
             }
+            result = vm;
         }
+
+        return result;
     }
 
     public Optional<Patient> findPatientByDisposalId(Long did) {

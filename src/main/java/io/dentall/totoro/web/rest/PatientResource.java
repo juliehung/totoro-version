@@ -508,27 +508,8 @@ public class PatientResource {
         }
 
         Patient p = patientOpt.get();
-        patientService.updatePatientNhiStatus(p);
+        NhiRuleCheckResultVM vm = patientService.updatePatientNhiStatus(p);
         patientService.update(p);
-
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-        List<String> messages = new ArrayList<>();
-        switch (code) {
-            case PatientService.NHI_STATUS_81:
-                if (StringUtils.isNotBlank(p.getNhiStatus81())) {
-                    messages.add(p.getNhiStatus81());
-                }
-                break;
-            case PatientService.NHI_STATUS_91004C:
-                if (StringUtils.isNotBlank(p.getNhiStatus91004C())) {
-                    messages.add(p.getNhiStatus91004C());
-                }
-                break;
-            default:
-                break;
-        }
-
-        vm.setMessages(messages);
 
         return ResponseEntity.ok(vm);
     }
