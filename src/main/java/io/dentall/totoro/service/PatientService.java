@@ -19,6 +19,7 @@ import io.dentall.totoro.service.util.DateTimeUtil;
 import io.dentall.totoro.service.util.FilterUtil;
 import io.dentall.totoro.service.util.StreamUtil;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
+import io.dentall.totoro.web.rest.vm.NhiMedicalRecordVM;
 import io.dentall.totoro.web.rest.vm.PatientFirstLatestVisitDateVM;
 import io.github.jhipster.service.QueryService;
 import io.github.jhipster.service.filter.InstantFilter;
@@ -34,6 +35,7 @@ import javax.persistence.criteria.*;
 import java.lang.reflect.Method;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.*;
 
 import static java.util.stream.Collectors.toSet;
@@ -628,48 +630,6 @@ public class PatientService extends QueryService<Patient> {
         return p;
     }
 
-    /**
-     * 特殊 rule check 只實作指定代碼(81/91004C)，部分檢核，若原生代碼有異動，則需一併調整
-     */
-    @Transactional
-    public NhiRuleCheckResultVM getPatientNhiStatus(
-        String code,
-        Long patientId
-    ) {
-        Optional<Patient> patientOpt = patientRepository.findById(patientId);
-        if (!patientOpt.isPresent()) {
-            throw new BadRequestAlertException("Can not found patient by id", ENTITY_NAME, "notfound");
-        }
-
-        Patient p = patientOpt.get();
-
-        NhiRuleCheckDTO dto = this.createNhiRuleCheckDto(patientId, code);
-        NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
-
-        switch (code) {
-            case NHI_STATUS_81:
-                vm = this.calculateNhiStatus81(dto);
-                break;
-            case NHI_STATUS_91004C:
-                vm = this.calculateNhiStatus91004C(dto);
-                break;
-            default:
-                break;
-        }
-
-        if (vm.getMessages() != null &&
-            vm.getMessages().size() > 0
-        ) {
-            if (NHI_STATUS_81.equals(code)) {
-                p.setNhiStatus81(vm.getMessages().get(0));
-            } else if (NHI_STATUS_91004C.equals(code)) {
-                p.setNhiStatus91004C(vm.getMessages().get(0));
-            }
-        }
-
-        return vm;
-    }
-
     public void setNewPatient(Patient patient) {
         patient.setNewPatient(
             patient
@@ -715,7 +675,7 @@ public class PatientService extends QueryService<Patient> {
         return nhiRuleCheckUtil.convertVmToDto(code, body);
     }
 
-    public NhiRuleCheckResultVM calculateNhiStatus81(NhiRuleCheckDTO dto) {
+    private NhiRuleCheckResultVM calculateNhiStatus81(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         if (vm.isValidated()) {
@@ -753,7 +713,7 @@ public class PatientService extends QueryService<Patient> {
         return vm;
     }
 
-    public NhiRuleCheckResultVM calculateNhiStatus91004C(NhiRuleCheckDTO dto) {
+    private NhiRuleCheckResultVM calculateNhiStatus91004C(NhiRuleCheckDTO dto) {
         NhiRuleCheckResultVM vm = new NhiRuleCheckResultVM();
 
         if (vm.isValidated()) {
@@ -814,26 +774,41 @@ public class PatientService extends QueryService<Patient> {
     }
 
     public void updatePatientNhiStatus(
-        Patient patient,
-        NhiRuleCheckResultVM vm,
-        String code
+        Patient patient
     ) {
-        if (vm != null &&
-            vm.getMessages() != null &&
-            vm.getMessages().size() > 0
+        if (patient == null ||
+            patient.getBirth() == null
         ) {
-            String message = vm.getMessages().get(0);
-           switch (code) {
-               case NHI_STATUS_81:
-                   patient.setNhiStatus81(message);
-                   break;
-               case NHI_STATUS_91004C:
-                   patient.setNhiStatus91004C(message);
-                   break;
-               default:
-                   break;
-           }
+            throw new BadRequestAlertException("Patient is nul or missing birth day info", ENTITY_NAME, "required");
         }
+
+        patient.setNhiStatus81("");
+        patient.setNhiStatus91004C("");
+        Period age = Period.between(patient.getBirth(), LocalDate.now());
+
+        if (age.getYears() <= 6) {
+            NhiRuleCheckResultVM vm = this.calculateNhiStatus81(this.createNhiRuleCheckDto(patient.getId(), NHI_STATUS_81));
+            if (vm != null &&
+                vm.getMessages() != null &&
+                vm.getMessages().size() > 0
+            ) {
+                patient.setNhiStatus81(vm.getMessages().get(0));
+            }
+        }
+
+        if (age.getYears() >= 12) {
+            NhiRuleCheckResultVM vm = this.calculateNhiStatus91004C(this.createNhiRuleCheckDto(patient.getId(), NHI_STATUS_91004C));
+            if (vm != null &&
+                vm.getMessages() != null &&
+                vm.getMessages().size() > 0
+            ) {
+                patient.setNhiStatus91004C(vm.getMessages().get(0));
+            }
+        }
+    }
+
+    public Optional<Patient> findPatientByDisposalId(Long did) {
+        return patientRepository.findByAppointments_Registration_Disposal_id(did);
     }
 
 }
