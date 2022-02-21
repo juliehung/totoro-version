@@ -8,6 +8,12 @@ import io.dentall.totoro.thumbnails.ThumbnailsParam;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.MemoryCacheImageInputStream;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,14 +42,13 @@ public class ThumbnailsService {
         this.CLINIC_NAME = imageGcsBusinessServiceOptional.isPresent() ? imageGcsBusinessServiceOptional.get().getClinicName() : "ClinicNameNotPresent";
     }
 
-    public List<Thumbnails> createThumbnailsList(String path, String name, byte[] content, String contentType, List<ThumbnailsParam> params) {
+    public List<Thumbnails> createThumbnailsList(String path, String name, String format, byte[] content, String contentType, List<ThumbnailsParam> params) {
         if (isEmpty(path) || isEmpty(name) || isNull(content) || content.length == 0) {
             return emptyList();
         }
         return params.stream().map(param -> {
                 try {
-                    byte[] thumbnailsBytes = ThumbnailsHelper.doThumbnails(content, param.getWidth(), param.getHeight());
-                    return createThumbnails(path, name, thumbnailsBytes, contentType, param);
+                    return createThumbnails(path, name, format, content, contentType, param);
                 } catch (Exception e) {
                     return Optional.<Thumbnails>empty();
                 }
@@ -53,19 +58,27 @@ public class ThumbnailsService {
             .collect(Collectors.toList());
     }
 
-    public Optional<Thumbnails> createThumbnails(String path, String name, String url, String contentType, ThumbnailsParam param) throws IOException {
-        if (isEmpty(path) || isEmpty(name) || isEmpty(url)) {
-            return Optional.empty();
-        }
-        byte[] thumbnailsBytes = ThumbnailsHelper.doThumbnails(url, param.getWidth(), param.getHeight());
-        return uploadThumbnails(path, name, thumbnailsBytes, contentType, param);
-    }
-
-    public Optional<Thumbnails> createThumbnails(String path, String name, byte[] content, String contentType, ThumbnailsParam param) throws IOException {
+    public Optional<Thumbnails> createThumbnails(String path, String name, String format, byte[] content, String contentType, ThumbnailsParam param) throws IOException {
         if (isEmpty(path) || isEmpty(name) || isNull(content) || content.length == 0) {
             return Optional.empty();
         }
-        byte[] thumbnailsBytes = ThumbnailsHelper.doThumbnails(content, param.getWidth(), param.getHeight());
+
+        byte[] thumbnailsBytes;
+
+        if (content.length > 9000000) {
+            // 因檔案大概超10M時，java在讀入資料轉成BuffedImage會產生「 Invalid scanline stride」Exception
+            // 所以保險點，超過9M的檔案，先用Sampling的方式讀檔，犧牲一些解析度，可換取成功產生縮圖
+            Iterator<ImageReader> it = ImageIO.getImageReadersByFormatName(format);
+            ImageReader reader = it.next();
+            reader.setInput(new MemoryCacheImageInputStream(new ByteArrayInputStream(content)));
+            ImageReadParam imageReadParam = reader.getDefaultReadParam();
+            imageReadParam.setSourceSubsampling(4, 4, 0, 0);
+            BufferedImage bufferedImage = reader.read(0, imageReadParam);
+            thumbnailsBytes = ThumbnailsHelper.doThumbnails(bufferedImage, param.getWidth(), param.getHeight(), format);
+        } else {
+            thumbnailsBytes = ThumbnailsHelper.doThumbnails(content, param.getWidth(), param.getHeight());
+        }
+
         return uploadThumbnails(path, name, thumbnailsBytes, contentType, param);
     }
 

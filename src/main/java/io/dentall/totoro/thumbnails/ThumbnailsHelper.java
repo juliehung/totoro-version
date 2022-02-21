@@ -5,6 +5,7 @@ import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Storage;
 import net.coobird.thumbnailator.Thumbnails;
 
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -86,6 +87,13 @@ public final class ThumbnailsHelper {
     public static byte[] doThumbnails(byte[] bytes, int width, int height) throws IOException {
         try (final ByteArrayOutputStream output = new ByteArrayOutputStream()) {
             Thumbnails.of(new ByteArrayInputStream(bytes)).size(width, height).toOutputStream(output);
+            return output.toByteArray();
+        }
+    }
+
+    public static byte[] doThumbnails(BufferedImage bufferedImage, int width, int height, String format) throws IOException {
+        try (final ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+            Thumbnails.of(bufferedImage).size(width, height).outputFormat(format).toOutputStream(output);
             return output.toByteArray();
         }
     }

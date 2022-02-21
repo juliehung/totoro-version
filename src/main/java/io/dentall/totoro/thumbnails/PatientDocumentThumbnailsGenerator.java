@@ -4,7 +4,6 @@ import com.google.cloud.storage.Blob;
 import io.dentall.totoro.business.service.ImageGcsBusinessService;
 import io.dentall.totoro.business.service.ThumbnailsService;
 import io.dentall.totoro.domain.Document;
-import io.dentall.totoro.service.util.FileNameUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.*;
 
+import static io.dentall.totoro.service.util.FileNameUtil.getExtension;
 import static io.dentall.totoro.thumbnails.ThumbnailsHelper.*;
 import static java.lang.String.valueOf;
 import static java.util.Collections.emptyList;
@@ -53,6 +53,7 @@ public class PatientDocumentThumbnailsGenerator {
         return thumbnailsService.createThumbnailsList(
             valueOf(patientId),
             valueOf(document.getId()),
+            document.getFileExtension(),
             bytes,
             file.getContentType(),
             thumbnailsParamList);
@@ -102,8 +103,8 @@ public class PatientDocumentThumbnailsGenerator {
                     } else {
                         Blob blob = blobOriginOptional.get();
                         byte[] blobBytes = blob.getContent();
-                        String contentType = blob.getContentType() == null ? "image/" + FileNameUtil.getExtension(fileName) : blob.getContentType();
-                        thumbnailsOptional = thumbnailsService.createThumbnails(valueOf(patientId), valueOf(document.getId()), blobBytes, contentType, param);
+                        String contentType = blob.getContentType() == null ? "image/" + getExtension(fileName) : blob.getContentType();
+                        thumbnailsOptional = thumbnailsService.createThumbnails(valueOf(patientId), valueOf(document.getId()), getExtension(fileName), blobBytes, contentType, param);
                     }
                 } catch (IOException e) {
                     log.error("create thumbnails fails. patientId=" + patientId, e);
