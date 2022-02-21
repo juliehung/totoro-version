@@ -43,8 +43,7 @@ public class PatientNhiStatusTasks {
     int count = 0;
 
     @Scheduled(
-//        cron = "0 0 7 * * *",
-        cron = "0 * * * * *",
+        cron = "0 0 7 * * *",
         zone = "Asia/Taipei"
     )
     @Transactional

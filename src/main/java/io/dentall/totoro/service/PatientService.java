@@ -789,7 +789,7 @@ public class PatientService extends QueryService<Patient> {
         patient.setNhiStatus91004C("");
         Period age = Period.between(patient.getBirth(), LocalDate.now());
 
-        if (age.getYears() <= 6) {
+        if (age.getYears() < 6) {
             NhiRuleCheckResultVM vm = this.calculateNhiStatus81(this.createNhiRuleCheckDto(patient.getId(), NHI_STATUS_81));
             if (vm != null &&
                 vm.getMessages() != null &&
