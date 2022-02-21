@@ -2,14 +2,16 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.DisposalSummaryDto;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricDisposal;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTreatment;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
 
 /**
  *
@@ -35,7 +37,8 @@ public class DisposalSummary extends AbstractMetaSummary<DisposalSummaryDto> {
                     result.setDisposalDate(disposal.getDisposalDate());
                     result.setPatientId(disposal.getPatientId());
                     result.setPatientName(disposal.getPatientName());
-                    summaryByTreatment(result, disposal.getToothList());
+                    List<MetricTreatment> treatments =  disposal.getToothList().stream().map(MetricTooth::getTreatment).distinct().collect(toList());
+                    summaryByTreatment(result, treatments);
                     summaryByDisposal(result, disposal);
                     list.add(result);
                     return list;
@@ -46,7 +49,7 @@ public class DisposalSummary extends AbstractMetaSummary<DisposalSummaryDto> {
                 })
             .stream()
             .sorted(comparing(dto -> dto.getDisposalDate().toString() + dto.getPatientId()))
-            .collect(Collectors.toList());
+            .collect(toList());
     }
 
 }

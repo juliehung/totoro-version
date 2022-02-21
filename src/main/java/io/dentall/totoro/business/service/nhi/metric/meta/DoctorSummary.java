@@ -3,6 +3,7 @@ package io.dentall.totoro.business.service.nhi.metric.meta;
 import io.dentall.totoro.business.service.nhi.metric.dto.DoctorSummaryDto;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricDisposal;
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTreatment;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
 
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 /**
  *
@@ -43,7 +45,8 @@ public class DoctorSummary extends AbstractMetaSummary<DoctorSummaryDto> {
                     List<MetricTooth> toothList = Optional.ofNullable(sourceByDoctor.get(entry.getKey())).orElse(emptyList());
 
                     DoctorSummaryDto result = new DoctorSummaryDto();
-                    summaryByTreatment(result, toothList);
+                    List<MetricTreatment> treatments = toothList.stream().map(MetricTooth::getTreatment).distinct().collect(toList());
+                    summaryByTreatment(result, treatments);
 
                     disposalList.forEach(vm -> {
                             result.setDoctorId(vm.getDoctorId());

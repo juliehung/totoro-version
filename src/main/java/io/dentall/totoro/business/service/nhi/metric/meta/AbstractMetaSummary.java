@@ -1,7 +1,7 @@
 package io.dentall.totoro.business.service.nhi.metric.meta;
 
 import io.dentall.totoro.business.service.nhi.metric.dto.MetricDisposal;
-import io.dentall.totoro.business.service.nhi.metric.dto.MetricTooth;
+import io.dentall.totoro.business.service.nhi.metric.dto.MetricTreatment;
 import io.dentall.totoro.business.service.nhi.metric.dto.SummaryDto;
 import io.dentall.totoro.business.service.nhi.metric.source.MetricConfig;
 import io.dentall.totoro.business.service.nhi.metric.source.Source;
@@ -20,7 +20,7 @@ public abstract class AbstractMetaSummary<T> extends AbstractMetaCalculator<List
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    protected void summaryByTreatment(SummaryDto summaryDto, List<MetricTooth> source) {
+    protected void summaryByTreatment(SummaryDto summaryDto, List<MetricTreatment> source) {
         source.stream().reduce(summaryDto,
             (dto, vm) -> {
                 String code = vm.getTreatmentProcedureCode();
