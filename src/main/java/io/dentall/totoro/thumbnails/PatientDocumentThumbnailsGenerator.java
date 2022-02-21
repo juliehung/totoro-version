@@ -61,7 +61,7 @@ public class PatientDocumentThumbnailsGenerator {
     /**
      * 針對有支援縮圖格式的圖片，檢查是否已經有產生符合條件的縮圖，沒有的話就直接產生縮圖
      */
-    public List<Thumbnails> generateThumbnails(Document document, List<ThumbnailsParam> thumbnailsParams) {
+    public List<Thumbnails> generateThumbnails(Document document, List<ThumbnailsParam> thumbnailsParams, String bucketName) {
         if (isNull(document) || !isSupported(document.getFileExtension()) || thumbnailsParams.size() == 0 || !imageGcsBusinessServiceOptional.isPresent()) {
             return emptyList();
         }
@@ -89,7 +89,7 @@ public class PatientDocumentThumbnailsGenerator {
                     Thumbnails thumbnails = new Thumbnails();
                     thumbnails.setWidth(param.getWidth());
                     thumbnails.setHeight(param.getHeight());
-                    thumbnails.setUrl(getUrl(blob));
+                    thumbnails.setUrl(getUrl(bucketName, blob));
                     thumbnailsOptional = Optional.of(thumbnails);
                 }
             } else {
