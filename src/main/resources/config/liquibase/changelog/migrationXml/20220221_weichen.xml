@@ -9,24 +9,24 @@
             insert into nhi_procedure
                 (id,code,name,english_name,point,effective_time,expiration_time,nhi_procedure_type_id,description,default_icd_10_cm_id,chief_complaint)
             values
-                (246,'91090C','高風險疾病患者牙結石清除-全口','Full mouth scaling for patients at high risk for dental diseases','700','2022-03-01T16:00:00Z','2029-12-30T15:59:59Z','130', '', '15', '');
+                (246,'91090C','高風險疾病患者牙結石清除-全口','Full mouth scaling for patients at high risk for dental diseases','700','2022-02-28T16:00:00Z','2029-12-30T15:59:59Z','130', '', '15', '');
             insert into nhi_procedure
                 (id,code,name,english_name,point,effective_time,expiration_time,nhi_procedure_type_id,description,default_icd_10_cm_id,chief_complaint)
             values
-                (247,'P7301C','高齲齒率患者氟化物治療','Topical fluoride application for high caries risk patients','500','2022-03-01T16:00:00Z','2029-12-30T15:59:59Z','190', '', '9', '');
+                (247,'P7301C','高齲齒率患者氟化物治療','Topical fluoride application for high caries risk patients','500','2022-02-28T16:00:00Z','2029-12-30T15:59:59Z','190', '', '9', '');
             insert into nhi_procedure
                 (id,code,name,english_name,point,effective_time,expiration_time,nhi_procedure_type_id,description,default_icd_10_cm_id,chief_complaint)
             values
-                (248,'P7101C','青少年齲齒控制照護處置','','300','2022-03-01T16:00:00Z','2029-12-30T15:59:59Z','190', '', '9', '');
+                (248,'P7101C','青少年齲齒控制照護處置','','300','2022-02-28T16:00:00Z','2029-12-30T15:59:59Z','190', '', '9', '');
             insert into nhi_procedure
                 (id,code,name,english_name,point,effective_time,expiration_time,nhi_procedure_type_id,description,default_icd_10_cm_id,chief_complaint)
             values
-                (249,'P7102C','青少年齲齒氟化物治療','','500','2022-03-01T16:00:00Z','2029-12-30T15:59:59Z','190', '', '9', '');
+                (249,'P7102C','青少年齲齒氟化物治療','','500','2022-02-28T16:00:00Z','2029-12-30T15:59:59Z','190', '', '9', '');
             update nhi_procedure set expiration_time = '2022-02-28T15:59:59Z' where id = 67;
             insert into nhi_procedure
                 (id, code, name, point, english_name, default_icd_10_cm_id, description, nhi_procedure_type_id, nhi_icd9cm_id, specific_code, chief_complaint, expiration_time, salary_type, effective_time)
             VALUES
-                (250, '91001C', '牙周緊急處置', 150, 'Management of periodontal emergencies', 11, 'Local debridement &amp; BI irrigation.', 130, 3, 'P4', 'Gum swelling.', null, null, '2022-03-01T16:00:00Z');
+                (250, '91001C', '牙周緊急處置', 150, 'Management of periodontal emergencies', 11, 'Local debridement &amp; BI irrigation.', 130, 3, 'P4', 'Gum swelling.', null, null, '2022-02-28T16:00:00Z');
         </sql>
     </changeSet>
 </databaseChangeLog>
