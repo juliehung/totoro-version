@@ -241,23 +241,23 @@ public final class DateTimeUtil {
             "".concat(String.valueOf(year))
                 .concat("-")
                 .concat(
-                    month > 10 ? String.valueOf(month) : "0" + String.valueOf(month)
+                    month >= 10 ? String.valueOf(month) : "0" + String.valueOf(month)
                 )
                 .concat("-")
                 .concat(
-                    day > 10 ? String.valueOf(day) : "0" + String.valueOf(day)
+                    day >= 10 ? String.valueOf(day) : "0" + String.valueOf(day)
                 )
                 .concat("T")
                 .concat(
-                    hour > 10 ? String.valueOf(hour) : "0" + String.valueOf(hour)
+                    hour >= 10 ? String.valueOf(hour) : "0" + String.valueOf(hour)
                 )
                 .concat(":")
                 .concat(
-                    minute > 10 ? String.valueOf(minute) : "0" + String.valueOf(minute)
+                    minute >= 10 ? String.valueOf(minute) : "0" + String.valueOf(minute)
                 )
                 .concat(":")
                 .concat(
-                    second > 10 ? String.valueOf(second) : "0" + String.valueOf(second)
+                    second >= 10 ? String.valueOf(second) : "0" + String.valueOf(second)
                 )
                 .concat("Z")
         );
