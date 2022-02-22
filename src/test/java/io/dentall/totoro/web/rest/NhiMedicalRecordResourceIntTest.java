@@ -559,24 +559,6 @@ public class NhiMedicalRecordResourceIntTest {
         defaultNhiMedicalRecordShouldNotBeFound("nhiExtendPatientId.equals=" + (nhiExtendPatientId + 1));
     }
 
-    /**
-     * Executes the search, and checks that the default entity is not returned
-     */
-    private void defaultNhiMedicalRecordShouldNotBeFound(String filter) throws Exception {
-        restNhiMedicalRecordMockMvc.perform(get("/api/nhi-medical-records?sort=id,desc&" + filter))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$").isArray())
-            .andExpect(jsonPath("$").isEmpty());
-
-        // Check, that the count call also returns 0
-        restNhiMedicalRecordMockMvc.perform(get("/api/nhi-medical-records/count?sort=id,desc&" + filter))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(content().string("0"));
-    }
-
-
     @Test
     @Transactional
     public void getNonExistingNhiMedicalRecord() throws Exception {
