@@ -3,11 +3,10 @@ package io.dentall.totoro.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.dentall.totoro.business.service.NhiRuleCheckSourceType;
 import io.dentall.totoro.business.service.nhi.NhiHybridRecord;
+import io.dentall.totoro.config.TimeConfig;
 import io.dentall.totoro.domain.NhiMedicalRecord;
-import io.dentall.totoro.repository.NhiExtendDisposalRepository;
-import io.dentall.totoro.repository.NhiMedicalRecordRepository;
-import io.dentall.totoro.repository.NhiMedicineRepository;
-import io.dentall.totoro.repository.NhiTxRepository;
+import io.dentall.totoro.domain.NhiProcedure;
+import io.dentall.totoro.repository.*;
 import io.dentall.totoro.service.NhiMedicalRecordQueryService;
 import io.dentall.totoro.service.NhiMedicalRecordService;
 import io.dentall.totoro.service.dto.NhiMedicalRecordCriteria;
@@ -28,11 +27,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 /**
  * REST controller for managing NhiMedicalRecord.
@@ -57,13 +56,16 @@ public class NhiMedicalRecordResource {
 
     private final NhiMedicalRecordRepository nhiMedicalRecordRepository;
 
+    private final NhiProcedureRepository nhiProcedureRepository;
+
     public NhiMedicalRecordResource(
         NhiMedicalRecordService nhiMedicalRecordService,
         NhiMedicalRecordQueryService nhiMedicalRecordQueryService,
         NhiTxRepository nhiTxRepository,
         NhiMedicineRepository nhiMedicineRepository,
         NhiExtendDisposalRepository nhiExtendDisposalRepository,
-        NhiMedicalRecordRepository nhiMedicalRecordRepository
+        NhiMedicalRecordRepository nhiMedicalRecordRepository,
+        NhiProcedureRepository nhiProcedureRepository
     ) {
         this.nhiMedicalRecordService = nhiMedicalRecordService;
         this.nhiMedicalRecordQueryService = nhiMedicalRecordQueryService;
@@ -71,6 +73,7 @@ public class NhiMedicalRecordResource {
         this.nhiMedicineRepository = nhiMedicineRepository;
         this.nhiExtendDisposalRepository = nhiExtendDisposalRepository;
         this.nhiMedicalRecordRepository = nhiMedicalRecordRepository;
+        this.nhiProcedureRepository = nhiProcedureRepository;
     }
 
     /**
@@ -147,12 +150,24 @@ public class NhiMedicalRecordResource {
         if (criteria.getNhiExtendPatientId() != null &&
             criteria.getNhiExtendPatientId().getEquals() != null
         ) {
+            Map<String, List<NhiProcedure>> idCodeToNhiProcedureMap =
+                nhiProcedureRepository.findAll().stream()
+                    .filter(np -> np.getCode() != null)
+                    .collect(groupingBy(NhiProcedure::getCode, toList()));
+
             if (NhiRuleCheckSourceType.SYSTEM_RECORD.equals(criteria.getIgnoreSourceType())) {
                 Page<NhiMedicalRecordVM2> nhiMedicalRecords = nhiMedicalRecordRepository.findNoneCancelledAndNotInSystem(
                     criteria.getNhiExtendPatientId().getEquals(),
                     pageRequest
                 );
-                contents = nhiMedicalRecords.map(NhiMedicalRecordMapper.INSTANCE::nhiMedicalRecordVM2ToNhiMedicalRecordVM).stream().collect(Collectors.toList());
+                contents = nhiMedicalRecords
+                    .map(NhiMedicalRecordMapper.INSTANCE::nhiMedicalRecordVM2ToNhiMedicalRecordVM)
+                    .map(vm -> {
+                        nhiMedicalRecordService.setValidatedNhiProcedure(vm, idCodeToNhiProcedureMap);
+                        return vm;
+                    })
+                    .stream()
+                    .collect(toList());
 
                 headers = PaginationUtil.generatePaginationHttpHeaders(nhiMedicalRecords, "/api/nhi-medical-records");
             } else {
@@ -160,7 +175,15 @@ public class NhiMedicalRecordResource {
                     criteria.getNhiExtendPatientId().getEquals(),
                     pageRequest
                 );
-                contents = nhiMedicalRecords.map(NhiMedicalRecordMapper.INSTANCE::nhiMedicalRecordVM2ToNhiMedicalRecordVM).stream().collect(Collectors.toList());
+
+                contents = nhiMedicalRecords
+                    .map(NhiMedicalRecordMapper.INSTANCE::nhiMedicalRecordVM2ToNhiMedicalRecordVM)
+                    .map(vm -> {
+                        nhiMedicalRecordService.setValidatedNhiProcedure(vm, idCodeToNhiProcedureMap);
+                        return vm;
+                    })
+                    .stream()
+                    .collect(Collectors.toList());
 
                 headers = PaginationUtil.generatePaginationHttpHeaders(nhiMedicalRecords, "/api/nhi-medical-records");
             }
