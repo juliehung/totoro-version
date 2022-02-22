@@ -215,28 +215,6 @@ public class Patient extends AbstractAuditingEntity implements Serializable, Ava
     @Column(name = "customized_other")
     private String customizedOther;
 
-    @Column(name = "nhi_status_81")
-    private String nhiStatus81;
-
-    @Column(name = "nhi_status_91004C")
-    private String nhiStatus91004C;
-
-    public String getNhiStatus81() {
-        return nhiStatus81;
-    }
-
-    public void setNhiStatus81(String nhiStatus81) {
-        this.nhiStatus81 = nhiStatus81;
-    }
-
-    public String getNhiStatus91004C() {
-        return nhiStatus91004C;
-    }
-
-    public void setNhiStatus91004C(String nhiStatus91004C) {
-        this.nhiStatus91004C = nhiStatus91004C;
-    }
-
     public Boolean getDisabled() {
         return disabled;
     }

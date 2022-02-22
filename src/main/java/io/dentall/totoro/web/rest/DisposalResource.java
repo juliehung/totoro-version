@@ -1,7 +1,6 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import io.dentall.totoro.business.service.UpdatePatientNhiStatus;
 import io.dentall.totoro.domain.Disposal;
 import io.dentall.totoro.config.TimeConfig;
 import io.dentall.totoro.domain.enumeration.PlainDisposalType;
@@ -90,7 +89,6 @@ public class DisposalResource {
      */
     @PostMapping("/disposals")
     @Timed
-    @UpdatePatientNhiStatus
     public ResponseEntity<Disposal> createDisposal(@Valid @RequestBody Disposal disposal) throws URISyntaxException {
         log.debug("REST request to save Disposal : {}", disposal);
         if (disposal.getId() != null) {
@@ -117,7 +115,6 @@ public class DisposalResource {
      */
     @PutMapping("/disposals")
     @Timed
-    @UpdatePatientNhiStatus
     public ResponseEntity<Disposal> updateDisposal(@Valid @RequestBody Disposal disposal) throws URISyntaxException {
         log.debug("REST request to update Disposal : {}", disposal);
         if (disposal.getId() == null) {

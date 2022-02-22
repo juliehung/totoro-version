@@ -21,8 +21,6 @@ public interface UWPRegistrationPageVM {
     String getPatientCustomizedBloodDisease();
     String getPatientCustomizedAllergy();
     String getPatientCustomizedOther();
-    String getPatientNhiStatus81();
-    String getPatientNhiStatus91004C();
 
     // disposal
     Long getDisposalId();

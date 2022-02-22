@@ -1,7 +1,6 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import io.dentall.totoro.business.service.UpdatePatientNhiStatus;
 import io.dentall.totoro.domain.Appointment;
 import io.dentall.totoro.domain.Tag;
 import io.dentall.totoro.repository.TagRepository;
@@ -72,7 +71,6 @@ public class AppointmentResource {
      */
     @PostMapping("/appointments")
     @Timed
-    @UpdatePatientNhiStatus
     public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointment) throws URISyntaxException {
         log.debug("REST request to save Appointment : {}", appointment);
         if (appointment.getId() != null) {
