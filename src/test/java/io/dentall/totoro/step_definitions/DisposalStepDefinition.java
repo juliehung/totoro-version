@@ -143,7 +143,8 @@ public class DisposalStepDefinition extends AbstractStepDefinition {
             nhiTxRepository,
             nhiMedicineRepository,
             nhiExtendDisposalRepository,
-            nhiMedicalRecordRepository
+            nhiMedicalRecordRepository,
+            null
         );
         final NhiProcedureResource resource5 = new NhiProcedureResource(nhiProcedureService, nhiProcedureRepository);
         this.mvc = MockMvcBuilders.standaloneSetup(resource1, resource2, resource3, resource4, resource5)

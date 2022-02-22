@@ -225,6 +225,44 @@ public final class DateTimeUtil {
         return LocalDate.of(year, month, day);
     }
 
+    public static Instant transformROCDateToInstant(String rocDateTim) {
+        if (rocDateTim.length() != 13) {
+            return Instant.now();
+        }
+
+        int year = Integer.parseInt(rocDateTim.substring(0, 3)) + 1911;
+        int month = Integer.parseInt(rocDateTim.substring(3, 5));
+        int day = Integer.parseInt(rocDateTim.substring(5, 7));
+        int hour = Integer.parseInt(rocDateTim.substring(7, 9));
+        int minute = Integer.parseInt(rocDateTim.substring(9, 11));
+        int second = Integer.parseInt(rocDateTim.substring(11, 13));
+
+        return Instant.parse(
+            "".concat(String.valueOf(year))
+                .concat("-")
+                .concat(
+                    month > 10 ? String.valueOf(month) : "0" + String.valueOf(month)
+                )
+                .concat("-")
+                .concat(
+                    day > 10 ? String.valueOf(day) : "0" + String.valueOf(day)
+                )
+                .concat("T")
+                .concat(
+                    hour > 10 ? String.valueOf(hour) : "0" + String.valueOf(hour)
+                )
+                .concat(":")
+                .concat(
+                    minute > 10 ? String.valueOf(minute) : "0" + String.valueOf(minute)
+                )
+                .concat(":")
+                .concat(
+                    second > 10 ? String.valueOf(second) : "0" + String.valueOf(second)
+                )
+                .concat("Z")
+        );
+    }
+
     public static Integer getAge(LocalDate birthday, LocalDate now) {
         int yearGap = now.getYear() - birthday.getYear();
         LocalDate birthDateThisYear = birthday.plusYears(yearGap);

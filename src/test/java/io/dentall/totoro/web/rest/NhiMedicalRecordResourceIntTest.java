@@ -117,7 +117,8 @@ public class NhiMedicalRecordResourceIntTest {
             nhiTxRepository,
             nhiMedicineRepository,
             nhiExtendDisposalRepository,
-            nhiMedicalRecordRepository
+            nhiMedicalRecordRepository,
+            null
         );
         this.restNhiMedicalRecordMockMvc = MockMvcBuilders.standaloneSetup(nhiMedicalRecordResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
