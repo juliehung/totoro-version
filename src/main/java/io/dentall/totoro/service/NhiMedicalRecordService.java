@@ -224,29 +224,33 @@ public class NhiMedicalRecordService {
         NhiMedicalRecordVM vm,
         Map<String, List<NhiProcedure>> idCodeToNhiProcedureMap
     ) {
-        NhiMedicalRecord nmr = vm.getNhiMedicalRecord();
-        // 轉出來的 Instant 無法利用 offset 轉到正確的時間點，因此採取 -8hrs 強制對齊 db timestamp
-        Instant nmrTxTime = DateTimeUtil.transformROCDateToInstant(nmr.getDate()).minus(8L, ChronoUnit.HOURS);
-        if (idCodeToNhiProcedureMap.containsKey(nmr.getNhiCode())) {
-            idCodeToNhiProcedureMap.get(nmr.getNhiCode())
-                .stream()
-                .filter(np -> {
-                    if (np.getEffectiveTime() != null &&
-                        nmrTxTime.isBefore(np.getEffectiveTime())
-                    ) {
-                        return false;
-                    }
+        try {
+            NhiMedicalRecord nmr = vm.getNhiMedicalRecord();
+            // 轉出來的 Instant 無法利用 offset 轉到正確的時間點，因此採取 -8hrs 強制對齊 db timestamp
+            Instant nmrTxTime = DateTimeUtil.transformROCDateToInstant(nmr.getDate()).minus(8L, ChronoUnit.HOURS);
+            if (idCodeToNhiProcedureMap.containsKey(nmr.getNhiCode())) {
+                idCodeToNhiProcedureMap.get(nmr.getNhiCode())
+                    .stream()
+                    .filter(np -> {
+                        if (np.getEffectiveTime() != null &&
+                            nmrTxTime.isBefore(np.getEffectiveTime())
+                        ) {
+                            return false;
+                        }
 
-                    if (np.getExpirationTime() != null &&
-                        nmrTxTime.isAfter(np.getExpirationTime())
-                    ) {
-                        return false;
-                    }
+                        if (np.getExpirationTime() != null &&
+                            nmrTxTime.isAfter(np.getExpirationTime())
+                        ) {
+                            return false;
+                        }
 
-                    return true;
-                })
-                .findFirst()
-                .ifPresent(np -> vm.setMandarin(np.getName()));
+                        return true;
+                    })
+                    .findFirst()
+                    .ifPresent(np -> vm.setMandarin(np.getName()));
+            }
+        } catch (Exception e) {
+           // do nothing
         }
         return vm;
     };
