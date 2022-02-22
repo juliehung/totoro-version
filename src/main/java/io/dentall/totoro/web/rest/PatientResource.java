@@ -26,6 +26,7 @@ import io.dentall.totoro.web.rest.vm.PatientDueDateVM;
 import io.dentall.totoro.web.rest.vm.PatientFirstLatestVisitDateVM;
 import io.dentall.totoro.web.rest.vm.PatientNationalIdValidationVM;
 import io.github.jhipster.web.util.ResponseUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -42,10 +43,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -498,12 +496,22 @@ public class PatientResource {
         @RequestParam("patientId") Long patientId
     ) {
         log.debug("REST request to get Patient's nhi status by patient id : {}", patientId);
-        if (!code.equals("81") &&
-            !code.equals("91004C")
+        if (!PatientService.NHI_STATUS_81.equals(code) &&
+            !PatientService.NHI_STATUS_91004C.equals(code)
         ) {
             throw new BadRequestAlertException("Only support nhi code 81, 91004C", ENTITY_NAME, "not.supported.nhi.code");
         }
-        return ResponseEntity.ok(patientService.getPatientNhiStatus(code, patientId));
+
+        Optional<Patient> patientOpt = patientRepository.findById(patientId);
+        if (!patientOpt.isPresent()) {
+            throw new BadRequestAlertException("Not found patient by id: " + patientId, ENTITY_NAME, "notfound");
+        }
+
+        Patient p = patientOpt.get();
+        NhiRuleCheckResultVM vm = patientService.updatePatientNhiStatus(p);
+        patientService.update(p);
+
+        return ResponseEntity.ok(vm);
     }
 
 }

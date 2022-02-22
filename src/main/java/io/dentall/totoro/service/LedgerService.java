@@ -138,6 +138,10 @@ public class LedgerService {
                     ledger.setIncludeStampTax(updateLedger.getIncludeStampTax());
                 }
 
+                if (updateLedger.getNote() != null) {
+                    ledger.setNote(updateLedger.getNote());
+                }
+
                 return ledger;
             })
             .get();

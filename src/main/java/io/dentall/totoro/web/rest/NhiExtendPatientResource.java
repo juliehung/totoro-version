@@ -1,6 +1,7 @@
 package io.dentall.totoro.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import io.dentall.totoro.business.service.UpdatePatientNhiStatus;
 import io.dentall.totoro.domain.NhiExtendPatient;
 import io.dentall.totoro.service.NhiExtendPatientService;
 import io.dentall.totoro.web.rest.errors.BadRequestAlertException;
@@ -65,6 +66,7 @@ public class NhiExtendPatientResource {
      */
     @PutMapping("/nhi-extend-patients")
     @Timed
+    @UpdatePatientNhiStatus
     public ResponseEntity<NhiExtendPatient> updateNhiExtendPatient(@RequestBody NhiExtendPatient nhiExtendPatient) throws URISyntaxException {
         log.debug("REST request to update NhiExtendPatient : {}", nhiExtendPatient);
         if (nhiExtendPatient.getId() == null) {
