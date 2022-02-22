@@ -643,4 +643,8 @@ public class NhiMedicalRecordResourceIntTest {
         List<NhiMedicalRecord> nhiMedicalRecordList = nhiMedicalRecordRepository.findAll();
         assertThat(nhiMedicalRecordList).hasSize(databaseSizeBeforeDelete - 1);
     }
+
+    public void defaultNhiMedicalRecordShouldNotBeFound(String s) {
+        // ignore all
+    }
 }
