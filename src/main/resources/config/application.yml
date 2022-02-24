@@ -67,6 +67,8 @@ spring:
     mvc:
         favicon:
             enabled: false
+        async:
+            request-timeout: 90000
     thymeleaf:
         mode: HTML
     jackson:
