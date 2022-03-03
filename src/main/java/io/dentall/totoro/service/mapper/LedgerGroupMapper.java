@@ -34,6 +34,7 @@ public interface LedgerGroupMapper {
     @Mapping(target = "doctorId", source = "ledgerGroup.doctorId")
     @Mapping(target = "createdDate", source = "createdDate")
     @Mapping(target = "lastModifiedBy", source = "lastModifiedBy")
+    @Mapping(target = "lastModifiedDate", source = "lastModifiedDate")
     LedgerVM convertLedgerFromDomainToVM(Ledger l);
 
     Ledger convertLedgerUnwrapGroupVMToLedger(LedgerUnwrapGroupVM vm);
