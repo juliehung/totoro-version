@@ -16,18 +16,16 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.YearMonth;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static io.dentall.totoro.service.util.DateTimeUtil.formatToMinguoDate;
 import static java.util.Arrays.stream;
 import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 import static net.logstash.logback.encoder.org.apache.commons.lang.StringUtils.isNumeric;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class ReportHelper {
 
@@ -184,5 +182,41 @@ public class ReportHelper {
         BigDecimal a = new BigDecimal(visibleCharacters * pixels + 5);
         BigDecimal b = new BigDecimal(pixels);
         return a.divide(b, RoundingMode.CEILING).intValue() * 256;
+    }
+
+    /**
+     * 因診察代碼不一定會寫進treatment_procedure(醫生沒有特別在處置單上新增診察代碼)，所以要特別產生沒有在treatment_procedure的診察代碼資料出來
+     */
+    public static List<NhiVo> generateExamNhiVoList(List<NhiVo> nhiVoList) {
+        // 找出 treatment_procedure 已有診察代碼的 disposalId
+        Set<Long> theDisposalIdThatExamCodeIncludedInTreatment =
+            nhiVoList
+                .stream()
+                .parallel()
+                .filter(data -> isNotBlank(data.getExamCode()) && data.getExamCode().equals(data.getProcedureCode()))
+                .map(NhiVo::getDisposalId)
+                .collect(toSet());
+
+        // 產生以診察代碼為主的資料
+        return new ArrayList<>(nhiVoList
+            .stream()
+            .parallel()
+            .filter(data -> !theDisposalIdThatExamCodeIncludedInTreatment.contains(data.getDisposalId())) // 濾掉已經有在treatment_procedure的診察代碼的處置單
+            .filter(data -> isNotBlank(data.getExamCode()))
+            .reduce(new ConcurrentHashMap<Long, NhiVo>(nhiVoList.size() / 3), (map, nhiVo) -> {
+                map.computeIfAbsent(nhiVo.getDisposalId(), disposalId -> {
+                    NhiVo examNhiVo = ReportMapper.INSTANCE.mapToNhiVo(nhiVo);
+                    examNhiVo.setProcedureId(null);
+                    examNhiVo.setProcedureCode(nhiVo.getExamCode());
+                    examNhiVo.setProcedureTooth(null);
+                    examNhiVo.setProcedureSurface(null);
+                    examNhiVo.setProcedurePoint(nhiVo.getExamPoint());
+                    return examNhiVo;
+                });
+                return map;
+            }, (map1, map2) -> {
+                map1.putAll(map2);
+                return map1;
+            }).values());
     }
 }

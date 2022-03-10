@@ -5,6 +5,7 @@ import io.dentall.totoro.web.rest.vm.FollowupReportVM;
 import io.dentall.totoro.web.rest.vm.TreatmentReportVM;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.Map;
 
 import static java.util.Optional.ofNullable;
 
-@Mapper
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ReportVmMapper {
 
     ReportVmMapper INSTANCE = Mappers.getMapper(ReportVmMapper.class);

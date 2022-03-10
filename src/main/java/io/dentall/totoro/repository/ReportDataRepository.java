@@ -62,6 +62,8 @@ public interface ReportDataRepository extends JpaRepository<ReportRecord, Long> 
             "       p.phone                   as patientPhone, " +
             "       p.note                    as patientNote, " +
             "       np.id                     as procedureId, " +
+            "       ned.examination_code      as examCode, " +
+            "       ned.examination_point     as examPoint, " +
             "       netp.a73                  as procedureCode, " +
             "       netp.a74                  as procedureTooth, " +
             "       netp.a75                  as procedureSurface, " +

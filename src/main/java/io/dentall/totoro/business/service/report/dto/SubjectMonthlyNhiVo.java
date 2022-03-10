@@ -69,8 +69,6 @@ public class SubjectMonthlyNhiVo {
 
         private String doctorName;
 
-        private long procedureId;
-
         private String procedureCode;
 
         private int procedureCount;
@@ -82,7 +80,6 @@ public class SubjectMonthlyNhiVo {
         public Summary(NhiVo vo) {
             this.disposalMonth = YearMonth.from(vo.getDisposalDate());
             this.doctorName = vo.getDoctorName();
-            this.procedureId = vo.getProcedureId();
             this.procedureCode = vo.getProcedureCode();
         }
 
@@ -100,14 +97,6 @@ public class SubjectMonthlyNhiVo {
 
         public void setDoctorName(String doctorName) {
             this.doctorName = doctorName;
-        }
-
-        public long getProcedureId() {
-            return procedureId;
-        }
-
-        public void setProcedureId(long procedureId) {
-            this.procedureId = procedureId;
         }
 
         public String getProcedureCode() {
@@ -151,12 +140,12 @@ public class SubjectMonthlyNhiVo {
                 return false;
             }
             Summary summary = (Summary) o;
-            return procedureId == summary.procedureId && Objects.equals(disposalMonth, summary.disposalMonth);
+            return Objects.equals(disposalMonth, summary.disposalMonth) && Objects.equals(procedureCode, summary.procedureCode);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(disposalMonth, procedureId);
+            return Objects.hash(disposalMonth, procedureCode);
         }
     }
 

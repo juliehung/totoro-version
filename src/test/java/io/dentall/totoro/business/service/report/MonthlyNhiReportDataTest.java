@@ -6,7 +6,10 @@ import io.dentall.totoro.business.service.report.dto.NhiVo;
 import io.dentall.totoro.business.service.report.dto.SubjectMonthlyNhiVo;
 import io.dentall.totoro.business.service.report.dto.SubjectMonthlyNhiVo.Summary;
 import io.dentall.totoro.business.service.report.treatment.MonthlyNhiReportSetting;
+import io.dentall.totoro.domain.NhiProcedure;
+import io.dentall.totoro.repository.NhiProcedureRepository;
 import io.dentall.totoro.repository.ReportDataRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static java.util.Arrays.asList;
@@ -37,7 +38,18 @@ public class MonthlyNhiReportDataTest {
     @Autowired
     private MonthlyNhiReportBuilderService monthlyNhiReportBuilderService;
 
+    @MockBean
+    private NhiProcedureRepository nhiProcedureRepository;
+
     private final AtomicLong disposalIdGenerator = new AtomicLong();
+
+    private static Map<Long, String> codeMappings = new HashMap<>();
+
+    @Before
+    public void initCodeMappings() {
+        codeMappings.put(1L, "0001");
+        codeMappings.put(2L, "0002");
+    }
 
     private NhiVo newData(long doctorId, LocalDate disposalDate, long procedureId) {
         NhiVo vo = new NhiVo();
@@ -48,6 +60,7 @@ public class MonthlyNhiReportDataTest {
         vo.setPatientId(1L);
         vo.setPatientName("P1");
         vo.setProcedureId(procedureId);
+        vo.setProcedureCode(codeMappings.get(procedureId));
         vo.setProcedurePoint(100 * procedureId);
         vo.setCardNumber("IC" + vo.getDisposalId());
         return vo;
@@ -64,9 +77,8 @@ public class MonthlyNhiReportDataTest {
         NhiVo vo2_3 = newData(2L, LocalDate.now().minusMonths(1), 1L);
         NhiVo vo2_4 = newData(2L, LocalDate.now().minusMonths(1), 2L);
 
-        return asList(vo1_1, vo1_2, vo1_3, vo1_4, vo2_1, vo2_2, vo2_3, vo2_4);
+        return new ArrayList<>(asList(vo1_1, vo1_2, vo1_3, vo1_4, vo2_1, vo2_2, vo2_3, vo2_4));
     }
-
 
     @Test
     public void testMonthlyNhiReportData() {
@@ -106,13 +118,12 @@ public class MonthlyNhiReportDataTest {
     private void checkSummary(List<Summary> summaryList, YearMonth yearMonth, Long procedureId, int patientCount, int procedureCount, long procedurePoint) {
         List<Summary> clinicSummary1 = summaryList.stream()
             .filter(summary -> summary.getDisposalMonth().compareTo(yearMonth) == 0)
-            .filter(summary -> summary.getProcedureId() == procedureId)
+            .filter(summary -> Objects.equals(summary.getProcedureCode(), codeMappings.get(procedureId)))
             .collect(toList());
         assertThat(clinicSummary1.size()).isEqualTo(1);
         assertThat(clinicSummary1.get(0).getPatientCount()).isEqualTo(patientCount);
         assertThat(clinicSummary1.get(0).getProcedureCount()).isEqualTo(procedureCount);
         assertThat(clinicSummary1.get(0).getProcedurePoint()).isEqualTo(procedurePoint);
-
     }
 
     @Test
@@ -141,6 +152,11 @@ public class MonthlyNhiReportDataTest {
     public void testMonthlyNhiReportDataFilterByNhiProcedure() {
         when(reportDataRepository.findNhiVoBetween(any(), any())).thenReturn(getData());
 
+        NhiProcedure nhiProcedure = new NhiProcedure();
+        nhiProcedure.setId(1L);
+        nhiProcedure.setCode(codeMappings.get(1L));
+        when(nhiProcedureRepository.findAllByIdIn(any(ArrayList.class))).thenReturn(asList(nhiProcedure));
+
         ReportDataProvider<MonthlyNhiReportSetting, List<SubjectMonthlyNhiVo>> provider = monthlyNhiReportBuilderService.getDataProvider();
         MonthlyNhiReportSetting setting = new MonthlyNhiReportSetting();
         setting.setBeginMonth(YearMonth.now());
@@ -152,7 +168,7 @@ public class MonthlyNhiReportDataTest {
             .stream()
             .map(SubjectMonthlyNhiVo::getSummaryList)
             .flatMap(Collection::stream)
-            .filter(summary -> summary.getProcedureId() != 1L)
+            .filter(summary -> !Objects.equals(summary.getProcedureCode(), codeMappings.get(1L)))
             .collect(toList());
         assertThat(otherProcedureList.size()).isEqualTo(0);
 

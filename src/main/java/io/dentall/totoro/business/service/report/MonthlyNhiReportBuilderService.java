@@ -8,18 +8,18 @@ import io.dentall.totoro.business.service.report.dto.SubjectMonthlyNhiVo;
 import io.dentall.totoro.business.service.report.dto.SubjectMonthlyNhiVo.Summary;
 import io.dentall.totoro.business.service.report.treatment.MonthlyNhiReportSetting;
 import io.dentall.totoro.business.service.report.treatment.MonthlyNhiSheet;
+import io.dentall.totoro.domain.NhiProcedure;
+import io.dentall.totoro.repository.NhiProcedureRepository;
 import io.dentall.totoro.repository.ReportDataRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.function.Function;
 
 import static io.dentall.totoro.business.service.report.context.ReportHelper.calculatePtCount;
+import static io.dentall.totoro.business.service.report.context.ReportHelper.generateExamNhiVoList;
 import static java.util.Collections.emptySet;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
@@ -31,8 +31,11 @@ public class MonthlyNhiReportBuilderService implements ReportBuilderService {
 
     private final ReportDataRepository reportDataRepository;
 
-    public MonthlyNhiReportBuilderService(ReportDataRepository reportDataRepository) {
+    private final NhiProcedureRepository nhiProcedureRepository;
+
+    public MonthlyNhiReportBuilderService(ReportDataRepository reportDataRepository, NhiProcedureRepository nhiProcedureRepository) {
         this.reportDataRepository = reportDataRepository;
+        this.nhiProcedureRepository = nhiProcedureRepository;
     }
 
     @Override
@@ -46,13 +49,16 @@ public class MonthlyNhiReportBuilderService implements ReportBuilderService {
     public ReportDataProvider<MonthlyNhiReportSetting, List<SubjectMonthlyNhiVo>> getDataProvider() {
         return (setting) -> {
             Set<Long> includeNhiProcedureIds = ofNullable(setting.getIncludeNhiProcedureIds()).orElse(emptySet());
+            Set<String> nhiCodeSet = includeNhiProcedureIds.isEmpty() ? emptySet() :
+                nhiProcedureRepository.findAllByIdIn(new ArrayList<>(includeNhiProcedureIds)).stream().map(NhiProcedure::getCode).collect(toSet());
             Set<Long> includeDoctorIds = ofNullable(setting.getIncludeDoctorIds()).orElse(emptySet());
+            List<NhiVo> nhiVoList = reportDataRepository.findNhiVoBetween(setting.getBeginMonth().atDay(1), setting.getEndMonth().atEndOfMonth());
+            nhiVoList.addAll(generateExamNhiVoList(nhiVoList));
 
-            List<NhiVo> nhiVoList = reportDataRepository
-                .findNhiVoBetween(setting.getBeginMonth().atDay(1), setting.getEndMonth().atEndOfMonth())
+            nhiVoList = nhiVoList
                 .stream()
                 .parallel()
-                .filter(vo -> includeNhiProcedureIds.isEmpty() || includeNhiProcedureIds.contains(vo.getProcedureId()))
+                .filter(vo -> nhiCodeSet.isEmpty() || nhiCodeSet.contains(vo.getProcedureCode()))
                 .filter(vo -> includeDoctorIds.isEmpty() || includeDoctorIds.contains(vo.getDoctorId()))
                 .collect(toList());
 
@@ -113,7 +119,7 @@ public class MonthlyNhiReportBuilderService implements ReportBuilderService {
                             existPatientCardNumber,
                             existDisposal));
                     summaryRef.setProcedureCount(summaryRef.getProcedureCount() + 1);
-                    summaryRef.setProcedurePoint(summaryRef.getProcedurePoint() + vo.getProcedurePoint());
+                    summaryRef.setProcedurePoint(summaryRef.getProcedurePoint() + ofNullable(vo.getProcedurePoint()).orElse(0L));
                     return summaryRef;
                 },
                 ((summary1, summary2) -> {
