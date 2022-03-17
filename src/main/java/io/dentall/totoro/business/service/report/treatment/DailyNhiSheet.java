@@ -59,6 +59,10 @@ public class DailyNhiSheet extends ExcelSheet {
             cell.setCellStyle(dataCellStyle);
 
             cell = row.createCell(cellCounter.get());
+            cell.setCellValue(vo.getProcedureSurface());
+            cell.setCellStyle(dataCellStyle);
+
+            cell = row.createCell(cellCounter.get());
             cell.setCellValue(displayFutureAppointmentMemo(vo.getFutureAppointmentList()));
             cell.setCellStyle(dataCellStyle);
 
@@ -79,9 +83,10 @@ public class DailyNhiSheet extends ExcelSheet {
         sheet.setColumnWidth(3, calculateColumnWith(7, 18));
         sheet.setColumnWidth(4, calculateColumnWith(7, 10));
         sheet.setColumnWidth(5, calculateColumnWith(7, 5));
-        sheet.setColumnWidth(6, calculateColumnWith(7, 40));
-        sheet.setColumnWidth(7, calculateColumnWith(7, 12));
-        sheet.setColumnWidth(8, calculateColumnWith(7, 80));
+        sheet.setColumnWidth(6, calculateColumnWith(7, 5));
+        sheet.setColumnWidth(7, calculateColumnWith(7, 40));
+        sheet.setColumnWidth(8, calculateColumnWith(7, 12));
+        sheet.setColumnWidth(9, calculateColumnWith(7, 80));
 
         Row header = sheet.createRow(rowCounter.get());
         XSSFColor cellColor = new XSSFColor(new byte[]{(byte) 243, (byte) 243, (byte) 243}, new DefaultIndexedColorMap());
@@ -118,6 +123,9 @@ public class DailyNhiSheet extends ExcelSheet {
         cell.setCellStyle(cellStyle);
         cell = header.createCell(cellCounter.get());
         cell.setCellValue("牙位");
+        cell.setCellStyle(cellStyle);
+        cell = header.createCell(cellCounter.get());
+        cell.setCellValue("牙面");
         cell.setCellStyle(cellStyle);
         cell = header.createCell(cellCounter.get());
         cell.setCellValue("未來預約_預約內容");
