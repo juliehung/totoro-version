@@ -5,6 +5,7 @@ import io.dentall.totoro.service.dto.table.AppointmentTable;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 import java.time.Instant;
@@ -15,7 +16,7 @@ import java.util.List;
 import static io.dentall.totoro.business.service.report.context.ReportHelper.toAge;
 import static io.dentall.totoro.service.util.DateTimeUtil.convertToTaipeiTime;
 
-@Mapper
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ReportMapper {
 
     ReportMapper INSTANCE = Mappers.getMapper(ReportMapper.class);
@@ -52,6 +53,8 @@ public interface ReportMapper {
     DisposalVo mapToDisposalVo(NhiVo vo);
 
     NhiVo mapToNhiVo(OwnExpenseVo vo);
+
+    NhiVo mapToNhiVo(NhiVo vo);
 
     @Mapping(target = "expectedArrivalTime", source = "expectedArrivalTime", qualifiedByName = "toTaipeiTime")
     FutureAppointmentVo mapToFutureAppointmentVo(AppointmentTable table);

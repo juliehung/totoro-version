@@ -29,6 +29,10 @@ public class NhiVo implements NhiDto, FutureAppointment {
 
     private String patientNote;
 
+    private String examCode;
+
+    private Long examPoint;
+
     private Long procedureId;
 
     private String procedureCode;
@@ -94,6 +98,16 @@ public class NhiVo implements NhiDto, FutureAppointment {
     }
 
     @Override
+    public String getExamCode() {
+        return examCode;
+    }
+
+    @Override
+    public Long getExamPoint() {
+        return examPoint;
+    }
+
+    @Override
     public Long getProcedureId() {
         return procedureId;
     }
@@ -156,6 +170,14 @@ public class NhiVo implements NhiDto, FutureAppointment {
 
     public void setPatientNote(String patientNote) {
         this.patientNote = patientNote;
+    }
+
+    public void setExamCode(String examCode) {
+        this.examCode = examCode;
+    }
+
+    public void setExamPoint(Long examPoint) {
+        this.examPoint = examPoint;
     }
 
     public void setProcedureId(Long procedureId) {

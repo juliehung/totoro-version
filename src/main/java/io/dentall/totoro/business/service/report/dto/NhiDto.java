@@ -24,6 +24,10 @@ public interface NhiDto extends DisposalDto {
 
     String getPatientNote();
 
+    String getExamCode();
+
+    Long getExamPoint();
+
     Long getProcedureId();
 
     String getProcedureCode();
