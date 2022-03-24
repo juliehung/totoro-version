@@ -34,7 +34,7 @@ jobs:
                 sudo apt-get update -y && \
                 sudo apt-get install unzip jq -y
             - name: "Set up Cloud SDK"
-              uses: google-github-actions/setup-gcloud@master
+              uses: google-github-actions/setup-gcloud@v0
               with:
                   project_id: ${{ secrets.hisGcpProjectId }}
                   service_account_key: ${{ secrets.hisGcpServiceKey }}
@@ -128,7 +128,7 @@ jobs:
           - name: "Move war to docker folder"
             run: mv ${{ needs.Combine-Web-And-Server.outputs.name }} totoro-admin/src/main/docker/app.war
           - name: "Set up Cloud SDK"
-            uses: google-github-actions/setup-gcloud@master
+            uses: google-github-actions/setup-gcloud@v0
             with:
               project_id: ${{ secrets.hisGcpProjectId }}
               service_account_key: ${{ secrets.hisGcpServiceKey }}
