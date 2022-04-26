@@ -3,6 +3,7 @@ package io.dentall.totoro.web.rest;
 import io.dentall.totoro.business.service.CloudFunctionService;
 import io.dentall.totoro.config.ImageRepositoryConfiguration;
 import io.dentall.totoro.domain.SmsView;
+import io.dentall.totoro.domain.enumeration.SmsEventStatus;
 import io.dentall.totoro.security.SecurityUtils;
 import io.dentall.totoro.service.SmsViewService;
 import io.dentall.totoro.service.dto.SmsChargeDTO;
@@ -118,15 +119,21 @@ public class MessageResource {
 
     @GetMapping("/messages/sms/events")
     public DeferredResult<ResponseEntity<List<SmsEventDTO>>> getSmsEvents(
+        @RequestParam(value = "status", required = false) SmsEventStatus status,
         @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
         @RequestParam(value = "size", defaultValue = "10", required = false) Integer size
     ) {
         DeferredResult<ResponseEntity<List<SmsEventDTO>>> result = new DeferredResult<>();
         ForkJoinPool.commonPool().submit(() -> {
             try {
-                Page<SmsEventDTO> events = cloudFunctionService.getSmsEvents(ImageRepositoryConfiguration.BASIC_FOLDER_PATH, PageRequest.of(page, size));
+                Page<SmsEventDTO> events = cloudFunctionService.getSmsEvents(
+                    ImageRepositoryConfiguration.BASIC_FOLDER_PATH,
+                    status,
+                    PageRequest.of(page, size)
+                );
                 HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(
-                    events, "/messages/sms/events"
+                    events,
+                    "/messages/sms/events"
                 );
 
                 result.setResult(ResponseEntity.ok().headers(headers).body(events.getContent()));

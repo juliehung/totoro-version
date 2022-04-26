@@ -7,6 +7,7 @@ import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import io.dentall.totoro.business.dto.SmsEventsPagination;
+import io.dentall.totoro.domain.enumeration.SmsEventStatus;
 import io.dentall.totoro.service.dto.SmsChargeDTO;
 import io.dentall.totoro.service.dto.SmsEventDTO;
 import io.dentall.totoro.web.rest.vm.SmsInfoVM;
@@ -89,7 +90,7 @@ public class CloudFunctionService {
         return restTemplate.postForObject(api, request, SmsEventDTO.class);
     }
 
-    public Page<SmsEventDTO> getSmsEvents(String clinic, Pageable pageable) throws IOException, ThrowableProblem {
+    public Page<SmsEventDTO> getSmsEvents(String clinic, SmsEventStatus status, Pageable pageable) throws IOException, ThrowableProblem {
         int size = pageable.getPageSize();
         int offset = pageable.getPageNumber() * pageable.getPageSize();
 
@@ -100,6 +101,9 @@ public class CloudFunctionService {
             new AbstractMap.SimpleEntry<>("size", size),
             new AbstractMap.SimpleEntry<>("offset", offset))
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        if (status != null) {
+            map.put("status", status);
+        }
         HttpEntity<String> request = new HttpEntity<>(mapper.writeValueAsString(map), getRequestHeaderBearer(token));
         SmsEventsPagination response = restTemplate.postForObject(api, request, SmsEventsPagination.class);
 
