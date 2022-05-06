@@ -24,7 +24,7 @@ on:
                 required: true
 jobs:
     Combine-Web-And-Server:
-        runs-on: ubuntu-18.04
+        runs-on: [ self-hosted, dentall-web-runner ]
         outputs:
           name: ${{ steps.generate-version.outputs.finalWarName}}
           version: ${{ steps.generate-version.outputs.version }}
@@ -112,7 +112,7 @@ jobs:
 
     Containerize-And-Push-To-Registry:
         needs: [ Combine-Web-And-Server ]
-        runs-on: ubuntu-18.04
+        runs-on: [ self-hosted, dentall-web-runner ]
         steps:
           - name: "Check out totoro admin"
             uses: actions/checkout@v2

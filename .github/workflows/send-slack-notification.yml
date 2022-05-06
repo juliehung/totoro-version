@@ -12,7 +12,7 @@ on:
 
 jobs:
     Send-Slack-Notification:
-        runs-on: ubuntu-18.04
+        runs-on: [ self-hosted, dentall-web-runner ]
         steps:
             - name: "Notify to Slack"
               run: curl --location --request POST "${{ secrets.slackQaChannelHook }}" --header "Content-Type:application/json" --data-raw '{"text":"${{ inputs.content }}"}'
