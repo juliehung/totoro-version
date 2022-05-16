@@ -16,7 +16,7 @@ on:
 
 jobs:
     History-Checking:
-        runs-on: [ self-hosted, dentall-web-runner ]
+        runs-on: ubuntu-18.04
         steps:
             - name: "Check out totoro version"
               uses: actions/checkout@v2
@@ -30,7 +30,7 @@ jobs:
                 ls totoro-version/${{ inputs.milestone }}.json
 
     History-Creation:
-        runs-on: [ self-hosted, dentall-web-runner ]
+        runs-on: ubuntu-18.04
         needs: [ History-Checking ]
         if: ${{ failure() }}
         steps:
@@ -52,7 +52,7 @@ jobs:
                 git push
 
     Calculate-Previous-Milestone:
-      runs-on: [ self-hosted, dentall-web-runner ]
+      runs-on: ubuntu-18.04
       outputs:
         dependedMilestone: ${{ steps.calculate.outputs.milestone }}
       steps:
@@ -63,7 +63,7 @@ jobs:
             xargs -I {} echo "::set-output name=milestone::{}"
 
     Server-Checking:
-        runs-on: [ self-hosted, dentall-web-runner ]
+        runs-on: ubuntu-18.04
         steps:
             - name: "Set up Cloud SDK"
               uses: google-github-actions/setup-gcloud@v0.3.0
@@ -76,7 +76,7 @@ jobs:
                 gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/server 
 
     Server-Copy:
-        runs-on: [ self-hosted, dentall-web-runner ]
+        runs-on: ubuntu-18.04
         needs: [ Calculate-Previous-Milestone, Server-Checking ]
         if: ${{ failure() }}
         steps:
@@ -96,7 +96,7 @@ jobs:
                 xargs -I {} gsutil cp {} gs://totoro-admin-build/${{ inputs.milestone }}/server/
 
     Web-Checking:
-        runs-on: [ self-hosted, dentall-web-runner ]
+        runs-on: ubuntu-18.04
         steps:
             - name: "Set up Cloud SDK"
               uses: google-github-actions/setup-gcloud@v0.3.0
