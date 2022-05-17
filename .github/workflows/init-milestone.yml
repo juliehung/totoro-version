@@ -109,7 +109,7 @@ jobs:
                 gsutil ls -l gs://totoro-admin-build/${{ inputs.milestone }}/web 
 
     Web-Copy:
-        runs-on: [ self-hosted, dentall-web-runner ]
+        runs-on: ubuntu-18.04
         needs: [ Calculate-Previous-Milestone, Web-Checking ]
         if: ${{ failure() }}
         steps:
