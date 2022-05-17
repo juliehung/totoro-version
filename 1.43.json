@@ -35,6 +35,12 @@
       "webFileName": "1.43.1.zip",
       "finalFileName": "1.43.1.2.war",
       "timestamp": "2022-05-16T11:02:55Z"
+    },
+    {
+      "serverFileName": "1.43.2.2.war",
+      "webFileName": "1.43.2.zip",
+      "finalFileName": "1.43.2.2.war",
+      "timestamp": "2022-05-17T03:13:15Z"
     }
   ]
 }
