@@ -8,6 +8,6 @@ on:
                 value: world 
 jobs:
     J1:
-        runs-on: ubuntu-18.04
+        runs-on: ubuntu-latest
         steps:
             - run: echo hello world

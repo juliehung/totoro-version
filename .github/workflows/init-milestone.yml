@@ -16,7 +16,7 @@ on:
 
 jobs:
     History-Checking:
-        runs-on: ubuntu-18.04
+        runs-on: ubuntu-latest
         steps:
             - name: "Check out totoro version"
               uses: actions/checkout@v2
