@@ -33,7 +33,7 @@ jobs:
           run: sleep ${{ inputs.sleepTime }}
 
     Start-Dev-Machine:
-        runs-on: ubuntu-18.04
+        runs-on: ubuntu-latest
         needs: [ Stop-Dev-Machine, Pause-A-While ]
         steps:
         - name: "Start target port machine"
