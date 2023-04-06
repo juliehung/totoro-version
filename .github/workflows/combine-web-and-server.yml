@@ -112,7 +112,7 @@ jobs:
 
     Containerize-And-Push-To-Registry:
         needs: [ Combine-Web-And-Server ]
-        runs-on: ubuntu-18.04
+        runs-on: ubuntu-latest
         steps:
           - name: "Check out totoro admin"
             uses: actions/checkout@v2
