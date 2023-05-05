@@ -107,6 +107,12 @@
       "webFileName": "1.99.1.zip",
       "finalFileName": "1.99.1.40.war",
       "timestamp": "2023-05-05T08:12:50Z"
+    },
+    {
+      "serverFileName": "1.99.1.41.war",
+      "webFileName": "1.99.1.zip",
+      "finalFileName": "1.99.1.41.war",
+      "timestamp": "2023-05-05T09:23:19Z"
     }
   ]
 }
