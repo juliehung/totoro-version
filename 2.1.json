@@ -119,6 +119,12 @@
       "webFileName": "2.1.11.zip",
       "finalFileName": "2.1.11.18.war",
       "timestamp": "2023-04-24T08:45:56Z"
+    },
+    {
+      "serverFileName": "2.1.12.18.war",
+      "webFileName": "2.1.12.zip",
+      "finalFileName": "2.1.12.18.war",
+      "timestamp": "2023-05-08T04:05:49Z"
     }
   ]
 }
