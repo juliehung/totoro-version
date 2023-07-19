@@ -305,6 +305,12 @@
       "webFileName": "2.2.12.zip",
       "finalFileName": "2.2.12.15.war",
       "timestamp": "2023-07-17T14:20:59Z"
+    },
+    {
+      "serverFileName": "2.2.12.16.war",
+      "webFileName": "2.2.12.zip",
+      "finalFileName": "2.2.12.16.war",
+      "timestamp": "2023-07-19T09:41:33Z"
     }
   ]
 }
